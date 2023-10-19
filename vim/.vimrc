@@ -293,7 +293,7 @@ set whichwrap+=<,>,h,l # make arrows and h, l, push cursor to next line
 # set pumheight=7 # max number of items in popup menu (pmenu)
 # ctags can get slow if it seaches dirs for tags file
 set tags=./tags,./../tags,./*/tags # this dir, just one level above, and all subdirs
-# set tags=~/projects/zmk/app/tags
+# set tags=~/git/zmk/app/tags
 
 # }}}
 
@@ -618,30 +618,30 @@ Plug 'airblade/vim-gitgutter'
 # Plug 'junegunn/fzf.vim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'yegappan/lsp'
-# Plug '~/projects/lsp'
+# Plug '~/git/lsp'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 # XXX python-syntax does not highlight 'dectest' (test code inside comments)
 # Plug 'vim-python/python-syntax'
 #
-Plug '~/projects/autosuggest.vim'
+Plug '~/git/autosuggest.vim'
 # Plug 'girishji/autosuggest.vim'
-# Plug '~/projects/declutter.vim'
+# Plug '~/git/declutter.vim'
 # Plug 'girishji/declutter.vim'
 Plug 'girishji/bufline.vim'
-# Plug '~/projects/bufline.vim'
-Plug '~/projects/vimcomplete'
+# Plug '~/git/bufline.vim'
+Plug '~/git/vimcomplete'
 # Plug 'girishji/vimcomplete'
-Plug '~/projects/ngram-complete.vim'
+Plug '~/git/ngram-complete.vim'
 # Plug 'girishji/ngram-complete.vim'
-Plug '~/projects/vimscript-complete.vim'
+Plug '~/git/vimscript-complete.vim'
 # Plug 'girishji/vimscript-complete.vim'
-Plug '~/projects/vsnip-complete.vim'
+Plug '~/git/vsnip-complete.vim'
 # Plug 'girishji/omnifunc-complete.vim'
-Plug '~/projects/omnifunc-complete.vim'
-Plug '~/projects/lsp-complete.vim'
-Plug '~/projects/pythondoc.vim'
+Plug '~/git/omnifunc-complete.vim'
+Plug '~/git/lsp-complete.vim'
+Plug '~/git/pythondoc.vim'
 # Plug 'girishji/pythondoc.vim'
 plug#end()
 # }}}

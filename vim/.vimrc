@@ -1,9 +1,4 @@
 vim9script
-# https://www.reddit.com/r/vim/wiki/vimrctips
-#
-# Shortcomings compared to neovim:
-#   - :s/foo/bar does not do live replacement
-#
 
 #---------------------
 # Essential {{{

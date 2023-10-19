@@ -1,0 +1,551 @@
+*leetcode.txt*
+
+------------------------------------------------------------------------------
+Perf speedup for string contactinations~
+use an array and then join().
+Use itertools.zip_longest() instead of zip() when two sequences differ by
+length
+p1768
+
+------------------------------------------------------------------------------
+To convert string to a list of characters~
+> list('asdf')
+Out[5]: ['a', 's', 'd', 'f']
+
+problem: reverse all vowels in a string. hello->holle~
+better solution:
+- create a reverse iterator object (from a generator expression)
+- Use join() to create string out of iterator (from another generator
+  expression)
+class Solution:
+    def reverseVowels(self, s: str) -> str:
+        it = (ch for ch in s[::-1] if ch.lower() in 'aeiou')
+        return ''.join(next(it) if ch.lower() in 'aeiou' else ch for ch in s)
+p345
+------------------------------------------------------------------------------
+python:
+    In insert mode <c-d> unindents; in normal mode use << and >> (hold shift
+key)
+
+------------------------------------------------------------------------------
+p238: When they say you cannot do something (like division), think of caching
+lots of intermediate values. In this case keep a suffix product list.
+
+Given an integer array nums, return an array answer such that answer[i] is
+equal to the product of all the elements of nums except nums[i].
+
+You must write an algorithm that runs in O(n) time and without using the
+division operation.
+
+Instead of appending to list, initialize length:
+        result = [1] * nlen
+
+------------------------------------------------------------------------------
+To create integer infinity (large value) use float('inf'):~
+float('inf') and float('-inf')
+or
+# Use maximal system integer to represent infinity
+INF = sys.maxsize
+
+------------------------------------------------------------------------------
+copy one list to another without iteration:~
+ mylist[:] = s
+
+------------------------------------------------------------------------------
+Iterator raises StopIteration exception when next(iter) fails.~
+list.count(val) counts (not itertools.count() which does something different)
+p.283
+
+------------------------------------------------------------------------------
+check list or deque x is empty:~
+if not x:
+    print('list/deque is empty')
+
+------------------------------------------------------------------------------
+bisect() can be implemented as a while loop (instead of recursion).~
+Same logic as recursion.
+p.35
+
+------------------------------------------------------------------------------
+ValueError and TypeError are 2 exceptions you can use in your code.~
+
+------------------------------------------------------------------------------
+It is safe to do [None] * 3 to get a list of length 3. Items are independent.~
+You should not do [[]] * 3 because the inside [] is the same for all 3 items
+since only the reference to [] is copied 3 times.
+To get a 3x2 matrix:
+A = [None] * 3
+for i in range(3):
+    A[i] = [None] * 2
+or
+w, h = 2, 3
+A = [[None] * w for i in range(h)]
+See ~/help/python
+
+------------------------------------------------------------------------------
+To get pairwise elements use itertools.pairwise()~
+def pairwise(iterable):
+    # pairwise('ABCDEFG') --> AB BC CD DE EF FG
+Alternately:
+for x, y in zip(a, a[1:]):
+  print(x, y)
+ex:
+return '' if any(i == j for i, j in pairwise(res)) else ''.join(res)
+
+itertools.groupby() gotchas:~
+- You must sort the list first before passing to groupby()
+- The iterator returns a tuple, first is the element, second is a list of all
+  occurances of that element.
+- You can only use that iterator once. If you need to sort your grouped list by
+  count you should store the list first.
+        s = 'asaaaddfafff'
+        groups = [(ch, len(list(lst))) for ch, lst in groupby(sorted(s))]
+        groups = sorted(groups, key=lambda x: x[1], reverse=True)
+- There is only one iterator underneath. You can only traverse the sublist once.
+  So if you calculating the length of sublists, do it only once (after
+  converting the iterator to a list)
+        for n, lst in groupby(sorted(nums)):
+            sublistlen = len(list(lst))
+
+Blurb from library doc:~
+The operation of groupby() is similar to the uniq filter in Unix. It generates
+a break or new group every time the value of the key function changes (which is
+why it is usually necessary to have sorted the data using the same key
+function). That behavior differs from SQL’s GROUP BY which aggregates common
+elements regardless of their input order.
+
+The returned group is itself an iterator that shares the underlying iterable
+with groupby(). Because the source is shared, when the groupby() object is
+advanced, the previous group is no longer visible. So, if that data is needed
+later, it should be stored as a list:
+>
+	groups = []
+	uniquekeys = []
+	data = sorted(data, key=keyfunc)
+	for k, g in groupby(data, keyfunc):
+	    groups.append(list(g))      # Store group iterator as a list
+	    uniquekeys.append(k)
+
+p.767
+
+------------------------------------------------------------------------------
+How to get unique values in list?~
+x = list(set(x))
+
+Gotcha: reverse() and sort() on list do not return value.~
+mylist = mylist.sort()  <- SILENT ERROR
+mylist = mylist.reverse()  <- SILENT ERROR
+
+Gotcha: reversed(), sorted() do not return a list, but they return iterator object.~
+Doing len() on these things is an ERROR
+
+for ...:
+    ...
+    break
+else:
+    # executed when break does not trigger
+
+------------------------------------------------------------------------------
+How to skip next few iteration steps inside a for loop:~
+1) if you know the condition apriori you can use a generator expression:
+  for i in (x for x in range(10) if x != 2):
+2) If condition can only be determined during execution of for loop, you have
+  to store the iterator object, call next() on it by using a iterator object
+  obtained through islice().
+
+from itertools import islice
+numbers = iter(range(10))
+for i in numbers:
+    if i == 2:
+        next(islice(numbers, 3, 3), None)  # consume 3
+
+next(iterator)
+next(iterator, default)
+Retrieve the next item from the iterator by calling its __next__() method. If
+default is given, it is returned if the iterator is exhausted, otherwise
+StopIteration is raised.
+
+itertools.islice(iterable, stop)
+itertools.islice(iterable, start, stop[, step])
+Make an iterator that returns selected elements from the iterable. If start is
+non-zero, then elements from the iterable are skipped until start is reached.
+Afterward, elements are returned consecutively unless step is set higher than
+one which results in items being skipped. If stop is None, then iteration
+continues until the iterator is exhausted.
+
+------------------------------------------------------------------------------
+How to get number of elements (length) of iterator?~
+Say you don't want to build a list, then you can do:
+>>> mylen = sum(1 for _ in range(10))
+
+But iterator will be exhausted after use.
+Use a lambda expression to create a generator expression.
+foo = lambda : (x for x in ...)
+Don't forget to put () after foo(), when using foo().
+
+------------------------------------------------------------------------------
+Do not enumerate revesed lists, your indices will be wrong (0 would be last element):~
+        for i, d in enumerate(digits[::-1]):
+
+------------------------------------------------------------------------------
+print(*iterator) will print because '*' will unpack the iterator values into
+positional arguments for print().
+
+------------------------------------------------------------------------------
+Do not use append() or extend() inside list comprehension.~
+It returns [None, ...] because append returns None.
+
+>>> z
+Out[16]: [[5, 3, 99], [2, 3, 99]]
+
+>>> zz = [f.copy().append(9339) for f in z]
+
+>>> zz
+Out[19]: [None, None]
+
+Use list concatenation instead (using '+')
+      ptos.extend(x + [pl] * n for x in copy.deepcopy(bval))
+
+------------------------------------------------------------------------------
+Use copy.deepcopy() when you copy 2-D lists (see above example)~
+
+'copy' from standard library:
+
+Assignment statements in Python do not copy objects, they create bindings
+between a target and an object.
+
+Interface summary:
+
+import copy
+
+copy.copy(x)
+Return a shallow copy of x.
+(there is also list.copy())
+
+copy.deepcopy(x[, memo])
+Return a deep copy of x.
+
+------------------------------------------------------------------------------
+All functions return something. If you don't specify anything it will return a
+None object.
+
+------------------------------------------------------------------------------
+C like structs:~
+The idiomatic approach is to use dataclasses for this purpose:
+>
+    from dataclasses import dataclass
+    @dataclass
+    class Employee:
+        name: str = None  # default argument
+        dept: str
+        salary: int
+
+This style of access is clear, concise, and convenient.
+
+>>> john = Employee('john', 'computer lab', 1000)
+>>> john.dept
+'computer lab'
+
+------------------------------------------------------------------------------
+Inheritance: super() is very different than in Java.~
+super() alone returns a temporary object of the superclass that then allows you
+to call that superclass’s methods. It does NOT take any arguments.
+From child object you call parent's method using explicit method name:
+super().writefoo(args)
+
+------------------------------------------------------------------------------
+__init__() vs __new__()~
+__new__ is a static method, while __init__ is an instance method. __new__ is
+responsible for creating and returning a new instance, while __init__ is
+responsible for initializing the attributes of the newly created object.
+__new__ is called before __init__ .
+
+------------------------------------------------------------------------------
+No need to declare variable inside a function empty.~
+Variables first declared in if or for statements are visible outside.
+Everything is function scope, class scope, module scope, etc.
+def fn():
+    if xxx:
+        y = some()
+    return y
+
+------------------------------------------------------------------------------
+Whether to use self.fn() or super().fn() in a child class where only parent
+defines fn():
+The most common assumption is that you'd want to be able to override fn in a
+subclass, so for most use-cases, you'd stick with self.fn().
+
+------------------------------------------------------------------------------
+remove last element from list~
+foo[:-1]
+del foo[-1]
+foo.pop()
+
+------------------------------------------------------------------------------
+Possible to sort array in LINEAR time.~
+If you use a giant array and simply flag indices where numbers in original
+array exist, and collect all those flagged indices, you have sorted in linear
+time. This is 'bucket sort'.
+p347
+
+Flatten lists:~
+- use recoursion for n-dimensional lists
+- use itertools.chain()
+- use list comprehension.
+
+Understanding list comprehension:~
+Flatten array:
+
+Interpret the following as:
+<num <for elem in vec> for num in elem>
+Inside for loop is the outer loop when translated:
+for elem in vec:
+    for num in elem:
+        ...
+
+> vec = [[1,2,3], [4,5,6], [7,8,9]]
+> [num for elem in vec for num in elem]
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+------------------------------------------------------------------------------
+Variable created in 'for' loop is not accessible from outside the loop.~
+Soln: use 'else' clause
+
+        for ss in s:
+            for tt in range(tidx, len(t)):
+                if t[tt] == ss:
+                    tidx = tt + 1
+                    break
+            # tt is NOT available here!
+            else:
+                return False
+p392
+
+------------------------------------------------------------------------------
+Scope of variables~
+
+- Scope is nothing but a dictionary.
+- Every function has its own local dictionary (for scoping)
+- Module has its own dictionary
+- Classes and methods have theirs
+- There is a outermost dictionary for builtin names
+- A function can use its own local dictionary and the outermost dictionary
+
+- A nested inner function cannot see variables in outer function. If you use
+same names, it just creates new variables (beware).
+- 'nonlocal' binds local variables to immediate outer scope.
+- 'global' binds variables to module (file) scope (NOT to outermost scope
+where builtin names live).
+- when you use 'nonlocal' it is same as having a local variable that has
+reference to another variable of the same name in outer scope. They are NOT
+SAME variable. If you reassign to inner x (say x = x[2:]), it is not reflected
+in outer scope.
+- integers, float, etc. are pas-by-value, and so a 'nonlocal' inner variable
+and outer variable refer to the same thing (you can change values).
+
+Print address of a variable~
+Use id(). Can combine with hex().
+
+	print(hex(id(foo))
+p.4
+
+------------------------------------------------------------------------------
+'Not defined' not same as 'None'
+if not xxx:
+         print('foo')
+Above will give NameError if xxx was not defined.
+NameError: name 'xxx' is not defined
+
+To check if defined, see existence in locals().
+
+------------------------------------------------------------------------------
+set, dict are in stdtypes.txt
+do |set..stdtypes.txt|
+
+set"extend" is through union operator "|"
+set has "add" instead of "append"
+
+------------------------------------------------------------------------------
+How to distinguish between None and 0/False? ~
+if x is not None:
+    ...
+x = False
+if x: # false
+if x is not None: # true
+
+x is not None
+is equivalent to
+id(test) == id(None) #False
+
+------------------------------------------------------------------------------
+Check existence of local/global/instance variable ~
+Local var:
+if 'myVar' in locals():
+  # myVar exists.
+
+To check the existence of a global variable:
+if 'myVar' in globals():
+  # myVar exists.
+
+To check if an object has an attribute:
+if hasattr(obj, 'attr_name'):
+  # obj.attr_name exists.
+
+------------------------------------------------------------------------------
+Sliding Window and DP~
+An alternative to recursive solution if you can ask the question "can I say it
+is valid now because it is valid for some small window (of X elements) I can
+examine now, and it was valid for f(N-X) state that you just traversed before?" 
+Now you can iterate with a DP array and find solution.
+p.2369
+
+------------------------------------------------------------------------------
+Interleave the 2 linked lists if you are copying~
+This turns O(nxn) solution to O(n)
+This solves problems related to deep copying random pointers
+
+Cannot guarantee order of execution when you create tuple and unpack~
+            jt = it.next
+            it = jt.next
+is not the same as
+	jt, it = (it.next, jt.next)
+p.138
+
+------------------------------------------------------------------------------
+Are objects of user defined hashable? YES~
+
+Objects which are instances of the user-defined class are hashable by default,
+they all compare unequal, and their hash value is their id().
+
+All immutable built-in objects in Python are hashable like tuples while the
+mutable containers like lists and dictionaries are not hashable.
+
+------------------------------------------------------------------------------
+In linked list problems think of keeping 2 pointers n spaces apart~
+
+You can solve problems with 1 loop traversal instead of two.
+p.19
+
+Anonymous objects/classes are not a thing in python~
+Use namedtuples or dataclasses (@dataclass).
+
+------------------------------------------------------------------------------
+Use `y = max(x, y)` instead of `if x > y: y = x`
+
+------------------------------------------------------------------------------
+Shifting array~
+
+The best way to shift an arry to left (remove 1 element from beginning and add
+another at end) is to use a deque() and do popleft() and append().
+p.198
+
+------------------------------------------------------------------------------
+In a dict() or set(), items(), keys(), values() are just views~
+
+When you delete from dict (del mydict[key]) then items(), keys(), values()
+all change automatically. These are not copies but views.
+
+------------------------------------------------------------------------------
+Make a dictionary of frequencies from list of values~
+
+>>> collections.Counter([1, 2, 2])
+Counter({2: 2, 1: 1})
+
+Flatten list~
+
+>>> a = [[1, 2], [3, 4], [5, 6]]
+>>> list(itertools.chain.from_iterable(a))
+[1, 2, 3, 4, 5, 6]
+
+p.1615
+
+------------------------------------------------------------------------------
+List subscript ~ vs -: ~
+
+i = 3
+a[~i] is 4th element from the end (matches a[3] which is 4th element from the
+beginning).
+a[-i] is 3rd element from the end.
+
+------------------------------------------------------------------------------
+assert statement~
+
+assert y!=0, "y cannot be zero"
+assert condition [, Error Message] 
+
+------------------------------------------------------------------------------
+Slice and reverse list~
+
+a[i:j+1][::-1]
+
+Cannot compare List reversed()~
+
+return a[i:j] == reversed(a[i:j]) is always False because reversed() return a
+'reversed' object. RHS is not a list.
+Use a[i:j] == a[i:j][::-1]
+
+=============================================================================
+DP problems:~
+
+The key to solving a DP problem efficiently is finding a way to break the
+problem into subproblems such that
+- the original problem can be solved relatively easily once solutions to the
+  subproblems are available, and
+- these subproblem solutions are cached.
+
+Focus on breaking down the problem in terms of F(n) = F(n-x) + ...
+Don’t have to do divide and conquer (break it in the middle).
+If you can find above relation, you may do DP
+
+READ THE VARIANTS of these problems in the EPI book.
+
+1) Use 2D array
+Count the NUMBER of score combinatrons
+In an American football game, a play can lead to 2 points (safety), 3 points
+(field goal), or 7 points (touchdown, assuming the extra point). Many different
+combinations of 2,3, and 7 point plays can make up a final score. For example,
+four combinations of plays yield a score of 12:
+o 6 safeties (2x6=12),
+o 3 safeties and 2 field goals (2 x 3 + 3 x2 = 72),
+o 1 safety,l field goal and l touchdown (2 x 1+ 3 x 1 +7 x1= 12), and
+o 4 fieldgoals(3x4=12).
+Write a program that takes a final score and scores for individual plays, and
+retums the number of combinations of plays that result in the final score.
+
+Hint: Count the number of combinations in which there are 0, 1, 2, 3 points
+from only safety, then repeat for (safety and field goal), etc.
+
+O pts column is initialized to 1's.
+2nd row: You can use 3 once, twice, etc. See the balance required and check
+previous row. Add it all up.
+
+		0 	1 	2 	3 	4 ...
+(2) 		1 	0 	1 	0 	1
+(2,3) 		1 	0 	1 	1 	1
+(2,3,7) 	1 	0 	1 	1 	1
+
+2) Compute Levenshtein Distance between 2 strings (for spell check)
+Levenshtein defined the distance between two words as the minimum number of
+"edits" it would take to transform the misspelled word into a correct word,
+where a single edit is the insertion, deletion, or substitution of a single
+character.
+
+Soln: Use 2 2-D matrix (Carthorse -> Orchestra)
+
+	 	C 	a 	r 	t 	h 	o 	r 	s 	e
+	0 	1 	2 	3 	4 	5 	6 	7 	8 	9
+O 	1 	1 	2 	3 	4 	5 	6 	7 	8 	9
+r 	2 	2 	2 	2 	3 	4 	5 	6 	7 	8
+c 	3 	3 	3 	3 	3 	4 	5 	6 	7 	8
+...
+
+- first row and column is when you transform to empty string
+- Say index (2,4). t above and r to left. Asks how to transform 'Cart' to 'Or'.
+- You are takin min of item to left (delete last letter from 'Cart'), item
+  above (do the same for 'Or') and item diagonally left-above (replace last
+  letter of both words)
+- bottom right cell gives the answer.
+
+and then adding one.
+
+vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

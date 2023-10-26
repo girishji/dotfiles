@@ -106,6 +106,10 @@ nnoremap <leader>i :AutoSuggestDisable<CR>[I:let nr = input("Which one: ")<Bar>e
 autocmd FTOptions FileType java setlocal define=^\\s*class
 autocmd FTOptions FileType python,vim setlocal define=^\\s*def
 
+if !empty(glob("~/cscope/cscope.out"))
+    cscope add ~/cscope/cscope.out
+endif
+
 # https://www.reddit.com/r/vim/comments/7bj837/favorite_console_tools_to_use_with_vim/
 # Workflow: Sometimes I have to look through a lot of files for a needle in a
 # haystack, not something I can grep for because I don't know what it will

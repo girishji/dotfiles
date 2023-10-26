@@ -10,6 +10,7 @@ asterisks	girish.txt	/*asterisks*
 best-global	vimtips.txt	/*best-global*
 best-searching	vimtips.txt	/*best-searching*
 best-substitution	vimtips.txt	/*best-substitution*
+cscopectags.txt	cscopectags.txt	/*cscopectags.txt*
 gcompletion	keybindings.txt	/*gcompletion*
 gfolds	girish.txt	/*gfolds*
 ghelp	girish.txt	/*ghelp*

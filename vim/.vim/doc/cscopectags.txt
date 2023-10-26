@@ -1,3 +1,48 @@
+*cscopectags.txt*
+
+------------------------------------------------------------------------------
+
+:ts[elect][!] [name]	List the tags that match [name], using the
+			information in the tags file(s).
+			When [name] is not given, the last tag name from the
+			tag stack is used.
+
+g]			Like CTRL-], but use ":tselect" instead of ":tag".
+
+{Visual}g]		Same as "g]", but use the highlighted text as the
+			identifier.
+
+:tj[ump][!] [name]	Like ":tselect", but jump to the tag directly when
+			there is only one match.
+
+g CTRL-]		Like CTRL-], but use ":tjump" instead of ":tag".
+
+{Visual}g CTRL-]	Same as "g CTRL-]", but use the highlighted text as
+			the identifier.
+
+To search for a specific tag and open Vim to its definition, run the following command in your shell:
+vim -t <tag>
+
+Or, open any Linux source file in Vim and use the following basic commands:
+
+Keyboard command
+
+Ctrl-]
+Jump to the tag underneath the cursor
+
+Ctrl-t
+Jump back up in the tag stack
+:ts <tag> <RET>
+Search for a particular tag
+
+:tn
+Go to the next definition for the last tag
+
+:tp
+Go to the previous definition for the last tag
+
+------------------------------------------------------------------------------
+
 $ ctags -R .
 or
 $ ctags . (if option is set in .ctags)
@@ -66,30 +111,5 @@ cscope Menu: Manipulation Commands
  ^d      Exit cscope.
 
 ==
-
-To search for a specific tag and open Vim to its definition, run the following command in your shell:
-vim -t <tag>
-
-Or, open any Linux source file in Vim and use the following basic commands:
-
-Keyboard command
-
-Ctrl-]
-Jump to the tag underneath the cursor
-
-Ctrl-t
-Jump back up in the tag stack
-:ts <tag> <RET>
-Search for a particular tag
-
-:tn
-Go to the next definition for the last tag
-
-:tp
-Go to the previous definition for the last tag
-
-:ts
-List all of the definitions of the last tag
-
 ----------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

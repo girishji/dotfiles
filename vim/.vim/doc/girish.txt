@@ -564,6 +564,22 @@ go back and forth using:
 <c-w>z will close the preview window
 :ta (navigate tag stack)
 
+Also:
+$ ctags -R .
+or
+$ ctags . (if option is set in .ctags)
+
+$ cscope -b
+
+.ctags has all the exclude dirs
+
+vim -t main (opens vim and puts you at main())
+
+for vim cscope bindings see ~/.vim/plugin/cscope_maps.vim
+
+https://cscope.sourceforge.net/cscope_vim_tutorial.html
+
+
 ----------------------------------------
 Ex commands line range~
 https://www.youtube.com/watch?v=Gs1VDYnS-Ac at 25:00 at 42:00
@@ -735,6 +751,14 @@ tpope names functions and variables all lowercase without underscore:
 dosurround(), newchar, opfunc(), inputreplacement(), extractbefore(), etc.
 
 "Names should be as short as possible while still being clear."
+
+----------------------------------------
+glob vs regex~
+	Glob pattern >
+	if filename =~ glob2regpat('Make*.mak')
+<	This is equivalent to: >
+	if filename =~ '^Make.*\.mak$'
+<	
 
 ----------------------------------------
 Batch mode and headless vim

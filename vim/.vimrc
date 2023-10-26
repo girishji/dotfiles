@@ -44,15 +44,20 @@ set wildignore+=*/build/*,build/,*/pycache/*,pycache/,*/venv/*,venv/,*/dist/*,di
 # set wildmenu|set wildmode=longest:full:lastused,full|set wildoptions=pum
 
 # Note:
-#   :find and does not show full path (if you set path to '**'), except when same filename is in different dirs
+#   :find does not show full path (if you set path to '**'), except when same filename is in different dirs
 #   :edit does not ignore dirs when used with '**'
-nnoremap <leader>f :call feedkeys(":find \<Tab>", 'tn')<cr>
+# nnoremap <leader>f :call feedkeys(":find \<Tab>", 'tn')<cr>
+
 # Note: problem with wildcharm is that it automatically inserts first item in menu
 # :set wildcharm=<c-z>
 # nnoremap <leader><space> :find<space><c-z>
+
 # Note: need autosuggest plugin for following mappings
 # nnoremap <leader><space> :e<space>**/*<left>
-nnoremap <leader><space> :e<space>**/
+# Note: Following works (respects wildignore) but slow
+nnoremap <leader>f :e<space>**/
+
+nnoremap <leader><space> :Find<space>
 nnoremap <leader><bs> :buffer<space>
 
 if executable("rg")
@@ -162,15 +167,19 @@ def Eatchar(): string
     var c = nr2char(getchar(0))
     return (c =~ '\s') ? '' : c
 enddef
+
 def NotCtx(): bool
     return synID(line('.'), col('.') - 1, 1)->synIDattr('name') =~? '\vcomment|string|character|doxygen'
 enddef
+
 def EOL(): bool
     return col('.') == col('$') || getline('.')->strpart(col('.')) =~ '^\s\+$'
 enddef
+
 def HelpAbbrevs()
     iabbr <buffer> --- ------------------------------------------------------------------------------<c-r>=<SID>Eatchar()<cr>
 enddef
+
 def VimAbbrevs()
     iabbr <buffer> #--- #------------------------------<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer><expr> augroup <SID>NotCtx() ? 'augroup' : 'augroup  \| autocmd!<cr>augroup END<esc>k_ela<c-r>=<SID>Eatchar()<cr>'
@@ -180,9 +189,11 @@ def VimAbbrevs()
     iabbr <buffer><expr> while   <SID>NotCtx() ? 'while' : 'while <c-o>oendwhile<esc>k_ela<c-r>=<SID>Eatchar()<cr>'
     iabbr <buffer><expr> for     <SID>NotCtx() ? 'for' : 'for <c-o>oendfor<esc>k_ela<c-r>=<SID>Eatchar()<cr>'
 enddef
+
 def TextAbbrevs()
     iabbr <buffer> vimhelpfmt vim:tw=78:ts=8:noet:ft=help:norl:<c-r>=<SID>Eatchar()<cr>
 enddef
+
 def GetSurroundingFn(): string
     var fpat = '\vdef\s+\zs\k+'
     var lnum = search(fpat, 'nb')
@@ -197,6 +208,7 @@ def GetSurroundingFn(): string
     endif
     return ''
 enddef
+
 def PythonAbbrevs()
     iabbr <buffer><expr> def     <SID>NotCtx() ? 'def' : 'def ():<cr>"""."""<esc>-f(i<c-r>=<SID>Eatchar()<cr>'
     # iabbr <buffer><expr> defa    def ():<c-o>o'''<cr>>>> print()<cr><cr>'''<esc>4k_f(i<c-r>=<SID>Eatchar()<cr>
@@ -239,11 +251,32 @@ def PythonAbbrevs()
     iabbr <buffer>       __floordiv__ def __floordiv__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
 
 enddef
+
+def CmakeAbbrevs()
+    iabbr <buffer> if() if() <c-o>end()<esc>k_f(a<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer> foreach() foreach(var IN )<c-o>endforeach()<esc>k_f)i<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer> function() function()<c-o>endfunction()<esc>k_f(a<c-r>=<SID>Eatchar()<cr>
+enddef
+
+def InsertDashes(): string
+    var s = ''
+    for _ in range(getline(line('.') - 1)->len())
+        s = s .. '-'
+    endfor
+    return s
+enddef
+
+def CommonAbbrevs()
+    iabbr <buffer> -- <esc>d0i<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=<SID>Eatchar()<cr>
+enddef
+
 augroup FTOptions
     au FileType vim VimAbbrevs()
     au FileType text,help TextAbbrevs()
     au FileType python PythonAbbrevs()
     au FileType help HelpAbbrevs()
+    au FileType cmake CmakeAbbrevs()
+    au BufEnter * CommonAbbrevs()
 augroup END
 
 # cmdline abbrevs
@@ -320,6 +353,7 @@ def MyHighlights()
         highlight PreProc cterm=bold
         highlight helpHyperTextJump cterm=underline
         highlight helpHyperTextEntry cterm=italic
+        highlight AS_SearchCompletePrefix ctermfg=124
         # Following is experimental
         # highlight String cterm=italic
         # highlight Function cterm=underline
@@ -378,8 +412,8 @@ augroup myCmds | autocmd!
     # list help files in buffer list (can type :ls instead of :ls!)
     # autocmd FileType help set buflisted
     # :h template
-    autocmd BufNewFile *.txt  r ~/vim/skeleton.txt
-    # autocmd BufNewFile *.cpp  r ~/vim/skeleton.cpp
+    # autocmd BufNewFile *.txt  r ~/.vim/skeleton.txt
+    # autocmd BufNewFile *.cpp  r ~/.vim/skeleton.cpp
     # spell
     # autocmd FileType help,text,markdown set spell
     autocmd FileType text,markdown set spell
@@ -583,6 +617,7 @@ nnoremap <leader>vd <cmd>GitDiffThisFile<cr>
 nnoremap <leader>vD <cmd>DiffOrig<cr>
 nnoremap <leader>ve <cmd>e ~/.vimrc<cr>
 nnoremap <leader>vz <scriptcmd>FoldingToggle()<cr>
+nnoremap <leader>vp <cmd>echo expand('%')<cr>
 
 # }}}
 
@@ -689,8 +724,10 @@ var options = {
         pum: true,
         hidestatusline: false,
         fuzzy: false,
-        # exclude: [],
-        # onspace: ['buffer']
+        # exclude: ['^buffer ', '^F'],
+        exclude: ['^F'],
+        # onspace: ['buffer', 'Find'],
+        onspace: ['buffer'],
         editcmdworkaround: true,
     }
 }
@@ -795,17 +832,17 @@ var lspOpts = {
 }
 autocmd VimEnter * call LspOptionsSet(lspOpts)
 
-# Make jdtls 'code actions' do 'organize imports', 'add unimplemented methods', etc.,
-var jfname = $'{$HOME}/.vim/plugged/lsp/autoload/lsp/textedit.vim'
-if filereadable(jfname)
-    import jfname
-    def g:JavaWorkspaceEdit(cmd: dict<any>)
-        for editAct in cmd.arguments
-            textedit.ApplyWorkspaceEdit(editAct)
-        endfor
-    enddef
-    autocmd FileType java g:LspRegisterCmdHandler('java.apply.workspaceEdit', g:JavaWorkspaceEdit)
-endif
+## Make jdtls 'code actions' do 'organize imports', 'add unimplemented methods', etc.,
+#var jfname = $'{$HOME}/.vim/plugged/lsp/autoload/lsp/textedit.vim'
+#if filereadable(jfname)
+#    import jfname
+#    def g:JavaWorkspaceEdit(cmd: dict<any>)
+#        for editAct in cmd.arguments
+#            textedit.ApplyWorkspaceEdit(editAct)
+#        endfor
+#    enddef
+#    autocmd FileType java g:LspRegisterCmdHandler('java.apply.workspaceEdit', g:JavaWorkspaceEdit)
+#endif
 
 # toggle diagnostics
 g:isLspDiagHighlighted = true
@@ -816,7 +853,9 @@ enddef
 
 def LSPUserSetup()
     # use tag mechanism to jump to location where a symbol is defined (<C-]>, <C-t> to go back, :tags)
-    setlocal tagfunc=lsp#lsp#TagFunc
+    # XXX: tagfunc breaks :cs find g <symbol>
+    # setlocal tagfunc=lsp#lsp#TagFunc
+
     # Format Code: formatexpr is used by 'gq' (NOT 'gw') (messes python with pyright)
     # setlocal formatexpr=lsp#lsp#FormatExpr()
     nnoremap <buffer> <leader>lf <cmd>LspFormat<cr>

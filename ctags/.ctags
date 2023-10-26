@@ -1,0 +1,34 @@
+--recurse=yes
+# qmk
+--exclude=builddefs
+--exclude=data
+--exclude=docs
+--exclude=drivers
+--exclude=keyboards
+--exclude=layouts
+--exclude=lib
+--exclude=platforms
+--exclude=tests
+--exclude=users
+--exclude=util
+# end qmk
+--exclude=.git
+--exclude=BUILD
+--exclude=build
+--exclude=.svn
+--exclude=*.js
+--exclude=vendor/*
+--exclude=node_modules/*
+--exclude=db/*
+--exclude=log/*
+--exclude=\*.min.\*
+--exclude=\*.swp
+--exclude=\*.bak
+--exclude=\*.pyc
+--exclude=\*.class
+--exclude=\*.sln
+--exclude=\*.csproj
+--exclude=\*.csproj.user
+--exclude=\*.cache
+--exclude=\*.dll
+--exclude=\*.pdb

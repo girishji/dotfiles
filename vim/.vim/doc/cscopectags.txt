@@ -1,0 +1,95 @@
+$ ctags -R .
+or
+$ ctags . (if option is set in .ctags)
+
+$ cscope -R -b // only db is built
+$ cscope -R // opens cscope
+
+.ctags has all the exclude dirs
+
+vim -t main (opens vim and puts you at main())
+
+for vim cscope bindings see ~/.vim/plugin/cscope_maps.vim
+prepend <c-\> for these:
+    " The following maps all invoke one of the following cscope search types:
+    "
+    "   's'   symbol: find all references to the token under cursor
+    "   'g'   global: find global definition(s) of the token under cursor
+    "   'c'   calls:  find all calls to the function name under cursor
+    "   't'   text:   find all instances of the text under cursor
+    "   'e'   egrep:  egrep search for the word under cursor
+    "   'f'   file:   open the filename under cursor
+    "   'i'   includes: find files that include the filename under cursor
+    "   'd'   called: find functions that function under cursor calls
+
+https://cscope.sourceforge.net/cscope_vim_tutorial.html
+
+====
+
+cscope cli:
+$ cscope -d -f ./cscope.out -L0 keyboard_init
+$ cscope -d -f ./cscope.out -L1 keyboard_init
+
+https://stackoverflow.com/questions/14915971/cscope-how-to-use-cscope-to-search-for-a-symbol-using-command-line
+
+====
+
+build database for all files recursive, db is cscope.out:
+cscope -R *
+
+lanunch:
+cscope -d
+
+https://cscope.sourceforge.net/large_projects.html
+
+mkdir .cscope
+find .. -path "../lib/chibios-contrib/ext/mcux-sdk/devices/*" -prune -o -name "*.[chxsS]" -print > cscope.files
+cscope -b -q -k
+
+cscope -d
+
+==
+
+cscope Menu: Manipulation Commands
+ Tab     Move to the next input field.
+ Return  Move to the next input field.
+ ^n      Move to the next input field.
+ ^p      Move to the previous input field.
+ ^y      Search with the last text typed.
+ ^b      Move to the previous input field and search pattern.
+ ^f      Move to the next input field and search pattern.
+ ^c      Toggle ignore/use letter case when searching. For example, a search for FILE matches file and File when ignoring the letter case.
+ ^r      Rebuild cross-reference.
+ !       Start an interactive shell. Type ^d to return to cscope. 
+ ^l      Redraw the screen.
+ ?       Display the list of commands.
+ ^d      Exit cscope.
+
+==
+
+To search for a specific tag and open Vim to its definition, run the following command in your shell:
+vim -t <tag>
+
+Or, open any Linux source file in Vim and use the following basic commands:
+
+Keyboard command
+
+Ctrl-]
+Jump to the tag underneath the cursor
+
+Ctrl-t
+Jump back up in the tag stack
+:ts <tag> <RET>
+Search for a particular tag
+
+:tn
+Go to the next definition for the last tag
+
+:tp
+Go to the previous definition for the last tag
+
+:ts
+List all of the definitions of the last tag
+
+----------------------------------------
+vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

@@ -39,17 +39,15 @@ var attr = {
 var popup_winid = popup_menu([], attr)
 
 def CmdAutoComplete()
-    def HandleAutocomp(context: string, timer: number)
-        for _ in range(pum_getpos()->get('size', 0)) # unselect first item
-            feedkeys("\<tab>", 'tn')
-        endfor
-    enddef
     if !wildmenumode()
         var context = getcmdline()->strpart(0, getcmdpos() - 1)
         if context =~ '\v^Find\s+'
             if foundfiles->len() > 1
                 feedkeys("\<tab>", 'tn')
-                timer_start(0, function(HandleAutocomp, [context]))
+                def RemoveFocus(timer: number)
+                    feedkeys("\<s-tab>", 'tn')
+                enddef
+                timer_start(0, function(RemoveFocus))
             elseif foundfiles->len() == 1
                 popup_winid->popup_settext(foundfiles)
                 popup_winid->popup_show()

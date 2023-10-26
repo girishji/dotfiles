@@ -564,21 +564,6 @@ go back and forth using:
 <c-w>z will close the preview window
 :ta (navigate tag stack)
 
-Also:
-$ ctags -R .
-or
-$ ctags . (if option is set in .ctags)
-
-$ cscope -b
-
-.ctags has all the exclude dirs
-
-vim -t main (opens vim and puts you at main())
-
-for vim cscope bindings see ~/.vim/plugin/cscope_maps.vim
-
-https://cscope.sourceforge.net/cscope_vim_tutorial.html
-
 
 ----------------------------------------
 Ex commands line range~

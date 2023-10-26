@@ -1,5 +1,7 @@
 vim9script
 
+# Define 'Find' command
+
 # Find file without autosuggest. autosuggest searches twice (uses popup).
 # Note:
 # If there is only one completion item and <tab> is invoked automatically then

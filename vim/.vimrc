@@ -994,7 +994,7 @@ def! g:MyInactiveStatusline(): string
 enddef
 
 augroup MyStatusLine | autocmd!
-    autocmd VimEnter * g:MyStatuslineSetup()
+    autocmd ColorScheme * g:MyStatuslineSetup()
     autocmd WinEnter,BufEnter,BufAdd * setl statusline=%{%g:MyActiveStatusline()%}
     autocmd User LspDiagsUpdated,BufLineUpdated setl statusline=%{%g:MyActiveStatusline()%}
     autocmd WinLeave,BufLeave * setl statusline=%{%g:MyInactiveStatusline()%}

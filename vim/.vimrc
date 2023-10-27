@@ -753,11 +753,15 @@ colorscheme quiet
 
 #--------------------
 # lsp
+var clangdpath = exepath('clangd')
+if clangdpath->empty()
+    clangdpath = expand("$HOMEBREW_PREFIX") .. '/opt/llvm/bin/clangd',
+endif
 var lspServers = [
     {
         name: 'clang',
         filetype: ['c', 'cpp'],
-        path: expand("$HOMEBREW_PREFIX") .. '/opt/llvm/bin/clangd',
+        path: clangdpath,
         args: ['--background-index']
     },
     # {

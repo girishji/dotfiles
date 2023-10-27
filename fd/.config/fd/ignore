@@ -1,0 +1,2 @@
+#  A .fdignore or .ignore file will always just affect directories below it
+# See PATTERN FORMAT in https://git-scm.com/docs/gitignore

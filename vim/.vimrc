@@ -1,7 +1,7 @@
 vim9script
 
 #---------------------
-# Essential {{{
+# Essential
 #---------------------
 
 g:mapleader = "\<Space>"
@@ -14,12 +14,12 @@ map <BS> <Leader>
 &t_EI = "\e[2 q" #EI = NORMAL mode (ALL ELSE)
 # reset the cursor on start
 autocmd VimEnter * silent execute '!echo -ne "\e[2 q"' | redraw!
-# }}}
+
 
 augroup FTOptions | autocmd!
 
 #---------------------
-# Navigation and Search {{{
+# Navigation and Search
 #---------------------
 # - When you are just exploring new project you search for filenames and symbols within them
 #     - use fzf (or :edit :file :grep)
@@ -106,9 +106,17 @@ nnoremap <leader>i :AutoSuggestDisable<CR>[I:let nr = input("Which one: ")<Bar>e
 autocmd FTOptions FileType java setlocal define=^\\s*class
 autocmd FTOptions FileType python,vim setlocal define=^\\s*def
 
-if !empty(glob("~/cscope/cscope.out"))
+if filereadable('./cscope.out')
+    cscope add ./cscope.out
+elseif filereadable('./../cscope.out')
+    cscope add ./../cscope.out
+elseif filereadable(expand('~/cscope/cscope.out'))
     cscope add ~/cscope/cscope.out
 endif
+
+# ctags will search the following for 'tags' file
+# default:
+# set tags=./tags,./../tags,./*/tags
 
 # https://www.reddit.com/r/vim/comments/7bj837/favorite_console_tools_to_use_with_vim/
 # Workflow: Sometimes I have to look through a lot of files for a needle in a
@@ -129,10 +137,10 @@ endif
 # manunally :copen or :cwindow or <leader>vc
 nnoremap <leader>vg :g//caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<c-left><c-left><right><right>
 
-# }}}
+
 
 #---------------------
-# AUTOCOMPLETE: {{{
+# AUTOCOMPLETE:
 #---------------------
 
 # ctrl-n is the easiest way to autocomplete (ctrl-p for backwards selection)
@@ -152,10 +160,10 @@ inoremap <expr> <s-Tab> WhitespaceOnly() ? "\<s-tab>" : "\<c-p>"
 #                 \ endif
 # endif
 
-# }}}
+
 
 #---------------------
-# Abbreviations {{{
+# Abbreviations
 #---------------------
 # https://vonheikemen.github.io/devlog/tools/using-vim-abbreviations/
 # <c-c> instead of <esc> to prevent expansion
@@ -286,10 +294,10 @@ augroup END
 # cmdline abbrevs
 cabbr <buffer> align   s/\v(.*)#(.*)/\=printf("%-16s %s", submatch(1), submatch(2))/<c-r>=g:Eatchar()<cr>
 
-# }}}
+
 
 #---------------------
-# Options {{{
+# Options
 #---------------------
 
 # Some sane defaults since vim8
@@ -332,12 +340,12 @@ set whichwrap+=<,>,h,l # make arrows and h, l, push cursor to next line
 set tags=./tags,./../tags,./*/tags # this dir, just one level above, and all subdirs
 # set tags=~/git/zmk/app/tags
 
-# }}}
+
 
 autocmd FTOptions FileType vim setl sw=4|setl ts=8|setl sts=4
 
 #--------------------
-# Syntax highlighting {{{
+# Syntax highlighting
 #--------------------
 
 syntax on # turn on syntax highlighting
@@ -377,10 +385,10 @@ augroup MyColors | autocmd!
                 \ | MyHighlights()
 augroup END
 
-# }}}
+
 
 #--------------------
-# Autocommands {{{
+# Autocommands
 #--------------------
 
 # Save yank'ed text into numbered registers and rotate. By default vim
@@ -433,7 +441,7 @@ augroup myCmds | autocmd!
     #
     autocmd FileType python PythonCustomization()
 augroup END
-# }}}
+
 
 def PythonCustomization()
     # NOTE: tidy-imports misses some imports. Put them in ~/.pyflyby
@@ -451,7 +459,7 @@ def PythonCustomization()
 enddef
 
 #--------------------
-# Commands {{{
+# Commands
 #--------------------
 
 def Ipython()
@@ -514,10 +522,10 @@ def StripTrailingWhitespace()
 enddef
 command StripTrailingWhitespace StripTrailingWhitespace()
 
-# }}}
+
 
 #--------------------
-# Keybindings {{{
+# Keybindings
 #--------------------
 
 # Y mapping, more natural but not vi compatible
@@ -623,10 +631,10 @@ nnoremap <leader>ve <cmd>e ~/.vimrc<cr>
 nnoremap <leader>vz <scriptcmd>FoldingToggle()<cr>
 nnoremap <leader>vp <cmd>echo expand('%')<cr>
 
-# }}}
+
 
 #--------------------
-# Plugins {{{
+# Plugins
 #--------------------
 
 # Disable netrw plugin. It defines :Hexplore which shares letter with :Help.
@@ -683,7 +691,7 @@ Plug '~/git/lsp-complete.vim'
 Plug '~/git/pythondoc.vim'
 # Plug 'girishji/pythondoc.vim'
 plug#end()
-# }}}
+
 
 #--------------------
 # pythondoc
@@ -745,7 +753,7 @@ autocmd VimEnter * g:AutoSuggestSetup(options)
 colorscheme quiet
 
 #--------------------
-# lsp {{{
+# lsp
 var lspServers = [
     {
         name: 'clang',
@@ -897,15 +905,15 @@ autocmd User LspAttached LSPUserSetup()
    # :map [] k$][%?}<CR>
 
 
-# }}}
+
 
 #--------------------
-# highlightedyank {{{
+# highlightedyank
 g:highlightedyank_highlight_duration = 300
-# }}}
+
 
 #--------------------
-# gitgutter {{{
+# gitgutter
 g:gitgutter_map_keys = 0
 nmap ]h <Plug>(GitGutterNextHunk)
 nmap [h <Plug>(GitGutterPrevHunk)
@@ -913,7 +921,7 @@ hi GitGutterAdd ctermfg=5 | hi GitGutterChange ctermfg=5 | hi GitGutterDelete ct
 # Disable these problematic autocmds, otherwise :vimgrep gives error when opening quickfix
 autocmd VimEnter * autocmd! gitgutter QuickFixCmdPre *vimgrep*
 autocmd VimEnter * autocmd! gitgutter QuickFixCmdPost *vimgrep*
-# }}}
+
 
 #--------------------
 # vim-commentary

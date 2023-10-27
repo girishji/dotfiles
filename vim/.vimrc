@@ -953,10 +953,10 @@ def Diagstr(): string
     return diagstr
 enddef
 
-def! g:MyStatuslineSetup(isclear: bool)
+def! g:MyStatuslineSetup()
     var bg: number = &background == 'dark' ? 0 : 7
     var fg: number = &background == 'dark' ? 7 : 8
-    if isclear
+    if &background == 'dark'
         set fillchars+=stl:―,stlnc:—
         # guibg is needed to avoid carets, when both active/non-active statusline have same bg
         exec $'highlight statusline cterm=none ctermfg={fg} ctermbg=none guibg=red'
@@ -994,11 +994,7 @@ def! g:MyInactiveStatusline(): string
 enddef
 
 augroup MyStatusLine | autocmd!
-    if &background == 'dark'
-        autocmd VimEnter * g:MyStatuslineSetup(v:true)
-    else
-        autocmd VimEnter * g:MyStatuslineSetup(v:false)
-    endif
+    autocmd VimEnter * g:MyStatuslineSetup()
     autocmd WinEnter,BufEnter,BufAdd * setl statusline=%{%g:MyActiveStatusline()%}
     autocmd User LspDiagsUpdated,BufLineUpdated setl statusline=%{%g:MyActiveStatusline()%}
     autocmd WinLeave,BufLeave * setl statusline=%{%g:MyInactiveStatusline()%}

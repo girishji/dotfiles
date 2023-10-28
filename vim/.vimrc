@@ -340,7 +340,7 @@ set whichwrap+=<,>,h,l # make arrows and h, l, push cursor to next line
 set tags=./tags,./../tags,./*/tags # this dir, just one level above, and all subdirs
 # set tags=~/git/zmk/app/tags
 
-autocmd FTOptions FileType vim,cmake setl sw=4|setl ts=8|setl sts=4|setl et
+autocmd FTOptions FileType vim,cmake,sh,zsh setl sw=4|setl ts=8|setl sts=4|setl et
 
 #--------------------
 # Syntax highlighting

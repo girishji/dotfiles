@@ -57,3 +57,7 @@ alias uuuuuu='cd ../../../../../..'
 alias uuuuuuu='cd ../../../../../../..'
 alias uuuuuuuu='cd ../../../../../../../..'
 alias uuuuuuuuu='cd ../../../../../../../../..'
+
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init bash)"
+fi

@@ -48,9 +48,9 @@ enddef
 def GetCmd(cmdline: string): list<string>
     var ctx = GetContextComponents(cmdline)
     if !ctx[0]->empty() && ctx[0] =~ '^/'
-        return ['fd', '-tf', '-tl', '-p', $'{ctx[0]}']
+        return ['fd', '-tf', '-tl', '-p', $'{ctx[0]->shellescape()}']
     endif
-    return ['fd', '-tf', '-tl', $'{ctx[0]}']
+    return ['fd', '-tf', '-tl', $'{ctx[0]->shellescape()}']
 enddef
 
 def IsLongDurationFind(context: string): bool
@@ -58,7 +58,7 @@ def IsLongDurationFind(context: string): bool
     var vjob: job = job_start(GetCmd(context))
     while start->reltime()->reltimefloat() * 1000 < 100
         if vjob->job_status() ==? 'run'
-            :sleep 5m
+            :sleep 1m
         else
             break
         endif

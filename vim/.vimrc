@@ -952,21 +952,19 @@ def Diagstr(): string
 enddef
 
 def! g:MyStatuslineSetup()
-    var bg: number = &background == 'dark' ? 0 : 7
-    var fg: number = &background == 'dark' ? 7 : 8
     if &background == 'dark'
         set fillchars+=stl:―,stlnc:—
         # guibg is needed to avoid carets, when both active/non-active statusline have same bg
-        exec $'highlight statusline cterm=none ctermfg={fg} ctermbg=none guibg=red'
-        exec $'highlight statuslinenc cterm=none ctermfg={fg} ctermbg=none guibg=green'
+        exec $'highlight statusline cterm=none ctermfg=7 ctermbg=none guibg=red'
+        exec $'highlight statuslinenc cterm=none ctermfg=7 ctermbg=none guibg=green'
         highlight user2 cterm=none ctermfg=7 ctermbg=none
         highlight user4 ctermfg=3 cterm=none
     else
-        exec $'highlight statusline cterm=none ctermfg={fg} ctermbg={bg} guibg=red'
-        exec $'highlight statuslinenc cterm=none ctermfg={fg} ctermbg={bg} guibg=green'
-        exec $'highlight user1 cterm=none ctermbg={bg}'
-        exec $'highlight user2 cterm=none ctermfg=240 ctermbg={bg}'
-        exec $'highlight user4 cterm=none ctermfg=52 ctermbg={bg}'
+        exec $'highlight statusline cterm=none ctermfg=8 ctermbg=7 guibg=red'
+        exec $'highlight statuslinenc cterm=none ctermfg=8 ctermbg=7 guibg=green'
+        exec $'highlight user1 cterm=none ctermbg=7'
+        exec $'highlight user2 cterm=none ctermfg=240 ctermbg=7'
+        exec $'highlight user4 cterm=none ctermfg=52 ctermbg=7'
     endif
     highlight! link StatusLineTerm statusline
     highlight! link StatusLineTermNC statuslinenc
@@ -983,7 +981,7 @@ def! g:MyActiveStatusline(): string
     var diagstr = Diagstr()
     var width = winwidth(0) - 30 - gitstr->len() - diagstr->len()
     var buflinestr = BuflineStr(width)
-    return $'%4*{diagstr}%* {buflinestr} %=%4*{gitstr}%* %y %P (%l:%c) %*'
+    return $'%4*{diagstr}%* {buflinestr} %= %f%4*{gitstr}%* %y %P (%l:%c) %*'
     # return $'{diagstr} {buflinestr} %={gitstr} %y %P (%l:%c) '
 enddef
 
@@ -992,7 +990,7 @@ def! g:MyInactiveStatusline(): string
 enddef
 
 augroup MyStatusLine | autocmd!
-    autocmd ColorScheme * g:MyStatuslineSetup()
+    autocmd VimEnter,ColorScheme * g:MyStatuslineSetup()
     autocmd WinEnter,BufEnter,BufAdd * setl statusline=%{%g:MyActiveStatusline()%}
     autocmd User LspDiagsUpdated,BufLineUpdated setl statusline=%{%g:MyActiveStatusline()%}
     autocmd WinLeave,BufLeave * setl statusline=%{%g:MyInactiveStatusline()%}

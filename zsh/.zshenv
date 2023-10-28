@@ -54,7 +54,7 @@ alias diffw='diff -w'  # ignore white spaces
 alias em='emacs'
 alias f='builtin fg'
 alias fd='fd -c never'
-alias gcsh='gcloud cloud-shell ssh'
+alias gcsh='gcloud cloud-shell ssh --authorize-session'
 alias gd='git diff'
 # NOTE: use "ag" or "rg" command instead of grep
 alias gr='grep -Ei'  # extended regex and case insensitive

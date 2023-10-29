@@ -65,3 +65,5 @@ alias uuuuuuuuu='cd ../../../../../../../../..'
 if command -v zoxide &> /dev/null; then
     eval "$(zoxide init bash)"
 fi
+
+ln -sf $(which fdfind) ~/bin/fd

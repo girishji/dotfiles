@@ -62,3 +62,7 @@ alias uuuuuu='cd ../../../../../..'
 alias uuuuuuu='cd ../../../../../../..'
 alias uuuuuuuu='cd ../../../../../../../..'
 alias uuuuuuuuu='cd ../../../../../../../../..'
+
+if ! command -v pyright &> /dev/null; then
+    npm install --global pyright
+fi

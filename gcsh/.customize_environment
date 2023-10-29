@@ -24,7 +24,3 @@ if [ -f "$HOME/.bash_aliases" ]; then
     source "$HOME/.bash_aliases"
 fi
 EOT
-
-# if ! command -v pyright &> /dev/null; then
-#     npm install --global pyright
-# fi

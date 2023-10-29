@@ -47,48 +47,67 @@ enddef
 
 def GetCmd(cmdline: string): list<string>
     var ctx = GetContextComponents(cmdline)
-    if !ctx[0]->empty() && ctx[0] =~ '^/'
-        return ['fd', '-tf', '-tl', '-p', $'{ctx[0]->shellescape()}']
+    var cmd = ['fd', '-tf', '-tl']
+    if ctx[0] =~ '^/'
+        cmd += [ '-p', '-g'] # can use **/foo
     endif
-    return ['fd', '-tf', '-tl', $'{ctx[0]->shellescape()}']
+    return cmd->add($'{ctx[0]->shellescape()}')
 enddef
 
-def IsLongDurationFind(context: string): bool
-    var start = reltime()
-    var vjob: job = job_start(GetCmd(context))
-    while start->reltime()->reltimefloat() * 1000 < 100
-        if vjob->job_status() ==? 'run'
-            :sleep 1m
+def FoundSingleFile(context: string): bool
+    def OutHandler(channel: channel, msg: string)
+        echom 'handler ' .. msg
+        if foundfile->empty()
+            foundfile = msg
         else
-            break
+            # vjob->job_stop('kill')
         endif
+    enddef
+    var start = reltime()
+    foundfile = ''
+    var lines = []
+    # var job: job = job_start(GetCmd(context), {out_cb: 'OutHandler'})
+    echom GetCmd(context)
+    var job: job = job_start(GetCmd(context), {out_cb: (ch, str) => lines->add(str)})
+    # ch_close_in(job)
+    echom job->ch_status()
+    while  (job->ch_status() !~# '^closed$\|^fail$' || job->job_status() ==# 'run')
+            && start->reltime()->reltimefloat() * 1000 < 100
+            :sleep 1m
     endwhile
-    if vjob->job_status() ==? 'run'
-        vjob->job_stop('kill')
-        return true
+    echom job->ch_status()
+    echom job->job_status()
+    if job->job_status() ==# 'run'
+        job->job_stop('kill')
     endif
-    return false
+    echom 'foundfile ' .. foundfile
+    echom lines
+    return !foundfile->empty()
 enddef
 
 def CmdAutoComplete()
     var context = getcmdline()->strpart(0, getcmdpos() - 1)
     if context =~ '\v^Find\s+' && !wildmenumode()
         def RemoveFocus(_: number)
-            feedkeys("\<s-tab>", 'tn')
+            if wildmenumode()
+                feedkeys("\<s-tab>", 'tn')
+            endif
         enddef
-        if IsLongDurationFind(context)
+        if !FoundSingleFile(context)
             feedkeys("\<tab>", 'tn')
             timer_start(0, function(RemoveFocus))
         else
-            var found = FindProg('', context, 0)
-            if found->empty() && !foundfile->empty()
+            # var found = FindProg('', context, 0)
+            # if found->empty() && !foundfile->empty()
+            if !foundfile->empty()
                 popup_winid->popup_settext(foundfile)
                 popup_winid->popup_show()
                 :redraw
-            elseif found->len() > 1
-                feedkeys("\<tab>", 'tn')
-                timer_start(0, function(RemoveFocus))
             endif
+            # elseif found->len() > 1
+            #     feedkeys("\<tab>", 'tn')
+            #     timer_start(0, function(RemoveFocus))
+            # endif
         endif
     endif
 enddef
@@ -105,11 +124,11 @@ def FindProg(arglead: string, cmdline: string, cursorpos: number): list<string>
     if !ctx[1]->empty()
         found->filter((_, v) => v =~# $'{ctx[1]}')
     endif
-    if found->len() == 1
-        foundfile = found[0]
-        return []
-    endif
-    foundfile = ''
+    # if found->len() == 1
+    #     foundfile = found[0]
+    #     return []
+    # endif
+    # foundfile = ''
     return found
 enddef
 

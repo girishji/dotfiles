@@ -18,7 +18,11 @@ alias cl='clear'
 alias diffw='diff -w'  # ignore white spaces
 alias em='emacs'
 alias f='builtin fg'
-alias fd='fd -c never'
+# alias fd='fd -c never'
+alias fdf='fd -tf -tl' # search file, ex: fdf foo
+alias fdd='fd -td' # search dir, ex: fdd foo
+alias fdx='fd -tx' # search executable
+alias fde='fd -te' # search for empty dirs and files
 alias gcsh='gcloud cloud-shell ssh'
 alias gd='git diff'
 # NOTE: use "ag" or "rg" command instead of grep

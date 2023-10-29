@@ -18,3 +18,7 @@ ln -sf $(which fdfind) ~/bin/fd
 
 apt-get -y install zoxide
 eval "$(zoxide init bash)"
+
+# if ! command -v pyright &> /dev/null; then
+#     npm install --global pyright
+# fi

@@ -11,6 +11,8 @@
 
 apt-get update
 
+apt-get -y install stow
+
 apt-get -y install fd-find
 ln -sf $(which fdfind) ~/bin/fd
 

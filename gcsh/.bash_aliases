@@ -34,7 +34,7 @@ alias grr='grep -Ei -R --exclude-dir=.git --exclude-dir=.github'  # extended reg
 #
 # XXX: use 'py' which is ipython+pyflyby
 alias ip='ipython --no-confirm-exit --colors=Linux'
-alias ls='ls -FG' # aliases the command /usr/bin/ls
+alias ls='ls --color=auto'
 alias l1='ls -1' # one listing per line
 alias l='ls'
 alias ll='ls -l'

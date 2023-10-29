@@ -14,11 +14,11 @@ if [ -n "$BASH_VERSION" ]; then
 fi
 
 # Needed customizations
-if ! command -v fdfind &> /dev/null; then
+if command -v fdfind &> /dev/null; then
     mkdir -p "$HOME/.local/bin"
     ln -sf $(which fdfind) "$HOME/.local/bin/fd"
 fi
-if ! command -v zoxide &> /dev/null; then
+if command -v zoxide &> /dev/null; then
     eval "$(zoxide init bash)"
 fi
 

@@ -3,8 +3,9 @@ alias ga='git add .; gitcommit '
 alias gs='git status '
 alias gc='git clone '
 alias gp='git push'
-alias gu='git pull --no-rebase'
-alias pipi='pip install --user '
+alias gitpull='git pull --no-rebase'
+alias gd='git diff'
+alias pipuser='pip install --user '
 alias lc='leetcode '
 alias rgi='rg -i ' # case insensitive
 
@@ -24,7 +25,6 @@ alias fdd='fd -td' # search dir, ex: fdd foo
 alias fdx='fd -tx' # search executable
 alias fde='fd -te' # search for empty dirs and files
 alias gcsh='gcloud cloud-shell ssh'
-alias gd='git diff'
 # NOTE: use "ag" or "rg" command instead of grep
 alias gr='grep -Ei'  # extended regex and case insensitive
 alias grc='grep -E'  # extended regex and case sensitive
@@ -61,9 +61,3 @@ alias uuuuuu='cd ../../../../../..'
 alias uuuuuuu='cd ../../../../../../..'
 alias uuuuuuuu='cd ../../../../../../../..'
 alias uuuuuuuuu='cd ../../../../../../../../..'
-
-if command -v zoxide &> /dev/null; then
-    eval "$(zoxide init bash)"
-fi
-
-ln -sf $(which fdfind) ~/bin/fd

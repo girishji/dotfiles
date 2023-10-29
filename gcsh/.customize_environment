@@ -17,11 +17,6 @@ apt-get -y install fd-find
 ln -sf $(which fdfind) ~/bin/fd
 
 apt-get -y install zoxide
-if command -v zoxide &> /dev/null; then
-    eval "$(zoxide init bash)"
-fi
+eval "$(zoxide init bash)"
 
-if command -v pyright &> /dev/null; then
-    npm install --global pyright
-fi
-
+npm install --global pyright

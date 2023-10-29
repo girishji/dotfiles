@@ -32,3 +32,6 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
+if ! command -v pyright &> /dev/null; then
+    npm install --global pyright
+fi

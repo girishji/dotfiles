@@ -10,17 +10,6 @@
 # exist in each Cloud Shell session using Debian package management commands.
 
 apt-get update
-
 apt-get -y install stow
-
 apt-get -y install fd-find
-ln -sf $(which fdfind) ~/bin/fd
-
 apt-get -y install zoxide
-eval "$(zoxide init bash)"
-
-cat <<EOT >> ~/.bashrc
-if [ -f "$HOME/.bash_aliases" ]; then
-    source "$HOME/.bash_aliases"
-fi
-EOT

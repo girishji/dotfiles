@@ -44,7 +44,8 @@ alias -g vims='vim -Nu NONE -S <(cat <<EOF
     vim9script
 EOF
 )'
-alias -g rgi='rg -i ' # case insensitive
+alias -g rg='rg --smart-case'
+alias -g ag='ag --smart-case'
 
 # other aliases
 alias b='bat'

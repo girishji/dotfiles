@@ -63,7 +63,14 @@ set wildignore+=*/build/*,build/,*/pycache/*,pycache/,*/venv/*,venv/,*/dist/*,di
 nnoremap <leader>f :e<space>**/
 
 nnoremap <leader><space> :Find<space>
-nnoremap <leader><bs> :buffer<space>
+nnoremap <leader>g :Grep<space>
+nnoremap <expr> <leader>G $':Grep {expand("<cword>")}'
+nnoremap <leader><tab> :Keymap<space>
+
+nnoremap <leader><bs> :Buffer<space>
+nnoremap <leader>B :buffer<space>
+# nnoremap <leader><bs> :buffer<space>
+# nnoremap <leader>B :Buffer<space>
 
 if executable("rg")
     set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
@@ -76,11 +83,11 @@ endif
 # (grep, vimgrep) https://vim.fandom.com/wiki/Find_in_files_within_Vim
 #
 # NOTE: <c-w> will delete the word before cursor
-# Search only files with same extension. Delete *.x to search everywhere.
-nnoremap <expr> <leader>G $':silent grep {expand("<cword>")} {expand("%:e") == "" ? "" : "**/*." .. expand("%:e")}<c-left><left>'
+# Search only files with same extension. Remove *.x to search everywhere.
+# nnoremap <expr> <leader>G $':silent grep {expand("<cword>")} {expand("%:e") == "" ? "" : "**/*." .. expand("%:e")}<c-left><left>'
 # nnoremap <expr> <leader>vG $':vim /{expand("<cword>")}/gj **{expand("%:e") == "" ? "" : "/*." .. expand("%:e")}<c-left><left><left><left>'
 # Search everywhere
-nnoremap <expr> <leader>g $':silent grep {expand("<cword>")}'
+# nnoremap <expr> <leader>g $':silent grep {expand("<cword>")}'
 # nnoremap <expr> <leader>vg $':vim /{expand("<cword>")}/j **<c-left><left><left><left>'
 
 # symbol-based navigation (:h E387 include-search)

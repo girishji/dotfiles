@@ -776,6 +776,17 @@ script local functions can be used from global scope.
 To find if something is truthy, see |truthy|
 
 ----------------------------------------
+non-greedy search~
+
+.* is greedy. So is .+ etc.
+
+\{-} is the non-greedy matching in Vim, so you should use \{-} instead of *.
+
+Try:
+
+%s/.\{-},//
+
+----------------------------------------
 Tags~
 https://gist.github.com/romainl/f2d0727bdb9bde063531cd237f47775f
 https://gist.github.com/romainl/27c1c29462a8c6c868f1a9bf244bc71d
@@ -855,8 +866,7 @@ commands can be used to move around.
 But then much longer, and possibly nested.  Position the cursor on the
 "#ifdef" and press %.  Vim will jump to the "#else".  Pressing % again takes
 you to the "#endif".  Another % takes you to the "#ifdef" again.
-   When the construct is nested, Vim will find the matching items.  This is a
-good way to check if you didn't forget an "#endif".
+
    When you are somewhere inside a "#if" - "#endif", you can jump to the start
 of it with: >
 
@@ -870,11 +880,6 @@ the next "#else" or "#endif" use: >
 
 MOVING IN CODE BLOCKS
 
-In C code blocks are enclosed in {}.  These can get pretty long.  To move to
-the start of the outer block use the "[[" command.  Use "][" to find the end.
-This assumes that the "{" and "}" are in the first column.
-   The "[{" command moves to the start of the current block.  It skips over
-pairs of {} at the same level.  "]}" jumps to the end.
    An overview:
 
 			function(int a)
@@ -891,13 +896,8 @@ pairs of {} at the same level.  "]}" jumps to the end.
 			    }			       <-+	 |
 			}				       <-+
 
-When writing C++ or Java, the outer {} block is for the class.  The next level
-of {} is for a method.  When somewhere inside a class use "[m" to find the
+The next level of {} is for a method.  When somewhere inside a class use "[m" to find the
 previous start of a method.  "]m" finds the next start of a method.
-
-Additionally, "[]" moves backward to the end of a function and "]]" moves
-forward to the start of the next function.  The end of a function is defined
-by a "}" in the first column.
 
 				int func1(void)
 				{

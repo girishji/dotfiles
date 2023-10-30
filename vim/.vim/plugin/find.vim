@@ -12,6 +12,10 @@ vim9script
 # var foundfile = ''
 
 
+var findcmd = 'fd -tf'
+if exepath('fd')->empty()
+    findcmd = 'find . -type f'
+endif
 var items: list<string> = []
 var index: number = 0
 var cmdline: string
@@ -155,8 +159,7 @@ def BuildFileList(context: string = '')
     # var job = job_start(GetCmd(context), {out_cb: (ch, str) => OutHandler(str)})
     items = []
     # var job: job = job_start(GetCmd(context), {out_cb: (ch, str) => items->add(str)})
-    var cmd = 'fd -tf'
-    var job: job = job_start(cmd, {out_cb: (ch, str) => items->add(str)})
+    var job: job = job_start(findcmd, {out_cb: (ch, str) => items->add(str)})
     var timeout = 2000 # ms
     while (job->ch_status() !~# '^closed$\|^fail$' || job->job_status() ==# 'run')
             && start->reltime()->reltimefloat() * 1000 < timeout
@@ -183,102 +186,39 @@ def FindProg()
         BuildFileList()
     else
         var lines: list<string>
-        if match[3]->empty() && match[2] !~ '^/' # search only file names, not full path
-            lines = items->copy()->filter((_, v) => fnamemodify(v, ':t') =~ $'{match[2]}')
+        # Non greedy regex and glob is PITA. Just use '/' to search path
+        # Instead of .* use .\{-} for non-greedy search. glob2regpat will convert glob to regex. # :h non-greedy
+        if match[3]->empty() && match[2] !~ '/' # search only file names, not full path
+            try
+                lines = items->copy()->filter((_, v) => fnamemodify(v, ':t') =~ $'^{match[2]}')
+            catch
+            endtry
         else
-            var GetPattern = (str) => str =~ '*' ? glob2regpat(str) : str
-            if match[2] =~ '^/'
-                match[2] = match[2]->slice(1)
-            endif
-            lines = items->copy()->filter((_, v) => v =~ $'{GetPattern(match[2])}')
-            if !match[4]->empty()
-                lines->filter((_, v) => v =~ $'{GetPattern(match[4])}')
-            endif
-            if !match[6]->empty()
-                lines->filter((_, v) => v =~ $'{GetPattern(match[6])}')
-            endif
+            # def GetPattern(str: string): string
+            #     if str =~ '*'
+            #         var pat = glob2regpat(str)
+            #         echom '---'
+            #         echom pat
+            #         pat = str->substitute('[*]', '\\{-}', 'g')
+            #         echom pat
+            #         return pat
+            #     endif
+            #     return str
+            # enddef
+            try
+                lines = items->copy()->filter((_, v) => v =~ $'{match[2]}')
+                if !match[4]->empty()
+                    lines->filter((_, v) => v =~ $'{match[4]}')
+                endif
+                if !match[6]->empty()
+                    lines->filter((_, v) => v =~ $'{match[6]}')
+                endif
+            catch
+            endtry
         endif
         UpdatePopup(lines)
     endif
-
-    # if !match[1]->empty() && !wildmenumode()
-    #     # context = [match[2], match[4]]
-    # # if cmdline =~ '\v^Find\s+' && !wildmenumode()
-    #     # if winid->popup_getoptions() == {}
-    #     #     winid = popup_menu([], attr)
-    #     # endif
-    #     if match[2]->empty()
-    #         BuildFileList()
-    #     else
-    #         # var dir_pattern = match[2] =~ '[/*]'
-    #         if match[2] =~ '[/*]' && match[4]->empty()
-    #             BuildFileList(match[2])
-    #         else
-    #             var pattern = match[4]->empty() ? match[2] : match[4]
-    #             UpdatePopup(items->copy()->filter((_, v) => v =~# $'{pattern}'))
-    #         endif
-    #     endif
-    # endif
 enddef
-
-# def FoundSingleFile(context: string): bool
-#     var job: job
-#     var only_one_file = false
-#     foundfile = ''
-#     def OutHandler(str: string)
-#         if foundfile->empty()
-#             foundfile = str
-#             only_one_file = true
-#         else
-#             foundfile = ''
-#             only_one_file = false
-#             job->job_stop()
-#             job->ch_close()
-#         endif
-#     enddef
-#     var start = reltime()
-#     # var lines = []
-#     job = job_start(GetCmd(context, false), {out_cb: (ch, str) => OutHandler(str)})
-#     # var job: job = job_start(GetCmd(context, false), {out_cb: (ch, str) => lines->add(str)})
-#     var timeout = 2000 # ms
-#     while  !only_one_file && (job->ch_status() !~# '^closed$\|^fail$' || job->job_status() ==# 'run')
-#             && start->reltime()->reltimefloat() * 1000 < timeout
-#             :sleep 1m
-#     endwhile
-#     if job->job_status() ==# 'run'
-#         job->job_stop('kill')
-#     endif
-#     echom 'foundfile ' .. foundfile
-#     # echom lines
-#     return !foundfile->empty()
-# enddef
-
-# def CmdAutoComplete()
-#     var context = getcmdline()->strpart(0, getcmdpos() - 1)
-#     if context =~ '\v^Find\s+' && !wildmenumode()
-#         def RemoveFocus(_: number)
-#             if wildmenumode()
-#                 feedkeys("\<s-tab>", 'tn')
-#             endif
-#         enddef
-#         if foundfile->empty() && !FoundSingleFile(context)
-#             feedkeys("\<tab>", 'tn')
-#             timer_start(0, function(RemoveFocus))
-#         else
-#             # var found = FindProg('', context, 0)
-#             # if found->empty() && !foundfile->empty()
-#             if !foundfile->empty()
-#                 popup_winid->popup_settext(foundfile)
-#                 popup_winid->popup_show()
-#                 :redraw
-#             endif
-#             # elseif found->len() > 1
-#             #     feedkeys("\<tab>", 'tn')
-#             #     timer_start(0, function(RemoveFocus))
-#             # endif
-#         endif
-#     endif
-# enddef
 
 var auto_suggest_setup_done = false
 def Setup()

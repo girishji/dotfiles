@@ -284,7 +284,7 @@ def InsertDashes(): string
 enddef
 
 def CommonAbbrevs()
-    iabbr <buffer> -- <esc>d0i<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer> --* <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=<SID>Eatchar()<cr>
 enddef
 
 augroup FTOptions
@@ -739,7 +739,6 @@ var options = {
         hidestatusline: false,
         fuzzy: false,
         # exclude: ['^buffer ', '^F'],
-        exclude: ['^F'],
         # onspace: ['buffer', 'Find'],
         onspace: ['buffer'],
         editcmdworkaround: true,
@@ -984,9 +983,15 @@ enddef
 def! g:MyActiveStatusline(): string
     var gitstr = Gitstr()
     var diagstr = Diagstr()
-    var width = winwidth(0) - 30 - gitstr->len() - diagstr->len()
+    var shortpath = expand('%:h')
+    var shortpathmax = 20
+    if shortpath->len() > shortpathmax
+        shortpath = shortpath->split('/')->map((_, v) => v->slice(0, 2))->join('/')->slice(0, shortpathmax)
+    endif
+    var width = winwidth(0) - 30 - gitstr->len() - diagstr->len() - shortpath->len()
     var buflinestr = BuflineStr(width)
-    return $'%4*{diagstr}%* {buflinestr} %= %f%4*{gitstr}%* %y %P (%l:%c) %*'
+    return $'%4*{diagstr}%* {buflinestr} %= {shortpath}%4*{gitstr}%* %y %P (%l:%c) %*'
+    # return $'%4*{diagstr}%* {buflinestr} %= %f%4*{gitstr}%* %y %P (%l:%c) %*'
     # return $'{diagstr} {buflinestr} %={gitstr} %y %P (%l:%c) '
 enddef
 

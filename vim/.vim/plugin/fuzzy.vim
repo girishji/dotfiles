@@ -38,6 +38,7 @@ var items: list<string> = []
 var index: number = 0
 var winid: number
 var processed: bool
+var job: job
 
 
 def GetAttr(): dict<any>
@@ -134,22 +135,30 @@ enddef
 def BuildList(cmd: list<string>)
     var start = reltime()
     items = []
-    var job: job = job_start(cmd, {out_cb: (ch, str) => items->add(str)})
-    var timeout = 2000 # ms
-    while (job->ch_status() !~# '^closed$\|^fail$' || job->job_status() ==# 'run')
-            && start->reltime()->reltimefloat() * 1000 < timeout
-            :sleep 5m
-            UpdatePopup(items)
-    endwhile
     if job->job_status() ==# 'run'
         job->job_stop('kill')
     endif
-    UpdatePopup(items)
+    job = job_start(cmd, {out_cb: (ch, str) => items->add(str)})
+    var timeout = 5000 # ms
+
+    def Poll(timer: number)
+        UpdatePopup(items)
+        if (job->ch_status() !~# '^closed$\|^fail$' || job->job_status() ==# 'run')
+                && start->reltime()->reltimefloat() * 1000 < timeout
+            timer_start(10, function(Poll))
+        else
+            if job->job_status() ==# 'run'
+                job->job_stop('kill')
+            endif
+        endif
+    enddef
+
+    timer_start(5, function(Poll))
 enddef
 
 
 def FindProg(cmdline: string)
-    var match = cmdline->matchlist($'\v({findcmdname})!?\s+(\S+)?(\s+)?(\S+)?(\s+)?(\S+)?')
+    var match = cmdline->matchlist($'\v({findcmdname})!?\s+(\S+)?(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?')
     if match->empty()
         return
     endif
@@ -158,7 +167,7 @@ def FindProg(cmdline: string)
     else
         var lines: list<string>
         try
-            # Non greedy regex and glob is PITA. Just use '/' to search path
+            # Non-greedy regex and glob is PITA. Just use '/' to search path
             # Instead of .* use .\{-} for non-greedy search. glob2regpat will convert glob to regex. # :h non-greedy
             if match[3]->empty() && match[2] !~ '/' # search only file names, not full path
                 # lines = items->copy()->filter((_, v) => v->fnamemodify(':t') =~ $'^{match[2]}')
@@ -170,7 +179,7 @@ def FindProg(cmdline: string)
                 else
                     lines = items->copy()->filter((_, v) => v =~ $'{match[2]}')
                 endif
-                for idx in [4, 6]
+                for idx in [4, 5, 6, 7, 8]
                     if !match[idx]->empty()
                         lines->filter((_, v) => v =~ $'{match[idx]}')
                     endif
@@ -183,27 +192,45 @@ def FindProg(cmdline: string)
 enddef
 
 
+var wait_till_space_after_pattern = false
+
 def GrepProg(cmdline: string)
-    var match = cmdline->matchlist($'\v({grepcmdname})!?\s+(\S+)?(\s+)?(\S+)?(\s+)?(\S+)?(\s+)?(\S+)?')
+    # You can only have capture patterns \1..\9. You can use non-capturing groups with the \%(pattern\)
+    var match = cmdline->matchlist($'\v({grepcmdname})!?\s+(\S+)?(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?')
     if match->empty()
         return
     endif
-    if match[2]->empty()
-        items = []
-    elseif !match[3]->empty()
-        if match[4]->empty()
+
+    def RegexSearch()
+        var lines = items->copy()
+        for idx in [4, 5, 6, 7]
+            if !match[idx]->empty()
+                try
+                    lines->filter((_, v) => v->matchstr('\v.*:\d+:\zs.*') =~ $'{match[idx]}')
+                catch
+                endtry
+            endif
+        endfor
+        UpdatePopup(lines)
+    enddef
+
+    if !wait_till_space_after_pattern
+        if match[2]->empty()
+            items = []
+        elseif !match[2]->empty() && match[3]->empty()
             BuildList(grepcmd->split()->add(match[2]))
         else
-            var lines = items->copy()
-            for idx in [4, 6, 8]
-                if !match[idx]->empty()
-                    try
-                        lines->filter((_, v) => v->matchstr('\v.*:\d+:\zs.*') =~ $'{match[idx]}')
-                    catch
-                    endtry
-                endif
-            endfor
-            UpdatePopup(lines)
+            RegexSearch()
+        endif
+    else
+        if match[2]->empty()
+            items = []
+        elseif !match[3]->empty()
+            if match[4]->empty()
+                BuildList(grepcmd->split()->add(match[2]))
+            else
+                RegexSearch()
+            endif
         endif
     endif
 enddef

@@ -1,2 +1,21 @@
 #  A .fdignore or .ignore file will always just affect directories below it
 # See PATTERN FORMAT in https://git-scm.com/docs/gitignore
+
+# If there is a separator at the beginning or middle (or both) of the pattern,
+# then the pattern is relative to the directory level of the particular
+# .gitignore file itself. Otherwise the pattern may also match at any level
+# below the .gitignore level.
+
+# If there is a separator at the end of the pattern then the pattern will only
+# match directories, otherwise the pattern can match both files and
+# directories.
+
+build/
+
+**/qmk_firmware/platforms
+**/qmk_firmware/users
+**/qmk_firmware/lib
+**/qmk_firmware/drivers
+**/qmk_firmware/lib
+**/qmk_firmware/keyboards
+**/qmk_firmware/layouts

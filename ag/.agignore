@@ -1,0 +1,4 @@
+# See https://git-scm.com/docs/gitignore
+
+cscope.out
+build/

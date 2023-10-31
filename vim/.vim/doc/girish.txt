@@ -1,6 +1,6 @@
 *girish.txt*
 ----------------------------------------
-Quick navigation tags 
+Quick navigation tags~
 
 `K` will look for help for word under cursor. 
 (make sure `:setlocal keywordprg=:help`)
@@ -851,7 +851,7 @@ Note:
 		include files.
 
 ------------------------------------------------------------------------------
-*29.3*	Moving through a program
+*29.3*	Moving through a program~
 
 Since a program is structured, Vim can recognize items in it.  Specific
 commands can be used to move around.

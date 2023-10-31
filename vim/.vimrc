@@ -375,7 +375,14 @@ def MyHighlights()
         highlight PreProc cterm=bold
         highlight helpHyperTextJump cterm=underline
         highlight helpHyperTextEntry cterm=italic
-        highlight AS_SearchCompletePrefix ctermfg=124
+        highlight helpHeader cterm=bold
+        highlight AS_SearchCompletePrefix ctermfg=220
+        highlight Pmenu ctermfg=none ctermbg=238 cterm=none guifg=#f8f8f2 guibg=#646e96 gui=NONE
+        highlight PmenuSel ctermfg=none ctermbg=124 cterm=bold guifg=#282a36 guibg=#50fa7b gui=NONE
+        highlight PmenuKind ctermfg=246 ctermbg=238 cterm=none guifg=#f8f8f2 guibg=#646e96 gui=NONE # 'kind' portion of completion item
+        highlight! link PmenuKindSel PmenuSel
+        highlight! link PmenuExtra PmenuKind # 'extra' text of completion item
+        highlight! link PmenuExtraSel PmenuSel
         # Following is experimental
         # highlight String cterm=italic
         # highlight Function cterm=underline
@@ -634,7 +641,7 @@ nnoremap <leader>vR :enew \| exec "nn <buffer> q :bd!\<cr\>" \| put = execute('m
 nnoremap <expr> <leader>vc empty(filter(getwininfo(), 'v:val.quickfix')) ? ':copen<CR>' : ':cclose<CR>'
 nnoremap <expr> <leader>vL empty(filter(getwininfo(), 'v:val.loclist')) ? ':lopen<CR>' : ':lclose<CR>'
 nnoremap <leader>vl <cmd>set buflisted!<cr>
-# nnoremap <leader>vm <cmd>messages<cr>
+nnoremap <leader>vm <cmd>messages<cr>
 nnoremap <leader>vd <cmd>GitDiffThisFile<cr>
 nnoremap <leader>vD <cmd>DiffOrig<cr>
 nnoremap <leader>ve <cmd>e ~/.vimrc<cr>
@@ -682,8 +689,8 @@ Plug 'hrsh7th/vim-vsnip-integ'
 # XXX python-syntax does not highlight 'dectest' (test code inside comments)
 # Plug 'vim-python/python-syntax'
 #
-# Plug '~/git/autosuggest.vim'
-Plug 'girishji/autosuggest.vim'
+Plug '~/git/autosuggest.vim'
+# Plug 'girishji/autosuggest.vim'
 # Plug '~/git/declutter.vim'
 # Plug 'girishji/declutter.vim'
 Plug 'girishji/bufline.vim'

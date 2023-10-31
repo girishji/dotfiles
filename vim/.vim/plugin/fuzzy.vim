@@ -5,7 +5,8 @@ endif
 
 vim9script
 
-# Live 'Find', 'Grep', Buffer, and 'Keymap'.
+# 'Find', 'Grep', 'Buffer', and 'Keymap' commands for live 'fuzzy' search.
+#
 # USAGE:
 #   :Find /start_of_line [regex]+
 #   :Find start_of_line/foo/bar [regex]+
@@ -39,6 +40,59 @@ var winid: number
 var processed: bool
 
 def GetAttr(): dict<any>
+
+    def ProcessTabKey(id: number, key: string)
+        if id->popup_getoptions().cursorline
+            var forward = key ==? "\<tab>"
+            id->popup_filter_menu(forward ? 'j' : 'k')
+            index += (forward ? 1 : -1)
+        else
+            id->popup_setoptions({cursorline: true})
+        endif
+        processed = true
+        var count = line('$', id)
+        if index < 0
+            index = count - 1
+            id->popup_setoptions({cursorline: false})
+        elseif index > (count - 1)
+            index = 0
+            id->popup_setoptions({cursorline: false})
+        endif
+        :redraw
+    enddef
+
+    def ProcessCarriageReturn(id: number, key: string)
+        if currentcmdname == findcmdname
+            setcmdline($'edit {winbufnr(id)->getbufoneline(index + 1)}')
+        elseif currentcmdname == grepcmdname
+            var line = winbufnr(id)->getbufoneline(index + 1)
+            if currentcmdname =~ 'grep'
+                var match = line->matchlist('\v(.*):(\d+):')
+                setcmdline($'edit +{match[2]} {match[1]}')
+            else
+                var match = line->matchlist('\v(.*):(\d+):(\d+):')
+                setcmdline($'edit +call\ cursor({match[2]},{match[3]}) {match[1]}')
+            endif
+        elseif currentcmdname == bufcmdname
+            var bufnr = winbufnr(id)->getbufoneline(index + 1)->matchstr('\v^\s*\zs\d+\ze')
+            setcmdline($'buffer {bufnr}')
+        endif
+        processed = false
+    enddef
+
+    def Filter(id: number, key: string): bool
+        if key ==? "\<tab>" || key ==? "\<s-tab>"
+            ProcessTabKey(id, key)
+        elseif key ==? "\<cr>"
+            ProcessCarriageReturn(id, key)
+        else
+            winid->popup_hide()
+            :redraw
+            processed = false
+        endif
+        return processed
+    enddef
+
     return {
         cursorline: false, # Do not automatically select the first item
         pos: 'botleft',
@@ -49,49 +103,7 @@ def GetAttr(): dict<any>
         filtermode: 'c',
         minwidth: 14,
         hidden: true,
-        filter: (id, key) => {
-            if key ==? "\<tab>" || key ==? "\<s-tab>"
-                if id->popup_getoptions().cursorline
-                    var forward = key ==? "\<tab>"
-                    id->popup_filter_menu(forward ? 'j' : 'k')
-                    index += (forward ? 1 : -1)
-                else
-                    id->popup_setoptions({cursorline: true})
-                endif
-                processed = true
-                var count = line('$', id)
-                if index < 0
-                    index = count - 1
-                    id->popup_setoptions({cursorline: false})
-                elseif index > (count - 1)
-                    index = 0
-                    id->popup_setoptions({cursorline: false})
-                endif
-                :redraw
-            elseif key ==? "\<cr>"
-                if currentcmdname == findcmdname
-                    setcmdline($'edit {winbufnr(id)->getbufoneline(index + 1)}')
-                elseif currentcmdname == grepcmdname
-                    var line = winbufnr(id)->getbufoneline(index + 1)
-                    if currentcmdname =~ 'grep'
-                        var match = line->matchlist('\v(.*):(\d+):')
-                        setcmdline($'edit +{match[2]} {match[1]}')
-                    else
-                        var match = line->matchlist('\v(.*):(\d+):(\d+):')
-                        setcmdline($'edit +call\ cursor({match[2]},{match[3]}) {match[1]}')
-                    endif
-                elseif currentcmdname == bufcmdname
-                    var bufnr = winbufnr(id)->getbufoneline(index + 1)->matchstr('\v^\s*\zs\d+\ze')
-                    setcmdline($'buffer {bufnr}')
-                endif
-                processed = false
-            else
-                winid->popup_hide()
-                :redraw
-                processed = false
-            endif
-            return processed
-        },
+        filter: function(Filter),
         callback: (id, result) => {
             if result == -1 # popup force closed due to <c-c>
                 feedkeys("\<c-c>", 'n')
@@ -99,6 +111,7 @@ def GetAttr(): dict<any>
         },
     }
 enddef
+
 
 def UpdatePopup(lines: list<string>)
     winid->popup_setoptions({cursorline: false})
@@ -128,6 +141,7 @@ def BuildList(cmd: list<string>)
     endif
     UpdatePopup(items)
 enddef
+
 
 def FindProg(cmdline: string)
     var match = cmdline->matchlist($'\v({findcmdname})!?\s+(\S+)?(\s+)?(\S+)?(\s+)?(\S+)?')
@@ -187,6 +201,7 @@ def GrepProg(cmdline: string)
         endif
     endif
 enddef
+
 
 def KeymapProg(cmdline: string)
     var match = cmdline->matchlist($'\v({kmapcmdname})!?\s+(\S+)?')
@@ -254,6 +269,7 @@ def Fuzzy()
     endif
 enddef
 
+
 def Setup()
     processed = false
     if winid->popup_getoptions() == {}
@@ -270,11 +286,13 @@ def Setup()
     endif
 enddef
 
+
 def Teardown()
     if winid->popup_getoptions() != {}
         winid->popup_close()
     endif
 enddef
+
 
 augroup FindCmdAutocmds | autocmd!
     autocmd VimEnter * Setup()

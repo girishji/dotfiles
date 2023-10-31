@@ -689,8 +689,8 @@ Plug 'hrsh7th/vim-vsnip-integ'
 # XXX python-syntax does not highlight 'dectest' (test code inside comments)
 # Plug 'vim-python/python-syntax'
 #
-Plug '~/git/autosuggest.vim'
-# Plug 'girishji/autosuggest.vim'
+# Plug '~/git/autosuggest.vim'
+Plug 'girishji/autosuggest.vim'
 # Plug '~/git/declutter.vim'
 # Plug 'girishji/declutter.vim'
 Plug 'girishji/bufline.vim'

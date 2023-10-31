@@ -39,6 +39,7 @@ var index: number = 0
 var winid: number
 var processed: bool
 
+
 def GetAttr(): dict<any>
 
     def ProcessTabKey(id: number, key: string)
@@ -114,6 +115,9 @@ enddef
 
 
 def UpdatePopup(lines: list<string>)
+    if winid->popup_getoptions() == {}
+        winid = popup_menu([], GetAttr())
+    endif
     winid->popup_setoptions({cursorline: false})
     index = 0
     if !lines->empty()
@@ -121,6 +125,7 @@ def UpdatePopup(lines: list<string>)
         winid->popup_show()
     else
         winid->popup_hide()
+        processed = false
     endif
     :redraw
 enddef
@@ -156,7 +161,8 @@ def FindProg(cmdline: string)
             # Non greedy regex and glob is PITA. Just use '/' to search path
             # Instead of .* use .\{-} for non-greedy search. glob2regpat will convert glob to regex. # :h non-greedy
             if match[3]->empty() && match[2] !~ '/' # search only file names, not full path
-                lines = items->copy()->filter((_, v) => v->fnamemodify(':t') =~ $'^{match[2]}')
+                # lines = items->copy()->filter((_, v) => v->fnamemodify(':t') =~ $'^{match[2]}')
+                lines = items->copy()->filter((_, v) => v->fnamemodify(':t') =~ $'{match[2]}')
             else
                 if match[2] =~ '/'
                     var pat = match[2] =~ '^/' ? match[2]->slice(1) : match[2]
@@ -229,6 +235,7 @@ def BufferProg(cmdline: string)
     endif
     if match[2]->empty()
         items = execute('ls!')->split("\n")
+        items->filter((_, v) => v->matchstr('".*"') !~ '\[Popup\]') # filter buffer of active popup
         UpdatePopup(items)
     else
         var lines: list<string>
@@ -272,9 +279,6 @@ enddef
 
 def Setup()
     processed = false
-    if winid->popup_getoptions() == {}
-        winid = popup_menu([], GetAttr())
-    endif
     if exists('*g:AutoSuggestSetup')
         var ignore = [findcmdname, grepcmdname, kmapcmdname, bufcmdname]
         ignore->map((_, v) => $'^{v}')

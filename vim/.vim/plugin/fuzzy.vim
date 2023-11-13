@@ -40,6 +40,8 @@ var winid: number
 var processed: bool
 var job: job
 
+var Smartcase = (pat) => pat =~ '\u' ? $'\C{pat}' : $'\c{pat}'
+var Case = (pat) => pat =~ '\u' ? '\C' : '\c'
 
 def GetAttr(): dict<any>
 
@@ -170,18 +172,15 @@ def FindProg(cmdline: string)
             # Non-greedy regex and glob is PITA. Just use '/' to search path
             # Instead of .* use .\{-} for non-greedy search. glob2regpat will convert glob to regex. # :h non-greedy
             if match[3]->empty() && match[2] !~ '/' # search only file names, not full path
-                # lines = items->copy()->filter((_, v) => v->fnamemodify(':t') =~ $'^{match[2]}')
-                lines = items->copy()->filter((_, v) => v->fnamemodify(':t') =~ $'{match[2]}')
-            else
-                if match[2] =~ '/'
-                    var pat = match[2] =~ '^/' ? match[2]->slice(1) : match[2]
-                    lines = items->copy()->filter((_, v) => v =~ $'^{pat}')
-                else
-                    lines = items->copy()->filter((_, v) => v =~ $'{match[2]}')
+                lines = items->copy()->filter((_, v) => v->fnamemodify(':t') =~ $'^{Smartcase(match[2])}')
+                if lines->empty()
+                    lines = items->copy()->filter((_, v) => v->fnamemodify(':t') =~ Smartcase(match[2]))
                 endif
-                for idx in [4, 5, 6, 7, 8]
+            else
+                var pat = match[2] =~ '^/' ? match[2]->slice(1) : match[2]
+                for idx in [2, 4, 5, 6, 7, 8]
                     if !match[idx]->empty()
-                        lines->filter((_, v) => v =~ $'{match[idx]}')
+                        lines->filter((_, v) => v =~? Smartcase(match[idx]))
                     endif
                 endfor
             endif
@@ -206,7 +205,7 @@ def GrepProg(cmdline: string)
         for idx in [4, 5, 6, 7]
             if !match[idx]->empty()
                 try
-                    lines->filter((_, v) => v->matchstr('\v.*:\d+:\zs.*') =~ $'{match[idx]}')
+                    lines->filter((_, v) => v->matchstr('\v.*:\d+:\zs.*') =~ Smartcase(match[idx]))
                 catch
                 endtry
             endif
@@ -247,7 +246,7 @@ def KeymapProg(cmdline: string)
     else
         var lines: list<string>
         try
-            lines = items->copy()->filter((_, v) => v =~ $'{match[2]}')
+            lines = items->copy()->filter((_, v) => v =~ Smartcase(match[2]))
         catch
         endtry
         UpdatePopup(lines)
@@ -268,13 +267,13 @@ def BufferProg(cmdline: string)
         var lines: list<string>
         try
             if match[2] !~ '/' # search only file names, not full path
-                lines = items->copy()->filter((_, v) => v->matchstr('".*"')->fnamemodify(':t') =~ $'{match[2]}')
+                lines = items->copy()->filter((_, v) => v->matchstr('".*"')->fnamemodify(':t') =~ Smartcase(match[2]))
                 if lines->empty()
-                    lines = items->copy()->filter((_, v) => v->matchstr('".*"') =~ $'{match[2]}')
+                    lines = items->copy()->filter((_, v) => v->matchstr('".*"') =~ Smartcase(match[2]))
                 endif
             else
                 var pat = match[2] =~ '^/' ? match[2]->slice(1) : match[2]
-                lines = items->copy()->filter((_, v) => v->matchstr('".*"') =~ $'{match[2]}')
+                lines = items->copy()->filter((_, v) => v->matchstr('".*"') =~ Smartcase(pat))
             endif
         catch
         endtry

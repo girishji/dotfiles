@@ -8,10 +8,10 @@
 --exclude=layouts
 --exclude=lib
 --exclude=platforms
---exclude=tests
 --exclude=users
 --exclude=util
 # end qmk
+
 --exclude=.git
 --exclude=BUILD
 --exclude=build

@@ -64,7 +64,9 @@ alias gd='git diff'
 # NOTE: use "ag" or "rg" command instead of grep
 alias gr='grep -Ei'  # extended regex and case insensitive
 alias grc='grep -E'  # extended regex and case sensitive
-alias grep='command grep --color' # aliases /usr/bin/grep
+alias grep='command grep --color'
+# --color is --color=auto. It does not use color codes when pipe is used. To see colors use grep --color=always foo | less -R
+alias gr2='grep --color=always'
 alias grr='grep -Ei -R --exclude-dir=.git --exclude-dir=.github'  # extended regex and recursivly search subdirs (like rgrep)
 #
 alias ibooks='cd /Users/gp/Library/Mobile Documents/iCloud~com~apple~iBooks/Documents'
@@ -74,7 +76,8 @@ alias ls='ls -FG' # aliases the command /usr/bin/ls
 alias l1='ls -1' # one listing per line
 alias l='ls'
 alias ll='ls -l'
-alias le='command less -R' # -R for interpreting color codes
+alias less='command less -R' # -R for interpreting Ansi color codes
+alias le='less'
 alias obsidian='cd /Users/gp/Library/Mobile Documents/iCloud~md~obsidian/Documents' 
 alias op='open'
 alias op='open'  # open foo.rtf will open in textedit

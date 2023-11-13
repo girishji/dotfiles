@@ -129,6 +129,7 @@ endif
 # ctags will search the following for 'tags' file
 # default:
 # set tags=./tags,./../tags,./*/tags
+set tags=./tags,./../tags,./../../tags,./*/tags
 
 # https://www.reddit.com/r/vim/comments/7bj837/favorite_console_tools_to_use_with_vim/
 # Workflow: Sometimes I have to look through a lot of files for a needle in a
@@ -378,7 +379,7 @@ def MyHighlights()
         highlight helpHeader cterm=bold
         highlight AS_SearchCompletePrefix ctermfg=220
         highlight Pmenu ctermfg=none ctermbg=238 cterm=none guifg=#f8f8f2 guibg=#646e96 gui=NONE
-        highlight PmenuSel ctermfg=none ctermbg=124 cterm=bold guifg=#282a36 guibg=#50fa7b gui=NONE
+        highlight PmenuSel ctermfg=none ctermbg=28 cterm=bold guifg=#282a36 guibg=#50fa7b gui=NONE
         highlight PmenuKind ctermfg=246 ctermbg=238 cterm=none guifg=#f8f8f2 guibg=#646e96 gui=NONE # 'kind' portion of completion item
         highlight! link PmenuKindSel PmenuSel
         highlight! link PmenuExtra PmenuKind # 'extra' text of completion item
@@ -658,7 +659,9 @@ nnoremap <leader>vp <cmd>echo expand('%')<cr>
 g:loaded_netrwPlugin = 1
 g:loaded_netrw = 1
 
-# This loads the "matchit" plugin; It makes the % command more powerful.
+# This loads the "matchit" plugin; It makes the % command more powerful, but
+# bracket matching gets much slower. Vim's default bracket matching does not
+# avoid commented brackets through. and this plugin avoids that.
 if has('syntax') && has('eval')
     packadd! matchit
 endif

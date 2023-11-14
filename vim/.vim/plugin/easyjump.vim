@@ -27,8 +27,21 @@ def Jump()
             cnum = getline(lnum)->match(ch, cnum + 1)
         endwhile
     endfor
-    # shuffle positions list
-    positions = positions->mapnew((_, v) => [v, rand()])->sort((a, b) => a[1] < b[1] ? 0 : 1)->mapnew((_, v) => v[0])
+    if positions->empty()
+        return
+    endif
+    # shuffle positions list keeping at least one target per line
+    var reqd = [positions[0]]
+    var remaining = []
+    for p in range(1, positions->len() - 1)
+        if positions[p][0] != positions[p - 1][0]
+            reqd->add(positions[p])
+        else
+            remaining->add(positions[p])
+        endif
+    endfor
+    remaining = remaining->mapnew((_, v) => [v, rand()])->sort((a, b) => a[1] < b[1] ? 0 : 1)->mapnew((_, v) => v[0])
+    positions = reqd + remaining
 
     var ngroups = positions->len() / targets->len() + 1
     var group = 0
@@ -55,6 +68,8 @@ def Jump()
         var jumpto = targets->index(t)
         if jumpto != -1
             cursor(positions[jumpto])
+            # add to jumplist (:jumps)
+            :normal! m'
         endif
     enddef
 

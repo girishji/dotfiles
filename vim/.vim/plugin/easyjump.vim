@@ -53,7 +53,7 @@ def Jump()
         prop_type_add(propname, {highlight: 'EasyJump', override: true, priority: 11})
         try
             for idx in range(targets->len())
-                var pidx = (group * targets->len()) + idx
+                var pidx = group * targets->len() + idx
                 if pidx < positions->len()
                     var [lnum, cnum] = positions[pidx]
                     prop_add(lnum, cnum + 1, {type: propname, text: targets[idx]})
@@ -69,7 +69,7 @@ def Jump()
     def JumpTo(tgt: string)
         var jumpto = targets->index(tgt)
         if jumpto != -1
-            cursor(positions[jumpto])
+            cursor(positions[group * targets->len() + jumpto])
             # add to jumplist (:jumps)
             :normal! m'
         endif

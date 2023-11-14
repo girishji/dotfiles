@@ -8,26 +8,31 @@ vim9script
 # Jump to any character on the screen, like 'easymotion' plugin. mapped to ','.
 # Can use 'd,xx' to delete or 'v,xx' to select in visual mode.
 
+g:easyjump_case = get(g:, 'easyjump_case', 'smart') # case/icase/smart
 :highlight default link EasyJump MatchParen
 
 var alpha = 'qwertyuiopasdfghjklzxcvbnm'
 var targets = $'{alpha}{alpha->toupper()}0123456789'->split('\zs')
 
 def Jump()
-    var ch = getcharstr()
     var positions: list<list<number>> = [] # A list of positions to jump to
     var propname = 'EasyJump'
     var [lstart, lend] = [line('w0'), line('w$')]
     var curpos = getcurpos()
+    var ch = getcharstr()
+    var ignorecase = (g:easyjump_case ==? 'icase' || (g:easyjump_case ==? 'smart' && ch == ch->tolower())) ? true : false
+    ch = ignorecase ? ch->tolower() : ch
+
     for lnum in range(lstart, lend)
-        var cnum = getline(lnum)->match(ch)
+        var line = ignorecase ? getline(lnum)->tolower() : getline(lnum)
+        var cnum = line->stridx(ch)
         while cnum != -1
             if ch == ' ' && !positions->empty() && positions[-1] == [lnum, cnum]
                 positions[-1][1] = cnum + 1
             elseif [lnum, cnum + 1] != [curpos[1], curpos[2]]
                 positions->add([lnum, cnum + 1])
             endif
-            cnum = getline(lnum)->match(ch, cnum + 1)
+            cnum = line->stridx(ch, cnum + 1)
         endwhile
     endfor
     if positions->empty()
@@ -98,7 +103,17 @@ def Jump()
     endtry
 enddef
 
-command EasyJump Jump()
-nmap , <cmd>EasyJump<cr>
-omap , <cmd>EasyJump<cr>
-vmap , <cmd>EasyJump<cr>
+nnoremap <silent> <Plug>EasyjumpJump; :<c-u>call <SID>Jump()<cr>
+xnoremap <silent> <Plug>EasyjumpJump; :<c-u>call <SID>Jump()<cr>
+onoremap <silent> <Plug>EasyjumpJump; :<c-u>call <SID>Jump()<cr>
+
+if !exists(":EasyJump")
+    command EasyJump Jump()
+endif
+
+if !hasmapto('<Plug>EasyjumpJump;', 'n') && mapcheck(',', 'n') ==# ''
+    nmap , <Plug>EasyjumpJump;
+    omap , <Plug>EasyjumpJump;
+    xmap , <Plug>EasyjumpJump;
+    vmap <silent> , <cmd>EasyJump<cr>
+endif

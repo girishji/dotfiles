@@ -9,6 +9,8 @@ vim9script
 # Can use 'd,xx' to delete or 'v,xx' to select in visual mode.
 
 g:easyjump_case = get(g:, 'easyjump_case', 'smart') # case/icase/smart
+g:easyjump_mapkeys = get(g:, 'easyjump_mapkeys', true)
+
 :highlight default link EasyJump MatchParen
 
 var alpha = 'qwertyuiopasdfghjklzxcvbnm'
@@ -111,9 +113,11 @@ if !exists(":EasyJump")
     command EasyJump Jump()
 endif
 
-if !hasmapto('<Plug>EasyjumpJump;', 'n') && mapcheck(',', 'n') ==# ''
-    nmap , <Plug>EasyjumpJump;
-    omap , <Plug>EasyjumpJump;
-    xmap , <Plug>EasyjumpJump;
-    vmap <silent> , <cmd>EasyJump<cr>
+if g:easyjump_mapkeys
+    if !hasmapto('<Plug>EasyjumpJump;', 'n') && mapcheck(',', 'n') ==# ''
+        nmap , <Plug>EasyjumpJump;
+        omap , <Plug>EasyjumpJump;
+        xmap , <Plug>EasyjumpJump;
+        vmap <silent> , <cmd>EasyJump<cr>
+    endif
 endif

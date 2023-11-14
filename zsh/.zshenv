@@ -84,7 +84,7 @@ alias op='open'  # open foo.rtf will open in textedit
 alias p3='python3'
 alias rm='rm -i'
 alias targ='tar -c --exclude-from=.gitignore -vzf'
-alias t='python3 ~/Projects/t/t.py --task-dir ~/.local/share/todo --list tasks'
+alias t='python3 ~/git/t/t.py --task-dir ~/.local/share/todo --list tasks'
 alias nv='nvim'
 alias nvc='nvim --clean'
 alias nvr='nvim -c "normal '\''0"'  # restore last opened buffer ('0 mark has last cursor location)

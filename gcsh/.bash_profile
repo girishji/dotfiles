@@ -35,3 +35,7 @@ fi
 if ! command -v pyright &> /dev/null; then
     npm install --global pyright
 fi
+
+if [ -d "$HOME/git/qmk_firmware" ] ; then
+    pip install --user qmk
+fi

@@ -18,7 +18,7 @@ map <BS> <Leader>
 &t_SR = "\e[4 q" #SR = REPLACE mode
 &t_EI = "\e[2 q" #EI = NORMAL mode (ALL ELSE)
 # reset the cursor on start
-autocmd VimEnter * silent execute '!echo -ne "\e[2 q"' | redraw!
+autocmd VimEnter,VimResume * silent execute '!echo -ne "\e[2 q"' | redraw!
 
 
 augroup FTOptions | autocmd!

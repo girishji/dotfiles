@@ -5,49 +5,77 @@ endif
 
 vim9script
 
-# Jump to any character on the screen, like 'easymotion'.
+# Jump to any character on the screen, like 'easymotion' plugin.
 
-var letters = 'qwertyuiopasdfghjklzxcvbnm'
-letters = letters .. letters->toupper() .. '0123456789'
+var alpha = 'qwertyuiopasdfghjklzxcvbnm'
+var targets = $'{alpha}{alpha->toupper()}0123456789'->split('\zs')
 
 def Jump()
     var ch = getcharstr()
-    var positions = []
-    var propname = 'EasyJumpProp'
+    var positions: list<list<number>> = [] # A list of positions to jump to
+    var propname = 'EasyJump'
     var [lstart, lend] = [line('w0'), line('w$')]
     var curpos = getcurpos()
     for lnum in range(lstart, lend)
         var cnum = getline(lnum)->match(ch)
         while cnum != -1
-            if [lnum, cnum + 1] != [curpos[1], curpos[2]]
+            if ch == ' ' && !positions->empty() && positions[-1] == [lnum, cnum]
+                positions[-1][1] = cnum + 1
+            elseif [lnum, cnum + 1] != [curpos[1], curpos[2]]
                 positions->add([lnum, cnum + 1])
             endif
             cnum = getline(lnum)->match(ch, cnum + 1)
         endwhile
     endfor
-    var id: number
-    try
-        # id = matchaddpos('Search', positions, 11)
-        prop_type_add(propname, {highlight: 'MatchParen', override: true, priority: 11})
-        var targets = letters->slice(0, positions->len())->split('\zs')
-        # randomize
-        targets = targets->mapnew((_, v) => [v, rand()])->sort((a, b) => a[1] < b[1] ? 0 : 1)->mapnew((_, v) => v[0])
+    # shuffle positions list
+    positions = positions->mapnew((_, v) => [v, rand()])->sort((a, b) => a[1] < b[1] ? 0 : 1)->mapnew((_, v) => v[0])
 
-        echom targets->len()
-        echom positions->len()
-        for idx in range(targets->len())
-            var [lnum, cnum] = positions[idx]
-            prop_add(lnum, cnum + 1, {type: propname, text: targets[idx]})
-        endfor
-        :redraw
-        ch = getcharstr()
-        var jumpto = targets->index(ch)
+    var ngroups = positions->len() / targets->len() + 1
+    var group = 0
+
+    def ShowTargets()
+        prop_type_delete(propname)
+        prop_type_add(propname, {highlight: 'MatchParen', override: true, priority: 11})
+        try
+            for idx in range(targets->len())
+                var pidx = (group * targets->len()) + idx
+                if pidx < positions->len()
+                    var [lnum, cnum] = positions[pidx]
+                    prop_add(lnum, cnum + 1, {type: propname, text: targets[idx]})
+                else
+                    break
+                endif
+            endfor
+        finally
+            :redraw
+        endtry
+    enddef
+
+    def JumpTo(t: string)
+        var jumpto = targets->index(t)
         if jumpto != -1
             cursor(positions[jumpto])
         endif
+    enddef
 
+    try
+        ShowTargets()
+        if ngroups > 1
+            while true
+                ch = getcharstr()
+                if ch == ';' || ch == ',' || ch == "\<tab>"
+                    group = (group + 1) % ngroups
+                    ShowTargets()
+                else
+                    JumpTo(ch)
+                    break
+                endif
+            endwhile
+        else
+            ch = getcharstr()
+            JumpTo(ch)
+        endif
     finally
-        # matchdelete(id)
         prop_type_delete(propname)
     endtry
 enddef

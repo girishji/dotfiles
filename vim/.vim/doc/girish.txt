@@ -39,6 +39,13 @@ https://vimhelp.org/usr_41.txt.html#41.6
 https://vimhelp.org/vim9.txt.html#inline-function
 
 ----------------------------------------
+Folds~
+zR -> open all folds in window
+zM -> close all folds in window
+zo -> open fold under cursor (zO for recursive levels)
+zc -> close fold under cursor (zC for recursive levels)
+
+----------------------------------------
 :so % -> source this buffer, or :w|so % (save and source)
 :set! variable -> echo the value of variable
 :set variable? -> print value of variable
@@ -141,6 +148,37 @@ You can pass more args to a callback function than what caller passes:
 `callback': funcref('s:popup_cb', [output])`
 callback is called with windid and result only. Here it is accepting [output]
 https://github.com/vim/vim/issues/6171
+
+----------------------------------------
+## substitute~
+
+:[range]s[ubstitute]/{pattern}/{string}/[flags]
+
+Symbol         Represents
+\0             Insert the entire matched pattern
+&              Insert the entire matched pattern
+\1             Insert the first submatch
+\2             Insert the second submatch (and so on, up to \9) Insert the entire matched pattern
+~              Use {string} from the previous invocation of :substitute
+\={Vim script} Evaluate {Vim script} expression; use result as replacement {string}
+\r             Insert a carriage return
+\t             Insert a tab character
+\\             Insert a single backslash
+
+:%s/content/copy/gc
+interactive
+
+:%s//copy/gc
+same as above, but reuse the most recent search pattern
+
+Can use inside global (see below)
+:g/pattern/ [range]s/foo/bar
+For all lines containing 'pattern' do substitution of foo with bar
+
+\= is very useful
+prepend each line with a random number (and then you can sort file to randomize
+lines)
+%s/^/\=rand() . " "/
 
 ----------------------------------------
 Filtering the Contents of a Buffer Through an External Command~

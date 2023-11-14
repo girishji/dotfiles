@@ -5,7 +5,9 @@ endif
 
 vim9script
 
-# Jump to any character on the screen, like 'easymotion' plugin.
+# Jump to any character on the screen, like 'easymotion' plugin. mapped to ','.
+
+:highlight default link EasyJump MatchParen
 
 var alpha = 'qwertyuiopasdfghjklzxcvbnm'
 var targets = $'{alpha}{alpha->toupper()}0123456789'->split('\zs')
@@ -48,7 +50,7 @@ def Jump()
 
     def ShowTargets()
         prop_type_delete(propname)
-        prop_type_add(propname, {highlight: 'MatchParen', override: true, priority: 11})
+        prop_type_add(propname, {highlight: 'EasyJump', override: true, priority: 11})
         try
             for idx in range(targets->len())
                 var pidx = (group * targets->len()) + idx
@@ -64,8 +66,8 @@ def Jump()
         endtry
     enddef
 
-    def JumpTo(t: string)
-        var jumpto = targets->index(t)
+    def JumpTo(tgt: string)
+        var jumpto = targets->index(tgt)
         if jumpto != -1
             cursor(positions[jumpto])
             # add to jumplist (:jumps)

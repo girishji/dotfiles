@@ -6,7 +6,7 @@ endif
 vim9script
 
 # Jump to any character on the screen, like 'easymotion' plugin. mapped to ','.
-# Can use 'd,xx' to delete (operator pending mode)
+# Can use 'd,xx' to delete or 'v,xx' to select in visual mode.
 
 :highlight default link EasyJump MatchParen
 
@@ -101,3 +101,4 @@ enddef
 command EasyJump Jump()
 nmap , <cmd>EasyJump<cr>
 omap , <cmd>EasyJump<cr>
+vmap , <cmd>EasyJump<cr>

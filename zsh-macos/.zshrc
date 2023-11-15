@@ -36,29 +36,47 @@ setopt vi
 # Initialize completion system
 autoload -U compinit && compinit
 
-# Autocompletion prioritize files with suffix aliases ahead of commands
-#   for completing first word typed
-zstyle ':completion:*:complete:-command-:*:*' tag-order \
-  suffix-aliases
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' menu select=2
+eval "$(dircolors -b)"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu select=long
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
 
-# Tab expand aliases (only global aliases)
-zstyle ':completion:*' completer _expand_alias _complete _ignored
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-# activate color-completion
-zstyle ':completion:*:default'         list-colors ${(s.:.)LS_COLORS}
+# # Autocompletion prioritize files with suffix aliases ahead of commands
+# #   for completing first word typed
+# zstyle ':completion:*:complete:-command-:*:*' tag-order \
+#   suffix-aliases
 
-# match uppercase from lowercase
-zstyle ':completion:*'                 matcher-list 'm:{a-z}={A-Z}'
+# # Tab expand aliases (only global aliases)
+# zstyle ':completion:*' completer _expand_alias _complete _ignored
 
-# separate matches into groups
-zstyle ':completion:*:matches'         group 'yes'
-zstyle ':completion:*'                 group-name ''
+# # activate color-completion
+# zstyle ':completion:*:default'         list-colors ${(s.:.)LS_COLORS}
 
-# describe options in full
-zstyle ':completion:*:options'         description 'yes'
+# # match uppercase from lowercase
+# zstyle ':completion:*'                 matcher-list 'm:{a-z}={A-Z}'
 
-# provide verbose completion information
-zstyle ':completion:*'                 verbose true
+# # separate matches into groups
+# zstyle ':completion:*:matches'         group 'yes'
+# zstyle ':completion:*'                 group-name ''
+
+# # describe options in full
+# zstyle ':completion:*:options'         description 'yes'
+
+# # provide verbose completion information
+# zstyle ':completion:*'                 verbose true
 
 
 ############################################################

@@ -292,7 +292,7 @@ venvdeactivate() {
 eval "$(zoxide init zsh)"
 
 ## Offers suggestions as you type
-source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 # Make PgDn accept suggestion; by default right-arrow accepts suggestion
 bindkey '^[[6~' autosuggest-accept
 # XXX: Setting fg color does not work properly. It does not repaint the screen

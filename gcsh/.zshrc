@@ -44,7 +44,7 @@ setopt vi
 ############################################################
 # Prompt
 
-PROMPT="%F{3}cloudshell%f: "
+PROMPT="%F{3}CLOUDSHELL%f: "
 PROMPT+='%F{87}%40<..<%~%<<%f ' # shortened path
 autoload -Uz vcs_info
 precmd_vcs_info() { vcs_info }

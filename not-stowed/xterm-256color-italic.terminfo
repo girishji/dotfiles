@@ -1,5 +1,0 @@
-# https://stackoverflow.com/questions/1326998/enabling-italics-in-vim-syntax-highlighting-for-mac-terminal
-# A xterm-256color based TERMINFO that adds the escape sequences for italic.
-xterm-256color-italic|xterm with 256 colors and italic,
-  sitm=\E[3m, ritm=\E[23m,
-  use=xterm-256color,

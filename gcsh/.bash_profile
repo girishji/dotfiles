@@ -40,4 +40,6 @@ if [ -d "$HOME/git/qmk_firmware" ] ; then
     pip install --user qmk
 fi
 
+[ -f /usr/bin/zsh ] && exec /usr/bin/zsh
+
 set -o vi

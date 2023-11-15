@@ -65,6 +65,7 @@ nnoremap <leader>f :e<space>**/
 nnoremap <leader><space> :Find<space>
 nnoremap <leader>g :Grep<space>
 nnoremap <expr> <leader>G $':Grep {expand("<cword>")}'
+nnoremap <expr> <leader>vg $':silent grep {expand("<cword>")}'
 nnoremap <leader><tab> :Keymap<space>
 
 nnoremap <leader><bs> :Buffer<space>

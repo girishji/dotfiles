@@ -39,3 +39,5 @@ fi
 if [ -d "$HOME/git/qmk_firmware" ] ; then
     pip install --user qmk
 fi
+
+set -o vi

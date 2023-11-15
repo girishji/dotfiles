@@ -160,30 +160,31 @@ enddef
 
 
 def FindProg(cmdline: string)
-    var match = cmdline->matchlist($'\v({findcmdname})!?\s+(\S+)?(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?')
+    var match = cmdline->matchlist($'\v%({findcmdname})!?\s+(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?')
     if match->empty()
         return
     endif
-    if match[2]->empty()
+    if match[1]->empty()
         BuildList(findcmd->split())
     else
         var lines: list<string>
         try
             # Non-greedy regex and glob is PITA. Just use '/' to search path
             # Instead of .* use .\{-} for non-greedy search. glob2regpat will convert glob to regex. # :h non-greedy
-            if match[3]->empty() && match[2] !~ '/' # search only file names, not full path
-                lines = items->copy()->filter((_, v) => v->fnamemodify(':t') =~ $'^{Smartcase(match[2])}')
+            if match[1] !~ '/' # search only file names, not full path
+                lines = items->copy()->filter((_, v) => v->fnamemodify(':t') =~ $'^{Smartcase(match[1])}')
                 if lines->empty()
-                    lines = items->copy()->filter((_, v) => v->fnamemodify(':t') =~ Smartcase(match[2]))
+                    lines = items->copy()->filter((_, v) => v->fnamemodify(':t') =~ Smartcase(match[1]))
                 endif
             else
-                var pat = match[2] =~ '^/' ? match[2]->slice(1) : match[2]
-                for idx in [2, 4, 5, 6, 7, 8]
-                    if !match[idx]->empty()
-                        lines->filter((_, v) => v =~? Smartcase(match[idx]))
-                    endif
-                endfor
+                var pat = match[1] =~ '^/' ? match[1]->slice(1) : match[1]
+                lines = items->copy()->filter((_, v) => v =~ Smartcase(pat))
             endif
+            for idx in range(2, 6)
+                if !match[idx]->empty()
+                    lines->filter((_, v) => v =~ Smartcase(match[idx]))
+                endif
+            endfor
         catch
         endtry
         UpdatePopup(lines)

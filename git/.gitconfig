@@ -7,4 +7,4 @@
 [credential "https://dev.azure.com"]
 	useHttpPath = true
 [core]
-	excludesfile = .gitignore
+	excludesfile = ~/.gitignore

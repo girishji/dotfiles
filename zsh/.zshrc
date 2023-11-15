@@ -97,7 +97,7 @@ export MANPAGER='less -s -M +Gg'
 ###########################################################
 # Prompt
 
-PROMPT="%B%F{3}[%f$(arch)%F{3}]%f%b "
+PROMPT="%B%F{3}[%f%F{207}$(arch)%f%F{3}]%f%b "
 PROMPT+='%40<..<%~%<< ' # shortened path
 autoload -Uz vcs_info
 precmd_vcs_info() { vcs_info }

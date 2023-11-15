@@ -1,90 +1,51 @@
-# Tips
 
-: <<'END_COMMENT'
+############################################################
 
-fzf:
-- Use arrow keys or C-[jk] or C-[pn] to select from filtered window
-- preview window: ctrl-p/n bound to page-up/down; Shift-[up/down] to scroll
-- C-t to bring up files. Since java/c/md files are suffix aliased to nvim, you
-    can start nvim by typing these files directly into the prompt
-- alt-c for directories
-- ctrl-r for history
+# autoload -Uz promptinit
+# promptinit
+# prompt adam1
 
-# list all keymaps (viins is vi insert mode, vicmd is cmd mode, etc)
-bindkey -l
-# list all bindings
-bindkey -M vicmd
-# man zshzle // has descriptions of all actions (widgets according to zsh) you can bind to
+setopt histignorealldups sharehistory
 
-zle is zsh line editor. movement and text modifying commands are in
-https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Modifying-Text
+# Use emacs keybindings even if our EDITOR is set to vi
+# bindkey -e
 
-Completion functions for commands (like pip, git, etc) are stored in files with
-names beginning with an underscore _, and these files should be placed in a
-directory after adding this directory to the $fpath variable.
+# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE=~/.zsh_history
 
-END_COMMENT
+# Use modern completion system
+autoload -Uz compinit
+compinit
+
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' menu select=2
+eval "$(dircolors -b)"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu select=long
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
+
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 ############################################################
 
 setopt vi
 
 ############################################################
-## Completions
-# https://zsh.sourceforge.io/Guide/zshguide06.html
-
-# Initialize completion system
-autoload -U compinit && compinit
-
-# Autocompletion prioritize files with suffix aliases ahead of commands
-#   for completing first word typed
-zstyle ':completion:*:complete:-command-:*:*' tag-order \
-  suffix-aliases
-
-# Tab expand aliases (only global aliases)
-zstyle ':completion:*' completer _expand_alias _complete _ignored
-
-# activate color-completion
-zstyle ':completion:*:default'         list-colors ${(s.:.)LS_COLORS}
-
-# match uppercase from lowercase
-zstyle ':completion:*'                 matcher-list 'm:{a-z}={A-Z}'
-
-# separate matches into groups
-zstyle ':completion:*:matches'         group 'yes'
-zstyle ':completion:*'                 group-name ''
-
-# describe options in full
-zstyle ':completion:*:options'         description 'yes'
-
-# provide verbose completion information
-zstyle ':completion:*'                 verbose true
-
-
-############################################################
-## Exports
-
-# nvim plugins should separated by arch, since treesitter parser executable
-# depends on arch
-export XDG_DATA_HOME="${HOME}/.local/share/"$(arch)
-
-# For picking up clangd and llvm on M1 Mac with brew
-export PATH="$HOMEBREW_PREFIX/opt/llvm/bin${PATH+:$PATH}"
-
-export EDITOR=vim
-
-# Make 'pip3 install --user xxx' packages available
-export PATH=$PATH:$(python3 -m site --user-base)/bin
-export PATH="$PATH:$HOME/bin:$HOME/.local/bin";
-
-# Add cursor location in %
-export MANPAGER='less -s -M +Gg'
-
-###########################################################
 # Prompt
 
-PROMPT="%B%F{3}[%f%F{207}$(arch)%f%F{3}]%f%b "
-PROMPT+='%40<..<%~%<< ' # shortened path
+PROMPT="%F{3}cloudshell%f: "
+PROMPT+='%F{87}%40<..<%~%<<%f ' # shortened path
 autoload -Uz vcs_info
 precmd_vcs_info() { vcs_info }
 precmd_functions+=( precmd_vcs_info )
@@ -92,24 +53,49 @@ setopt prompt_subst
 PROMPT+=\$vcs_info_msg_0_
 zstyle ':vcs_info:git:*' formats '%F{5}[%f%F{2}%b%f%F{5}]%f '
 zstyle ':vcs_info:*' enable git
+PROMPT+="%F{207}(%f%B${DEVSHELL_PROJECT_ID:-cloudshell}%F{207}%b)%f "
 PROMPT+='%# ' # changes to '#' when root
-
-# PROMPT='$ '
 
 RPROMPT='%F{1}%(?..%? :( )%f' # display return code of cmd only when not 0
 # NOTE: Using single quotes will delay evaluation of functions until prompt is computed.
 #   Double quotes forces the evaluation of function when you set the PROMPT variable.
 
 ############################################################
-## Colors
+## Completions
+# https://zsh.sourceforge.io/Guide/zshguide06.html
 
-# https://superuser.com/questions/290500/zsh-completion-colors-and-os-x
-# export LSCOLORS=Exfxcxdxbxegedabagacad; # make dir color bold
+# # Initialize completion system
+# autoload -U compinit && compinit
+
+# # Autocompletion prioritize files with suffix aliases ahead of commands
+# #   for completing first word typed
+# zstyle ':completion:*:complete:-command-:*:*' tag-order \
+#   suffix-aliases
+
+# # Tab expand aliases (only global aliases)
+# zstyle ':completion:*' completer _expand_alias _complete _ignored
+
+# # activate color-completion
+# zstyle ':completion:*:default'         list-colors ${(s.:.)LS_COLORS}
+
+# # match uppercase from lowercase
+# zstyle ':completion:*'                 matcher-list 'm:{a-z}={A-Z}'
+
+# # separate matches into groups
+# zstyle ':completion:*:matches'         group 'yes'
+# zstyle ':completion:*'                 group-name ''
+
+# # describe options in full
+# zstyle ':completion:*:options'         description 'yes'
+
+# # provide verbose completion information
+# zstyle ':completion:*'                 verbose true
+
 
 ############################################################
-## Aliases
+## Exports
 
-# Aliases are in ~/.zshenv
+export EDITOR=vim
 
 ############################################################
 # Keybindings

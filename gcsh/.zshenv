@@ -2,9 +2,10 @@
 #
 # Global Order: zshenv, zprofile, zshrc, zlogin
 #
+# Sourcing Order:
 # Vim does not source .zshrc since it starts a non-interactive shell during `:!`
 # command.
-# Basically, zsh always sources ~/.zshenv. Interactive shells source ~/.zshrc,
+# zsh always sources ~/.zshenv. Interactive shells source ~/.zshrc,
 # and login shells source ~/.zprofile and ~/.zlogin. Thus, an interactive login
 # shell sources ~/.zshenv ~/.zprofile ~/.zlogin ~/.zlogin, and a noninteractive,
 # nonlogin shell like the one vim uses to run commands only sources ~/.zshenv.

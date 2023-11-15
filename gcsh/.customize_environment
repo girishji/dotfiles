@@ -15,3 +15,4 @@ apt-get -y install fd-find
 apt-get -y install zoxide
 apt-get -y install silversearcher-ag
 apt-get -y install ripgrep
+apt-get -y install tree

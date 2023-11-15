@@ -1,0 +1,60 @@
+# A script to generate message during git commit
+# workflow:
+#	git status
+#	git diff filename
+# 	git add . (after this, cannot do git diff)
+#	gitcommit
+#
+# to kill emacs (abort commit): C-u 1 M-x kill-emacs
+#
+
+# if [ ! -f ChangeLog ]; then
+#    echo "Error: No ChangeLog found"
+#    exit 0
+# fi
+
+git status
+
+read -p "Press any key to continue... " -n1 -s
+
+gmfile="${HOME}/.gitmessage.txt"
+
+echo "# Title: Summary, imperative, start upper case, don't end with a period
+# No more than 50 chars. #### 50 chars is here: #
+# vim:tw=78:ts=8:
+
+# Remember blank line between title and body.
+
+# Body: Explain *what* and *why* (not *how*).
+# Wrap at 72 chars. ################################## which is here: #
+" > ${gmfile}
+
+git status --porcelain >> ${gmfile}
+
+## Commit comments
+vim ${gmfile}
+
+if [ "$?" != "0" ]; then
+   echo "Aborted"
+   exit 1
+fi
+
+if [[ "$#" != "0" ]]; then
+  echo "Author: $(git config user.name) <$(git config user.email)>" > ChangeLog
+  echo "Date:   $(date -R)" >> ChangeLog
+  echo "" >> ChangeLog
+  cat ${gmfile} | grep -E -v '^\s*#' >> ChangeLog
+  echo "" >> ChangeLog
+  git log >> ChangeLog
+  git add ChangeLog
+fi
+
+
+# commit without opening editor:
+git commit --cleanup=strip -F ${gmfile}
+
+## end Changelog
+
+# will edit ${gmfile} interactively:
+# git commit
+

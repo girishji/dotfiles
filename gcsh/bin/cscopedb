@@ -1,0 +1,32 @@
+#!/bin/sh
+
+target=`pwd`
+if [[ -d "$1" ]]; then
+    target="${target}/$1"
+fi
+echo "dest dir: $target"
+
+outdir="${HOME}/cscope"
+outfile="${outdir}/cscope.files"
+if [[ -d "$2" ]]; then
+    outdir="$2"
+fi
+mkdir -p "${outdir}"
+echo "cscope db: ${outdir}/cscope.out"
+
+find $target \
+	-path "${target}/lib/*" -prune -o \
+	-path "${target}/builddefs/*" -prune -o \
+	-path "${target}/data/*" -prune -o \
+	-path "${target}/docs/*" -prune -o \
+	-path "${target}/drivers/*" -prune -o \
+	-path "${target}/keyboards/*" -prune -o \
+	-path "${target}/layouts/*" -prune -o \
+	-path "${target}/Users/*" -prune -o \
+	-name "*.[chxsS]" -print > "${outfile}"
+
+cd ~/cscope
+cscope -b -q -k
+
+#-----------------------------------------------------------------------
+# vim:textwidth=78:tabstop=8:shiftwidth=4:softtabstop=4:expandtab:ft=sh:

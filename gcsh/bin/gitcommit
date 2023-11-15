@@ -32,7 +32,7 @@ echo "# Title: Summary, imperative, start upper case, don't end with a period
 git status --porcelain >> ${gmfile}
 
 ## Commit comments
-vim ${gmfile}
+vim --clean ${gmfile}
 
 if [ "$?" != "0" ]; then
    echo "Aborted"

@@ -6,3 +6,6 @@
 	helper = !/usr/bin/gh auth git-credential
 [core]
 	excludesfile = ~/.gitignore
+[user]
+	email = girishji@gmail.com
+	name = Girish Palya

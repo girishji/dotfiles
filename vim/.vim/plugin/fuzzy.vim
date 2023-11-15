@@ -203,7 +203,7 @@ def GrepProg(cmdline: string)
 
     def RegexSearch()
         var lines = items->copy()
-        for idx in [4, 5, 6, 7]
+        for idx in range(4, 7)
             if !match[idx]->empty()
                 try
                     lines->filter((_, v) => v->matchstr('\v.*:\d+:\zs.*') =~ Smartcase(match[idx]))

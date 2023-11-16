@@ -89,6 +89,8 @@ def GetAttr(): dict<any>
             ProcessTabKey(id, key)
         elseif key ==? "\<cr>"
             ProcessCarriageReturn(id, key)
+        elseif key ==? "\<esc>"
+            processed = false
         else
             winid->popup_hide()
             :redraw

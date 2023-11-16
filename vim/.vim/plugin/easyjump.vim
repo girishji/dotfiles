@@ -5,8 +5,11 @@ endif
 
 vim9script
 
-# Jump to any character on the screen, like 'easymotion' plugin. mapped to ','.
-# Can use 'd,xx' to delete or 'v,xx' to select in visual mode.
+# Trigger. Target. Choose.
+# Jump to any character on screen using 3 characters.
+# Vim idioms supported:
+#   - Jump list updated so that you can jump back using <ctrl-o>
+#   - Mapped to ','. Can use 'd,xx' to delete, 'c,xx', 'v,xx', etc.
 
 g:easyjump_case = get(g:, 'easyjump_case', 'smart') # case/icase/smart
 g:easyjump_mapkeys = get(g:, 'easyjump_mapkeys', true)
@@ -111,6 +114,7 @@ onoremap <silent> <Plug>EasyjumpJump; :<c-u>call <SID>Jump()<cr>
 
 if !exists(":EasyJump")
     command EasyJump Jump()
+    vmap <silent> , <cmd>EasyJump<cr>
 endif
 
 if g:easyjump_mapkeys
@@ -118,6 +122,5 @@ if g:easyjump_mapkeys
         nmap , <Plug>EasyjumpJump;
         omap , <Plug>EasyjumpJump;
         xmap , <Plug>EasyjumpJump;
-        vmap <silent> , <cmd>EasyJump<cr>
     endif
 endif

@@ -87,13 +87,6 @@ def Jump()
         # shuffle the remaining targets
         remaining = remaining->mapnew((_, v) => [v, rand()])->sort((a, b) => a[1] < b[1] ? 0 : 1)->mapnew((_, v) => v[0])
         targets = reqd + remaining
-        # error check
-        if expected != targets->len()
-            echoe 'EasyJump: Target list filter error'
-        endif
-        if targets->copy()->sort()->uniq()->len() != targets->len()
-            echoe 'EasyJump: Targets list has duplicates'
-        endif
     enddef
 
     # If target count > letters count, split into groups
@@ -127,8 +120,22 @@ def Jump()
         endif
     enddef
 
+    def Verify()
+        # error check
+        if expected != targets->len()
+            echoe 'EasyJump: Target list filter error'
+        endif
+        if targets->copy()->sort()->uniq()->len() != targets->len()
+            echoe 'EasyJump: Targets list has duplicates'
+        endif
+        if letters->copy()->sort()->uniq()->len() != letters->len()
+            echoe 'EasyJump: Letters list has duplicates'
+        endif
+    enddef
+
     try
         Prioritize()
+        Verify()
         ShowTargets()
         if ngroups > 1
             while true

@@ -132,7 +132,6 @@ def Jump()
 
     try
         Prioritize()
-        Verify()
         ShowTargets()
         if ngroups > 1
             while true

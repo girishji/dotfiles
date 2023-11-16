@@ -45,7 +45,7 @@ setopt vi
 ############################################################
 # Prompt
 
-PROMPT="%F{3}CLOUDSHELL%f: "
+PROMPT="%F{3}%BCLOUDSHELL%b%f: "
 PROMPT+='%F{87}%40<..<%~%<<%f ' # shortened path
 autoload -Uz vcs_info
 precmd_vcs_info() { vcs_info }
@@ -54,7 +54,7 @@ setopt prompt_subst
 PROMPT+=\$vcs_info_msg_0_
 zstyle ':vcs_info:git:*' formats '%F{5}[%f%F{2}%b%f%F{5}]%f '
 zstyle ':vcs_info:*' enable git
-PROMPT+="%F{207}(%f%B${DEVSHELL_PROJECT_ID:-cloudshell}%F{207}%b)%f "
+PROMPT+="%F{207}(%f${DEVSHELL_PROJECT_ID:-cloudshell}%F{207})%f "
 PROMPT+='%# ' # changes to '#' when root
 
 RPROMPT='%F{1}%(?..%? :( )%f' # display return code of cmd only when not 0

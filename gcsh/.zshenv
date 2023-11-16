@@ -58,7 +58,7 @@ alias grep='command grep --color'
 alias gr2='grep --color=always'
 alias grr='grep -Ei -R --exclude-dir=.git --exclude-dir=.github'  # extended regex and recursivly search subdirs (like rgrep)
 
-alias ls='ls -FG' # aliases the command /usr/bin/ls
+alias ls='ls --color=auto'
 alias l1='ls -1' # one listing per line
 alias l='ls'
 alias ll='ls -l'

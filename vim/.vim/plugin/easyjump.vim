@@ -55,6 +55,13 @@ def Jump()
         return
     endif
 
+    if letters->copy()->sort()->uniq()->len() != letters->len()
+        echoe 'EasyJump: Letters list has duplicates'
+    endif
+    # If target count > letters count, split into groups
+    var ngroups = targets->len() / letters->len() + 1
+    var group = 0
+
     # Prioritize: Keep more targets near cursor, at least one per line
     def Prioritize()
         var reqd = []
@@ -87,11 +94,14 @@ def Jump()
         # shuffle the remaining targets
         remaining = remaining->mapnew((_, v) => [v, rand()])->sort((a, b) => a[1] < b[1] ? 0 : 1)->mapnew((_, v) => v[0])
         targets = reqd + remaining
+        # error check
+        if expected != targets->len()
+            echoe 'EasyJump: Target list filter error'
+        endif
+        if targets->copy()->sort()->uniq()->len() != targets->len()
+            echoe 'EasyJump: Targets list has duplicates'
+        endif
     enddef
-
-    # If target count > letters count, split into groups
-    var ngroups = targets->len() / letters->len() + 1
-    var group = 0
 
     def ShowTargets()
         prop_type_delete(propname)
@@ -117,19 +127,6 @@ def Jump()
             cursor(targets[group * letters->len() + jumpto])
             # add to jumplist (:jumps)
             :normal! m'
-        endif
-    enddef
-
-    def Verify()
-        # error check
-        if expected != targets->len()
-            echoe 'EasyJump: Target list filter error'
-        endif
-        if targets->copy()->sort()->uniq()->len() != targets->len()
-            echoe 'EasyJump: Targets list has duplicates'
-        endif
-        if letters->copy()->sort()->uniq()->len() != letters->len()
-            echoe 'EasyJump: Letters list has duplicates'
         endif
     enddef
 

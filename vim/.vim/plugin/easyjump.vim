@@ -104,26 +104,28 @@ def Jump()
             JumpTo(ch)
         endif
     finally
-        while prop_remove({type: propname}, lstart, lend) > 0
-        endwhile
-        # XXX prop_type_delete causes 'J' to not work (Vim bug)
-        # prop_type_delete(propname)
+        if !prop_type_get(propname)->empty()
+            while prop_remove({type: propname}, lstart, lend) > 0
+            endwhile
+        endif
+        # prop_type_delete(propname) # XXX Vim bug: 'J' after jump causes corruption
     endtry
 enddef
 
-nnoremap <silent> <Plug>EasyjumpJump; :<c-u>call <SID>Jump()<cr>
-xnoremap <silent> <Plug>EasyjumpJump; :<c-u>call <SID>Jump()<cr>
-onoremap <silent> <Plug>EasyjumpJump; :<c-u>call <SID>Jump()<cr>
+def VJump()
+    Jump()
+    :normal! m'
+    :normal! gv``
+enddef
 
-if !exists(":EasyJump")
-    command EasyJump Jump()
-    vmap <silent> , <cmd>EasyJump<cr>
-endif
+nnoremap <silent> <Plug>EasyjumpJump; :<c-u>call <SID>Jump()<cr>
+onoremap <silent> <Plug>EasyjumpJump; :<c-u>call <SID>Jump()<cr>
+vnoremap <silent> <Plug>EasyjumpVJump; :<c-u>call <SID>VJump()<cr>
 
 if g:easyjump_mapkeys
     if !hasmapto('<Plug>EasyjumpJump;', 'n') && mapcheck(',', 'n') ==# ''
         nmap , <Plug>EasyjumpJump;
         omap , <Plug>EasyjumpJump;
-        xmap , <Plug>EasyjumpJump;
+        vmap , <Plug>EasyjumpVJump;
     endif
 endif

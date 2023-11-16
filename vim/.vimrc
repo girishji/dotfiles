@@ -326,7 +326,7 @@ set list
 set fillchars=vert:│,fold:۰,diff:·
 set clipboard=unnamed # Always use the system clipboard
 set number # line numbering
-set relativenumber
+# set relativenumber
 set hls # highlight search
 set lbr # line break
 set laststatus=2 # always show statusline

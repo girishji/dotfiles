@@ -104,7 +104,10 @@ def Jump()
             JumpTo(ch)
         endif
     finally
-        prop_type_delete(propname)
+        while prop_remove({type: propname}, lstart, lend) > 0
+        endwhile
+        # XXX prop_type_delete causes 'J' to not work (Vim bug)
+        # prop_type_delete(propname)
     endtry
 enddef
 

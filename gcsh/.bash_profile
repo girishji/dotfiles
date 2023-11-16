@@ -9,7 +9,7 @@ if [ -n "$BASH_VERSION" ]; then
     fi
     # include .bash_aliases
     if [ -f "$HOME/.bash_aliases" ]; then
-        source "$HOME/.bash_aliases"
+        . "$HOME/.bash_aliases"
     fi
 fi
 
@@ -40,6 +40,9 @@ if [ -d "$HOME/git/qmk_firmware" ] ; then
     pip install --user qmk
 fi
 
-[ -f /usr/bin/zsh ] && exec /usr/bin/zsh
+if command -v /usr/bin/zsh &> /dev/null; then
+    exec /usr/bin/zsh
+fi
+# [ -f /usr/bin/zsh ] && exec /usr/bin/zsh
 
 set -o vi

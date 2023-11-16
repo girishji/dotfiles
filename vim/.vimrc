@@ -65,7 +65,6 @@ nnoremap <leader>f :e<space>**/
 nnoremap <leader><space> :Find<space>
 nnoremap <leader>g :Grep<space>
 nnoremap <expr> <leader>G $':Grep {expand("<cword>")}'
-nnoremap <expr> <leader>vg $':silent grep {expand("<cword>")}'
 nnoremap <leader><tab> :Keymap<space>
 
 nnoremap <leader><bs> :Buffer<space>
@@ -113,7 +112,7 @@ nnoremap <leader>fi :ilist<space>/| # search /pattern/ for symbols, <num> [<tab>
 nnoremap <leader>fd :dlist<space>/| # :dli
 # (girish: above will list all #define when you do / and search in all files)
 # List matches and select to jump to.
-nnoremap <leader>i :AutoSuggestDisable<CR>[I:let nr = input("Which one: ")<Bar>exe "normal " .. nr .. "[\t"<Bar>AutoSuggestEnable<CR>
+# nnoremap <leader>i :AutoSuggestDisable<CR>[I:let nr = input("Which one: ")<Bar>exe "normal " .. nr .. "[\t"<Bar>AutoSuggestEnable<CR>
 
 # Convince java that 'class' is a macro like C's #define
 autocmd FTOptions FileType java setlocal define=^\\s*class
@@ -146,11 +145,10 @@ set tags=./tags,./../tags,./../../tags,./*/tags
 # you can use :arga[dd] **/*.c open all the .c files in your project
 # nnoremap <expr> <leader>vf $':argadd **/*.{expand("%:e")}'
 
-# Certain lines marked by a pattern need attention. Put them in quickfix list.
-# Since caddexpr is not compatible with opening qf-list automatically, open it
-# manunally :copen or :cwindow or <leader>vc
-nnoremap <leader>vg :g//caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<c-left><c-left><right><right>
-
+# :g search file for pattern and put resulting lines in quickfix list
+# cadde[xpr] {expr}	Evaluate {expr} and add the resulting lines to the quickfix list
+# Since caddexpr does not open qf-list automatically, open it manunally :copen or :cwindow or <leader>vc
+# nnoremap <leader>vg :g//caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<c-left><c-left><right><right>
 
 
 #---------------------

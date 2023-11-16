@@ -128,9 +128,7 @@ def Jump()
     enddef
 
     try
-        echom targets
         Prioritize()
-        echom targets
         ShowTargets()
         if ngroups > 1
             while true

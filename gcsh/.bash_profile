@@ -1,5 +1,6 @@
 # For gcp cloud shell
-# ~/.profile says .profile is not sourced if .bash_profile exists
+# .profile is not sourced if .bash_profile exists
+# https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html
 
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
@@ -36,10 +37,19 @@ if ! command -v pyright &> /dev/null; then
     npm install --global pyright
 fi
 
-if [ -d "$HOME/git/qmk_firmware" ] ; then
+if [ -d "$HOME/git/qmk_firmware" ] && ! pip show qmk &> /dev/null; then
     pip install --user qmk
 fi
 
 set -o vi
 
+# this should be the last command/line
 [ -f /bin/zsh ] && exec /bin/zsh
+# it takes a few minutes for /bin/zsh to become available
+# if [ -f /bin/zsh ] ; then
+#     echo "girish zsh exists" >&2
+#     exec /bin/zsh
+# else
+#     echo "girish no zsh" >&2
+# fi
+

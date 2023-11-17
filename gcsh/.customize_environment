@@ -16,4 +16,5 @@ apt-get -y install zoxide
 apt-get -y install silversearcher-ag
 apt-get -y install ripgrep
 apt-get -y install tree
+apt-get -y install zsh
 apt-get -y install zsh-autosuggestions

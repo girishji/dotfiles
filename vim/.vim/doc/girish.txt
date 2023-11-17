@@ -168,8 +168,9 @@ Symbol         Represents
 :%s/content/copy/gc
 interactive
 
-:%s//copy/gc
-same as above, but reuse the most recent search pattern
+:%s//<c-r><c-w>/gc
+same as above, but reuse the most recent search pattern. <c-r><c-w> gets word
+under cursor.
 
 Can use inside global (see below)
 :g/pattern/ [range]s/foo/bar
@@ -823,6 +824,10 @@ non-greedy search~
 Try:
 
 %s/.\{-},//
+
+----------------------------------------
+Spelling
+z= will show spelling options
 
 ----------------------------------------
 Tags~

@@ -707,6 +707,8 @@ Plug 'girishji/vsnip-complete.vim'
 Plug 'girishji/omnifunc-complete.vim'
 Plug 'girishji/lsp-complete.vim'
 Plug 'girishji/pythondoc.vim'
+# Plug '~/git/easyjump.vim'
+Plug 'girishji/easyjump.vim'
 plug#end()
 
 

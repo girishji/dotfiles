@@ -43,13 +43,11 @@ fi
 
 set -o vi
 
-# this should be the last command/line
+# this should be the last thing in the file
+# XXX: It takes a few minutes for zsh to appear in /etc/shells (list of valid shells)
+# https://zsh.sourceforge.io/FAQ/zshfaq01.html#l7
 [ -f /bin/zsh ] && exec /bin/zsh
-# it takes a few minutes for /bin/zsh to become available
-# if [ -f /bin/zsh ] ; then
-#     echo "girish zsh exists" >&2
-#     exec /bin/zsh
-# else
-#     echo "girish no zsh" >&2
-# fi
+if ! grep /zsh$ /etc/shells > /dev/null ; then
+    echo "(~/.bash_profile) zsh is not available yet"
+fi
 

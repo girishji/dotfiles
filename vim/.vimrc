@@ -112,8 +112,6 @@ nnoremap <leader>fi :ilist<space>/| # search /pattern/ for symbols, <num> [<tab>
 # (girish: above will search all files for variable, fn name etc.)
 nnoremap <leader>fd :dlist<space>/| # :dli
 # (girish: above will list all #define when you do / and search in all files)
-# List matches and select to jump to.
-# nnoremap <leader>i :AutoSuggestDisable<CR>[I:let nr = input("Which one: ")<Bar>exe "normal " .. nr .. "[\t"<Bar>AutoSuggestEnable<CR>
 
 # Convince java that 'class' is a macro like C's #define
 autocmd FTOptions FileType java setlocal define=^\\s*class

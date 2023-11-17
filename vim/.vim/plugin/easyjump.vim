@@ -2,7 +2,6 @@ if !has('vim9script') ||  v:version < 900
     echoe "Needs Vim version 9.0 and above"
     finish
 endif
-
 vim9script
 
 # Trigger. Target. Choose.
@@ -10,12 +9,12 @@ vim9script
 # Vim idioms supported:
 #   - Jump list updated so that you can jump back using <ctrl-o>
 #   - Mapped to ','. Can use 'd,xx' to delete, 'c,xx', 'v,xx', etc.
+#   - change highlight using EasyJump group
+#   - remap keys after g:easyjump_mapkeys=false
+#   - case sensitive and smart case
 
 g:easyjump_case = get(g:, 'easyjump_case', 'smart') # case/icase/smart
-g:easyjump_mapkeys = get(g:, 'easyjump_mapkeys', true)
-
 :highlight default link EasyJump MatchParen
-
 var alpha = 'asdfgwercvhjkluiopynmbtqxz'
 var letters = $'{alpha}{alpha->toupper()}0123456789'->split('\zs')
 
@@ -24,11 +23,11 @@ def Jump()
     var propname = 'EasyJump'
     var [lstart, lend] = [line('w0'), line('w$')]
     var curpos = getcurpos()
-    var ch = getcharstr()
-    var ignorecase = (g:easyjump_case ==? 'icase' || (g:easyjump_case ==? 'smart' && ch == ch->tolower())) ? true : false
-    ch = ignorecase ? ch->tolower() : ch
+    var ch = g:easyjump_case ==? 'icase' ? getcharstr()->tolower() : getcharstr()
+    var ignorecase = (g:easyjump_case ==? 'icase' || (g:easyjump_case ==? 'smart' && ch =~ '\U')) ? true : false
+    var Ignorecase = (s) => ignorecase ? s->tolower() : s
 
-    # Gather targets to jump to, starting from cursor and searching outwards
+    # gather targets to jump to, starting from cursor position and searching outwards
     var curline = curpos[1]
     var linenrs = [curline]
     for dist in range(1, (lend - lstart))
@@ -40,7 +39,7 @@ def Jump()
         endif
     endfor
     for lnum in linenrs
-        var line = ignorecase ? getline(lnum)->tolower() : getline(lnum)
+        var line = Ignorecase(getline(lnum))
         var cnum = line->stridx(ch)
         while cnum != -1 && ([lnum, cnum + 1] != [curpos[1], curpos[2]])
             if ch == ' ' && !targets->empty() && targets[-1] == [lnum, cnum]
@@ -58,14 +57,17 @@ def Jump()
     if letters->copy()->sort()->uniq()->len() != letters->len()
         echoe 'EasyJump: Letters list has duplicates'
     endif
-    # If target count > letters count, split into groups
+    # if target count > letters count, split into groups
     var ngroups = targets->len() / letters->len() + 1
     var group = 0
 
-    # Prioritize: Keep more targets near cursor, at least one per line
+    # order target list by keeping more targets near cursor, and at least one per line
     def Prioritize()
-        var reqd = []
-        var remaining = []
+        if ngroups < 2
+            return
+        endif
+        var highpri = []
+        var lowpri = []
         var expected = targets->len()
         def FilterTargets(tlinenr: number, tmax: number)
             if tlinenr < lstart || tlinenr > lend
@@ -73,8 +75,8 @@ def Jump()
             endif
             var curtargets = targets->copy()->filter((_, v) => v[0] == tlinenr)
             targets->filter((_, v) => v[0] != tlinenr)
-            reqd->extend(curtargets->slice(0, tmax))
-            remaining->extend(curtargets->slice(tmax))
+            highpri->extend(curtargets->slice(0, tmax))
+            lowpri->extend(curtargets->slice(tmax))
         enddef
 
         FilterTargets(curline, 10) # 10 targets max
@@ -83,17 +85,17 @@ def Jump()
             FilterTargets(curline + 1, excess / 3)
             FilterTargets(curline - 1, excess / 3)
         endif
-        # one per line
+        # at least one target per line
         for p in range(targets->len())
             if targets[p][0] != targets[p - 1][0]
-                reqd->add(targets[p])
+                highpri->add(targets[p])
             else
-                remaining->add(targets[p])
+                lowpri->add(targets[p])
             endif
         endfor
-        # shuffle the remaining targets
-        remaining = remaining->mapnew((_, v) => [v, rand()])->sort((a, b) => a[1] < b[1] ? 0 : 1)->mapnew((_, v) => v[0])
-        targets = reqd + remaining
+        # shuffle the remaining low priority targets
+        lowpri = lowpri->mapnew((_, v) => [v, rand()])->sort((a, b) => a[1] < b[1] ? 0 : 1)->mapnew((_, v) => v[0])
+        targets = highpri + lowpri
         # error check
         if expected != targets->len()
             echoe 'EasyJump: Target list filter error'
@@ -124,7 +126,10 @@ def Jump()
     def JumpTo(tgt: string)
         var jumpto = letters->index(tgt)
         if jumpto != -1
-            cursor(targets[group * letters->len() + jumpto])
+            var idx = group * letters->len() + jumpto
+            if idx < targets->len()
+                cursor(targets[idx])
+            endif
             # add to jumplist (:jumps)
             :normal! m'
         endif
@@ -159,18 +164,15 @@ enddef
 
 def VJump()
     Jump()
-    :normal! m'
-    :normal! gv``
+    :normal! m'gv``
 enddef
 
 nnoremap <silent> <Plug>EasyjumpJump; :<c-u>call <SID>Jump()<cr>
 onoremap <silent> <Plug>EasyjumpJump; :<c-u>call <SID>Jump()<cr>
-vnoremap <silent> <Plug>EasyjumpVJump; :<c-u>call <SID>VJump()<cr>
+vnoremap <silent> <Plug>EasyjumpJump; :<c-u>call <SID>VJump()<cr>
 
-if g:easyjump_mapkeys
-    if !hasmapto('<Plug>EasyjumpJump;', 'n') && mapcheck(',', 'n') ==# ''
-        nmap , <Plug>EasyjumpJump;
-        omap , <Plug>EasyjumpJump;
-        vmap , <Plug>EasyjumpVJump;
-    endif
+if get(g:, 'easyjump_mapkeys', true) && !hasmapto('<Plug>EasyjumpJump;', 'n') && mapcheck(',', 'n') ==# ''
+    nmap , <Plug>EasyjumpJump;
+    omap , <Plug>EasyjumpJump;
+    vmap , <Plug>EasyjumpJump;
 endif

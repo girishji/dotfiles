@@ -711,6 +711,13 @@ Plug 'girishji/pythondoc.vim'
 Plug 'girishji/easyjump.vim'
 plug#end()
 
+#---------------------
+# easyjump
+
+g:easyjump_default_keymap = false
+nmap s <Plug>EasyjumpJump;
+omap s <Plug>EasyjumpJump;
+vmap s <Plug>EasyjumpJump;
 
 #--------------------
 # pythondoc

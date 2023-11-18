@@ -172,6 +172,8 @@ interactive
 same as above, but reuse the most recent search pattern. <c-r><c-w> gets word
 under cursor.
 
+\r is the newline (line break) within patterns.
+
 Can use inside global (see below)
 :g/pattern/ [range]s/foo/bar
 For all lines containing 'pattern' do substitution of foo with bar

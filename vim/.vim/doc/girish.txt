@@ -326,11 +326,22 @@ While in command line:
   C-c : puts whatever you edited after `:` in command mode
 While in normal mode:
   `q:` : puts you into full editing mode for Ex commands
-  C-r<register> : inserts contents of register
+  C-r<register> : inserts contents of register (r = recall)
   C-r C-w : inserts word under cursor
   C-r C-W : inserts WORD under cursor
   C-r C-l : inserts line under cursor
   C-r / : inserts search register
+
+----------------------------------------
+On the command line, Ctrl-r followed by any of the registers (the named
+ones, like a or 3, or the others, such as - or ") will insert the contents of
+said register.
+
+(This works in insert mode as well.)
+
+So you could Yank the text (" is the yank register)
+
+Substitute with :%s/<C-r>"/replacement/g
 
 ----------------------------------------
 " Vim's built-in doc system to make a mini-wiki within Vim.  

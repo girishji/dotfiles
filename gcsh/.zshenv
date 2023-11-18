@@ -51,11 +51,11 @@ alias diffw='diff -w'  # ignore white spaces
 alias gcsh='gcloud cloud-shell ssh --authorize-session'
 alias gd='git diff'
 # NOTE: use "ag" or "rg" command instead of grep
-alias gr='grep -Ei'  # extended regex and case insensitive
-alias grc='grep -E'  # extended regex and case sensitive
 alias grep='command grep --color'
+alias grep2='grep --color=always'
+alias gr='grep2 -Ei'  # extended regex and case insensitive
+alias grc='grep2 -E'  # extended regex and case sensitive
 # --color is --color=auto. It does not use color codes when pipe is used. To see colors use grep --color=always foo | less -R
-alias gr2='grep --color=always'
 alias grr='grep -Ei -R --exclude-dir=.git --exclude-dir=.github'  # extended regex and recursivly search subdirs (like rgrep)
 
 alias ls='ls --color=auto'

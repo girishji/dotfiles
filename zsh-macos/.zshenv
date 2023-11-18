@@ -62,11 +62,13 @@ alias f='builtin fg'
 alias gcsh='gcloud cloud-shell ssh --authorize-session'
 alias gd='git diff'
 # NOTE: use "ag" or "rg" command instead of grep
+alias grep='command grep --color'
+alias grep2='grep --color=always'
 alias gr='grep -Ei'  # extended regex and case insensitive
 alias grc='grep -E'  # extended regex and case sensitive
-alias grep='command grep --color'
+alias gr2='grep2 -Ei'  # extended regex and case insensitive
+alias grc2='grep2 -E'  # extended regex and case sensitive
 # --color is --color=auto. It does not use color codes when pipe is used. To see colors use grep --color=always foo | less -R
-alias gr2='grep --color=always'
 alias grr='grep -Ei -R --exclude-dir=.git --exclude-dir=.github'  # extended regex and recursivly search subdirs (like rgrep)
 #
 alias ibooks='cd /Users/gp/Library/Mobile Documents/iCloud~com~apple~iBooks/Documents'

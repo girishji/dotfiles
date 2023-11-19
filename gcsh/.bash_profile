@@ -43,11 +43,14 @@ fi
 
 set -o vi
 
-# this should be the last thing in the file
-# XXX: It takes a few minutes for zsh to appear in /etc/shells (list of valid shells)
+# this should be the last thing in this file
+# XXX: it takes a few minutes for zsh to appear in /etc/shells (list of valid shells)
 # https://zsh.sourceforge.io/FAQ/zshfaq01.html#l7
-[ -f /bin/zsh ] && exec /bin/zsh
-if ! grep /zsh$ /etc/shells > /dev/null ; then
-    echo "(~/.bash_profile) zsh is not available yet"
+if [ -f /bin/zsh ]; then
+    exec /bin/zsh
+else
+    # zsh is not available yet through /etc/shells, so try reinstallign it.
+    sudo apt install zsh -y
+    [ -f /bin/zsh ] && exec /bin/zsh
 fi
 

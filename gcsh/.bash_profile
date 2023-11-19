@@ -50,7 +50,7 @@ if [ -f /bin/zsh ]; then
     exec /bin/zsh
 else
     # zsh is not available yet through /etc/shells, so try reinstallign it.
-    sudo apt install zsh -y
+    sudo apt install -y zsh
     [ -f /bin/zsh ] && exec /bin/zsh
 fi
 

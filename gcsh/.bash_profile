@@ -41,6 +41,10 @@ if [ -d "$HOME/git/qmk_firmware" ] && ! pip show qmk &> /dev/null; then
     pip install --user qmk
 fi
 
+if [ ! -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+    sudo apt install -y zsh-autosuggestions
+fi
+
 set -o vi
 
 # this should be the last thing in this file

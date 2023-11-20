@@ -781,7 +781,7 @@ colorscheme quiet
 # lsp
 var clangdpath = exepath('clangd')
 if clangdpath->empty()
-    clangdpath = expand("$HOMEBREW_PREFIX") .. '/opt/llvm/bin/clangd',
+    clangdpath = expand("$HOMEBREW_PREFIX") .. '/opt/llvm/bin/clangd'
 endif
 var lspServers = [
     {

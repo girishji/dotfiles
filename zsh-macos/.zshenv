@@ -37,7 +37,7 @@ alias -g gs='git status '
 alias gc='git clone '
 alias -g gp='git push'
 alias -g gu='git pull --no-rebase'
-alias -g pipi='pip install --user '
+alias pipu='pip install --user '
 alias -g lc='leetcode '
 alias -g vims='vim -Nu NONE -S <(cat <<EOF
     " vim:ts=4:ft=vim
@@ -105,7 +105,7 @@ alias uuuuuuu='cd ../../../../../../..'
 alias uuuuuuuu='cd ../../../../../../../..'
 alias uuuuuuuuu='cd ../../../../../../../../..'
 
-# alias ssh1='gcloud compute ssh --zone "us-central1-f" "vm-fast" --project "finanse" --ssh-flag="-ServerAliveInterval=30"'
-# alias gscp='gcloud compute scp'
+alias gssh='gcloud compute ssh --zone "us-east1-b" "e2micro" --project "sandbox-403316" --ssh-flag="-ServerAliveInterval=30"'
+alias gscp='gcloud compute scp'
 # alias gscpr='gcloud compute scp --recurse'
 . "$HOME/.cargo/env"

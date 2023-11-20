@@ -779,31 +779,21 @@ colorscheme quiet
 
 #--------------------
 # lsp
+var lspServers: list<dict<any>> = []
 var clangdpath = exepath('clangd')
 if clangdpath->empty()
     clangdpath = expand("$HOMEBREW_PREFIX") .. '/opt/llvm/bin/clangd'
 endif
-var lspServers = [
-    {
+if filereadable(clangdpath)
+    lspServers->add({
         name: 'clang',
         filetype: ['c', 'cpp'],
         path: clangdpath,
         args: ['--background-index']
-    },
-    # {
-    #     name: 'pylsp',
-    #     filetype: 'python',
-    #     path: exepath('pylsp'),
-    #     args: [],
-    #     # debug: true,
-    #     # workspaceConfig: {
-    #     #     plugins: {
-    #     #         # pylint: { enabled: true }
-    #     #         # autopep8: { enabled: false }
-    #     #     }
-    #     # },
-    # },
-    {
+    })
+endif
+if filereadable(exepath('pyright-langserver'))
+    lspServers->add({
         name: 'pyright',
         filetype: 'python',
         path: exepath('pyright-langserver'),
@@ -822,7 +812,22 @@ var lspServers = [
                 },
             },
         },
-    },
+    })
+endif
+
+    # {
+    #     name: 'pylsp',
+    #     filetype: 'python',
+    #     path: exepath('pylsp'),
+    #     args: [],
+    #     # debug: true,
+    #     # workspaceConfig: {
+    #     #     plugins: {
+    #     #         # pylint: { enabled: true }
+    #     #         # autopep8: { enabled: false }
+    #     #     }
+    #     # },
+    # },
     # {
     #     # Note:
     #     # - use <tab> to place implementation skeleton of method ('t' <tab> <space> you get toString() in jdtls)
@@ -849,7 +854,6 @@ var lspServers = [
     #         },
     #     },
     # },
-]
 
 autocmd VimEnter * call LspAddServer(lspServers)
 # XXX registering for FileType event causes multiple instances of server jobs

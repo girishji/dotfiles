@@ -1,14 +1,14 @@
-
 ############################################################
 
-# autoload -Uz promptinit
-# promptinit
-# prompt adam1
+os=$(uname -s)
+
+setopt vi
 
 setopt histignorealldups sharehistory
 
-# Use emacs keybindings even if our EDITOR is set to vi
-# bindkey -e
+############################################################
+## Completions
+# https://zsh.sourceforge.io/Guide/zshguide06.html
 
 # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=1000
@@ -25,7 +25,9 @@ zstyle ':completion:*' completer _expand _expand_alias _complete _correct _appro
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
+if [[ "$os" == "Linux" ]]; then
+    eval "$(dircolors -b)"
+fi
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
@@ -39,36 +41,7 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-############################################################
-
-setopt vi
-
-############################################################
-# Prompt
-
-PROMPT="%F{3}%BCLOUDSHELL%b%f: "
-PROMPT+='%F{87}%40<..<%~%<<%f ' # shortened path
-autoload -Uz vcs_info
-precmd_vcs_info() { vcs_info }
-precmd_functions+=( precmd_vcs_info )
-setopt prompt_subst
-PROMPT+=\$vcs_info_msg_0_
-zstyle ':vcs_info:git:*' formats '%F{5}[%f%F{2}%b%f%F{5}]%f '
-zstyle ':vcs_info:*' enable git
-PROMPT+="%F{207}(%f${DEVSHELL_PROJECT_ID:-cloudshell}%F{207})%f "
-PROMPT+='%# ' # changes to '#' when root
-
-RPROMPT='%F{1}%(?..%? :( )%f' # display return code of cmd only when not 0
-# NOTE: Using single quotes will delay evaluation of functions until prompt is computed.
-#   Double quotes forces the evaluation of function when you set the PROMPT variable.
-
-############################################################
-## Completions
-# https://zsh.sourceforge.io/Guide/zshguide06.html
-
-# # Initialize completion system
-# autoload -U compinit && compinit
-
+## OLD ##
 # # Autocompletion prioritize files with suffix aliases ahead of commands
 # #   for completing first word typed
 # zstyle ':completion:*:complete:-command-:*:*' tag-order \
@@ -93,11 +66,81 @@ RPROMPT='%F{1}%(?..%? :( )%f' # display return code of cmd only when not 0
 # # provide verbose completion information
 # zstyle ':completion:*'                 verbose true
 
+############################################################
+# Prompt
+if [[ "$os" == "Linux" ]]; then
+    PROMPT="%F{3}%BGCLOUDL%b%f: "
+    PROMPT+='%F{87}%40<..<%~%<<%f ' # shortened path
+    autoload -Uz vcs_info
+    precmd_vcs_info() { vcs_info }
+    precmd_functions+=( precmd_vcs_info )
+    setopt prompt_subst
+    PROMPT+=\$vcs_info_msg_0_
+    zstyle ':vcs_info:git:*' formats '%F{5}[%f%F{2}%b%f%F{5}]%f '
+    zstyle ':vcs_info:*' enable git
+    PROMPT+="%F{207}(%f${DEVSHELL_PROJECT_ID:-cloudshell}%F{207})%f "
+    PROMPT+='%# ' # changes to '#' when root
+
+    RPROMPT='%F{1}%(?..%? :( )%f' # display return code of cmd only when not 0
+    # NOTE: Using single quotes will delay evaluation of functions until prompt is computed.
+    #   Double quotes forces the evaluation of function when you set the PROMPT variable.
+else
+    PROMPT="%B%F{3}[%f%F{207}$(arch)%f%F{3}]%f%b "
+    PROMPT+='%40<..<%~%<< ' # shortened path
+    autoload -Uz vcs_info
+    precmd_vcs_info() { vcs_info }
+    precmd_functions+=( precmd_vcs_info )
+    setopt prompt_subst
+    PROMPT+=\$vcs_info_msg_0_
+    zstyle ':vcs_info:git:*' formats '%F{5}[%f%F{2}%b%f%F{5}]%f '
+    zstyle ':vcs_info:*' enable git
+    PROMPT+='%# ' # changes to '#' when root
+    # PROMPT='$ '
+    RPROMPT='%F{1}%(?..%? :( )%f' # display return code of cmd only when not 0
+    # NOTE: Using single quotes will delay evaluation of functions until prompt is computed.
+    #   Double quotes forces the evaluation of function when you set the PROMPT variable.
+fi
 
 ############################################################
 ## Exports
 
-export EDITOR=vim
+if [[ "$os" == "Darwin" ]]; then
+    # Setup to use appropriate brew based on arch value and set
+    # HOMEBREW_PREFIX, PATH and other global vars
+    if [ "$(arch)" = "arm64" ]; then
+        eval $(/opt/homebrew/bin/brew shellenv);
+    else
+        eval $(/usr/local/bin/brew shellenv);
+    fi
+    # nvim plugins should separated by arch, since treesitter parser executable
+    # depends on arch
+    export XDG_DATA_HOME="${HOME}/.local/share/"$(arch)
+
+    # For picking up clangd and llvm on M1 Mac with brew
+    export PATH="$HOMEBREW_PREFIX/opt/llvm/bin${PATH+:$PATH}"
+
+    export EDITOR=vim
+    export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-19.jdk/Contents/Home
+
+    # export OPENAI_API_KEY=sk-E...
+
+    # Use a 8-bit color theme for bat
+    export BAT_THEME="ansi"
+    export BAT_STYLE="numbers,changes,grid,header"
+
+    # Make 'pip3 install --user xxx' packages available
+    export PATH=$PATH:$(python3 -m site --user-base)/bin
+    export PATH="$PATH:$HOME/bin:$HOME/.local/bin";
+
+    # Add cursor location in %
+    export MANPAGER='less -s -M +Gg'
+fi
+
+############################################################
+## Colors
+
+# https://superuser.com/questions/290500/zsh-completion-colors-and-os-x
+# export LSCOLORS=Exfxcxdxbxegedabagacad; # make dir color bold
 
 ############################################################
 # Keybindings
@@ -269,6 +312,80 @@ bindkey "\C-xs" insert_sed
 #   loaded all ways to find the command. Execute it once and then
 #   it will show up in suggestions.
 
+if [[ "$os" == "Darwin" ]]; then
+
+    # rsync dirs A and B, A being the source
+    # https://stackoverflow.com/questions/13713101/rsync-exclude-according-to-gitignore-hgignore-svnignore-like-filter-c
+    # https://unix.stackexchange.com/questions/203846/how-to-sync-two-folders-with-command-line-tools
+    rsyncdir() {
+      if [[ $# -ne 2 ]]; then
+        echo "Usage: rsyncdir {srcdir} {destdir}"
+        return -1
+      fi
+      rsync --delete-after --filter=":e- .gitignore" --filter "- .git/" -v -a "${1}/" "${2}" # slash after first arg is important
+    }
+
+    # fzf: https://thevaluable.dev/practical-guide-fzf-example/
+    # When no input is given to fzf (meaning w/o pipe) it will use fd instead of find
+    export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    # XXX: fd ignores files from .gitignore
+    # export FZF_ALT_C_COMMAND='fd --type d -H' # -H --hidden to show files hidden by .gitignore;
+    # KEYBINDINGS: tab, shift-tab, etc. see 'man fzf'
+    export MY_FZF_KEYBINDINGS="tab:up,shift-tab:down,alt-up:prev-history,alt-down:next-history,alt-shift-up:toggle-out,alt-shift-down:toggle-in,ctrl-p:preview-page-up,ctrl-n:preview-page-down,ctrl-/:change-preview-window(hidden|)"
+    bg_color="${COLORFGBG:-0;-1}" # if not set, use default value of 0;-1 (fg;bg)
+    if [[ ${bg_color} == "0;15" ]]; then # light background
+      export MY_FZF_COLORS="hl:10,bg+:7,fg+:-1:underline"
+    else
+      export MY_FZF_COLORS="bg+:${bg_color#*;},fg+:underline,hl:5,hl+:4,pointer:4,gutter:-1"
+    fi
+    my_fzf_history="${HOME}/.local/share/fzf-cmd-history"
+    # XXX: Do not export FZF_DEFAULT_OPTS, it interfers with fzf inside Vim
+
+    # fzf keybindings (CTRL-T, CTRL-R, ALT-C) <- run /usr/local/opt/fzf/install first
+    [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+    # Search *file name* in curdir and browse contents using pager (bat) (press <CR>)
+    # Alt-pgup/down to scroll preview window
+    ff() {
+      fzf --bind 'enter:execute(bat -f --paging=always {})' \
+        --preview 'bat -f {}' \
+        --bind "${MY_FZF_KEYBINDINGS}" \
+        --color "${MY_FZF_COLORS}" \
+        # --bind 'ctrl-/:change-preview-window(hidden|)'
+    }
+
+    # Search for a *keyword* in curdir and browse files.
+    # Alt-pgup/down to scroll preview window
+    # Switch between Ripgrep launcher mode (CTRL-R) and fzf filtering mode (CTRL-F)
+    # https://github.com/junegunn/fzf/blob/master/ADVANCED.md#ripgrep-integration
+    fr() {
+      rm -f /tmp/rg-fzf-{r,f}
+      RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
+      INITIAL_QUERY="${*:-}"
+      FZF_DEFAULT_COMMAND_SAVED="$FZF_DEFAULT_COMMAND"
+      FZF_DEFAULT_COMMAND="$RG_PREFIX $(printf %q "$INITIAL_QUERY")" \
+        fzf --ansi \
+        --color "hl:-1:underline,hl+:-1:underline:reverse" \
+        --no-bold \
+        --color "${MY_FZF_COLORS}" \
+        --disabled --query "$INITIAL_QUERY" \
+        --history "${my_fzf_history}" \
+        --bind "change:reload:sleep 0.1; $RG_PREFIX {q} || true" \
+        --bind "ctrl-f:unbind(change,ctrl-f)+change-prompt(2. fzf> )+enable-search+rebind(ctrl-r)+transform-query(echo {q} > /tmp/rg-fzf-r; cat /tmp/rg-fzf-f)" \
+        --bind "ctrl-r:unbind(ctrl-r)+change-prompt(1. ripgrep> )+disable-search+reload($RG_PREFIX {q} || true)+rebind(change,ctrl-f)+transform-query(echo {q} > /tmp/rg-fzf-f; cat /tmp/rg-fzf-r)" \
+        --bind "start:unbind(ctrl-r)" \
+        --prompt '1. ripgrep> ' \
+        --delimiter : \
+        --header '╱ CTRL-R (ripgrep mode) ╱ CTRL-F (fzf mode) ╱' \
+        --preview 'bat --color=always {1} --highlight-line {2}' \
+        --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
+        --bind 'enter:become(FZF_DEFAULT_COMMAND=$FZF_DEFAULT_COMMAND_SAVED vim {1} +{2})' \
+        --bind "${MY_FZF_KEYBINDINGS}"
+    }
+
+fi
+
 # Upgrade top level pip packages (their dependencies will also get updated to appropriate versions)
 pipupdate() {
   pipdeptree -f --warn silence | grep -E '^[a-zA-Z0-9\-]+' | grep -v '@' | sed 's/=.*//' | xargs -n1 pip install --user -U
@@ -293,8 +410,18 @@ venvdeactivate() {
 # Configure zoxide completion
 eval "$(zoxide init zsh)"
 
-## Offers suggestions as you type
-source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+if [[ "$os" == "Darwin" ]]; then
+
+    # leetcode-api
+    # Rust
+    source "$HOME/.cargo/env"
+    # leetcode (installed through cargo)
+    eval "$(leetcode completions)"
+
+    ## Offers suggestions as you type
+    source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
 # Make PgDn accept suggestion; by default right-arrow accepts suggestion
 bindkey '^[[6~' autosuggest-accept
 # XXX: Setting fg color does not work properly. It does not repaint the screen
@@ -307,3 +434,11 @@ bindkey '^[[6~' autosuggest-accept
 # fi
 
 ############################################################
+
+if [[ "$os" == "Darwin" ]]; then
+    # The next line updates PATH for the Google Cloud SDK.
+    if [ -f '/Users/gp/.local/opt/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/gp/.local/opt/google-cloud-sdk/path.zsh.inc'; fi
+    # The next line enables shell command completion for gcloud.
+    if [ -f '/Users/gp/.local/opt/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/gp/.local/opt/google-cloud-sdk/completion.zsh.inc'; fi
+fi
+

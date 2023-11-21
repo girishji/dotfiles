@@ -28,8 +28,6 @@ vim9script
 # linux
 #  -prune prevents descent into dir while -not compares pattern but descends recursively
 #  to exclude directories with a specific name at any level, use the -name primary instead of -path
-#  easier to reason:
-#    find build -not \( -path build/external -prune \) -not \( -path build/blog -prune \) -name \*.js
 #  https://stackoverflow.com/questions/4210042/how-do-i-exclude-a-directory-when-using-find
 
 # \( and \) can be replaced by repeating what is outside \( and \)
@@ -37,7 +35,7 @@ vim9script
 # same as
 # findcmd = 'find . -type d -path ./dir1 -prune -o -type d -path ./dir2 -prune -o -name '*.txt' -print'
 
-findcmd = 'find . -type d -name build -prune -o -type d -name .git -prune -o -type f -print'
+var findcmd = 'find . -type d -name build -prune -o -type d -name .git -prune -o -type f -print'
 
 var grepcmd = 'ag --vimgrep --smart-case'
 if exepath('ag')->empty()

@@ -18,10 +18,27 @@ vim9script
 #
 # NOTE: In regex, .* is greedy while .\{-} is non-greedy (:h non-greedy)
 
-var findcmd = 'fd -tf'
-if exepath('fd')->empty()
-    findcmd = 'find . -type f'
-endif
+# XXX 'fd' hangs sometimes. Use 'find' with ~/.ignore file.
+# var findcmd = 'fd -tf'
+# if exepath('fd')->empty()
+#     findcmd = 'find . -type f'
+# endif
+
+# var findcmd = 'find . ! -path '*/.git/*' ! -path '*/build/*' -type f -print'
+# linux
+#  -prune prevents descent into dir while -not compares pattern but descends recursively
+#  to exclude directories with a specific name at any level, use the -name primary instead of -path
+#  easier to reason:
+#    find build -not \( -path build/external -prune \) -not \( -path build/blog -prune \) -name \*.js
+#  https://stackoverflow.com/questions/4210042/how-do-i-exclude-a-directory-when-using-find
+
+# \( and \) can be replaced by repeating what is outside \( and \)
+# findcmd = 'find . -type d \( -path ./dir1 -o -path ./dir2 \) -prune -o -name '*.txt' -print'
+# same as
+# findcmd = 'find . -type d -path ./dir1 -prune -o -type d -path ./dir2 -prune -o -name '*.txt' -print'
+
+findcmd = 'find . -type d -name build -prune -o -type d -name .git -prune -o -type f -print'
+
 var grepcmd = 'ag --vimgrep --smart-case'
 if exepath('ag')->empty()
     grepcmd = 'grep -n --recursive'

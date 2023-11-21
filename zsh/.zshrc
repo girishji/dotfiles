@@ -417,10 +417,10 @@ if [[ "$os" == "Darwin" ]]; then
     source "$HOME/.cargo/env"
     # leetcode (installed through cargo)
     eval "$(leetcode completions)"
-
-    ## Offers suggestions as you type
-    source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
+
+## Offers suggestions as you type
+source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # Make PgDn accept suggestion; by default right-arrow accepts suggestion
 bindkey '^[[6~' autosuggest-accept

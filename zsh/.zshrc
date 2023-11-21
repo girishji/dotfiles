@@ -69,7 +69,7 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 ############################################################
 # Prompt
 if [[ "$os" == "Linux" ]]; then
-    PROMPT="%F{3}%BGCLOUDL%b%f: "
+    PROMPT="%F{3}%BGCLOUD%b%f: "
     PROMPT+='%F{87}%40<..<%~%<<%f ' # shortened path
     autoload -Uz vcs_info
     precmd_vcs_info() { vcs_info }
@@ -417,10 +417,10 @@ if [[ "$os" == "Darwin" ]]; then
     source "$HOME/.cargo/env"
     # leetcode (installed through cargo)
     eval "$(leetcode completions)"
-
-    ## Offers suggestions as you type
-    source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
+
+## Offers suggestions as you type
+source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # Make PgDn accept suggestion; by default right-arrow accepts suggestion
 bindkey '^[[6~' autosuggest-accept

@@ -69,7 +69,7 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 ############################################################
 # Prompt
 if [[ "$os" == "Linux" ]]; then
-    PROMPT="%F{3}%BGCLOUDL%b%f: "
+    PROMPT="%F{3}%BGCLOUD%b%f: "
     PROMPT+='%F{87}%40<..<%~%<<%f ' # shortened path
     autoload -Uz vcs_info
     precmd_vcs_info() { vcs_info }

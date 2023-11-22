@@ -13,11 +13,6 @@ is_cloud_vm() {
     --filter="is_active=true AND name ~ cloudshell" 2> /dev/null | wc -l) -ne 0 ]]
 }
 
-is_cloud_shell() {
-    which gcloud > /dev/null && [[ $(gcloud config configurations list \
-    --filter="is_active=true AND name ~ cloudshell" 2> /dev/null | wc -l) -ne 0 ]]
-}
-
 ############################################################
 ## Completions
 # https://zsh.sourceforge.io/Guide/zshguide06.html
@@ -81,27 +76,7 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 ############################################################
 # Prompt
-if is_cloud_shell || is_cloud_vm; then
-    PROMPT="%F{3}%BGCLOUD%b%f: "
-    PROMPT+='%F{87}%40<..<%~%<<%f ' # shortened path
-    autoload -Uz vcs_info
-    precmd_vcs_info() { vcs_info }
-    precmd_functions+=( precmd_vcs_info )
-    setopt prompt_subst
-    PROMPT+=\$vcs_info_msg_0_
-    zstyle ':vcs_info:git:*' formats '%F{5}[%f%F{2}%b%f%F{5}]%f '
-    zstyle ':vcs_info:*' enable git
-    if is_cloud_vm; then
-        PROMPT+="%F{207}(%f%m%F{207})%f "
-    else
-        PROMPT+="%F{207}(%f${DEVSHELL_PROJECT_ID:-cloudshell}%F{207})%f "
-    fi
-    PROMPT+='%# ' # changes to '#' when root
-
-    RPROMPT='%F{1}%(?..%? :( )%f' # display return code of cmd only when not 0
-    # NOTE: Using single quotes will delay evaluation of functions until prompt is computed.
-    #   Double quotes forces the evaluation of function when you set the PROMPT variable.
-else
+if is_macos; then
     PROMPT="%B%F{3}[%f%F{207}$(arch)%f%F{3}]%f%b "
     PROMPT+='%40<..<%~%<< ' # shortened path
     autoload -Uz vcs_info
@@ -113,6 +88,26 @@ else
     zstyle ':vcs_info:*' enable git
     PROMPT+='%# ' # changes to '#' when root
     # PROMPT='$ '
+    RPROMPT='%F{1}%(?..%? :( )%f' # display return code of cmd only when not 0
+    # NOTE: Using single quotes will delay evaluation of functions until prompt is computed.
+    #   Double quotes forces the evaluation of function when you set the PROMPT variable.
+else
+    PROMPT="%F{3}%BGCLOUD%b%f: "
+    PROMPT+='%F{87}%40<..<%~%<<%f ' # shortened path
+    autoload -Uz vcs_info
+    precmd_vcs_info() { vcs_info }
+    precmd_functions+=( precmd_vcs_info )
+    setopt prompt_subst
+    PROMPT+=\$vcs_info_msg_0_
+    zstyle ':vcs_info:git:*' formats '%F{5}[%f%F{2}%b%f%F{5}]%f '
+    zstyle ':vcs_info:*' enable git
+    if is_cloud_vm; then
+        PROMPT+="%F{207}(%f%m%F{207})%f "
+    else # cloud shell
+        PROMPT+="%F{207}(%f${DEVSHELL_PROJECT_ID:-cloudshell}%F{207})%f "
+    fi
+    PROMPT+='%# ' # changes to '#' when root
+
     RPROMPT='%F{1}%(?..%? :( )%f' # display return code of cmd only when not 0
     # NOTE: Using single quotes will delay evaluation of functions until prompt is computed.
     #   Double quotes forces the evaluation of function when you set the PROMPT variable.

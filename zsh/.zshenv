@@ -99,10 +99,10 @@ alias vr='vim -c "normal '\''0"'  # restore last opened buffer
 alias viclean='vim --clean'
 
 unameout=$(uname -s)
-if [[ "$unameout" == "Darwin" ]]; then
+if [[ $(uname -s) == "Darwin" ]]; then
     . "$HOME/.cargo/env"
     alias ibooks='cd /Users/gp/Library/Mobile Documents/iCloud~com~apple~iBooks/Documents'
-    alias obsidian='cd /Users/gp/Library/Mobile Documents/iCloud~md~obsidian/Documents' 
+    alias obsidian='cd /Users/gp/Library/Mobile Documents/iCloud~md~obsidian/Documents'
     alias op='open'
 
     alias g gssh='gcloud compute ssh --zone "us-east1-b" "e2medium" --project "sandbox-403316" --ssh-flag="-ServerAliveInterval=30"'
@@ -110,9 +110,15 @@ if [[ "$unameout" == "Darwin" ]]; then
     # alias -g gscp='gcloud compute scp'
     alias gstop='gcloud compute instances stop e2medium'
     alias gcsh='gcloud cloud-shell ssh --authorize-session'
-elif [[ ! $(uname -n) =~ sandbox ]]; then # on google cloud shell
-    if [[ -f ~/bin/vim.appimage ]]; then
-        alias vi='~/bin/vim.appimage'
-        alias vim='~/bin/vim.appimage'
+else
+    if [[ ! -d "$HOME/.config" ]]; then
+        mkdir -p $HOME/.config
+    fi
+    # on google cloud shell
+    if which gcloud > /dev/null && [[ $(gcloud config configurations list \
+        --filter="is_active=true AND name ~ cloudshell" 2> /dev/null | wc -l) -ne 0 ]] \
+        && [[ -f ~/bin/vim.appimage ]]; then
+            alias vi='~/bin/vim.appimage'
+            alias vim='~/bin/vim.appimage'
     fi
 fi

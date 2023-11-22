@@ -98,6 +98,8 @@ alias vd='vi -d'  # diff mode - pass 2 files
 alias vr='vim -c "normal '\''0"'  # restore last opened buffer
 alias viclean='vim --clean'
 
+alias makedebug="make SHELL='sh -x'"
+
 unameout=$(uname -s)
 if [[ $(uname -s) == "Darwin" ]]; then
     . "$HOME/.cargo/env"

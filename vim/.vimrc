@@ -276,9 +276,9 @@ def PythonAbbrevs()
 enddef
 
 def CmakeAbbrevs()
-    iabbr <buffer> if() if() <c-o>end()<esc>k_f(a<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer> foreach() foreach(var IN )<c-o>endforeach()<esc>k_f)i<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer> function() function()<c-o>endfunction()<esc>k_f(a<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer> if() if() <c-o>oend()<esc>k_f(a<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer> foreach() foreach(var IN )<c-o>oendforeach()<esc>k_f)i<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer> function() function()<c-o>oendfunction()<esc>k_f(a<c-r>=<SID>Eatchar()<cr>
 enddef
 
 def InsertDashes(): string

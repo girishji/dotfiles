@@ -4,15 +4,6 @@ setopt vi
 
 setopt histignorealldups sharehistory
 
-is_macos() {
-    [[ $(uname -s) == "Darwin" ]]
-}
-
-is_cloud_shell() {
-    which gcloud > /dev/null && [[ $(gcloud config configurations list \
-    --filter="is_active=true AND name ~ cloudshell" 2> /dev/null | wc -l) -ne 0 ]]
-}
-
 ############################################################
 ## Completions
 # https://zsh.sourceforge.io/Guide/zshguide06.html

@@ -10,6 +10,15 @@
 # nonlogin shell like the one vim uses to run commands only sources ~/.zshenv.
 # See https://unix.stackexchange.com/questions/113462/how-can-i-make-shell-aliases-available-when-shelling-out-from-vim
 
+is_macos() {
+    [[ $(uname -s) == "Darwin" ]]
+}
+
+is_cloud_shell() {
+    which gcloud > /dev/null && [[ $(gcloud config configurations list \
+    --filter="is_active=true AND name ~ cloudshell" 2> /dev/null | wc -l) -ne 0 ]]
+}
+
 # suffix aliases (executing these file types will open app).
 alias -s {lua,zshrc,cpp,c,cc,py,java,html,vim,md,markdown,scm,txt,vimrc}=vim
 # alias -s git="git clone" # clone repo by simply pasting git url
@@ -46,42 +55,44 @@ EOF
 alias rg='rg --smart-case'
 alias ag='ag --smart-case'
 
-# other aliases
-alias b='bat'
-alias ba='bat --style=plain' # without line numbers
-alias bc='bc -l'
+if is_macos; then
+    alias b='bat'
+    alias ba='bat --style=plain' # without line numbers
+    alias bc='bc -l'
+    alias em='emacs'
+    # XXX: use 'py' which is ipython+pyflyby
+    alias ip='ipython --no-confirm-exit --colors=Linux'
+    alias ls='ls -FG' # aliases the command /usr/bin/ls
+    alias nv='nvim'
+else
+    alias ls='ls --color=always' # auto/always/never
+fi
+
+# NOTE: ERE (extended regex) vs BRE (basic): ERE escapes +. ? etc. like vim's 'magic'
+#       --color is --color=auto. It does not use color codes when pipe is used. To see colors use grep --color=always foo | less -R
+alias grep='command grep --color -E' # ERE instead of BRE
+alias gr='grep'
+alias gr2='grep --color=always -E' # for 'less' command pipethrough
+alias gri='grep -i'  # case insensitive
+
+alias l1='ls -1' # one listing per line
+alias l='ls'
+alias ll='ls -l'
 alias c='z'
 alias ca='cat'
 alias ci='zi' # interactive z: list the directories by fzf and cd
 alias cl='clear'
 alias diffw='diff -w'  # ignore white spaces
-alias em='emacs'
 alias f='builtin fg'
 # alias fd='fd -c never' # no colors
 alias gd='git diff'
 
-# NOTE: ERE (extended regex) vs BRE (basic): ERE escapes +. ? etc. like vim's 'magic'
-#       --color is --color=auto. It does not use color codes when pipe is used. To see colors use grep --color=always foo | less -R
-alias grep='command grep --color -E' # ERE instead of BRE
-alias grep2='grep --color=always -E' # for 'less' command pipethrough
-alias gr='grep'
-alias gri='grep -i'  # case insensitive
-#
-# XXX: use 'py' which is ipython+pyflyby
-alias ip='ipython --no-confirm-exit --colors=Linux'
-alias ls='ls -FG' # aliases the command /usr/bin/ls
-alias l1='ls -1' # one listing per line
-alias l='ls'
-alias ll='ls -l'
 alias less='command less -R' # -R for interpreting Ansi color codes
 alias le='less'
 alias p3='python3'
 alias rm='rm -i'
 alias targ='tar -c --exclude-from=.gitignore -vzf'
 alias t='python3 ~/git/t/t.py --task-dir ~/.local/share/todo --list tasks'
-alias nv='nvim'
-alias nvc='nvim --clean'
-alias nvr='nvim -c "normal '\''0"'  # restore last opened buffer ('0 mark has last cursor location)
 alias tt='tree'
 alias u='cd ..'
 alias uu='cd ../..'
@@ -101,7 +112,7 @@ alias viclean='vim --clean'
 alias makedebug="make SHELL='sh -x'"
 
 unameout=$(uname -s)
-if [[ $(uname -s) == "Darwin" ]]; then
+if is_macos; then
     . "$HOME/.cargo/env"
     alias ibooks='cd /Users/gp/Library/Mobile Documents/iCloud~com~apple~iBooks/Documents'
     alias obsidian='cd /Users/gp/Library/Mobile Documents/iCloud~md~obsidian/Documents'
@@ -116,11 +127,10 @@ else
     if [[ ! -d "$HOME/.config" ]]; then
         mkdir -p $HOME/.config
     fi
-    # on google cloud shell
-    if which gcloud > /dev/null && [[ $(gcloud config configurations list \
-        --filter="is_active=true AND name ~ cloudshell" 2> /dev/null | wc -l) -ne 0 ]] \
-        && [[ -f ~/bin/vim.appimage ]]; then
+    if is_cloud_shell; then
+        if [[ -f ~/bin/vim.appimage ]]; then
             alias vi='~/bin/vim.appimage'
             alias vim='~/bin/vim.appimage'
+        fi
     fi
 fi

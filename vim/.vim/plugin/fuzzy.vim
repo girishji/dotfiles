@@ -183,8 +183,6 @@ def FindProg(cmdline: string)
     endif
     if match[1]->empty()
         BuildList(findcmd->split())
-        items = items->mapnew((_, v) => [v, v->split('/')->len()])->sort((a, b) => a[1] < b[1] ? 0 : 1)->mapnew((_, v) => v[0])
-        echom items
     else
         var lines: list<string>
         try
@@ -206,6 +204,7 @@ def FindProg(cmdline: string)
             endfor
         catch
         endtry
+        lines = lines->mapnew((_, v) => [v, v->split('/')->len()])->sort((a, b) => a[1] < b[1] ? 0 : 1)->mapnew((_, v) => v[0])
         UpdatePopup(lines)
     endif
 enddef

@@ -105,7 +105,7 @@ else
         # PROMPT+="%F{207}(%f${DEVSHELL_PROJECT_ID:-cloudshell}%F{207})%f "
         if [[ -n "$DEVSHELL_PROJECT_ID" ]]; then
             # PROMPT+="%F{207}(%f${DEVSHELL_PROJECT_ID:-cloudshell}%F{207})%f "
-            PROMPT+="%F{207}(%f${DEVSHELL_PROJECT_ID}%F{207})%f "
+            PROMPT+="%F{207}(%fcloudshell:${DEVSHELL_PROJECT_ID}%F{207})%f "
         else
             PROMPT+="%F{207}(%fcloudshell%F{207})%f "
         fi

@@ -118,7 +118,7 @@ if is_macos; then
     alias obsidian='cd /Users/gp/Library/Mobile Documents/iCloud~md~obsidian/Documents'
     alias op='open'
 
-    alias g gssh='gcloud compute ssh --zone "us-east1-b" "n2dstd" --project "sandbox-403316" --ssh-flag="-ServerAliveInterval=30"'
+    alias g gssh='gcloud compute ssh --zone "us-central1-a" "n2dstd" --project "sandbox-403316" --ssh-flag="-ServerAliveInterval=30"'
     alias -g gscp='gcloud compute scp --recurse n2dstd:~/foo ~/bar'
     # alias -g gscp='gcloud compute scp'
     alias gstop='gcloud compute instances stop n2dstd'

@@ -102,8 +102,11 @@ else
     zstyle ':vcs_info:git:*' formats '%F{5}[%f%F{2}%b%f%F{5}]%f '
     zstyle ':vcs_info:*' enable git
     if is_cloud_shell; then
+        if [[ -n "$DEVSHELL_PROJECT_ID" ]]; then
+            PROMPT+="%F{207}(%fcloudshell:${DEVSHELL_PROJECT_ID}%F{207})%f "
+        else
+            PROMPT+="%F{207}(%fcloudshell%F{207})%f "
         # PROMPT+="%F{207}(%f${DEVSHELL_PROJECT_ID:-cloudshell}%F{207})%f "
-        PROMPT+="%F{207}(%fcloudshell%F{207})%f "
     else # cloud vm
         PROMPT+="%F{207}(%f%m%F{207})%f "
     fi

@@ -8,7 +8,7 @@ is_macos() {
     [[ $(uname -s) == "Darwin" ]]
 }
 
-is_cloud_vm() {
+is_cloud_shell() {
     which gcloud > /dev/null && [[ $(gcloud config configurations list \
     --filter="is_active=true AND name ~ cloudshell" 2> /dev/null | wc -l) -ne 0 ]]
 }
@@ -101,10 +101,10 @@ else
     PROMPT+=\$vcs_info_msg_0_
     zstyle ':vcs_info:git:*' formats '%F{5}[%f%F{2}%b%f%F{5}]%f '
     zstyle ':vcs_info:*' enable git
-    if is_cloud_vm; then
-        PROMPT+="%F{207}(%f%m%F{207})%f "
-    else # cloud shell
+    if is_cloud_shell; then
         PROMPT+="%F{207}(%f${DEVSHELL_PROJECT_ID:-cloudshell}%F{207})%f "
+    else # cloud vm
+        PROMPT+="%F{207}(%f%m%F{207})%f "
     fi
     PROMPT+='%# ' # changes to '#' when root
 

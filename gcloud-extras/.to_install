@@ -1,24 +1,19 @@
 #!/bin/sh
 
-# https://cloud.google.com/shell/docs/configuring-cloud-shell
+sudo apt-get update
+sudo apt-get -y install stow
+sudo apt-get -y install fd-find
+sudo apt-get -y install zoxide
+sudo apt-get -y install silversearcher-ag
+sudo apt-get -y install ripgrep
+sudo apt-get -y install tree
+sudo apt-get -y install zsh
+sudo apt-get -y install zsh-autosuggestions
+sudo apt-get -y install build-essential
+sudo apt-get -y install cmake
+sudo apt-get -y install git
+sudo apt-get -y install python3-pip
+sudo apt-get -y install vim
+sudo apt-get -y install gh
 
-# Cloud Shell automatically runs the script, $HOME/.customize_environment, when
-# your instance boots up. Unlike .profile or .bashrc, this script runs once
-# when Cloud Shell boots (rather than once for each shell login).
-
-# This script runs as root and you can install any packages that you want to
-# exist in each Cloud Shell session using Debian package management commands.
-
-apt-get update
-apt-get -y install stow
-apt-get -y install fd-find
-apt-get -y install zoxide
-apt-get -y install silversearcher-ag
-apt-get -y install ripgrep
-apt-get -y install tree
-apt-get -y install zsh
-apt-get -y install zsh-autosuggestions
-apt-get -y install build-essential
-apt-get -y install cmake
-apt-get -y install git
-apt-get -y install python3-pip
+sudo chsh -s /bin/zsh "$USER"

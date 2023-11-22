@@ -1,0 +1,328 @@
+2023-11-22 06:49:05,542 DEBUG    root            Loaded Command Group: ['gcloud', 'topic']
+2023-11-22 06:49:05,549 DEBUG    root            Loaded Command Group: ['gcloud', 'topic', 'filters']
+2023-11-22 06:49:05,551 DEBUG    root            Running [gcloud.topic.filters] with arguments: []
+2023-11-22 06:49:05,552 DEBUG    root            Running [gcloud.topic.filters] with arguments: [--document: "None"]
+2023-11-22 06:49:05,553 DEBUG    root            Loaded Command Group: ['gcloud', 'alpha', 'topic']
+2023-11-22 06:49:05,556 DEBUG    root            Loaded Command Group: ['gcloud', 'alpha', 'topic', 'filters']
+2023-11-22 06:49:05,557 DEBUG    root            Loaded Command Group: ['gcloud', 'beta', 'topic']
+2023-11-22 06:49:05,560 DEBUG    root            Loaded Command Group: ['gcloud', 'beta', 'topic', 'filters']
+2023-11-22 06:49:05,568 DEBUG    root            Loaded Command Group: ['gcloud', 'topic', 'formats']
+2023-11-22 06:49:05,571 DEBUG    root            Loaded Command Group: ['gcloud', 'topic', 'resource_keys']
+2023-11-22 06:49:05,574 DEBUG    root            Loaded Command Group: ['gcloud', 'topic', 'projections']
+2023-11-22 06:49:05,665 DEBUG    root            Loaded Command Group: ['gcloud', 'compute']
+2023-11-22 06:49:05,707 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'instances']
+2023-11-22 06:49:05,735 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'instances', 'list']
+2023-11-22 06:49:05,739 DEBUG    root            Loaded Command Group: ['gcloud', 'projects']
+2023-11-22 06:49:05,747 DEBUG    root            Loaded Command Group: ['gcloud', 'projects', 'list']
+2023-11-22 06:49:05,760 DEBUG    root            Loaded Command Group: ['gcloud', 'projects', 'get_iam_policy']
+2023-11-22 06:49:05,764 DEBUG    root            Loaded Command Group: ['gcloud', 'container', 'images']
+2023-11-22 06:49:05,847 DEBUG    root            Loaded Command Group: ['gcloud', 'container', 'images', 'list_tags']
+2023-11-22 06:49:05,861 DEBUG    root            Chosen display Format:table[width=80]([0]:label='PATTERN':align=left,[1]:label='VALUE':align=left,[2]:label='MATCHES':align=left,[3]:label='DEPRECATED_MATCHES':align=left)
+2023-11-22 06:49:05,863 INFO     ___FILE_ONLY___ [m[1mNAME[m
+    gcloud topic filters - resource filters supplementary help
+
+[m[1mDESCRIPTION[m
+    Most [1mgcloud[m commands return a list of resources on success. By default they
+    are pretty-printed on the standard output. The
+    [1m--format=[m[4mNAME[m[[4mATTRIBUTES[m][1m([m[4mPROJECTION[m[1m)[m and [1m--filter=[m[4mEXPRESSION[m flags along
+    with projections can be used to format and change the default output to a
+    more meaningful result.
+
+    Use the [1m--format[m flag to change the default output format of a command. For
+    details run $ gcloud topic formats.
+
+    Use the [1m--filter[m flag to select resources to be listed. Resource filters
+    are described in detail below.
+
+    Use resource-keys to reach resource items through a unique path of names
+    from the root. For details run $ gcloud topic resource-keys.
+
+    Use projections to list a subset of resource keys in a resource. For
+    details run $ gcloud topic projections.
+
+    Note: To refer to a list of fields you can sort, filter, and format by for
+    each resource, you can run a list command with the format set to [1mtext[m or
+    [1mjson[m. For example, $ gcloud compute instances list --limit=1 --format=text.
+
+    To work through an interactive tutorial about using the filter and format
+    flags instead, see:
+    https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/cloud-shell-tutorials&page=editor&tutorial=cloudsdk/tutorial.md
+
+    Note: Depending on the specific server API, filtering may be done entirely
+    by the client, entirely by the server, or by a combination of both.
+
+[m  [1mFilter Expressions[m
+    A filter expression is a Boolean function that selects the resources to
+    print from a list of resources. Expressions are composed of terms connected
+    by logic operators.
+
+     [1mLogicOperator[m
+        Logic operators must be in uppercase: [1mAND[m, [1mOR[m, [1mNOT[m. Additionally,
+        expressions containing both [1mAND[m and [1mOR[m must be parenthesized to
+        disambiguate precedence.
+
+         [1mNOT[m [4mterm-1[m
+            True if [4mterm-1[m is False, otherwise False.
+
+         [4mterm-1[m [1mAND[m [4mterm-2[m
+            True if both [4mterm-1[m and [4mterm-2[m are true.
+
+         [4mterm-1[m [1mOR[m [4mterm-2[m
+            True if at least one of [4mterm-1[m or [4mterm-2[m is true.
+
+         [4mterm-1[m [4mterm-2[m
+            Term conjunction (implicit [1mAND[m) is True if both [4mterm-1[m and [4mterm-2[m
+            are true. Conjunction has lower precedence than [1mOR[m.
+
+     [1mTerms[m
+        A term is a [4mkey[m [4moperator[m [4mvalue[m tuple, where [4mkey[m is a dotted name that
+        evaluates to the value of a resource attribute, and [4mvalue[m may be:
+
+         [1mnumber[m
+            integer or floating point numeric constant
+
+         [1munquoted literal[m
+            character sequence terminated by space, ( or )
+
+         [1mquoted literal[m
+            [4m"..."[m or [4m'...'[m
+
+            Most filter expressions need to be quoted in shell commands. If you
+            use [4m'...'[m shell quotes then use [4m"..."[m filter string literal quotes
+            and vice versa.
+
+        Quoted literals will be interpreted as string values, even when the
+        value could also be a valid number. For example, 'key:1e9' will be
+        interpreted as a key named 'key' with the string value '1e9', rather
+        than with the float value of one billion expressed in scientific
+        notation.
+
+     [1mOperator Terms[m
+         [4mkey[m [1m:[m [4msimple-pattern[m
+            [1m:[m operator evaluation is changing for consistency across Google
+            APIs. The current default is deprecated and will be dropped
+            shortly. A warning will be displayed when a --filter expression
+            would return different matches using both the deprecated and new
+            implementations.
+
+            The current deprecated default is True if [4mkey[m contains
+            [4msimple-pattern[m. The match is case insensitive. It allows one [1m*[m that
+            matches any sequence of 0 or more characters. If [1m*[m is specified
+            then the match is anchored, meaning all characters from the
+            beginning and end of the value must match.
+
+            The new implementation is True if [4msimple-pattern[m matches any [4mword[m
+            in [4mkey[m. Words are locale specific but typically consist of
+            alpha-numeric characters. Non-word characters that do not appear in
+            [4msimple-pattern[m are ignored. The matching is anchored and case
+            insensitive. An optional trailing [1m*[m does a word prefix match.
+
+            Use [4mkey[m[1m:*[m to test if [4mkey[m is defined and [1m-[m[4mkey[m[1m:*[m to test if [4mkey[m is
+            undefined.
+
+         [4mkey[m [1m:([m [4msimple-pattern[m ... [1m)[m
+            True if [4mkey[m matches any [4msimple-pattern[m in the (space, tab, newline,
+            comma) separated list.
+
+         [4mkey[m [1m=[m [4mvalue[m
+            True if [4mkey[m is equal to [4mvalue[m, or [deprecated] equivalent to [1m:[m with
+            the exception that the trailing [1m*[m prefix match is not supported.
+
+            For historical reasons, this operation currently behaves
+            differently for different Google APIs. For many APIs, this is True
+            if key is equal to value. For a few APIs, this is currently
+            equivalent to [1m:[m, with the exception that the trailing [1m*[m prefix
+            match is not supported. However, this behaviour is being phased
+            out, and use of [1m=[m for those APIs is deprecated; for those APIs, if
+            you want matching, you should use [1m:[m instead of [1m=[m, and if you want
+            to test for equality, you can use [4mkey[m <= [4mvalue[m AND [4mkey[m >= [4mvalue[m.
+
+         [4mkey[m [1m=([m [4mvalue[m ... [1m)[m
+            True if [4mkey[m is equal to any [4mvalue[m in the (space, tab, newline, [1m,[m)
+            separated list.
+
+         [4mkey[m [1m!=[m [4mvalue[m
+            True if [4mkey[m is not [4mvalue[m. Equivalent to -[4mkey[m=[4mvalue[m and NOT
+            [4mkey[m=[4mvalue[m.
+
+         [4mkey[m [1m<[m [4mvalue[m
+            True if [4mkey[m is less than [4mvalue[m. If both [4mkey[m and [4mvalue[m are numeric
+            then numeric comparison is used, otherwise lexicographic string
+            comparison is used.
+
+         [4mkey[m [1m<=[m [4mvalue[m
+            True if [4mkey[m is less than or equal to [4mvalue[m. If both [4mkey[m and [4mvalue[m
+            are numeric then numeric comparison is used, otherwise
+            lexicographic string comparison is used.
+
+         [4mkey[m [1m>=[m [4mvalue[m
+            True if [4mkey[m is greater than or equal to [4mvalue[m. If both [4mkey[m and
+            [4mvalue[m are numeric then numeric comparison is used, otherwise
+            lexicographic string comparison is used.
+
+         [4mkey[m [1m>[m [4mvalue[m
+            True if [4mkey[m is greater than [4mvalue[m. If both [4mkey[m and [4mvalue[m are
+            numeric then numeric comparison is used, otherwise lexicographic
+            string comparison is used.
+
+         [4mkey[m [1m~[m [4mvalue[m
+            True if [4mkey[m contains a match for the RE (regular expression)
+            pattern [4mvalue[m. Depending on your shell, you might have to escape or
+            quote [4m~[m to ensure it isn't consumed as HOME.
+
+         [4mkey[m [1m!~[m [4mvalue[m
+            True if [4mkey[m does not contain a match for the RE (regular
+            expression) pattern [4mvalue[m. Depending on your shell, you might have
+            to escape or quote [4m~[m to ensure it isn't consumed as HOME.
+
+        Regular expressions are evaluated using Python's standard library:
+        https://docs.python.org/3/library/re.html#re-syntax.
+
+[m  [1mDetermine which fields are available for filtering[m
+    In order to build filters, it is often helpful to review some
+    representative fields returned from commands. One simple way to do this is
+    to add [1m--format=yaml --limit=1[m to a command. With these flags, a single
+    record is returned and its full contents are displayed as a YAML document.
+    For example, a list of project fields could be generated by running:
+
+        $ gcloud projects list --format=yaml --limit=1
+
+    This might display the following data:
+
+        createTime: '2021-02-10T19:19:49.242Z'
+        lifecycleState: ACTIVE
+        name: MyProject
+        parent:
+          id: '123'
+          type: folder
+        projectId: my-project
+        projectNumber: '456'
+
+    Using this data, one way of filtering projects is by their parent's ID by
+    specifying [1m[1;4mparent.id[1m[m as the [4mkey[m.
+
+[m  [1mFilter on a custom or nested list in response[m
+    By default the filter expression operates on root level resources. In order
+    to filter on a nested list(not at the root level of the json) , one can use
+    the [1m--flatten[m flag to provide a the [1mresource-key[m to list. For example, To
+    list members under [1mmy-project[m that have an editor role, one can run:
+
+        $ gcloud projects get-iam-policy cloudsdktest --flatten=bindings \
+            --filter=bindings.role:roles/editor \
+            --format='value(bindings.members)'
+
+[m[1mEXAMPLES[m
+    List all Google Compute Engine instance resources:
+
+        $ gcloud compute instances list
+
+    List Compute Engine instance resources that have machineType [1mf1-micro[m:
+
+        $ gcloud compute instances list --filter="machineType:f1-micro"
+
+    List Compute Engine instance resources using a regular expression for zone
+    [1mus[m and not MachineType [1mf1-micro[m:
+
+        $ gcloud compute instances list \
+            --filter="zone ~ us AND -machineType:f1-micro"
+
+    List Compute Engine instance resources with tag [1mmy-tag[m:
+
+        $ gcloud compute instances list --filter="tags.items=my-tag"
+
+    List Compute Engine instance resources with tag [1mmy-tag[m or [1mmy-other-tag[m:
+
+        $ gcloud compute instances list \
+            --filter="tags.items=(my-tag,my-other-tag)"
+
+    List Compute Engine instance resources with tag [1mmy-tag[m and [1mmy-other-tag[m:
+
+        $ gcloud compute instances list \
+            --filter="tags.items=my-tag AND tags.items=my-other-tag"
+
+    List Compute Engine instance resources which either have tag [1mmy-tag[m but not
+    [1mmy-other-tag[m or have tag [1malternative-tag[m:
+
+        $ gcloud compute instances list \
+            --filter="(tags.items=my-tag AND -tags.items=my-other-tag) OR \
+        tags.items=alternative-tag"
+
+    List Compute Engine instance resources which contain the key [1mfingerprint[m in
+    the [1mmetadata[m object:
+
+        $ gcloud compute instances list --limit=1 \
+            --filter="metadata.list(show="keys"):fingerprint"
+
+    List Compute Engine instance resources with label [1mmy-label[m with any value:
+
+        $ gcloud compute instances list --filter="labels.my-label:*"
+
+    List Container Registry images that have a tag with the value '30e5504145':
+
+        $ gcloud container images list-tags --filter="'tags:30e5504145'"
+
+    The last example encloses the filter expression in single quotes because
+    the value '30e5504145' could be interpreted as a number in scientific
+    notation.
+
+    List in JSON format those projects where the labels match specific values
+    (e.g. label.env is 'test' and label.version is alpha):
+
+        $ gcloud projects list --format="json" \
+            --filter="labels.env=test AND labels.version=alpha"
+
+    List projects that were created on and after a specific date:
+
+        $ gcloud projects list \
+            --format="table(projectNumber,projectId,createTime)" \
+            --filter="createTime>=2018-01-15"
+
+    List projects that were created on and after a specific date and time and
+    sort from oldest to newest (with dates and times listed according to the
+    local timezone):
+
+        $ gcloud projects list \
+            --format="table(projectNumber,projectId,createTime.date(tz=LOCAL\
+        ))" --filter="createTime>=2018-01-15T12:00:00" --sort-by=createTime
+
+    List projects that were created within the last two weeks, using ISO8601
+    durations:
+
+        $ gcloud projects list \
+            --format="table(projectNumber,projectId,createTime)" \
+            --filter="createTime>-P2W"
+
+    For more about ISO8601 durations, see:
+    https://en.wikipedia.org/wiki/ISO_8601
+
+    The table below shows examples of pattern matching if used with the [1m:[m
+    operator:
+
+      PATTERN  VALUE        MATCHES  DEPRECATED_MATCHES
+      abc*     abcpdqxyz    True     True
+      abc      abcpdqxyz    False    True
+      pdq*     abcpdqxyz    False    False
+      pdq      abcpdqxyz    False    True
+      xyz*     abcpdqxyz    False    False
+      xyz      abcpdqxyz    False    True
+      *        abcpdqxyz    True     True
+      *        (None)       False    False
+      *        ('')         False    False
+      *        (otherwise)  True     True
+      abc*     abc.pdq.xyz  True     True
+      abc      abc.pdq.xyz  True     True
+      abc.pdq  abc.pdq.xyz  True     True
+      pdq*     abc.pdq.xyz  True     False
+      pdq      abc.pdq.xyz  True     True
+      pdq.xyz  abc.pdq.xyz  True     True
+      xyz*     abc.pdq.xyz  True     False
+      xyz      abc.pdq.xyz  True     True
+
+[m[1mNOTES[m
+    These variants are also available:
+
+        $ gcloud alpha topic filters
+
+        $ gcloud beta topic filters
+
+[m

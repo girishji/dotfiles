@@ -1,0 +1,23 @@
+2023-11-22 08:04:29,293 DEBUG    root            Loaded Command Group: ['gcloud', 'config']
+2023-11-22 08:04:29,295 DEBUG    root            Loaded Command Group: ['gcloud', 'config', 'configurations']
+2023-11-22 08:04:29,296 DEBUG    root            Loaded Command Group: ['gcloud', 'config', 'configurations', 'list']
+2023-11-22 08:04:29,299 DEBUG    root            Running [gcloud.config.configurations.list] with arguments: [--filter: "is_active=true AND name ~ cloudshell"]
+2023-11-22 08:04:29,299 DEBUG    root            Chosen display Format:table(
+        name,
+        is_active,
+        properties.core.account,
+        properties.core.project,
+        properties.compute.zone:label=COMPUTE_DEFAULT_ZONE,
+        properties.compute.region:label=COMPUTE_DEFAULT_REGION)
+    
+2023-11-22 08:04:29,301 INFO     root            Display format: "table(
+        name,
+        is_active,
+        properties.core.account,
+        properties.core.project,
+        properties.compute.zone:label=COMPUTE_DEFAULT_ZONE,
+        properties.compute.region:label=COMPUTE_DEFAULT_REGION)
+    "
+2023-11-22 08:04:29,304 INFO     ___FILE_ONLY___ Listed 0 items.
+
+2023-11-22 08:04:29,304 DEBUG    root            SDK update checks are disabled.

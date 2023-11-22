@@ -1,0 +1,39 @@
+2023-11-22 06:44:04,580 DEBUG    root            Loaded Command Group: ['gcloud', 'config']
+2023-11-22 06:44:04,583 DEBUG    root            Loaded Command Group: ['gcloud', 'config', 'configurations']
+2023-11-22 06:44:04,587 DEBUG    root            Loaded Command Group: ['gcloud', 'config', 'configurations', 'list']
+2023-11-22 06:44:04,589 DEBUG    root            Running [gcloud.config.configurations.list] with arguments: []
+2023-11-22 06:44:04,589 DEBUG    root            Chosen display Format:table(
+        name,
+        is_active,
+        properties.core.account,
+        properties.core.project,
+        properties.compute.zone:label=COMPUTE_DEFAULT_ZONE,
+        properties.compute.region:label=COMPUTE_DEFAULT_REGION)
+    
+2023-11-22 06:44:04,590 INFO     root            Display format: "table(
+        name,
+        is_active,
+        properties.core.account,
+        properties.core.project,
+        properties.compute.zone:label=COMPUTE_DEFAULT_ZONE,
+        properties.compute.region:label=COMPUTE_DEFAULT_REGION)
+    "
+2023-11-22 06:44:04,593 INFO     ___FILE_ONLY___ NAME
+2023-11-22 06:44:04,594 INFO     ___FILE_ONLY___      
+2023-11-22 06:44:04,594 INFO     ___FILE_ONLY___ IS_ACTIVE
+2023-11-22 06:44:04,594 INFO     ___FILE_ONLY___   
+2023-11-22 06:44:04,594 INFO     ___FILE_ONLY___ ACCOUNT
+2023-11-22 06:44:04,594 INFO     ___FILE_ONLY___   
+2023-11-22 06:44:04,594 INFO     ___FILE_ONLY___ PROJECT
+2023-11-22 06:44:04,594 INFO     ___FILE_ONLY___   
+2023-11-22 06:44:04,594 INFO     ___FILE_ONLY___ COMPUTE_DEFAULT_ZONE
+2023-11-22 06:44:04,594 INFO     ___FILE_ONLY___   
+2023-11-22 06:44:04,594 INFO     ___FILE_ONLY___ COMPUTE_DEFAULT_REGION
+2023-11-22 06:44:04,594 INFO     ___FILE_ONLY___ 
+
+2023-11-22 06:44:04,594 INFO     ___FILE_ONLY___ default
+2023-11-22 06:44:04,594 INFO     ___FILE_ONLY___   
+2023-11-22 06:44:04,594 INFO     ___FILE_ONLY___ True
+2023-11-22 06:44:04,595 INFO     ___FILE_ONLY___ 
+
+2023-11-22 06:44:04,595 DEBUG    root            SDK update checks are disabled.

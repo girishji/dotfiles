@@ -1,10 +1,22 @@
 ############################################################
 
-os=$(uname -s)
-
 setopt vi
 
 setopt histignorealldups sharehistory
+
+is_macos() {
+    [[ $(uname -s) == "Darwin" ]]
+}
+
+is_cloud_vm() {
+    which gcloud > /dev/null && [[ $(gcloud config configurations list \
+    --filter="is_active=true AND name ~ cloudshell" 2> /dev/null | wc -l) -ne 0 ]]
+}
+
+is_cloud_shell() {
+    which gcloud > /dev/null && [[ $(gcloud config configurations list \
+    --filter="is_active=true AND name ~ cloudshell" 2> /dev/null | wc -l) -ne 0 ]]
+}
 
 ############################################################
 ## Completions
@@ -25,9 +37,6 @@ zstyle ':completion:*' completer _expand _expand_alias _complete _correct _appro
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
-if [[ "$os" == "Linux" ]]; then
-    eval "$(dircolors -b)"
-fi
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
@@ -40,6 +49,10 @@ zstyle ':completion:*' verbose true
 
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+
+# if [[ "$os" == "Linux" ]]; then
+#     eval "$(dircolors -b)"
+# fi
 
 ## OLD ##
 # # Autocompletion prioritize files with suffix aliases ahead of commands
@@ -68,7 +81,7 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 ############################################################
 # Prompt
-if [[ "$os" == "Linux" ]]; then
+if is_cloud_shell || is_cloud_vm; then
     PROMPT="%F{3}%BGCLOUD%b%f: "
     PROMPT+='%F{87}%40<..<%~%<<%f ' # shortened path
     autoload -Uz vcs_info
@@ -78,7 +91,11 @@ if [[ "$os" == "Linux" ]]; then
     PROMPT+=\$vcs_info_msg_0_
     zstyle ':vcs_info:git:*' formats '%F{5}[%f%F{2}%b%f%F{5}]%f '
     zstyle ':vcs_info:*' enable git
-    PROMPT+="%F{207}(%f${DEVSHELL_PROJECT_ID:-cloudshell}%F{207})%f "
+    if is_cloud_vm; then
+        PROMPT+="%F{207}(%f%m%F{207})%f "
+    else
+        PROMPT+="%F{207}(%f${DEVSHELL_PROJECT_ID:-cloudshell}%F{207})%f "
+    fi
     PROMPT+='%# ' # changes to '#' when root
 
     RPROMPT='%F{1}%(?..%? :( )%f' # display return code of cmd only when not 0
@@ -104,7 +121,7 @@ fi
 ############################################################
 ## Exports
 
-if [[ "$os" == "Darwin" ]]; then
+if is_macos; then
     # Setup to use appropriate brew based on arch value and set
     # HOMEBREW_PREFIX, PATH and other global vars
     if [ "$(arch)" = "arm64" ]; then
@@ -168,7 +185,7 @@ bindkey -M vicmd "\C-y" yank_previous_word_and_print
 
 # Change cursor shape for different vi modes.
 # https://gist.github.com/LukeSmithxyz/e62f26e55ea8b0ed41a65912fbebbe52
-function zle-keymap-select {
+zle-keymap-select() {
   if [[ ${KEYMAP} == vicmd ]] ||
      [[ $1 = 'block' ]]; then
     echo -ne '\e[2 q'
@@ -312,7 +329,7 @@ bindkey "\C-xs" insert_sed
 #   loaded all ways to find the command. Execute it once and then
 #   it will show up in suggestions.
 
-if [[ "$os" == "Darwin" ]]; then
+if is_macos; then
 
     # rsync dirs A and B, A being the source
     # https://stackoverflow.com/questions/13713101/rsync-exclude-according-to-gitignore-hgignore-svnignore-like-filter-c
@@ -410,7 +427,7 @@ venvdeactivate() {
 # Configure zoxide completion
 eval "$(zoxide init zsh)"
 
-if [[ "$os" == "Darwin" ]]; then
+if is_macos; then
     # leetcode-api
     # Rust
     source "$HOME/.cargo/env"
@@ -436,7 +453,7 @@ bindkey '^[[6~' autosuggest-accept
 
 ############################################################
 
-if [[ "$os" == "Darwin" ]]; then
+if is_macos; then
     # The next line updates PATH for the Google Cloud SDK.
     if [ -f '/Users/gp/.local/opt/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/gp/.local/opt/google-cloud-sdk/path.zsh.inc'; fi
     # The next line enables shell command completion for gcloud.

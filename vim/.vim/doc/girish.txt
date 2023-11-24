@@ -291,6 +291,11 @@ Note: <() is process substitution
 (https://tldp.org/LDP/abs/html/process-sub.html)
 
 ----------------------------------------
+unit testing~
+
+https://stackoverflow.com/questions/16739300/redirect-ex-command-to-stdout-in-vim
+
+----------------------------------------
 |sub-replace|
 
 When the substitute string starts with "\=" the remainder is interpreted as an

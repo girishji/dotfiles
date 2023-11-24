@@ -762,7 +762,7 @@ var options = {
         pum: true,
         hidestatusline: false,
         fuzzy: false,
-        # exclude: ['^buffer ', '^F'],
+        exclude: ['^buffer ', '^Find', '^Buffer'],
         # onspace: ['buffer', 'Find'],
         onspace: ['buffer'],
         editcmdworkaround: true,

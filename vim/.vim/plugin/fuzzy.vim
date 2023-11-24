@@ -30,12 +30,7 @@ vim9script
 #  to exclude directories with a specific name at any level, use the -name primary instead of -path
 #  https://stackoverflow.com/questions/4210042/how-do-i-exclude-a-directory-when-using-find
 
-# \( and \) can be replaced by repeating what is outside \( and \)
-# findcmd = 'find . -type d \( -path ./dir1 -o -path ./dir2 \) -prune -o -name '*.txt' -print'
-# same as
-# findcmd = 'find . -type d -path ./dir1 -prune -o -type d -path ./dir2 -prune -o -name '*.txt' -print'
-
-var findcmd = 'find . -type d -name build -prune -o -type d -name .git -prune -o -type f -name *.swp -prune -o -type f -print'
+var findcmd = 'find . -type d -name build -prune -o -type f -name *.swp -prune -o -path */.* -prune -o -type f -print'
 
 var grepcmd = 'ag --vimgrep --smart-case'
 if exepath('ag')->empty()
@@ -286,7 +281,7 @@ def BufferProg(cmdline: string)
         var lines: list<string>
         try
             if match[2] !~ '/' # search only file names, not full path
-                lines = items->copy()->filter((_, v) => v->matchstr('".*"')->fnamemodify(':t') =~ Smartcase(match[2]))
+                lines = items->copy()->filter((_, v) => v->matchstr('".*"')->fnamemodify(':t') =~ $'^{Smartcase(match[2])}')
                 if lines->empty()
                     lines = items->copy()->filter((_, v) => v->matchstr('".*"') =~ Smartcase(match[2]))
                 endif

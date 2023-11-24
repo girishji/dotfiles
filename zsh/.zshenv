@@ -25,8 +25,9 @@ alias -s {lua,zshrc,cpp,c,cc,py,java,html,vim,md,markdown,scm,txt,vimrc}=vim
 
 # global aliases
 # http://www.zzapper.co.uk/AliasTypesCheatSheet.php
-alias -g G='| grep -iE'
-alias -g Gv='| grep -ivE' # negative grep pipe
+alias -g G='| grep --color -iE'
+
+# alias -g fg='find . -path "*/.*" -prune -o -exec {} \;'
 alias -g H='| head '
 alias -g L='| less '
 # TAB Expand and then tweak as required
@@ -35,6 +36,12 @@ alias -g SED=$'| sed \'/color/ s/red/green/g\''
 # alias -g X=$'| xargs -I {} -t echo {}' # -t will echo the command
 alias -g X=$'| xargs -I {} echo {}'
 alias -g T=' 2>&1 | tee tee.txt'
+
+# cannot alias 'fi' since it is a reserved keyword, 'fg' is foreground cmd
+alias -g F='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print'
+alias -g fin='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print'
+alias -g fig='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print -exec grep --color -Ei x {} \;'
+
 alias -g fdf='fd -tf -tl' # search file, ex: fdf foo
 alias -g fdd='fd -td' # search dir, ex: fdd foo
 alias -g fdx='fd -tx' # search executable
@@ -70,10 +77,9 @@ fi
 
 # NOTE: ERE (extended regex) vs BRE (basic): ERE escapes +. ? etc. like vim's 'magic'
 #       --color is --color=auto. It does not use color codes when pipe is used. To see colors use grep --color=always foo | less -R
-alias grep='command grep --color -E' # ERE instead of BRE
-alias gr='grep'
+alias gr1='command grep --color -E' # ERE instead of BRE
 alias gr2='grep --color=always -E' # for 'less' command pipethrough
-alias gri='grep -i'  # case insensitive
+alias -g gr='grep --color=always -Ei' # ERE and case insensitive
 
 alias l1='ls -1' # one listing per line
 alias l='ls'

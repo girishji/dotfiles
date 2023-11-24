@@ -35,7 +35,7 @@ vim9script
 # same as
 # findcmd = 'find . -type d -path ./dir1 -prune -o -type d -path ./dir2 -prune -o -name '*.txt' -print'
 
-var findcmd = 'find . -type d -name build -prune -o -type d -name .git -prune -o -type f -print'
+var findcmd = 'find . -type d -name build -prune -o -type d -name .git -prune -o -type f -name *.swp -prune -o -type f -print'
 
 var grepcmd = 'ag --vimgrep --smart-case'
 if exepath('ag')->empty()

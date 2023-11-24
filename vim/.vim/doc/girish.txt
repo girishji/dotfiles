@@ -279,7 +279,6 @@ https://vi.stackexchange.com/questions/24462/what-are-the-new-popup-windows-in-v
 ----------------------------------------
 Legacy script:
 How to quickly test some vim9script in shell 
-Mapped in zsh to 'vims'
 >
     vim -Nu NONE -S <(cat <<EOF
         vim9script
@@ -290,8 +289,6 @@ Mapped in zsh to 'vims'
     )
 Note: <() is process substitution
 (https://tldp.org/LDP/abs/html/process-sub.html)
-
-n++ and --n does not work. only +- and -= work.
 
 ----------------------------------------
 |sub-replace|

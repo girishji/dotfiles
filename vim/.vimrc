@@ -117,18 +117,18 @@ nnoremap <leader>fd :dlist<space>/| # :dli
 autocmd FTOptions FileType java setlocal define=^\\s*class
 autocmd FTOptions FileType python,vim setlocal define=^\\s*def
 
-if filereadable('./cscope.out')
-    cscope add ./cscope.out
-elseif filereadable('./../cscope.out')
-    cscope add ./../cscope.out
-elseif filereadable(expand('~/cscope/cscope.out'))
-    cscope add ~/cscope/cscope.out
-endif
-
+autocmd FTOptions FileType c,cpp
+            \ if filereadable('./cscope.out') |
+            \     cscope add ./cscope.out |
+            \ elseif filereadable('./../cscope.out') |
+            \     cscope add ./../cscope.out |
+            \ elseif filereadable(expand('~/cscope/cscope.out')) |
+            \     cscope add ~/cscope/cscope.out |
+            \ endif |
+            \ set tags=./tags,./../tags,./../../tags,./*/tags
 # ctags will search the following for 'tags' file
 # default:
 # set tags=./tags,./../tags,./*/tags
-set tags=./tags,./../tags,./../../tags,./*/tags
 
 # https://www.reddit.com/r/vim/comments/7bj837/favorite_console_tools_to_use_with_vim/
 # Workflow: Sometimes I have to look through a lot of files for a needle in a
@@ -149,6 +149,8 @@ set tags=./tags,./../tags,./../../tags,./*/tags
 # Since caddexpr does not open qf-list automatically, open it manunally :copen or :cwindow or <leader>vc
 # nnoremap <leader>vg :g//caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<c-left><c-left><right><right>
 
+autocmd FTOptions FileType markdown
+            \ nnoremap <buffer> <leader>` ciw``<esc>P
 
 #---------------------
 # AUTOCOMPLETE:
@@ -304,8 +306,6 @@ augroup END
 
 # cmdline abbrevs
 cabbr <buffer> align   s/\v(.*)#(.*)/\=printf("%-16s %s", submatch(1), submatch(2))/<c-r>=g:Eatchar()<cr>
-
-
 
 #---------------------
 # Options
@@ -707,17 +707,17 @@ Plug 'girishji/vsnip-complete.vim'
 Plug 'girishji/omnifunc-complete.vim'
 Plug 'girishji/lsp-complete.vim'
 Plug 'girishji/pythondoc.vim'
-# Plug '~/git/easyjump.vim'
-Plug 'girishji/easyjump.vim'
+Plug '~/git/easyjump.vim'
+# Plug 'girishji/easyjump.vim'
 plug#end()
 
 #---------------------
 # easyjump
 
-g:easyjump_default_keymap = false
-nmap s <Plug>EasyjumpJump;
-omap s <Plug>EasyjumpJump;
-vmap s <Plug>EasyjumpJump;
+# g:easyjump_default_keymap = false
+# nmap s <Plug>EasyjumpJump;
+# omap s <Plug>EasyjumpJump;
+# vmap s <Plug>EasyjumpJump;
 
 #--------------------
 # pythondoc

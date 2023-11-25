@@ -136,7 +136,7 @@ autocmd MyFTOptions FileType python,vim setlocal define=^\\s*def
 autocmd MyFTOptions FileType markdown
             \ nnoremap <buffer> <leader>` ciw``<esc>P
 
-def SetupTags()
+def SetupCscope()
     if filereadable('./cscope.out')
         cscope add ./cscope.out
     elseif filereadable('./../cscope.out')
@@ -144,12 +144,12 @@ def SetupTags()
     elseif filereadable(expand('~/cscope/cscope.out'))
         cscope add ~/cscope/cscope.out
     endif
-    # ctags will search the following for 'tags' file
-    # default: set tags=./tags,./../tags,./*/tags
-    set tags=./tags,./../tags,./../../tags,./*/tags
 enddef
+command CscopeDB SetupCscope()
 
-autocmd MyFTOptions FileType c,cpp SetupTags()
+# ctags will search the following for 'tags' file
+# default: set tags=./tags,./../tags,./*/tags
+
 
 #---------------------
 # AUTOCOMPLETE:

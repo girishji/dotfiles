@@ -20,8 +20,9 @@ map <BS> <Leader>
 # reset the cursor on start
 autocmd VimEnter,VimResume * silent execute '!echo -ne "\e[2 q"' | redraw!
 
+# sourced automatically: source $VIMRUNTIME/defaults.vim
 
-augroup FTOptions | autocmd!
+augroup MyFTOptions | autocmd!
 
 #---------------------
 # Navigation and Search
@@ -114,26 +115,9 @@ nnoremap <leader>fd :dlist<space>/| # :dli
 # (girish: above will list all #define when you do / and search in all files)
 
 # Convince java that 'class' is a macro like C's #define
-autocmd FTOptions FileType java setlocal define=^\\s*class
-autocmd FTOptions FileType python,vim setlocal define=^\\s*def
+autocmd MyFTOptions FileType java setlocal define=^\\s*class
+autocmd MyFTOptions FileType python,vim setlocal define=^\\s*def
 
-autocmd FTOptions FileType c,cpp
-            \ if filereadable('./cscope.out') |
-            \     cscope add ./cscope.out |
-            \ elseif filereadable('./../cscope.out') |
-            \     cscope add ./../cscope.out |
-            \ elseif filereadable(expand('~/cscope/cscope.out')) |
-            \     cscope add ~/cscope/cscope.out |
-            \ endif |
-            \ set tags=./tags,./../tags,./../../tags,./*/tags
-# ctags will search the following for 'tags' file
-# default:
-# set tags=./tags,./../tags,./*/tags
-
-# https://www.reddit.com/r/vim/comments/7bj837/favorite_console_tools_to_use_with_vim/
-# Workflow: Sometimes I have to look through a lot of files for a needle in a
-# haystack, not something I can grep for because I don't know what it will
-# look like, but I will know it when I see it.
 # My workflow for this tends to be to create a list of files I need to visit in
 # a buffer with find then I go through them quickly using `gf` then bounce back
 # using <C-o> and mark that file as checked by deleting it with dd.
@@ -149,8 +133,23 @@ autocmd FTOptions FileType c,cpp
 # Since caddexpr does not open qf-list automatically, open it manunally :copen or :cwindow or <leader>vc
 # nnoremap <leader>vg :g//caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<c-left><c-left><right><right>
 
-autocmd FTOptions FileType markdown
+autocmd MyFTOptions FileType markdown
             \ nnoremap <buffer> <leader>` ciw``<esc>P
+
+def SetupTags()
+    if filereadable('./cscope.out')
+        cscope add ./cscope.out
+    elseif filereadable('./../cscope.out')
+        cscope add ./../cscope.out
+    elseif filereadable(expand('~/cscope/cscope.out'))
+        cscope add ~/cscope/cscope.out
+    endif
+    # ctags will search the following for 'tags' file
+    # default: set tags=./tags,./../tags,./*/tags
+    set tags=./tags,./../tags,./../../tags,./*/tags
+enddef
+
+autocmd MyFTOptions FileType c,cpp SetupTags()
 
 #---------------------
 # AUTOCOMPLETE:
@@ -295,7 +294,7 @@ def CommonAbbrevs()
     iabbr <buffer> --* <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=<SID>Eatchar()<cr>
 enddef
 
-augroup FTOptions
+augroup MyFTOptions
     au FileType vim VimAbbrevs()
     au FileType text,help TextAbbrevs()
     au FileType python PythonAbbrevs()
@@ -351,7 +350,7 @@ set whichwrap+=<,>,h,l # make arrows and h, l, push cursor to next line
 set tags=./tags,./../tags,./*/tags # this dir, just one level above, and all subdirs
 # set tags=~/git/zmk/app/tags
 
-autocmd FTOptions FileType vim,cmake,sh,zsh setl sw=4|setl ts=8|setl sts=4|setl et
+autocmd MyFTOptions FileType vim,cmake,sh,zsh setl sw=4|setl ts=8|setl sts=4|setl et
 
 #--------------------
 # Syntax highlighting
@@ -557,10 +556,6 @@ nnoremap <leader>k 5k
 # g* selects foo in foobar while * selects <foo>, <> is word boundary. make * behave like g*
 # nnoremap * g*
 # nnoremap # g#
-# Make it easy to enter commands and navigate with f, F, t, T
-# nnoremap ; :
-# nnoremap , ;
-# nnoremap : ,
 #  Resize window using <ctrl> arrow keys
 # nnoremap <silent> <C-Up> :resize +2<cr>
 # nnoremap <silent> <C-Down> :resize -2<cr>
@@ -642,12 +637,9 @@ nnoremap <expr> <leader>vL empty(filter(getwininfo(), 'v:val.loclist')) ? ':lope
 nnoremap <leader>vl <cmd>set buflisted!<cr>
 nnoremap <leader>vm <cmd>messages<cr>
 nnoremap <leader>vd <cmd>GitDiffThisFile<cr>
-nnoremap <leader>vD <cmd>DiffOrig<cr>
 nnoremap <leader>ve <cmd>e ~/.vimrc<cr>
 nnoremap <leader>vz <scriptcmd>FoldingToggle()<cr>
 nnoremap <leader>vp <cmd>echo expand('%')<cr>
-
-
 
 #--------------------
 # Plugins
@@ -958,8 +950,7 @@ autocmd VimEnter * autocmd! gitgutter QuickFixCmdPost *vimgrep*
 
 #--------------------
 # vim-commentary
-
-autocmd FTOptions FileType c,cpp setlocal commentstring=//\ %s |
+autocmd MyFTOptions FileType c,cpp setlocal commentstring=//\ %s |
             \ command! CommentBlock setlocal commentstring=/*%s*/ |
             \ command! CommentLines setlocal commentstring=//\ %s
 

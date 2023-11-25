@@ -273,21 +273,22 @@ def BufferProg(cmdline: string)
     if match->empty()
         return
     endif
+    var bpat = '"\zs.*\ze"'
     if match[2]->empty()
         items = execute('ls!')->split("\n")
-        items->filter((_, v) => v->matchstr('".*"') !~ '\[Popup\]') # filter buffer of active popup
+        items->filter((_, v) => v->matchstr(bpat) !~ '\[Popup\]') # filter buffer of active popup
         UpdatePopup(items)
     else
         var lines: list<string>
         try
             if match[2] !~ '/' # search only file names, not full path
-                lines = items->copy()->filter((_, v) => v->matchstr('".*"')->fnamemodify(':t') =~ $'^{Smartcase(match[2])}')
+                lines = items->copy()->filter((_, v) => v->matchstr(bpat)->fnamemodify(':t') =~ $'^{Smartcase(match[2])}')
                 if lines->empty()
-                    lines = items->copy()->filter((_, v) => v->matchstr('".*"') =~ Smartcase(match[2]))
+                    lines = items->copy()->filter((_, v) => v->matchstr(bpat) =~ Smartcase(match[2]))
                 endif
             else
                 var pat = match[2] =~ '^/' ? match[2]->slice(1) : match[2]
-                lines = items->copy()->filter((_, v) => v->matchstr('".*"') =~ Smartcase(pat))
+                lines = items->copy()->filter((_, v) => v->matchstr(bpat) =~ Smartcase(pat))
             endif
         catch
         endtry

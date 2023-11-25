@@ -102,7 +102,7 @@ def GetAttr(): dict<any>
         elseif key ==? "\<esc>"
             processed = false
         else
-            winid->popup_hide()
+            winid->popup_close() # NOTE: popup_hide instead of popup_close causes tab selected item index to not properly unwind
             :redraw
             processed = false
         endif

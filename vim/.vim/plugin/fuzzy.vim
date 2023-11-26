@@ -269,27 +269,33 @@ enddef
 
 
 def BufferProg(cmdline: string)
-    var match = cmdline->matchlist($'\v({bufcmdname})!?\s+(\S+)?')
+    var match = cmdline->matchlist($'\v%({bufcmdname})!?\s+(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?')
     if match->empty()
         return
     endif
     var bpat = '"\zs.*\ze"'
-    if match[2]->empty()
+    if match[1]->empty()
         items = execute('ls!')->split("\n")
         items->filter((_, v) => v->matchstr(bpat) !~ '\[Popup\]') # filter buffer of active popup
         UpdatePopup(items)
     else
         var lines: list<string>
         try
-            if match[2] !~ '/' # search only file names, not full path
-                lines = items->copy()->filter((_, v) => v->matchstr(bpat)->fnamemodify(':t') =~ $'^{Smartcase(match[2])}')
+            var firstpat = match[1]
+            if firstpat !~ '/' # search only file names, not full path
+                lines = items->copy()->filter((_, v) => v->matchstr(bpat)->fnamemodify(':t') =~ $'^{Smartcase(firstpat)}')
                 if lines->empty()
-                    lines = items->copy()->filter((_, v) => v->matchstr(bpat) =~ Smartcase(match[2]))
+                    lines = items->copy()->filter((_, v) => v->matchstr(bpat) =~ Smartcase(firstpat))
                 endif
             else
-                var pat = match[2] =~ '^/' ? match[2]->slice(1) : match[2]
+                var pat = firstpat =~ '^/' ? firstpat->slice(1) : firstpat
                 lines = items->copy()->filter((_, v) => v->matchstr(bpat) =~ Smartcase(pat))
             endif
+            for idx in range(2, 4)
+                if !match[idx]->empty()
+                    lines->filter((_, v) => v->matchstr(bpat) =~ Smartcase(match[idx]))
+                endif
+            endfor
         catch
         endtry
         UpdatePopup(lines)

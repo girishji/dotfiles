@@ -30,7 +30,9 @@ vim9script
 #  to exclude directories with a specific name at any level, use the -name primary instead of -path
 #  https://stackoverflow.com/questions/4210042/how-do-i-exclude-a-directory-when-using-find
 
-var findcmd = 'find . -type d -name build -prune -o -type f -name *.swp -prune -o -path */.* -prune -o -type f -print'
+# var findcmd = 'find . -type d -name build -prune -o -type f -name *.swp -prune -o -path */.* -prune -o -type f -print'
+# var findcmd = ['/bin/sh', '-c', 'find . -type d -name build -prune -o -type f -name "*.swp" -prune -o -path "*/.*" -prune -o -type f -print']
+var findcmd = 'find . -type d -name build -prune -o -type f -name "*.swp" -prune -o -path "*/.*" -prune -o -type f -print'
 
 var grepcmd = 'ag --vimgrep --smart-case'
 if exepath('ag')->empty()
@@ -182,7 +184,8 @@ def FindProg(cmdline: string)
         return
     endif
     if match[1]->empty()
-        BuildList(findcmd->split())
+        # BuildList(findcmd->split())
+        BuildList(["/bin/sh", "-c"]->add(findcmd))
     else
         var lines: list<string>
         try

@@ -131,7 +131,7 @@ autocmd MyFTOptions FileType python,vim setlocal define=^\\s*def
 # :g search file for pattern and put resulting lines in quickfix list
 # cadde[xpr] {expr}	Evaluate {expr} and add the resulting lines to the quickfix list
 # Since caddexpr does not open qf-list automatically, open it manunally :copen or :cwindow or <leader>vc
-# nnoremap <leader>vg :g//caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<c-left><c-left><right><right>
+nnoremap <leader>vg :g//caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<c-left><c-left><right><right>
 
 autocmd MyFTOptions FileType markdown
             \ nnoremap <buffer> <leader>` ciw``<esc>P

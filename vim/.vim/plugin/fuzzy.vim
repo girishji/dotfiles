@@ -91,22 +91,22 @@ def GetAttr(): dict<any>
             var bufnr = winbufnr(id)->getbufoneline(index + 1)->matchstr('\v^\s*\zs\d+\ze')
             setcmdline($'buffer {bufnr}')
         endif
-        processed = false
+        processed = true
     enddef
 
     def Filter(id: number, key: string): bool
         if key ==? "\<tab>" || key ==? "\<s-tab>"
             ProcessTabKey(id, key)
+            return true
         elseif key ==? "\<cr>"
             ProcessCarriageReturn(id, key)
-        elseif key ==? "\<esc>"
-            processed = false
+            return false
         else
             winid->popup_close() # NOTE: popup_hide instead of popup_close causes tab selected item index to not properly unwind
             :redraw
-            processed = false
+            processed = (key ==? "\<esc>") ? true : false
+            return false
         endif
-        return processed
     enddef
 
     return {
@@ -122,6 +122,8 @@ def GetAttr(): dict<any>
         filter: function(Filter),
         callback: (id, result) => {
             if result == -1 # popup force closed due to <c-c>
+                processed = true
+                winid->popup_close()
                 feedkeys("\<c-c>", 'n')
             endif
         },
@@ -130,6 +132,9 @@ enddef
 
 
 def UpdatePopup(lines: list<string>)
+    if processed
+        return
+    endif
     if winid->popup_getoptions() == {}
         winid = popup_menu([], GetAttr())
     endif
@@ -139,8 +144,7 @@ def UpdatePopup(lines: list<string>)
         winid->popup_settext(lines)
         winid->popup_show()
     else
-        winid->popup_hide()
-        processed = false
+        winid->popup_close()
     endif
     :redraw
 enddef
@@ -159,6 +163,7 @@ def BuildList(cmd: list<string>)
         UpdatePopup(items)
         if (job->ch_status() !~# '^closed$\|^fail$' || job->job_status() ==# 'run')
                 && start->reltime()->reltimefloat() * 1000 < timeout
+                && !processed
             timer_start(10, function(Poll))
         else
             if job->job_status() ==# 'run'
@@ -275,7 +280,8 @@ def BufferProg(cmdline: string)
     endif
     var bpat = '"\zs.*\ze"'
     if match[1]->empty()
-        items = execute('ls!')->split("\n")
+        # items = execute('ls!')->split("\n")
+        items = execute('ls')->split("\n")
         items->filter((_, v) => v->matchstr(bpat) !~ '\[Popup\]') # filter buffer of active popup
         UpdatePopup(items)
     else
@@ -325,7 +331,6 @@ enddef
 
 
 def Setup()
-    processed = false
     if exists('*g:AutoSuggestSetup')
         var ignore = [findcmdname, grepcmdname, kmapcmdname, bufcmdname]
         ignore->map((_, v) => $'^{v}')
@@ -337,16 +342,21 @@ def Setup()
     endif
 enddef
 
+def FuzzySetup()
+    processed = false
+enddef
 
 def Teardown()
     if winid->popup_getoptions() != {}
         winid->popup_close()
+        :redraw
     endif
 enddef
 
 
 augroup FindCmdAutocmds | autocmd!
     autocmd VimEnter * Setup()
+    autocmd CmdlineEnter : FuzzySetup()
     autocmd CmdlineChanged : Fuzzy()
     autocmd CmdlineLeave : Teardown()
 augroup END

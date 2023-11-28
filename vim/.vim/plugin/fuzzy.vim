@@ -30,14 +30,16 @@ vim9script
 #  to exclude directories with a specific name at any level, use the -name primary instead of -path
 #  https://stackoverflow.com/questions/4210042/how-do-i-exclude-a-directory-when-using-find
 
-# var findcmd = 'find . -type d -name build -prune -o -type f -name *.swp -prune -o -path */.* -prune -o -type f -print'
-# var findcmd = ['/bin/sh', '-c', 'find . -type d -name build -prune -o -type f -name "*.swp" -prune -o -path "*/.*" -prune -o -type f -print']
-var findcmd = 'find . -type d -name build -prune -o -type f -name "*.swp" -prune -o -path "*/.*" -prune -o -type f -print'
+var findcmd = 'find . -type d -name build -prune -o -type f -name *.swp -prune -o -path */.* -prune -o -type f -print'
+# var findcmd = 'find . -type d -name build -prune -o -type f -name "*.swp" -prune -o -path "*/.*" -prune -o -type f -print'
 
 var grepcmd = 'ag --vimgrep --smart-case'
 if exepath('ag')->empty()
     grepcmd = 'grep -n --recursive'
 endif
+
+highlight default link FuzzyHint MatchParen
+var highlightstr: string
 
 var findcmdname = 'Find'
 var grepcmdname = 'Grep'
@@ -145,14 +147,20 @@ def UpdatePopup(lines: list<string>)
     if !lines->empty()
         winid->popup_settext(lines)
         winid->popup_show()
+        clearmatches()
+        if !highlightstr->empty()
+            matchadd('FuzzyHint', highlightstr, 10, -1, {window: winid})
+        endif
     else
         winid->popup_close()
     endif
+    # ch_log("UpdatePopup before redraw")
     :redraw
 enddef
 
 
 def BuildList(cmd: list<string>)
+    # ch_log('BuildList call')
     var start = reltime()
     items = []
     if job->job_status() ==# 'run'
@@ -161,11 +169,17 @@ def BuildList(cmd: list<string>)
     job = job_start(cmd, {out_cb: (ch, str) => items->add(str)})
     var timeout = 5000 # ms
 
+    # ch_logfile('channellog', 'w')
+
     def Poll(timer: number)
+        # ch_log('Poll ')
         UpdatePopup(items)
-        if (job->ch_status() !~# '^closed$\|^fail$' || job->job_status() ==# 'run')
+        # XXX randomly, channel remains open for a long time after job exits.
+        # if (job->ch_status() !~# '^closed$\|^fail$' || job->job_status() ==# 'run')
+        if job->job_status() ==# 'run'
                 && start->reltime()->reltimefloat() * 1000 < timeout
                 && !processed
+            # ch_log('status ' .. job->ch_status()) ..' : ' .. job->job_status()
             timer_start(10, function(Poll))
         else
             if job->job_status() ==# 'run'
@@ -174,9 +188,9 @@ def BuildList(cmd: list<string>)
         endif
     enddef
 
+    UpdatePopup(items)
     timer_start(5, function(Poll))
 enddef
-
 
 def FindProg(cmdline: string)
     var match = cmdline->matchlist($'\v%({findcmdname})!?\s+(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?')
@@ -184,8 +198,9 @@ def FindProg(cmdline: string)
         return
     endif
     if match[1]->empty()
-        # BuildList(findcmd->split())
-        BuildList(["/bin/sh", "-c"]->add(findcmd))
+        highlightstr = '\v/\zs\w\ze[^/]*$'
+        BuildList(findcmd->split())
+        # BuildList(["/bin/sh", "-c"]->add(findcmd))
     else
         var lines: list<string>
         try
@@ -196,13 +211,21 @@ def FindProg(cmdline: string)
                 if lines->empty()
                     lines = items->copy()->filter((_, v) => v->fnamemodify(':t') =~ Smartcase(match[1]))
                 endif
+                highlightstr = $'\v/\zs{Smartcase(match[1])}\ze[^/]*$'
             else
-                var pat = match[1] =~ '^/' ? match[1]->slice(1) : match[1]
-                lines = items->copy()->filter((_, v) => v =~ Smartcase(pat))
+                if match[1] == '/'
+                    highlightstr = ''
+                    lines = items->copy()
+                else
+                    var pat = match[1] =~ '^/' ? match[1]->slice(1) : match[1]
+                    lines = items->copy()->filter((_, v) => v =~ Smartcase(pat))
+                    highlightstr = $'\v{Smartcase(pat)}'
+                endif
             endif
             for idx in range(2, 6)
                 if !match[idx]->empty()
                     lines->filter((_, v) => v =~ Smartcase(match[idx]))
+                    highlightstr ..= $'|{Smartcase(match[idx])}'
                 endif
             endfor
         catch
@@ -286,23 +309,32 @@ def BufferProg(cmdline: string)
         # items = execute('ls!')->split("\n")
         items = execute('ls')->split("\n")
         items->filter((_, v) => v->matchstr(bpat) !~ '\[Popup\]') # filter buffer of active popup
+        highlightstr = '\v/\zs\w\ze[^/]*"'
         UpdatePopup(items)
     else
         var lines: list<string>
         try
             var firstpat = match[1]
-            if firstpat !~ '/' # search only file names, not full path
+            if firstpat !~ '/' # search only buffer names, not full path
                 lines = items->copy()->filter((_, v) => v->matchstr(bpat)->fnamemodify(':t') =~ $'^{Smartcase(firstpat)}')
                 if lines->empty()
                     lines = items->copy()->filter((_, v) => v->matchstr(bpat) =~ Smartcase(firstpat))
                 endif
+                highlightstr = $'\v".*/\zs{Smartcase(firstpat)}\ze[^/]*"'
             else
-                var pat = firstpat =~ '^/' ? firstpat->slice(1) : firstpat
-                lines = items->copy()->filter((_, v) => v->matchstr(bpat) =~ Smartcase(pat))
+                if match[1] == '/'
+                    highlightstr = ''
+                    lines = items->copy()
+                else
+                    var pat = firstpat =~ '^/' ? firstpat->slice(1) : firstpat
+                    lines = items->copy()->filter((_, v) => v->matchstr(bpat) =~ Smartcase(pat))
+                    highlightstr = $'\v{Smartcase(pat)}'
+                endif
             endif
             for idx in range(2, 4)
                 if !match[idx]->empty()
                     lines->filter((_, v) => v->matchstr(bpat) =~ Smartcase(match[idx]))
+                    highlightstr ..= $'|{Smartcase(match[idx])}'
                 endif
             endfor
         catch

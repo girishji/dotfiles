@@ -30,8 +30,7 @@ vim9script
 #  to exclude directories with a specific name at any level, use the -name primary instead of -path
 #  https://stackoverflow.com/questions/4210042/how-do-i-exclude-a-directory-when-using-find
 
-var findcmd = 'find . -type d -name build -prune -o -type f -name *.swp -prune -o -path */.* -prune -o -type f -print'
-# var findcmd = 'find . -type d -name build -prune -o -type f -name "*.swp" -prune -o -path "*/.*" -prune -o -type f -print'
+var findcmd = 'find . -type d -name qmk_firmware -prune -o -type d -name build -prune -o -type f -name *.swp -prune -o -path */.* -prune -o -type f -print'
 
 var grepcmd = 'ag --vimgrep --smart-case'
 if exepath('ag')->empty()
@@ -154,42 +153,29 @@ def UpdatePopup(lines: list<string>)
     else
         winid->popup_close()
     endif
-    # ch_log("UpdatePopup before redraw")
     :redraw
 enddef
 
 
 def BuildList(cmd: list<string>)
+    # ch_logfile('/tmp/channellog', 'w')
     # ch_log('BuildList call')
     var start = reltime()
     items = []
     if job->job_status() ==# 'run'
         job->job_stop('kill')
     endif
-    job = job_start(cmd, {out_cb: (ch, str) => items->add(str)})
-    var timeout = 5000 # ms
-
-    # ch_logfile('channellog', 'w')
-
-    def Poll(timer: number)
-        # ch_log('Poll ')
-        UpdatePopup(items)
-        # XXX randomly, channel remains open for a long time after job exits.
-        # if (job->ch_status() !~# '^closed$\|^fail$' || job->job_status() ==# 'run')
-        if job->job_status() ==# 'run'
-                && start->reltime()->reltimefloat() * 1000 < timeout
-                && !processed
-            # ch_log('status ' .. job->ch_status()) ..' : ' .. job->job_status()
-            timer_start(10, function(Poll))
-        else
-            if job->job_status() ==# 'run'
-                job->job_stop('kill')
+    job = job_start(cmd, {
+        out_cb: (ch, str) => {
+            items->add(str)
+            if start->reltime()->reltimefloat() * 1000 > 100 # update every 100ms
+                UpdatePopup(items)
+                start = reltime()
             endif
-        endif
-    enddef
-
-    UpdatePopup(items)
-    timer_start(5, function(Poll))
+        }, exit_cb: (jb, status) => {
+            UpdatePopup(items)
+        }
+    })
 enddef
 
 def FindProg(cmdline: string)
@@ -200,7 +186,6 @@ def FindProg(cmdline: string)
     if match[1]->empty()
         highlightstr = '\v/\zs\w\ze[^/]*$'
         BuildList(findcmd->split())
-        # BuildList(["/bin/sh", "-c"]->add(findcmd))
     else
         var lines: list<string>
         try

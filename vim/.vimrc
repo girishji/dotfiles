@@ -697,7 +697,8 @@ Plug 'girishji/vimscript-complete.vim'
 # Plug 'girishji/omnifunc-complete.vim'
 Plug 'girishji/vsnip-complete.vim'
 Plug 'girishji/omnifunc-complete.vim'
-Plug 'girishji/lsp-complete.vim'
+# Plug 'girishji/lsp-complete.vim'
+Plug '~/git/lsp-complete.vim'
 Plug 'girishji/pythondoc.vim'
 Plug '~/git/easyjump.vim'
 # Plug 'girishji/easyjump.vim'
@@ -807,19 +808,25 @@ if filereadable(exepath('pyright-langserver'))
     })
 endif
 
-    # {
-    #     name: 'pylsp',
-    #     filetype: 'python',
-    #     path: exepath('pylsp'),
-    #     args: [],
-    #     # debug: true,
-    #     # workspaceConfig: {
-    #     #     plugins: {
-    #     #         # pylint: { enabled: true }
-    #     #         # autopep8: { enabled: false }
-    #     #     }
-    #     # },
-    # },
+# if filereadable(exepath('pylsp'))
+#     lspServers->add({
+#         name: 'pylsp',
+#         filetype: 'python',
+#         path: exepath('pylsp'),
+#         args: [],
+#         # debug: true,
+#         workspaceConfig: {
+#             plugins: {
+#                 # pylint: { enabled: true },
+#                 autopep8: { enabled: false },
+#                 pycodestyle: { enabled: false },
+#                 pyflakes: { enabled: false },
+#                 pydocstyle: { enabled: false },
+#             },
+#         },
+#     })
+# endif
+
     # {
     #     # Note:
     #     # - use <tab> to place implementation skeleton of method ('t' <tab> <space> you get toString() in jdtls)

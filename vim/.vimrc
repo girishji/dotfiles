@@ -374,10 +374,11 @@ def MyHighlights()
         highlight helpHyperTextJump cterm=underline
         highlight helpHyperTextEntry cterm=italic
         highlight helpHeader cterm=bold
+        highlight helpExample ctermfg=248
         highlight AS_SearchCompletePrefix ctermfg=220
-        highlight Pmenu ctermfg=none ctermbg=238 cterm=none guifg=#f8f8f2 guibg=#646e96 gui=NONE
+        highlight Pmenu ctermfg=none ctermbg=236 cterm=none guifg=#f8f8f2 guibg=#646e96 gui=NONE
         highlight PmenuSel ctermfg=none ctermbg=28 cterm=bold guifg=#282a36 guibg=#50fa7b gui=NONE
-        highlight PmenuKind ctermfg=246 ctermbg=238 cterm=none guifg=#f8f8f2 guibg=#646e96 gui=NONE # 'kind' portion of completion item
+        highlight PmenuKind ctermfg=246 ctermbg=236 cterm=none guifg=#f8f8f2 guibg=#646e96 gui=NONE # 'kind' portion of completion item
         highlight! link PmenuKindSel PmenuSel
         highlight! link PmenuExtra PmenuKind # 'extra' text of completion item
         highlight! link PmenuExtraSel PmenuSel
@@ -697,11 +698,11 @@ Plug 'girishji/vimscript-complete.vim'
 # Plug 'girishji/omnifunc-complete.vim'
 Plug 'girishji/vsnip-complete.vim'
 Plug 'girishji/omnifunc-complete.vim'
-# Plug 'girishji/lsp-complete.vim'
-Plug '~/git/lsp-complete.vim'
+Plug 'girishji/lsp-complete.vim'
+# Plug '~/git/lsp-complete.vim'
 Plug 'girishji/pythondoc.vim'
-Plug '~/git/easyjump.vim'
-# Plug 'girishji/easyjump.vim'
+# Plug '~/git/easyjump.vim'
+Plug 'girishji/easyjump.vim'
 plug#end()
 
 #---------------------
@@ -723,7 +724,7 @@ g:pythondoc_hh_expand = 1
 g:vimcomplete_tab_enable = 1
 
 var vcoptions = {
-    completor: { shuffleEqualPriority: true },
+    completor: { shuffleEqualPriority: true, alwaysOn: true },
     buffer: { enable: true, priority: 11, urlComplete: true, envComplete: true },
     abbrev: { enable: true, priority: 10 },
     lsp: { enable: true, priority: 10, maxCount: 10 },
@@ -785,47 +786,47 @@ if filereadable(clangdpath)
         args: ['--background-index']
     })
 endif
-if filereadable(exepath('pyright-langserver'))
-    lspServers->add({
-        name: 'pyright',
-        filetype: 'python',
-        path: exepath('pyright-langserver'),
-        args: ['--stdio'],
-        # debug: true,
-        # https://github.com/microsoft/pyright/blob/main/docs/settings.md
-        workspaceConfig: {
-            python: {
-                # pythonPath doesn't seem to work
-                # pythonPath: ['/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages'],
-                analysis: {
-                    autoSearchPaths: true,
-                    diagnosticMode: 'workspace',
-                    autoImportCompletions: true,
-                    typeCheckingMode: "off", # off, basic, strict
-                },
-            },
-        },
-    })
-endif
-
-# if filereadable(exepath('pylsp'))
+# if filereadable(exepath('pyright-langserver'))
 #     lspServers->add({
-#         name: 'pylsp',
+#         name: 'pyright',
 #         filetype: 'python',
-#         path: exepath('pylsp'),
-#         args: [],
+#         path: exepath('pyright-langserver'),
+#         args: ['--stdio'],
 #         # debug: true,
+#         # https://github.com/microsoft/pyright/blob/main/docs/settings.md
 #         workspaceConfig: {
-#             plugins: {
-#                 # pylint: { enabled: true },
-#                 autopep8: { enabled: false },
-#                 pycodestyle: { enabled: false },
-#                 pyflakes: { enabled: false },
-#                 pydocstyle: { enabled: false },
+#             python: {
+#                 # pythonPath doesn't seem to work
+#                 # pythonPath: ['/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages'],
+#                 analysis: {
+#                     autoSearchPaths: true,
+#                     diagnosticMode: 'workspace',
+#                     autoImportCompletions: true,
+#                     typeCheckingMode: "off", # off, basic, strict
+#                 },
 #             },
 #         },
 #     })
 # endif
+
+if filereadable(exepath('pylsp'))
+    lspServers->add({
+        name: 'pylsp',
+        filetype: 'python',
+        path: exepath('pylsp'),
+        args: [],
+        debug: true,
+        workspaceConfig: {
+            plugins: {
+                # pylint: { enabled: true },
+                autopep8: { enabled: false },
+                pycodestyle: { enabled: false },
+                pyflakes: { enabled: false },
+                pydocstyle: { enabled: false },
+            },
+        },
+    })
+endif
 
     # {
     #     # Note:
@@ -872,9 +873,10 @@ var lspOpts = {
     completionTextEdit: false,
     snippetSupport: true, # snippets from lsp server
     vsnipSupport: true,
-    autoComplete: true,
+    # autoComplete: false,
+    # omniComplete: true,
 }
-autocmd VimEnter * call LspOptionsSet(lspOpts)
+autocmd BufEnter,VimEnter * call LspOptionsSet(lspOpts)
 
 ## Make jdtls 'code actions' do 'organize imports', 'add unimplemented methods', etc.,
 #var jfname = $'{$HOME}/.vim/plugged/lsp/autoload/lsp/textedit.vim'
@@ -935,9 +937,6 @@ autocmd User LspAttached LSPUserSetup()
    # :map ][ /}<CR>b99]}
    # :map ]] j0[[%/{<CR>
    # :map [] k$][%?}<CR>
-
-
-
 
 #--------------------
 # highlightedyank

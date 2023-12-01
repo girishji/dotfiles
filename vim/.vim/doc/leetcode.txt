@@ -53,6 +53,7 @@ copy one list to another without iteration:~
 
 ------------------------------------------------------------------------------
 Iterator raises StopIteration exception when next(iter) fails.~
+
 list.count(val) counts (not itertools.count() which does something different)
 p.283
 
@@ -432,6 +433,11 @@ Use namedtuples or dataclasses (@dataclass).
 ------------------------------------------------------------------------------
 Use `y = max(x, y)` instead of `if x > y: y = x`
 
+max() and min() accept 'key' which can be a lambda:
+Say we have dict called counter.
+>
+     return max(counter.items(), key=lambda x: x[1])
+
 ------------------------------------------------------------------------------
 Shifting array~
 
@@ -463,7 +469,7 @@ p.1615
 List subscript ~ vs -: ~
 
 i = 3
-a[~i] is 4th element from the end (matches a[3] which is 4th element from the
+a[~i] is 4th element from the end (matches a[i] which is 4th element from the
 beginning).
 a[-i] is 3rd element from the end.
 
@@ -547,5 +553,22 @@ c 	3 	3 	3 	3 	3 	4 	5 	6 	7 	8
 - bottom right cell gives the answer.
 
 and then adding one.
+
+------------------------------------------------------------------------------
+Voting algo~
+Keep track of majority element (occurs > n/2 times, n=size)
+>
+    def majorityElement(self, nums: List[int]) -> int:
+        # voting algo
+        count = 0
+        for n in nums:
+            if not count:
+                candidate, count = n, 1
+            else:
+                count += 1 if candidate == n else -1
+        return candidate
+
+------------------------------------------------------------------------------
+
 
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

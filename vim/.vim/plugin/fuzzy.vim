@@ -30,7 +30,8 @@ vim9script
 #  to exclude directories with a specific name at any level, use the -name primary instead of -path
 #  https://stackoverflow.com/questions/4210042/how-do-i-exclude-a-directory-when-using-find
 
-var findcmd = 'find . -type d -name qmk_firmware -prune -o -type d -name build -prune -o -type f -name *.swp -prune -o -path */.* -prune -o -type f -print'
+var exclude_dirs = ['build', 'testbuild', 'qmk_firmware']
+var findcmd = 'find . ' .. exclude_dirs->map((_, v) => $'-type d -name {v} -prune')->join(' -o ') .. ' -o -type f -name *.swp -prune -o -path */.* -prune -o -type f -print'
 
 var grepcmd = 'ag --vimgrep --smart-case'
 if exepath('ag')->empty()
@@ -38,7 +39,10 @@ if exepath('ag')->empty()
 endif
 
 highlight default link FuzzyHint MatchParen
-var highlightstr: string
+highlight default FuzzyLowlight ctermfg=248
+
+var highlight_pat: string
+var anti_highlight_pat: string
 
 var findcmdname = 'Find'
 var grepcmdname = 'Grep'
@@ -118,7 +122,7 @@ def GetAttr(): dict<any>
         line: &lines - &cmdheight,
         col: 1,
         drag: false,
-        border: [0, 0, 0, 0],
+        border: [1, 0, 1, 0],
         filtermode: 'c',
         minwidth: 14,
         hidden: true,
@@ -147,8 +151,11 @@ def UpdatePopup(lines: list<string>)
         winid->popup_settext(lines)
         winid->popup_show()
         clearmatches()
-        if !highlightstr->empty()
-            matchadd('FuzzyHint', highlightstr, 10, -1, {window: winid})
+        if !highlight_pat->empty()
+            matchadd('FuzzyHint', highlight_pat, 10, -1, {window: winid})
+        endif
+        if !anti_highlight_pat->empty()
+            matchadd('FuzzyLowlight', anti_highlight_pat, 10, -1, {window: winid})
         endif
     else
         winid->popup_close()
@@ -184,7 +191,9 @@ def FindProg(cmdline: string)
         return
     endif
     if match[1]->empty()
-        highlightstr = '\v/\zs\w\ze[^/]*$'
+        # highlight_pat = '\v/\zs\w\ze[^/]*$'
+        highlight_pat = ''
+        anti_highlight_pat = '\v.*\ze/\w[^/]*$'
         BuildList(findcmd->split())
     else
         var lines: list<string>
@@ -196,21 +205,22 @@ def FindProg(cmdline: string)
                 if lines->empty()
                     lines = items->copy()->filter((_, v) => v->fnamemodify(':t') =~ Smartcase(match[1]))
                 endif
-                highlightstr = $'\v/\zs{Smartcase(match[1])}\ze[^/]*$'
+                highlight_pat = $'\v/\zs{Smartcase(match[1])}\ze[^/]*$'
             else
+                anti_highlight_pat = ''
                 if match[1] == '/'
-                    highlightstr = ''
+                    highlight_pat = ''
                     lines = items->copy()
                 else
                     var pat = match[1] =~ '^/' ? match[1]->slice(1) : match[1]
                     lines = items->copy()->filter((_, v) => v =~ Smartcase(pat))
-                    highlightstr = $'\v{Smartcase(pat)}'
+                    highlight_pat = $'\v{Smartcase(pat)}'
                 endif
             endif
             for idx in range(2, 6)
                 if !match[idx]->empty()
                     lines->filter((_, v) => v =~ Smartcase(match[idx]))
-                    highlightstr ..= $'|{Smartcase(match[idx])}'
+                    highlight_pat ..= $'|{Smartcase(match[idx])}'
                 endif
             endfor
         catch
@@ -294,7 +304,7 @@ def BufferProg(cmdline: string)
         # items = execute('ls!')->split("\n")
         items = execute('ls')->split("\n")
         items->filter((_, v) => v->matchstr(bpat) !~ '\[Popup\]') # filter buffer of active popup
-        highlightstr = '\v/\zs\w\ze[^/]*"'
+        highlight_pat = '\v/\zs\w\ze[^/]*"'
         UpdatePopup(items)
     else
         var lines: list<string>
@@ -305,21 +315,21 @@ def BufferProg(cmdline: string)
                 if lines->empty()
                     lines = items->copy()->filter((_, v) => v->matchstr(bpat) =~ Smartcase(firstpat))
                 endif
-                highlightstr = $'\v".*/\zs{Smartcase(firstpat)}\ze[^/]*"'
+                highlight_pat = $'\v".*/\zs{Smartcase(firstpat)}\ze[^/]*"'
             else
                 if match[1] == '/'
-                    highlightstr = ''
+                    highlight_pat = ''
                     lines = items->copy()
                 else
                     var pat = firstpat =~ '^/' ? firstpat->slice(1) : firstpat
                     lines = items->copy()->filter((_, v) => v->matchstr(bpat) =~ Smartcase(pat))
-                    highlightstr = $'\v{Smartcase(pat)}'
+                    highlight_pat = $'\v{Smartcase(pat)}'
                 endif
             endif
             for idx in range(2, 4)
                 if !match[idx]->empty()
                     lines->filter((_, v) => v->matchstr(bpat) =~ Smartcase(match[idx]))
-                    highlightstr ..= $'|{Smartcase(match[idx])}'
+                    highlight_pat ..= $'|{Smartcase(match[idx])}'
                 endif
             endfor
         catch

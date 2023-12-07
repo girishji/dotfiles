@@ -516,17 +516,6 @@ def GitDiffThisFile()
 enddef
 command GitDiffThisFile GitDiffThisFile()
 
-# Preview with GitHub Markdown
-var markdown_preview_job: job
-def OpenMarkdownPreview()
-    if markdown_preview_job->job_status() != 'run'
-        markdown_preview_job = job_start('grip')
-    endif
-    sleep 500m
-    silent exec '!open http://localhost:6419/' .. expand('%')
-enddef
-command PreviewMarkdown OpenMarkdownPreview()
-
 def StripTrailingWhitespace()
     if !&binary && &filetype != 'diff'
         :normal mz
@@ -616,15 +605,16 @@ nnoremap ga `[v`]
 nnoremap <leader>b <cmd>b#<cr>| # alternate buffer
 nnoremap <leader>d <cmd>bdelete<cr>| # use :hide instead
 nnoremap <leader>h <cmd>hide<cr>| # hide window
-nnoremap <leader>u <cmd>unhide<cr><c-w>w| # unhide window
-tnoremap <c-w>h <c-w>:hide<cr>| # hide window
+# nnoremap <leader>u <cmd>unhide<cr><c-w>w| # unhide = one window for each loaded buffer (splits horizontally, not useful)
+tnoremap <c-w>h <c-w>:hide<cr>| # hide window (when terminal window is active)
 nnoremap <leader>t <cmd>!tree <bar> more<cr>
 nnoremap <leader>w <cmd>w<cr>
 nnoremap <leader>q <cmd>qa<cr>
 nnoremap <leader>Q <cmd>qa!<cr>
 nnoremap <leader>n <cmd>only<cr>
 nnoremap <leader>- <c-w>s| # horizontal split
-nnoremap <leader>\| <c-w>v| # vertical split
+# nnoremap <leader>\| <c-w>v| # vertical split
+nnoremap <leader>\ <c-w>v| # vertical split
 nnoremap <leader>o <c-w>w| # next window in CCW direction
 nnoremap <leader>r <cmd>registers<cr>
 nnoremap <leader>m <cmd>marks<cr>

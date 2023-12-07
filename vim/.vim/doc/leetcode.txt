@@ -7,6 +7,97 @@ Use itertools.zip_longest() instead of zip() when two sequences differ by
 length
 p1768
 
+There is functools and itertools~
+To multiply all elements of a list
+>
+	>>> from functools import reduce
+	>>> reduce(lambda x, y: x*y, [1, 2, 3, 4, 5, 6])
+	720
+
+Similary, `map()` has its place.
+>
+	>>> map(int, myiterable)
+	calles int(x) on each element x of myiterable
+
+------------------------------------------------------------------------------
+Split string into list of characters~
+>
+	% list('foobar')
+
+Reminder and quotent in one function~
+>
+	% divmod(10, 3)
+
+------------------------------------------------------------------------------
+regex~
+
+There is no `=~` operator in Python. Use `re.search(r'pat', str)` instead. Get
+the matching string by calling `.group()` to above. Also, use `.span()`,
+`.start()`, `.end()`, since `search()` returns a 'match' object.
+To find all matches, not just the first, use `re.finditer()`. `re.findall()`
+does not let you use group(), span(), etc.
+
+Use raw strings and you don't need to escape (, ), [, ], etc.
+
+match(), search(), findall(), finditer().
+
+Inside a for loop use compiled pattern:
+>
+     >>> p = re.compile(r'\d+')
+     >>> p.findall('12 drummers drumming, 11 pipers piping, 10 lords a-leaping')
+     ['12', '11', '10']
+
+Module level functions:
+>
+     >>> print(re.match(r'From\s+', 'Fromage amk'))
+     None
+     >>> re.match(r'From\s+', 'From amk Thu May 14 19:12:10 1998')
+     <re.Match object; span=(0, 5), match='From '>
+
+Should you use these module-level functions, or should you get the
+  pattern and call its methods yourself?  If you’re accessing a regex
+  within a loop, pre-compiling it will save a few function calls.
+  Outside of loops, there’s not much difference thanks to the internal
+  cache.
+
+|howto-regex.pyx|
+:Help howto-regex
+
+To concatenate raw strings:
+
+Use `str.format()`:
+>
+	MyID = 'X12345'
+	MasterFile_Name = r'C:\Users\ABC\{}\DEF\File - Test.xlsx'.format(MyID)  
+
+------------------------------------------------------------------------------
+Overlapping patterns in regex~
+
+How do you match 'one' and 'eight' both in 'oneight'?
+
+`findall` doesn't yield overlapping matches by default. But you can use lookahead assertion:
+
+(?=...) lookahead assertion:
+
+(?=...) matches if ... matches next, but doesn’t consume any of the string.
+This is called a lookahead assertion. For example, Isaac (?=Asimov) will match
+'Isaac ' only if it’s followed by 'Asimov'.
+
+It is important to note that lookahead does not consume string, so the next
+match can start right at the point where lookahead matched.
+>
+	>>> match1 = re.findall(r'el', 'hello')
+	>>> print match1
+	['el']
+	# here the cursor advanced to 'i' and it cannot find 'eight'
+	>>> match1 = re.findall(r'(one|eight)', 'oneight'?
+	['one']
+	
+	>>> re.findall(r'(?=(\w\w))', 'hello')
+	['he', 'el', 'll', 'lo']
+	>>> re.findall(r'(?=(one|eight))', 'oneight')
+	['one', 'eight']
+
 ------------------------------------------------------------------------------
 To convert string to a list of characters~
 > list('asdf')
@@ -27,6 +118,20 @@ python:
     In insert mode <c-d> unindents; in normal mode use << and >> (hold shift
 key)
 
+" vs ` ~
+They are interchangeable. You can use one inside another.
+
+------------------------------------------------------------------------------
+File idiom~
+>
+	with open('filename') as f: # default mode is 'r'
+	    for line in f:
+	        pass
+	    f.seek(0) # resets the file cursor to beginning
+
+to read entire file into memory where each line is a list item use `f.readlines()`.
+`f.read()` reads entire file into one string
+	
 ------------------------------------------------------------------------------
 p238: When they say you cannot do something (like division), think of caching
 lots of intermediate values. In this case keep a suffix product list.
@@ -71,7 +176,8 @@ p.35
 ValueError and TypeError are 2 exceptions you can use in your code.~
 
 ------------------------------------------------------------------------------
-It is safe to do [None] * 3 to get a list of length 3. Items are independent.~
+It is safe to do [None] * 3 to get a list of length 3. Items are _independent_.~
+
 You should not do [[]] * 3 because the inside [] is the same for all 3 items
 since only the reference to [] is copied 3 times.
 To get a 3x2 matrix:
@@ -185,7 +291,7 @@ foo = lambda : (x for x in ...)
 Don't forget to put () after foo(), when using foo().
 
 ------------------------------------------------------------------------------
-Do not enumerate revesed lists, your indices will be wrong (0 would be last element):~
+If you enumerate revesed lists, your indices will be reversed (0 would be last element):~
         for i, d in enumerate(digits[::-1]):
 
 ------------------------------------------------------------------------------
@@ -294,9 +400,15 @@ Flatten lists:~
 - use itertools.chain()
 - use list comprehension.
 
-Understanding list comprehension:~
-Flatten array:
+Flatten list~
+>
+	>>> a = [[1, 2], [3, 4], [5, 6]]
+	>>> list(itertools.chain.from_iterable(a))
+	[1, 2, 3, 4, 5, 6]
 
+p.1615
+
+Interpreting nested for loops in list comprehension:~
 Interpret the following as:
 <num <for elem in vec> for num in elem>
 Inside for loop is the outer loop when translated:
@@ -341,7 +453,7 @@ where builtin names live).
 reference to another variable of the same name in outer scope. They are NOT
 SAME variable. If you reassign to inner x (say x = x[2:]), it is not reflected
 in outer scope.
-- integers, float, etc. are pas-by-value, and so a 'nonlocal' inner variable
+- integers, float, etc. are pass-by-value, and so a 'nonlocal' inner variable
 and outer variable refer to the same thing (you can change values).
 
 Print address of a variable~
@@ -363,8 +475,12 @@ To check if defined, see existence in locals().
 set, dict are in stdtypes.txt
 do |set..stdtypes.txt|
 
-set"extend" is through union operator "|"
-set has "add" instead of "append"
+set"extend" is through union operator "|". Synonymously you can use set.update()
+You can add a list, but only after converting to set.
+>
+	s |= set([1, 4, 54])
+
+set has "add" instead of "append". add() only adds one element.
 
 ------------------------------------------------------------------------------
 How to distinguish between None and 0/False? ~
@@ -457,14 +573,6 @@ Make a dictionary of frequencies from list of values~
 >>> collections.Counter([1, 2, 2])
 Counter({2: 2, 1: 1})
 
-Flatten list~
-
->>> a = [[1, 2], [3, 4], [5, 6]]
->>> list(itertools.chain.from_iterable(a))
-[1, 2, 3, 4, 5, 6]
-
-p.1615
-
 ------------------------------------------------------------------------------
 List subscript ~ vs -: ~
 
@@ -525,10 +633,12 @@ O pts column is initialized to 1's.
 2nd row: You can use 3 once, twice, etc. See the balance required and check
 previous row. Add it all up.
 
-		0 	1 	2 	3 	4 ...
-(2) 		1 	0 	1 	0 	1
-(2,3) 		1 	0 	1 	1 	1
-(2,3,7) 	1 	0 	1 	1 	1
+		0 	1 	2 	3 	4 	5 	6 ...
+(2) 		1 	0 	1 	0 	1 	0 	1
+(2,3) 		1 	0 	1 	1 	1 	1 	1+1
+(2,3,7) 	1 	0 	1 	1 	1 	1 	2
+
+DP table lor 2,3,7 point plays (rows) and final scores from 0 to L2 (columns).
 
 2) Compute Levenshtein Distance between 2 strings (for spell check)
 Levenshtein defined the distance between two words as the minimum number of
@@ -546,13 +656,11 @@ c 	3 	3 	3 	3 	3 	4 	5 	6 	7 	8
 ...
 
 - first row and column is when you transform to empty string
-- Say index (2,4). t above and r to left. Asks how to transform 'Cart' to 'Or'.
-- You are takin min of item to left (delete last letter from 'Cart'), item
+- Say index (2,4) (value=3). t col and r row. Asks how to transform 'Cart' to 'Or'.
+- You are taking min of item to left (delete last letter from 'Cart'), item
   above (do the same for 'Or') and item diagonally left-above (replace last
   letter of both words)
 - bottom right cell gives the answer.
-
-and then adding one.
 
 ------------------------------------------------------------------------------
 Voting algo~
@@ -569,6 +677,113 @@ Keep track of majority element (occurs > n/2 times, n=size)
         return candidate
 
 ------------------------------------------------------------------------------
+Python match-case statement (like switch statment)~
+>
+	my_value = 10
+	chosen_color = 11
+	match my_value:
+	    case 10:
+	        print("The number is ten")
+	    case base_color: # XXX see below
+		print("Yes, it matches!")
+	    case _:
+	        # this is the default handler if none
+	        # of the above cases match.
+	        print("The number is none of 10, 2*10 or 100")
 
+Important Notes:
+
+- Cases don't fall through. It is like having a 'break' inside every 'case'.
+- Variable references don't work as a condition. Why you can't match single
+  variable references in case conditions: you don't actually match against the
+  value of that variable but actually introduce a placeholder of that same name! 
+- Unfortunately, it is not a regex match. You cannot do `case r'foo':`
+- Powerful Pattern Matching (match - (M)atch (a)in'(t) (c)ase (h)ooey)
+  It features special functionality like deep placeholders and wildcards.
+>
+	match point:
+	    case (0, 0):
+	        print("Origin")
+	    case (0, y):
+	        print("Our current Y position is", y, " now.")
+
+You can match arbitrary nested data structures, including placeholders. In the
+above example, we are matching a tuple with two items where in the second
+case, we use a placeholder y that gets its value assigned upon matching.
+
+You can also match class attributes, in a very similar fashion:
+>
+	class Point:
+	    x: int
+	    y: int
+	
+	def location(point):
+	    match point:
+	        case Point(x=0, y=0):
+	            print("Origin is the point's location.")
+	        case Point(x=0, y=y):
+	            print("The point lies on the y axis at a height of", y, "units.")
+
+
+------------------------------------------------------------------------------
+Enum~
+>
+	from enum import Enum
+	
+	# class syntax
+	class Color(Enum):
+	    RED = 1
+	    GREEN = 2
+	    BLUE = 3
+	
+	# functional syntax
+	Color = Enum('Color', ['RED', 'GREEN', 'BLUE'])
+	
+	>>> Color.BLUE.name
+	'BLUE'
+	# values start from 1
+	>>> Color.RED.value
+	1
+	>>> dir(Color)
+	['BLUE', 'GREEN', 'RED', '__class__', '__contains__', '__doc__', '__getitem__', '__init_subclass__', '__iter__', '__len__', '__members__', '__module__', '__name__', '__qualname__']
+	>>> Color['BLUE']
+	<Color.BLUE: 3>
+	>>> list(Color)
+	[<Color.RED: 1>, <Color.GREEN: 2>, <Color.BLUE: 3>]
+	>>> len(Color)
+	3
+
+
+Even though we can use class syntax to create Enums, Enums are not normal
+Python classes.
+- The class Color is an enumeration (or enum)
+- The attributes Color.RED, Color.GREEN, etc., are enumeration members (or
+  members) and are functionally constants.
+- The enum members have names and values (the name of Color.RED is RED, the
+  value of Color.BLUE is 3, etc.)
+
+
+------------------------------------------------------------------------------
+pep8: E731 do not assign a lambda expression, use a def~
+>
+	Yes:
+	def f(x): return 2*x 
+
+	No:
+	f = lambda x: 2*x 
+
+The legitimate use case for lambda is where you want to use a function without
+assigning it, e.g:
+>
+	sorted(players, key=lambda player: player.rank)
+
+Assigning lambdas to names basically just duplicates the functionality of def
+- and in general, it's best to do something a single way to avoid confusion
+and increase clarity. The first form means that the name of the resulting
+function object is specifically 'f' instead of the generic '<lambda>'. This is
+more useful for tracebacks and string representations in general. Do not make
+reducing number of LoC a goal. Go for clarity.
+
+------------------------------------------------------------------------------
 
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

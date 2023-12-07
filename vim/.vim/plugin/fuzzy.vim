@@ -1,5 +1,4 @@
 if !has('vim9script') ||  v:version < 900
-    " echoe "Needs Vim version 9.0 and above"
     finish
 endif
 
@@ -30,7 +29,7 @@ vim9script
 #  to exclude directories with a specific name at any level, use the -name primary instead of -path
 #  https://stackoverflow.com/questions/4210042/how-do-i-exclude-a-directory-when-using-find
 
-var exclude_dirs = ['build', 'testbuild', 'qmk_firmware']
+var exclude_dirs = ['build', 'qmk_firmware']
 var findcmd = 'find . ' .. exclude_dirs->map((_, v) => $'-type d -name {v} -prune')->join(' -o ') .. ' -o -type f -name *.swp -prune -o -path */.* -prune -o -type f -print'
 
 var grepcmd = 'ag --vimgrep --smart-case'

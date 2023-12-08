@@ -1,14 +1,13 @@
 if !has('vim9script') ||  v:version < 900
     finish
 endif
-
 vim9script
 
 var id: number
 
 def HighligtClear()
     if id > 0
-        matchdelete(id, 10 + 1)
+        matchdelete(id)
         :redraw
         id = 0
     endif
@@ -27,18 +26,13 @@ def HighligtChars(s: string): string
     endfor
     freq->filter((_, v) => v > 1)
 
-    var dir = {
-        f: {start: col - 1, reverse: false},
-        t: {start: col, reverse: false},
-        F: {start: col - 1, reverse: true},
-        T: {start: col - 2, reverse: true},
-    }
+    var [start, reverse] = (s =~ '\C[ft]') ? [col, false] : [col - 2, true]
     var locations = {}
     for ch in freq->keys()
-        var loc = dir[s].reverse ? line->strridx(ch, dir[s].start) : line->stridx(ch, dir[s].start)
+        var loc = reverse ? line->strridx(ch, start) : line->stridx(ch, start)
         while loc != -1
             locations[ch] = locations->get(ch, [])->add(loc + 1)
-            loc = dir[s].reverse ? line->strridx(ch, loc - 1) : line->stridx(ch, loc + 1)
+            loc = reverse ? line->strridx(ch, loc - 1) : line->stridx(ch, loc + 1)
         endwhile
     endfor
 
@@ -48,7 +42,7 @@ def HighligtChars(s: string): string
     endfor
     loclist->map((_, v) => [lnum, v])
     if !loclist->empty()
-        id = matchaddpos('Comment', loclist)
+        id = matchaddpos('Comment', loclist, 11)
     endif
     :redraw
     return ''

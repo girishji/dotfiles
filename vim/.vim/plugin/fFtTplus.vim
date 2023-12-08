@@ -8,7 +8,8 @@ var id: number
 
 def HighligtClear()
     if id > 0
-        matchdelete(id)
+        matchdelete(id, 10 + 1)
+        :redraw
         id = 0
     endif
 enddef
@@ -26,26 +27,18 @@ def HighligtChars(s: string): string
     endfor
     freq->filter((_, v) => v > 1)
 
-    var reverse = false
-    var start: number
-    if s == 'f'
-        start = col - 1
-    elseif s == 't'
-        start = col
-    elseif s == 'F'
-        start = col - 1
-        reverse = true
-    elseif s == 'T'
-        start = col - 2
-        reverse = true
-    endif
-
+    var dir = {
+        f: {start: col - 1, reverse: false},
+        t: {start: col, reverse: false},
+        F: {start: col - 1, reverse: true},
+        T: {start: col - 2, reverse: true},
+    }
     var locations = {}
     for ch in freq->keys()
-        var loc = reverse ? line->strridx(ch, start) : line->stridx(ch, start)
+        var loc = dir[s].reverse ? line->strridx(ch, dir[s].start) : line->stridx(ch, dir[s].start)
         while loc != -1
             locations[ch] = locations->get(ch, [])->add(loc + 1)
-            loc = reverse ? line->strridx(ch, loc - 1) : line->stridx(ch, loc + 1)
+            loc = dir[s].reverse ? line->strridx(ch, loc - 1) : line->stridx(ch, loc + 1)
         endwhile
     endfor
 
@@ -54,8 +47,9 @@ def HighligtChars(s: string): string
         loclist += val->slice(1)
     endfor
     loclist->map((_, v) => [lnum, v])
-
-    id = matchaddpos('Comment', loclist)
+    if !loclist->empty()
+        id = matchaddpos('Comment', loclist)
+    endif
     :redraw
     return ''
 enddef

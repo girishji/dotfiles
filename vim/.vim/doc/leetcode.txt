@@ -410,8 +410,11 @@ p.1615
 
 Interpreting nested for loops in list comprehension:~
 Interpret the following as:
+
 <num <for elem in vec> for num in elem>
+
 Inside for loop is the outer loop when translated:
+
 for elem in vec:
     for num in elem:
         ...

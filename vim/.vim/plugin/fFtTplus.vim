@@ -42,9 +42,12 @@ def HighligtChars(s: string): string
     endfor
     loclist->map((_, v) => [lnum, v])
     if !loclist->empty()
+        if id > 0
+            matchdelete(id)
+        endif
         id = matchaddpos('Comment', loclist, 11)
+        :redraw
     endif
-    :redraw
     return ''
 enddef
 

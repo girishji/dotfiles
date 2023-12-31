@@ -234,7 +234,8 @@ def GetSurroundingFn(): string
 enddef
 
 def PythonAbbrevs()
-    iabbr <buffer><expr> def     <SID>NotCtx() ? 'def' : 'def ():<cr>"""."""<esc>-f(i<c-r>=<SID>Eatchar()<cr>'
+    # iabbr <buffer><expr> def     <SID>NotCtx() ? 'def' : 'def ():<cr>"""."""<esc>-f(i<c-r>=<SID>Eatchar()<cr>'
+    iabbr <buffer><expr> def     <SID>NotCtx() ? 'def' : 'def ():<cr><esc>-f(i<c-r>=<SID>Eatchar()<cr>'
     # iabbr <buffer><expr> defa    def ():<c-o>o'''<cr>>>> print()<cr><cr>'''<esc>4k_f(i<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       trya try:
                 \<cr>pass
@@ -255,18 +256,52 @@ def PythonAbbrevs()
     iabbr <buffer>       enum_   Color = Enum('Color', ['RED', 'GRN'])<esc>_fC<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       pre      print(, file=stderr)<esc>F,i<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       pr      print()<c-o>i<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       tuple_ Point = namedtuple('Point', 'x y')<esc>_<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       tuple_named Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       namedtup Point = namedtuple('Point', ('x', 'y'))<esc>_<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       zip_longest itertools.zip_longest(<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       pairwise_ itertools.pairwise(<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       Counter_  collections.Counter()<c-o>i<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       chain_    itertools.chain(<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       chain_iter  itertools.chain.from_iterable()<c-o>i<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       dict_default1 collections.defaultdict(int)<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       dict_default2 collections.defaultdict(str)<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       dict_default3 collections.defaultdict(lambda: '[default value]')<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       cache_ @functools.cache<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       copy_ copy.copy(<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       deepcopy_ copy.deepcopy(<c-r>=<SID>Eatchar()<cr>
+    # itertools
+    iabbr  <buffer>  tee_                            tee(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  chain_                          chain(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  count_                          count(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  cycle_                          cycle(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  islice_                         islice(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  repeat_                         repeat(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  batched_                        batched(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  groupby_                        groupby(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  product_                        product(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  starmap_                        starmap(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  compress_                       compress(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  pairwise_                       pairwise(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  dropwhile_                      dropwhile(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  takewhile_                      takewhile(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  accumulate_                     accumulate(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  zip_longest_                    zip_longest(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  filterfalse_                    filterfalse(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  Element_                        Element(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  combinations_                   combinations(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  permutations_                   permutations(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  combinations_with_replacement_  combinations_with_replacement(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  chain_                          chain(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  chain_iter_                     chain.from_iterable()<c-o>i<c-r>=<SID>Eatchar()<cr>
+    # random
+    iabbr  <buffer>  randrange_                      randrange(<c-r>=<SID>Eatchar()<cr>
+    # collections
+    iabbr  <buffer>  Counter_       Counter()<c-o>i<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  defaultdict1   defaultdict(int)<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  defaultdict_   defaultdict(set)<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  defaultdict3   defaultdict(lambda: '[default  value]')<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  dict_default1  defaultdict(int)<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  dict_default2  defaultdict(set)<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  dict_default3  defaultdict(lambda: '[default  value]')<c-r>=<SID>Eatchar()<cr>
+    #
+    iabbr <buffer>       bisect_  bisect(<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       bisect_left  bisect_left(<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       bisect_right  bisect_right(<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       heapq_nlargest  heapq.nlargest(<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       heapq_nsmallest heapq.nsmallest(<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       deque_ deque(<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       __init__ def __init__(self):<esc>hi<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       __add__ def __add__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       __sub__ def __sub__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
@@ -359,36 +394,37 @@ autocmd MyFTOptions FileType vim,cmake,sh,zsh setl sw=4|setl ts=8|setl sts=4|set
 syntax on # turn on syntax highlighting
 
 def MyHighlights()
-    exec $'highlight LspDiagVirtualTextError ctermbg={&background == "dark" ? 0 : 7} ctermfg=1 cterm=underline'
-    exec $'highlight LspDiagVirtualTextWarning ctermbg={&background == "dark" ? 0 : 7} ctermfg=3 cterm=underline'
-    exec $'highlight LspDiagVirtualTextHint ctermbg={&background == "dark" ? 0 : 7} ctermfg=2 cterm=underline'
-    exec $'highlight LspDiagVirtualTextInfo ctermbg={&background == "dark" ? 0 : 7} ctermfg=5 cterm=underline'
-    highlight link LspDiagSignErrorText LspDiagVirtualTextError
-    highlight link LspDiagSignWarningText LspDiagVirtualTextWarning
-    highlight link LspDiagSignHintText LspDiagVirtualTextHint
-    highlight link LspDiagSignInfoText LspDiagVirtualTextInfo
+    exec  $'highlight  LspDiagVirtualTextError    ctermbg={&background  ==  "dark"  ?  0  :  7}  ctermfg=1  cterm=underline'
+    exec  $'highlight  LspDiagVirtualTextWarning  ctermbg={&background  ==  "dark"  ?  0  :  7}  ctermfg=3  cterm=underline'
+    exec  $'highlight  LspDiagVirtualTextHint     ctermbg={&background  ==  "dark"  ?  0  :  7}  ctermfg=2  cterm=underline'
+    exec  $'highlight  LspDiagVirtualTextInfo     ctermbg={&background  ==  "dark"  ?  0  :  7}  ctermfg=5  cterm=underline'
+    highlight  link  LspDiagSignErrorText    LspDiagVirtualTextError
+    highlight  link  LspDiagSignWarningText  LspDiagVirtualTextWarning
+    highlight  link  LspDiagSignHintText     LspDiagVirtualTextHint
+    highlight  link  LspDiagSignInfoText     LspDiagVirtualTextInfo
     if execute('colorscheme') =~ 'quiet'
-        highlight Comment ctermfg=244
-        highlight LineNr ctermfg=244
-        highlight PreProc cterm=bold
-        highlight helpHyperTextJump cterm=underline
-        highlight helpHyperTextEntry cterm=italic
-        highlight helpHeader cterm=bold
-        highlight helpExample ctermfg=248
-        highlight AS_SearchCompletePrefix ctermfg=220
-        highlight Pmenu ctermfg=none ctermbg=236 cterm=none guifg=#f8f8f2 guibg=#646e96 gui=NONE
-        highlight PmenuSel ctermfg=none ctermbg=28 cterm=bold guifg=#282a36 guibg=#50fa7b gui=NONE
-        highlight PmenuKind ctermfg=246 ctermbg=236 cterm=none guifg=#f8f8f2 guibg=#646e96 gui=NONE # 'kind' portion of completion item
-        highlight! link PmenuKindSel PmenuSel
-        highlight! link PmenuExtra PmenuKind # 'extra' text of completion item
-        highlight! link PmenuExtraSel PmenuSel
-        # Following is experimental
-        # highlight String cterm=italic
-        # highlight Function cterm=underline
+        highlight  Comment                  ctermfg=244
+        highlight  LineNr                   ctermfg=244
+        highlight  PreProc                  cterm=bold
+        highlight  helpHyperTextJump        cterm=underline
+        highlight  helpHyperTextEntry       cterm=italic
+        highlight  helpHeader               cterm=bold
+        highlight  helpExample              ctermfg=248
+        highlight  AS_SearchCompletePrefix  ctermfg=207
+        highlight  LspSigActiveParameter    ctermfg=207
+        # keep Pmenu bg high contrast to see insert mode completion clearly
+        highlight  Pmenu       ctermfg=none  ctermbg=22    cterm=none
+        highlight  PmenuSel    ctermfg=none  ctermbg=none  cterm=reverse
+        highlight  PmenuThumb  ctermfg=246   ctermbg=246
+        highlight link PmenuKind Pmenu
+        highlight link PmenuKindSel    PmenuSel
+        highlight link PmenuExtra      Pmenu
+        highlight link PmenuExtraSel   PmenuSel
+
     elseif execute('colorscheme') =~ 'slate'
-        highlight Comment ctermfg=246
-        highlight Type ctermfg=71 cterm=bold
-        highlight ModeMsg ctermfg=235 ctermbg=220 cterm=reverse
+        highlight  Comment  ctermfg=246
+        highlight  Type     ctermfg=71   cterm=bold
+        highlight  ModeMsg  ctermfg=235  ctermbg=220  cterm=reverse
     endif
 enddef
 
@@ -444,7 +480,7 @@ augroup myCmds | autocmd!
     # autocmd BufNewFile *.cpp  r ~/.vim/skeleton.cpp
     # spell
     # autocmd FileType help,text,markdown set spell
-    autocmd FileType text,markdown set spell
+    autocmd FileType markdown set spell
     # :retab to change tab characters to match existing settings
     # :expandtab replaces tab to spaces
     # gitdiff by default uses 8 for tab width
@@ -469,6 +505,7 @@ def PythonCustomization()
     nnoremap <buffer><expr> <leader>vt $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode test {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"
     nnoremap <buffer><expr> <leader>vx $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode exec {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"
     nnoremap <buffer><expr> <leader>vp $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| r ! python3 #<cr>"
+    nnoremap <buffer><expr> <leader>vP <cmd>echo expand('%')<cr>
     setlocal makeprg=python3\ %
     nnoremap <buffer> <leader>p :Ipython<cr>
     &l:formatprg = "black --quiet -"
@@ -618,7 +655,7 @@ nnoremap <leader>\ <c-w>v| # vertical split
 nnoremap <leader>o <c-w>w| # next window in CCW direction
 nnoremap <leader>r <cmd>registers<cr>
 nnoremap <leader>m <cmd>marks<cr>
-vnoremap <leader>a :!column -t| # align columns
+vnoremap <leader>a :!column -t<cr>| # align columns
 # Vim group
 nnoremap <leader>vs :set spell!<CR><Bar>:echo "Spell Check: " .. strpart("OffOn", 3 * &spell, 3)<CR>
 nnoremap <leader>vr :new \| exec "nn <buffer> q :bd!\<cr\>" \| r ! | # redirect shell command, use :il /foo to filter lines
@@ -800,21 +837,13 @@ endif
 # endif
 
 if filereadable(exepath('pylsp'))
+    # see ~/.config/pycodestyle
     lspServers->add({
         name: 'pylsp',
         filetype: 'python',
         path: exepath('pylsp'),
         args: [],
-        debug: true,
-        workspaceConfig: {
-            plugins: {
-                # pylint: { enabled: true },
-                autopep8: { enabled: false },
-                pycodestyle: { enabled: false },
-                pyflakes: { enabled: false },
-                pydocstyle: { enabled: false },
-            },
-        },
+        # debug: true,
     })
 endif
 

@@ -871,7 +871,7 @@ Guessing names:
 :tag /foo$  -> ends with foo, for example
 
 Fing places where tag is called from:~
-Cscope is a free program.  It does not only find places where an identifier is
+Cscope not only find places where an identifier is
 declared, but also where it is used.  See |cscope|.
 
 Preview window and finding right arguments to function~

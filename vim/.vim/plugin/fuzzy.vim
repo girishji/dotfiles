@@ -17,28 +17,20 @@ vim9script
 #
 # NOTE: In regex, .* is greedy while .\{-} is non-greedy (:h non-greedy)
 
-# XXX 'fd' hangs sometimes. Use 'find' with ~/.ignore file.
-# var findcmd = 'fd -tf'
-# if exepath('fd')->empty()
-#     findcmd = 'find . -type f'
-# endif
-
-# var findcmd = 'find . ! -path '*/.git/*' ! -path '*/build/*' -type f -print'
-# linux
-#  -prune prevents descent into dir while -not compares pattern but descends recursively
-#  to exclude directories with a specific name at any level, use the -name primary instead of -path
-#  https://stackoverflow.com/questions/4210042/how-do-i-exclude-a-directory-when-using-find
-
-var exclude_dirs = ['build', 'qmk_firmware']
-var findcmd = 'find . ' .. exclude_dirs->map((_, v) => $'-type d -name {v} -prune')->join(' -o ') .. ' -o -type f -name *.swp -prune -o -path */.* -prune -o -type f -print'
+var findcmd = 'fd -tf'
+if exepath('fd')->empty()
+    var exclude_dirs = ['build', 'qmk_firmware']
+    var findcmd = 'find . ' .. exclude_dirs->map((_, v) => $'-type d -name {v} -prune')->join(' -o ') .. ' -o -type f -name *.swp -prune -o -path */.* -prune -o -type f -print'
+endif
 
 var grepcmd = 'ag --vimgrep --smart-case'
 if exepath('ag')->empty()
     grepcmd = 'grep -n --recursive'
 endif
 
-highlight default link FuzzyHint MatchParen
-highlight default FuzzyLowlight ctermfg=248
+# highlight default link FuzzyHint MatchParen
+highlight default FuzzyHint ctermfg=213 cterm=bold
+highlight default FuzzyDeEmphasize ctermfg=248
 
 var highlight_pat: string
 var anti_highlight_pat: string
@@ -121,7 +113,7 @@ def GetAttr(): dict<any>
         line: &lines - &cmdheight,
         col: 1,
         drag: false,
-        border: [1, 0, 1, 0],
+        border: [0, 0, 0, 0],
         filtermode: 'c',
         minwidth: 14,
         hidden: true,
@@ -154,7 +146,7 @@ def UpdatePopup(lines: list<string>)
             matchadd('FuzzyHint', highlight_pat, 10, -1, {window: winid})
         endif
         if !anti_highlight_pat->empty()
-            matchadd('FuzzyLowlight', anti_highlight_pat, 10, -1, {window: winid})
+            matchadd('FuzzyDeEmphasize', anti_highlight_pat, 10, -1, {window: winid})
         endif
     else
         winid->popup_close()

@@ -13,3 +13,5 @@ qmk_firmware/lib/
 qmk_firmware/keyboards/
 qmk_firmware/layouts/
 qmk_firmware/docs/
+
+keyboards/

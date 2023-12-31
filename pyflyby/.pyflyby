@@ -8,8 +8,13 @@ import sys
 import copy
 import collections
 from collections import Counter
+from heapq import heappush, heappop, heappushpop, heapify, heapreplace, merge, nlargest, nsmallest
+import heapq
+import bisect
+from bisect import bisect_left, bisect_right, bisect
 
 __forget_imports__ = ["from numpy import NaN"]
 __forget_imports__ = ["from numpy import copy"]
 __forget_imports__ = ["from scipy.optimize.zeros import bisect"]
+__forget_imports__ = ["from numpy import product"]
 

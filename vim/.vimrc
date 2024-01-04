@@ -237,7 +237,7 @@ def PythonAbbrevs()
     # iabbr <buffer><expr> def     <SID>NotCtx() ? 'def' : 'def ():<cr>"""."""<esc>-f(i<c-r>=<SID>Eatchar()<cr>'
     iabbr <buffer><expr> def     <SID>NotCtx() ? 'def' : 'def ():<cr><esc>-f(i<c-r>=<SID>Eatchar()<cr>'
     # iabbr <buffer><expr> defa    def ():<c-o>o'''<cr>>>> print()<cr><cr>'''<esc>4k_f(i<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       trya try:
+    iabbr <buffer>       try_ try:
                 \<cr>pass
                 \<cr>except Exception as err:
                 \<cr>print(f"Unexpected {err=}, {type(err)=}")
@@ -252,15 +252,15 @@ def PythonAbbrevs()
                 \<cr>'''<esc>ggOfrom sys import stderr<esc>Go<c-u><esc>o<esc>
                 \:normal i__main__<cr>
                 \?>>> print<cr>:nohl<cr>g_hi<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       """ """<cr><cr>"""<c-o>-<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       enum_   Color = Enum('Color', ['RED', 'GRN'])<esc>_fC<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       pre      print(, file=stderr)<esc>F,i<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       pr      print()<c-o>i<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       tuple_ Point = namedtuple('Point', 'x y')<esc>_<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       tuple_named Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       cache_ @functools.cache<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       copy_ copy.copy(<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       deepcopy_ copy.deepcopy(<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       """            """<cr><cr>"""<c-o>-<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       enum_          Color = Enum('Color', ['RED', 'GRN'])<esc>_fC<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       pre            print(, file=stderr)<esc>F,i<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       pr             print()<c-o>i<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       tuple_         Point = namedtuple('Point', 'x y')<esc>_<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       tuple_named    Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       cache_         @functools.cache<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       copy_          copy.copy(<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       deepcopy_      copy.deepcopy(<c-r>=<SID>Eatchar()<cr>
     # itertools
     iabbr  <buffer>  tee_                            tee(<c-r>=<SID>Eatchar()<cr>
     iabbr  <buffer>  chain_                          chain(<c-r>=<SID>Eatchar()<cr>
@@ -295,20 +295,34 @@ def PythonAbbrevs()
     iabbr  <buffer>  dict_default1  defaultdict(int)<c-r>=<SID>Eatchar()<cr>
     iabbr  <buffer>  dict_default2  defaultdict(set)<c-r>=<SID>Eatchar()<cr>
     iabbr  <buffer>  dict_default3  defaultdict(lambda: '[default  value]')<c-r>=<SID>Eatchar()<cr>
+    # bisect
+    iabbr  <buffer>  bisect_       bisect(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  bisect_left   bisect_left(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  bisect_right  bisect_right(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  insort_left   insort_left(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  insort_       insort(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  insort_right  insort_right(<c-r>=<SID>Eatchar()<cr>
+    # re
+    iabbr  <buffer>  finditer_   re.finditer(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  findall_    re.findall(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  match_      re.match(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  fullmatch_  re.fullmatch(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  search_     re.search(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  sub_        re.sub(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  subn_       re.subn(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  split_      re.split(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  escape_     re.escape(<c-r>=<SID>Eatchar()<cr>
+    iabbr  <buffer>  compile_    re.compile(<c-r>=<SID>Eatchar()<cr>
     #
-    iabbr <buffer>       bisect_  bisect(<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       bisect_left  bisect_left(<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       bisect_right  bisect_right(<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       heapq_nlargest  heapq.nlargest(<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       heapq_nsmallest heapq.nsmallest(<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       deque_ deque(<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       __init__ def __init__(self):<esc>hi<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       __add__ def __add__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       __sub__ def __sub__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       __mul__ def __mul__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       __truediv__ def __truediv__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       __floordiv__ def __floordiv__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
-
+    iabbr <buffer>   heapq_nlargest  heapq.nlargest(<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>   heapq_nsmallest heapq.nsmallest(<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>   deque_          deque(<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>   __init__        def __init__(self):<esc>hi<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>   __add__         def __add__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>   __sub__         def __sub__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>   __mul__         def __mul__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>   __truediv__     def __truediv__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>   __floordiv__    def __floordiv__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
 enddef
 
 def CmakeAbbrevs()
@@ -1024,6 +1038,22 @@ def BuflineStr(width: number): string
     return exists('*g:BuflineGetstr') ? g:BuflineGetstr(width) : ''
 enddef
 
+var elapsedTime = 0
+def GetElapsed(): string
+    var mins = elapsedTime % 60
+    var hrs = elapsedTime / 60
+    return (hrs < 10 ? $'0{hrs}' : string(hrs)) .. ':' .. (mins < 10 ? $'0{mins}' : string(mins))
+enddef
+
+def UpdateElapsed(timer: number)
+    if exists('#User#ElapsedTimeUpdated')
+        :doau <nomodeline> User ElapsedTimeUpdated
+    endif
+    elapsedTime += 1
+    timer_start(60 * 1000, function(UpdateElapsed))
+enddef
+timer_start(60 * 1000, function(UpdateElapsed))
+
 def! g:MyActiveStatusline(): string
     var gitstr = Gitstr()
     var diagstr = Diagstr()
@@ -1032,9 +1062,10 @@ def! g:MyActiveStatusline(): string
     if shortpath->len() > shortpathmax
         shortpath = shortpath->split('/')->map((_, v) => v->slice(0, 2))->join('/')->slice(0, shortpathmax)
     endif
-    var width = winwidth(0) - 30 - gitstr->len() - diagstr->len() - shortpath->len()
+    var elapsed = GetElapsed()
+    var width = winwidth(0) - 30 - gitstr->len() - diagstr->len() - shortpath->len() - elapsed->len()
     var buflinestr = BuflineStr(width)
-    return $'%4*{diagstr}%* {buflinestr} %= {shortpath}%4*{gitstr}%* %y %P (%l:%c) %*'
+    return $'%4*{diagstr}%* {buflinestr} %= %4*{elapsed}%* {shortpath}%4*{gitstr}%* %y %P (%l:%c) %*'
     # return $'%4*{diagstr}%* {buflinestr} %= %f%4*{gitstr}%* %y %P (%l:%c) %*'
     # return $'{diagstr} {buflinestr} %={gitstr} %y %P (%l:%c) '
 enddef
@@ -1046,7 +1077,7 @@ enddef
 augroup MyStatusLine | autocmd!
     autocmd VimEnter,ColorScheme * g:MyStatuslineSetup()
     autocmd WinEnter,BufEnter,BufAdd * setl statusline=%{%g:MyActiveStatusline()%}
-    autocmd User LspDiagsUpdated,BufLineUpdated setl statusline=%{%g:MyActiveStatusline()%}
+    autocmd User LspDiagsUpdated,BufLineUpdated,ElapsedTimeUpdated setl statusline=%{%g:MyActiveStatusline()%}
     autocmd WinLeave,BufLeave * setl statusline=%{%g:MyInactiveStatusline()%}
 augroup END
 

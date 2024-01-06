@@ -516,6 +516,7 @@ augroup myCmds | autocmd!
     # autocmd FileType cpp,c setlocal makeprg=g++\ -std=c++11\ -O2\ -Wall\ %\ -o\ %<
     #
     autocmd FileType python PythonCustomization()
+    autocmd FileType cpp CppCustomization()
 augroup END
 
 
@@ -534,6 +535,10 @@ def PythonCustomization()
     setlocal makeprg=python3\ %
     nnoremap <buffer> <leader>p :Ipython<cr>
     &l:formatprg = "black --quiet -"
+enddef
+
+def CppCustomization()
+    nnoremap <leader>h :Cppman<space>
 enddef
 
 #--------------------

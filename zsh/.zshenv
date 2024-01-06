@@ -52,7 +52,7 @@ alias -g gs='git status '
 alias gc='git clone '
 alias -g gp='git push'
 alias -g gu='git pull --no-rebase'
-alias pipu='pip install --user '
+alias pipi='pip install --user '
 alias -g lc='leetcode '
 alias -g vims='vim -Nu NONE -S <(cat <<EOF
     " vim:ts=4:ft=vim

@@ -235,7 +235,7 @@ enddef
 
 def PythonAbbrevs()
     # iabbr <buffer><expr> def     <SID>NotCtx() ? 'def' : 'def ():<cr>"""."""<esc>-f(i<c-r>=<SID>Eatchar()<cr>'
-    iabbr <buffer><expr> def     <SID>NotCtx() ? 'def' : 'def ():<cr><esc>-f(i<c-r>=<SID>Eatchar()<cr>'
+    iabbr <buffer><expr> def     <SID>NotCtx() ? 'def' : 'def ):<cr><esc>-f)i<c-r>=<SID>Eatchar()<cr>'
     # iabbr <buffer><expr> defa    def ():<c-o>o'''<cr>>>> print()<cr><cr>'''<esc>4k_f(i<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       try_ try:
                 \<cr>pass
@@ -253,14 +253,24 @@ def PythonAbbrevs()
                 \:normal i__main__<cr>
                 \?>>> print<cr>:nohl<cr>g_hi<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       """            """<cr><cr>"""<c-o>-<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       case_ match myval:
+                \<cr>case 10:
+                \<cr>pass
+                \<cr>case _:<esc>3k_fm;i<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       match_case_ match myval:
+                \<cr>case 10:
+                \<cr>pass
+                \<cr>case _:<esc>3k_fm;i<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       enum_          Color = Enum('Color', ['RED', 'GRN'])<esc>_fC<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       pre            print(, file=stderr)<esc>F,i<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       pr             print()<c-o>i<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       tuple_         Point = namedtuple('Point', 'x y')<esc>_<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       tuple_named    Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       cache_         @functools.cache<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       copy_          copy.copy(<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       deepcopy_      copy.deepcopy(<c-r>=<SID>Eatchar()<cr>
+    # functools
+    iabbr <buffer>       cache_         @functools.cache<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       partial_       functools.partial(<c-r>=<SID>Eatchar()<cr>
     # itertools
     iabbr  <buffer>  tee_                            tee(<c-r>=<SID>Eatchar()<cr>
     iabbr  <buffer>  chain_                          chain(<c-r>=<SID>Eatchar()<cr>
@@ -513,6 +523,7 @@ def PythonCustomization()
     # NOTE: tidy-imports misses some imports. Put them in ~/.pyflyby
     # python help (:redraw! will fix any screen issues after shell command)
     nnoremap <buffer> <leader>vh :term ++close pydoc3<space>
+    nnoremap <leader>h :Help<space>
     nnoremap <buffer> <leader>vb :!open https://docs.python.org/3/search.html\?q=
     nnoremap <buffer> <leader>vi :% !tidy-imports --replace-star-imports -r -p --quiet --black<cr>
     nnoremap <buffer> <leader>vf :% !black -q -<cr>
@@ -544,6 +555,12 @@ def Ipython()
     endif
 enddef
 command Ipython Ipython()
+
+# cppman to view cppreference.com documentation
+command -complete=custom,ListCppKeywords -nargs=1 Cppman :term ++close cppman <args>
+def ListCppKeywords(ArgLead: string, CmdLine: string, CursorPos: number): string
+    return system($'cppman -f {ArgLead}')
+enddef
 
 # Find highlight group under cursor
 def SynStack()
@@ -655,7 +672,7 @@ nnoremap ga `[v`]
 # <leader> mappings
 nnoremap <leader>b <cmd>b#<cr>| # alternate buffer
 nnoremap <leader>d <cmd>bdelete<cr>| # use :hide instead
-nnoremap <leader>h <cmd>hide<cr>| # hide window
+nnoremap <leader>H <cmd>hide<cr>| # hide window
 # nnoremap <leader>u <cmd>unhide<cr><c-w>w| # unhide = one window for each loaded buffer (splits horizontally, not useful)
 tnoremap <c-w>h <c-w>:hide<cr>| # hide window (when terminal window is active)
 nnoremap <leader>t <cmd>!tree <bar> more<cr>
@@ -718,9 +735,9 @@ Plug 'airblade/vim-gitgutter'
 Plug 'machakann/vim-highlightedyank'
 Plug 'yegappan/lsp'
 # Plug '~/git/lsp'
-Plug 'rafamadriz/friendly-snippets'
-Plug 'hrsh7th/vim-vsnip'
-Plug 'hrsh7th/vim-vsnip-integ'
+# Plug 'rafamadriz/friendly-snippets'
+# Plug 'hrsh7th/vim-vsnip'
+# Plug 'hrsh7th/vim-vsnip-integ'
 # XXX python-syntax does not highlight 'dectest' (test code inside comments)
 # Plug 'vim-python/python-syntax'
 #
@@ -735,13 +752,13 @@ Plug 'girishji/vimcomplete'
 # Plug '~/git/ngram-complete.vim'
 Plug 'girishji/ngram-complete.vim'
 # Plug '~/git/vimscript-complete.vim'
-Plug 'girishji/vimscript-complete.vim'
+Plug 'girishji/vimscript-complete.vim', {'for': 'vim'}
 # Plug 'girishji/omnifunc-complete.vim'
-Plug 'girishji/vsnip-complete.vim'
+# Plug 'girishji/vsnip-complete.vim'
 Plug 'girishji/omnifunc-complete.vim'
 Plug 'girishji/lsp-complete.vim'
 # Plug '~/git/lsp-complete.vim'
-Plug 'girishji/pythondoc.vim'
+Plug 'girishji/pythondoc.vim', {'for': 'python'}
 # Plug '~/git/easyjump.vim'
 Plug 'girishji/easyjump.vim'
 plug#end()
@@ -904,8 +921,8 @@ var lspOpts = {
     outlineWinSize: 30,
     useBufferCompletion: true,
     completionTextEdit: false,
-    snippetSupport: true, # snippets from lsp server
-    vsnipSupport: true,
+    snippetSupport: false, # snippets from lsp server
+    vsnipSupport: false,
     # autoComplete: false,
     # omniComplete: true,
 }

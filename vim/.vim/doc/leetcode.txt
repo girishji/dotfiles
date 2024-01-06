@@ -468,10 +468,19 @@ The most common assumption is that you'd want to be able to override fn in a
 subclass, so for most use-cases, you'd stick with self.fn().
 
 ------------------------------------------------------------------------------
-remove last element from list~
-foo[:-1]
-del foo[-1]
-foo.pop()
+Delete (remove) element(s) from list~
+
+	- Remove all items: clear()
+	- Remove an item by index and get its value: pop()
+	- Remove an item by value: remove()
+	- Remove items by index or slice: del
+	- Remove items that meet the condition: List comprehensions
+
+del examples:
+>
+	del foo[-1]
+	del l[:] # delete all items
+	del l[::2]
 
 ------------------------------------------------------------------------------
 Possible to sort array in LINEAR time.~
@@ -1174,6 +1183,63 @@ use takewhile() and dropwhile()
           # dropwhile(lambda x: x<5, [1,4,6,4,1]) --> 6 4 1
 
 ------------------------------------------------------------------------------ 
+Truthiness: 'if foo is None' not 'if not foo' (False: foo==0 and foo==None)~
+Bugs happend when you do:
+ >
+            idxneg = next((idx for idx in range(mid, en) if nums[idx] < 0), None)
+	    if not idxneg: # WRONG
+            if idxneg is None: # OK
 
+------------------------------------------------------------------------------
+Use functools.partial():
+>
+            f = functools.partial(takewhile, lambda x: nums[x] > 0)
+            leftsum = sum(nums[i] for i in f(reversed(range(st, mid))))
+            rightsum = sum(nums[i] for i in f(range(mid + 1, en)))
+------------------------------------------------------------------------------ 
+Alternate between 0 and 1 inside a for loop~
+Use `&1`
+>
+	dp = [[1]*n for i in range(2)]
+	for i in range(1,m):
+	    for j in range(1,n):
+	        dp[i&1][j] = dp[(i-1)&1][j] + dp[i&1][j-1]
+	return dp[(m-1)&1][-1]
+
+------------------------------------------------------------------------------
+Combinatorics~
+
+62. There is a robot on an m x n grid. The robot is initially located at the
+top-left corner (i.e., grid[0][0]). The robot tries to move to the
+bottom-right corner (i.e., grid[m - 1][n - 1]). The robot can only move either
+down or right at any point in time.
+
+Given the two integers m and n, return the number of possible unique paths
+that the robot can take to reach the bottom-right corner.
+
+Ans:
+- We need to make m-1 down-moves and n-1 right-moves to reach the destination
+cell.
+- Thus, we need to perform a total number of m+n-2 moves.
+- At each cell along the path, we can choose either the right-move or
+  down-move and we need to find the number of unique combinations of these
+  choices (which eventually leads to unique paths).
+- This is nothing but calculating the number of different ways to choose m-1
+  down-moves and n-1 right-moves from a total of m+n-2 moves.
+
+Ans = (m + n - 2)C(m - 1) = (m + n - 2) C (n - 1)
+C = Combination
+
+DP solution~
+f(m, n) = f(m - 1, n) + f(m, n - 1)
+
+Tabulation Solution~
+Maintain a matrix mxn such that each cell represents total number of paths to
+get to that cell from (0, 0). Go throw the matrix and update each cell by
+adding values from left cell and top cell.
+In fact, you only need to maintain values from one row above.
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

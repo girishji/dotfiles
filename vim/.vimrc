@@ -13,6 +13,10 @@ g:mapleader = "\<Space>"
 g:maplocalleader = "\<Space>" # meant for certain file types
 map <BS> <Leader>
 
+# To make undercurl work in iterm2
+&t_Cs = "\e[4:3m"
+&t_Ce = "\e[4:0m"
+
 # Cursor shape changes to show which mode you are in (:h t_SI)
 &t_SI = "\e[6 q" #SI = INSERT mode
 &t_SR = "\e[4 q" #SR = REPLACE mode
@@ -40,12 +44,13 @@ augroup MyFTOptions | autocmd!
 # set path-=/usr/include
 # https://www.youtube.com/watch?v=Gs1VDYnS-Ac 24:00
 set path=.,**
-# path set to '**' ignores wildignore dirs because it does not use full path
+# path set to '**' does not consider wildignore dirs because it does not use full path
 # set wildignore appropriately
 # https://vi.stackexchange.com/questions/15457/what-does-wildignore-actually-do-and-what-functions-tools-respect-it
 # https://stackoverflow.com/questions/4296201/vim-ignore-special-path-in-search
 # */build/* form is needed for :find to ignore, while build/ is needed for :edit to ignore 'build' dir.
 set wildignore+=*/build/*,build/,*/pycache/*,pycache/,*/venv/*,venv/,*/dist/*,dist/,*.o,*.obj
+
 # NOTE: Following are set through CmdComplete plugin
 # set wildmenu|set wildmode=longest:full:lastused,full|set wildoptions=pum
 
@@ -61,7 +66,7 @@ set wildignore+=*/build/*,build/,*/pycache/*,pycache/,*/venv/*,venv/,*/dist/*,di
 # Note: need autosuggest plugin for following mappings
 # nnoremap <leader><space> :e<space>**/*<left>
 # Note: Following works (respects wildignore) but slow
-nnoremap <leader>f :e<space>**/
+nnoremap <leader>ff :e<space>**/
 
 nnoremap <leader><space> :Find<space>
 nnoremap <leader>g :Grep<space>
@@ -247,12 +252,12 @@ def PythonAbbrevs()
                 \ if __name__ == "__main__":
                 \<cr>import doctest
                 \<cr>doctest.testmod()<esc><c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       ''' '''
+    iabbr <buffer>       '''_ '''
                 \<cr>>>> print(<c-r>=<SID>GetSurroundingFn()<cr>)
                 \<cr>'''<esc>ggOfrom sys import stderr<esc>Go<c-u><esc>o<esc>
                 \:normal i__main__<cr>
                 \?>>> print<cr>:nohl<cr>g_hi<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       """            """<cr><cr>"""<c-o>-<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       """            """."""<c-o>3h<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       case_ match myval:
                 \<cr>case 10:
                 \<cr>pass
@@ -411,57 +416,6 @@ set tags=./tags,./../tags,./*/tags # this dir, just one level above, and all sub
 
 autocmd MyFTOptions FileType vim,cmake,sh,zsh setl sw=4|setl ts=8|setl sts=4|setl et
 
-#--------------------
-# Syntax highlighting
-#--------------------
-
-syntax on # turn on syntax highlighting
-
-def MyHighlights()
-    exec  $'highlight  LspDiagVirtualTextError    ctermbg={&background  ==  "dark"  ?  0  :  7}  ctermfg=1  cterm=underline'
-    exec  $'highlight  LspDiagVirtualTextWarning  ctermbg={&background  ==  "dark"  ?  0  :  7}  ctermfg=3  cterm=underline'
-    exec  $'highlight  LspDiagVirtualTextHint     ctermbg={&background  ==  "dark"  ?  0  :  7}  ctermfg=2  cterm=underline'
-    exec  $'highlight  LspDiagVirtualTextInfo     ctermbg={&background  ==  "dark"  ?  0  :  7}  ctermfg=5  cterm=underline'
-    highlight  link  LspDiagSignErrorText    LspDiagVirtualTextError
-    highlight  link  LspDiagSignWarningText  LspDiagVirtualTextWarning
-    highlight  link  LspDiagSignHintText     LspDiagVirtualTextHint
-    highlight  link  LspDiagSignInfoText     LspDiagVirtualTextInfo
-    if execute('colorscheme') =~ 'quiet'
-        highlight  Comment                  ctermfg=244
-        highlight  LineNr                   ctermfg=244
-        highlight  PreProc                  cterm=bold
-        highlight  helpHyperTextJump        cterm=underline
-        highlight  helpHyperTextEntry       cterm=italic
-        highlight  helpHeader               cterm=bold
-        highlight  helpExample              ctermfg=248
-        highlight  AS_SearchCompletePrefix  ctermfg=207
-        highlight  LspSigActiveParameter    ctermfg=207
-        # keep Pmenu bg high contrast to see insert mode completion clearly
-        highlight  Pmenu       ctermfg=none  ctermbg=22    cterm=none
-        highlight  PmenuSel    ctermfg=none  ctermbg=none  cterm=reverse
-        highlight  PmenuThumb  ctermfg=246   ctermbg=246
-        highlight link PmenuKind Pmenu
-        highlight link PmenuKindSel    PmenuSel
-        highlight link PmenuExtra      Pmenu
-        highlight link PmenuExtraSel   PmenuSel
-
-    elseif execute('colorscheme') =~ 'slate'
-        highlight  Comment  ctermfg=246
-        highlight  Type     ctermfg=71   cterm=bold
-        highlight  ModeMsg  ctermfg=235  ctermbg=220  cterm=reverse
-    endif
-enddef
-
-augroup MyColors | autocmd!
-    # slate or zaibatsu:
-    # autocmd FileType c,cmake ++nested colorscheme slate
-    # Trailing spaces show up in red
-    autocmd ColorScheme * highlight TrailingWhitespace ctermbg=196
-                \ | match TrailingWhitespace /\s\+\%#\@<!$/
-                \ | MyHighlights()
-augroup END
-
-
 
 #--------------------
 # Autocommands
@@ -530,11 +484,13 @@ def PythonCustomization()
     nnoremap <buffer> <leader>vf :% !black -q -<cr>
     nnoremap <buffer><expr> <leader>vt $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode test {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"
     nnoremap <buffer><expr> <leader>vx $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode exec {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"
-    nnoremap <buffer><expr> <leader>vp $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| r ! python3 #<cr>"
+    nnoremap <buffer><expr> <leader>vp $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| r !python3 #<cr>"
     nnoremap <buffer><expr> <leader>vP <cmd>echo expand('%')<cr>
     setlocal makeprg=python3\ %
     nnoremap <buffer> <leader>p :Ipython<cr>
     &l:formatprg = "black --quiet -"
+    g:pyindent_open_paren = 'shiftwidth()' # https://github.com/vim/vim/blob/v8.2.0/runtime/indent/python.vim
+    set dictionary=$HOME/.vim/data/pythondict
 enddef
 
 def CppCustomization()
@@ -706,6 +662,77 @@ nnoremap <leader>vz <scriptcmd>FoldingToggle()<cr>
 nnoremap <leader>vp <cmd>echo expand('%')<cr>
 
 #--------------------
+# colorscheme
+#--------------------
+
+syntax on # turn on syntax highlighting
+
+def ColorSchemeSetup()
+    if &background == 'dark'
+        # set termguicolors
+        # colorscheme quiet
+        # colorscheme slate
+        colorscheme xcodedarkhc
+
+        if execute('colorscheme') =~ 'quiet'
+            highlight  helpHyperTextJump        cterm=underline
+            highlight  helpHyperTextEntry       cterm=italic
+            highlight  helpHeader               cterm=bold
+            highlight link PmenuKind Pmenu
+            highlight link PmenuKindSel    PmenuSel
+            highlight link PmenuExtra      Pmenu
+            highlight link PmenuExtraSel   PmenuSel
+            highlight  Comment                  ctermfg=244
+            highlight  LineNr                   ctermfg=244
+            highlight  PreProc                  cterm=bold
+            highlight  helpExample              ctermfg=248
+            highlight  AS_SearchCompletePrefix  ctermfg=207
+            highlight  LspSigActiveParameter    ctermfg=207
+            # keep Pmenu bg high contrast to see insert mode completion clearly
+            highlight  Pmenu       ctermfg=none  ctermbg=22    cterm=none
+            highlight  PmenuSel    ctermfg=none  ctermbg=none  cterm=reverse
+            highlight  PmenuThumb  ctermfg=246   ctermbg=246
+        elseif execute('colorscheme') =~ 'slate'
+            highlight  Comment  ctermfg=246
+            highlight  Type     ctermfg=71   cterm=bold
+            highlight  ModeMsg  ctermfg=235  ctermbg=220  cterm=reverse
+        endif
+    else
+        if execute('colorscheme') =~ 'github'
+            # use a slightly darker background, like GitHub inline code blocks
+            # g:github_colors_soft = 1
+        elseif execute('colorscheme') =~ 'slate'
+            highlight Normal ctermbg=None
+            highlight Pmenu ctermbg=193
+        endif
+        colorscheme github
+    endif
+enddef
+
+autocmd VimEnter * ColorSchemeSetup()
+
+def PostColorSchemeSetup()
+    # if &background == 'dark'
+    #     highlight  LspDiagVirtualTextError    ctermbg=0  ctermfg=1  cterm=underline
+    #     highlight  LspDiagVirtualTextWarning  ctermbg=0  ctermfg=3  cterm=underline
+    #     highlight  LspDiagVirtualTextHint     ctermbg=0  ctermfg=2  cterm=underline
+    #     highlight  LspDiagVirtualTextInfo     ctermbg=0  ctermfg=5  cterm=underline
+    # endif
+    # highlight  link  LspDiagSignErrorText    LspDiagVirtualTextError
+    # highlight  link  LspDiagSignWarningText  LspDiagVirtualTextWarning
+    # highlight  link  LspDiagSignHintText     LspDiagVirtualTextHint
+    # highlight  link  LspDiagSignInfoText     LspDiagVirtualTextInfo
+enddef
+
+augroup ColorSchemeCustomization | autocmd!
+    # autocmd FileType c,cmake ++nested colorscheme slate
+    # Trailing spaces show up in red
+    autocmd ColorScheme * highlight TrailingWhitespace ctermbg=196
+                \ | match TrailingWhitespace /\s\+\%#\@<!$/
+                \ | PostColorSchemeSetup()
+augroup END
+
+#--------------------
 # Plugins
 #--------------------
 
@@ -740,28 +767,30 @@ Plug 'airblade/vim-gitgutter'
 Plug 'machakann/vim-highlightedyank'
 Plug 'yegappan/lsp'
 # Plug '~/git/lsp'
-# Plug 'rafamadriz/friendly-snippets'
-# Plug 'hrsh7th/vim-vsnip'
-# Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'rafamadriz/friendly-snippets'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
 # XXX python-syntax does not highlight 'dectest' (test code inside comments)
 # Plug 'vim-python/python-syntax'
+Plug 'cormacrelf/vim-colors-github'
+Plug 'arzg/vim-colors-xcode'
 #
-# Plug '~/git/autosuggest.vim'
-Plug 'girishji/autosuggest.vim'
+Plug '~/git/autosuggest.vim'
+# Plug 'girishji/autosuggest.vim'
 # Plug '~/git/declutter.vim'
 # Plug 'girishji/declutter.vim'
 Plug 'girishji/bufline.vim'
 # Plug '~/git/bufline.vim'
-# Plug '~/git/vimcomplete'
-Plug 'girishji/vimcomplete'
-# Plug '~/git/ngram-complete.vim'
-Plug 'girishji/ngram-complete.vim'
+Plug '~/git/vimcomplete'
+# Plug 'girishji/vimcomplete'
+Plug '~/git/ngram-complete.vim'
+# Plug 'girishji/ngram-complete.vim'
 # Plug '~/git/vimscript-complete.vim'
-Plug 'girishji/vimscript-complete.vim', {'for': 'vim'}
+# Plug 'girishji/vimscript-complete.vim', {'for': 'vim'}
 # Plug 'girishji/omnifunc-complete.vim'
 # Plug 'girishji/vsnip-complete.vim'
-Plug 'girishji/omnifunc-complete.vim'
-Plug 'girishji/lsp-complete.vim'
+# Plug 'girishji/omnifunc-complete.vim'
+# Plug 'girishji/lsp-complete.vim'
 # Plug '~/git/lsp-complete.vim'
 Plug 'girishji/pythondoc.vim', {'for': 'python'}
 # Plug '~/git/easyjump.vim'
@@ -771,10 +800,10 @@ plug#end()
 #---------------------
 # easyjump
 
-# g:easyjump_default_keymap = false
-# nmap s <Plug>EasyjumpJump;
-# omap s <Plug>EasyjumpJump;
-# vmap s <Plug>EasyjumpJump;
+g:easyjump_default_keymap = false
+nmap , <Plug>EasyjumpJump;
+omap , <Plug>EasyjumpJump;
+vmap , <Plug>EasyjumpJump;
 
 #--------------------
 # pythondoc
@@ -786,13 +815,19 @@ g:pythondoc_hh_expand = 1
 
 g:vimcomplete_tab_enable = 1
 
+var dictproperties = {
+    python: { onlyWords: false, sortedDict: false},
+    text: { onlyWords: true, sortedDict: true, matcher: 'casematch' }
+}
+
 var vcoptions = {
     completor: { shuffleEqualPriority: true, alwaysOn: true },
-    buffer: { enable: true, priority: 11, urlComplete: true, envComplete: true },
-    abbrev: { enable: true, priority: 10 },
-    lsp: { enable: true, priority: 10, maxCount: 10 },
+    buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true },
+    dictionary: { enable: true, filetypes: ['python'], properties: dictproperties },
+    abbrev: { enable: true },
+    lsp: { enable: true, maxCount: 10 },
     omnifunc: { enable: false, priority: 10, filetypes: ['python', 'javascript'] },
-    vsnip: { enable: true, priority: 10, adaptNonKeyword: true },
+    vsnip: { enable: true, adaptNonKeyword: true },
     vimscript: { enable: true, priority: 10 },
     ngram: {
         enable: true,
@@ -827,12 +862,6 @@ var options = {
 }
 autocmd VimEnter * g:AutoSuggestSetup(options)
 
-#--------------------
-# declutter
-
-# colorscheme declutter-minimal
-# colorscheme declutter
-colorscheme quiet
 
 #--------------------
 # lsp
@@ -979,8 +1008,8 @@ def LSPUserSetup()
     nnoremap <buffer> ]e :LspDiagNext<CR>
     nnoremap <buffer> K :LspHover<CR>
     nnoremap <buffer> gl :LspDiagCurrent<CR>| # display all diag messages under cursor in a popup
-    hi LspDiagVirtualText ctermfg=1
-    hi LspDiagLine ctermbg=none
+    highlight LspDiagVirtualText ctermfg=1
+    highlight LspDiagLine ctermbg=none
     set completepopup+=highlight:normal,border:on
 enddef
 autocmd User LspAttached LSPUserSetup()
@@ -1038,17 +1067,27 @@ enddef
 def! g:MyStatuslineSetup()
     if &background == 'dark'
         set fillchars+=stl:―,stlnc:—
-        # guibg is needed to avoid carets, when both active/non-active statusline have same bg
-        exec $'highlight statusline cterm=none ctermfg=7 ctermbg=none guibg=red'
-        exec $'highlight statuslinenc cterm=none ctermfg=7 ctermbg=none guibg=green'
-        highlight user2 cterm=none ctermfg=7 ctermbg=none
-        highlight user4 ctermfg=3 cterm=none
+        if &termguicolors
+            highlight link user1 statusline
+            highlight link user2 statusline
+            highlight link user4 statusline
+        else
+            # guibg is needed to avoid carets, when both active/non-active statusline have same bg
+            exec $'highlight statusline cterm=none ctermfg=7 ctermbg=none guibg=red'
+            exec $'highlight statuslinenc cterm=none ctermfg=7 ctermbg=none guibg=green'
+            highlight user2 cterm=none ctermfg=7 ctermbg=none
+            highlight user4 ctermfg=3 cterm=none
+        endif
     else
-        exec $'highlight statusline cterm=none ctermfg=8 ctermbg=7 guibg=red'
-        exec $'highlight statuslinenc cterm=none ctermfg=8 ctermbg=7 guibg=green'
-        exec $'highlight user1 cterm=none ctermbg=7'
-        exec $'highlight user2 cterm=none ctermfg=240 ctermbg=7'
-        exec $'highlight user4 cterm=none ctermfg=52 ctermbg=7'
+        # highlight statusline cterm=none ctermfg=8 ctermbg=7 guibg=red
+        # highlight statuslinenc cterm=none ctermfg=8 ctermbg=7 guibg=green
+        # highlight user1 cterm=none ctermbg=7
+        # highlight user2 cterm=none ctermfg=240 ctermbg=7
+        # highlight user4 cterm=none ctermfg=52 ctermbg=7
+        highlight link user1 statusline
+        highlight link user2 statusline
+        highlight link user4 statusline
+
     endif
     highlight! link StatusLineTerm statusline
     highlight! link StatusLineTermNC statuslinenc

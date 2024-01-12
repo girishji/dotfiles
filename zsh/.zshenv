@@ -38,9 +38,9 @@ alias -g X=$'| xargs -I {} echo {}'
 alias -g T=' 2>&1 | tee tee.txt'
 
 # cannot alias 'fi' since it is a reserved keyword, 'fg' is foreground cmd
-alias -g F='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print'
-alias -g fin='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print'
-alias -g fig='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print -exec grep --color -Ei x {} \;'
+alias -g find='find . -path pat_path -name pat_last_component -exec echo {} \;'
+alias -g findd='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print -exec grep --color -Ei x {} \;'
+alias -g finddd='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print'
 
 alias -g fdf='fd -tf -tl' # search file, ex: fdf foo
 alias -g fdd='fd -td' # search dir, ex: fdd foo
@@ -54,11 +54,11 @@ alias -g gp='git push'
 alias -g gu='git pull --no-rebase'
 alias pipi='pip install --user '
 alias -g lc='leetcode '
-alias -g vims='vim -Nu NONE -S <(cat <<EOF
-    " vim:ts=4:ft=vim
-    vim9script
-EOF
-)'
+# alias -g vim_='vim -Nu NONE -S <(cat <<EOF
+#     " vim:ts=4:ft=vim
+#     vim9script
+# EOF
+# )'
 alias rg='rg --smart-case'
 alias ag='ag --smart-case'
 

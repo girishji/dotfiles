@@ -1240,6 +1240,76 @@ adding values from left cell and top cell.
 In fact, you only need to maintain values from one row above.
 
 ------------------------------------------------------------------------------
+DFA (Deterministic Finite Automata)~
+
+A deterministic finite automaton (or DFA) is an abstract machine whose
+behaviour can be described using a transition diagram like this one:
+                  [1]
+            ┌──────────────┐
+            │              │          ┌─────┐
+          ┌─┴─┐          ┌─▼─┐  [0]   │┼───┼│
+    ─────►│q0 │          │q1 ├───────►├│q2 ││
+          ├──▲┘          └─┬─┘        │┼───┼│
+          │  │     [1]     │          └──▲──┘
+          │  └─────────────┘             │
+          │           [0,1]              │
+          └──────────────────────────────┘
+The nodes in the diagram indicate the states of the machine and the edges
+indicate the state transitions that occur when the machine reads the next
+symbol (like 0, 1 here) in a string. A machine accepts a string if and only if
+it ends up in one of states with double outlines (q2) after reading the entire
+string.
+
+A Deterministic Finite Automaton (DFA) is defined as a 5-tuple (Q, Σ, δ, s, F)
+consisting of
+
+- A finite set Q (the set of states)
+- A finite set of symbols Σ (the input alphabet)
+- A transition function δ: Q × Σ → Q mapping the current state q ∈ Q and input
+  symbol a ∈ Σ to a new state δ(q, a) ∈ Q
+- An initial state s ∈ Q (the start state)
+- A set of accepting states F (the final states)
+- A DFA is a mathematical model of a simple computational device that reads a
+  string of symbols over the input alphabet Σ, and either accepts or reject
+  the input string. We would like to turn this mathematical definion into a
+  working program, so that we can run DFAs on our computer.
+
+We define a data type corresponding to DFAs:
+
+type State = Int (all integers)
+type DFA = ([State], [Char], State->Char->State, State, [State])
+
+That's it! Let us see how this data type corresponds to the mathematical
+definition. The first line defines State as a type synonym for Int, the
+haskell standard type for integer numbers. Giving a user defined name to the
+type of states is useful to make our programs more readable. The second line
+introduces another type synonym, DFA, the type we will use to represent DFAs.
+The type definition simply says that a DFA is a 5-tuple, and specifies the
+type of each component of the tuple:
+
+- The first component has type [State], i.e., it is a list of state. We do not
+  really care about the order in which the states are given in this list. But
+  ordered lists are generally easier to work with than unordered sets. So, we
+  will generally use lists to represent sets of elements.
+- The second component has type [Char], i.e., it is a list of characters, the
+  elements of the input alphabet.
+- The third component is the transition function, and has type
+  State->Char->State, i.e., it is a function that on input a State and a Char,
+  outputs a State.
+- The fourt component is just a State, the start state of the automaton
+- The last component is a list of states, the final states of the automaton.
+
+Summary:
+- create a list of dicts mapping symbol to next state, list idx is current
+state.
+- create a fn() mapping chars to symbol
+
+You can convert a regex into DFA with some intuition without rules, but a
+systematic (and laborious) way suitable for automatic conversion:
+https://www.youtube.com/watch?v=RYNN-tb9WxI
+https://leetcode.com/problems/valid-number/solutions/23728/a-simple-solution-in-python-based-on-dfa/
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

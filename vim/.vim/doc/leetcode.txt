@@ -1309,6 +1309,20 @@ systematic (and laborious) way suitable for automatic conversion:
 https://www.youtube.com/watch?v=RYNN-tb9WxI
 https://leetcode.com/problems/valid-number/solutions/23728/a-simple-solution-in-python-based-on-dfa/
 ------------------------------------------------------------------------------
+# format strings~
+1.
+>
+	>>> year = 2016
+	>>> event = 'Referendum'
+	>>> f'Results of the {year} {event}'
+	'Results of the 2016 Referendum'
+2.
+>
+	>>> yes_votes = 42_572_654
+	>>> no_votes = 43_132_495
+	>>> percentage = yes_votes / (yes_votes + no_votes)
+	>>> '{:-9} YES votes  {:2.2%}'.format(yes_votes, percentage)
+
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 

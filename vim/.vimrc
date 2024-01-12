@@ -271,66 +271,12 @@ def PythonAbbrevs()
     iabbr <buffer>       pr             print()<c-o>i<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       tuple_         Point = namedtuple('Point', 'x y')<esc>_<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       tuple_named    Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       copy_          copy.copy(<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       deepcopy_      copy.deepcopy(<c-r>=<SID>Eatchar()<cr>
-    # functools
-    iabbr <buffer>       cache_         @functools.cache<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       partial_       functools.partial(<c-r>=<SID>Eatchar()<cr>
-    # itertools
-    iabbr  <buffer>  tee_                            tee(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  chain_                          chain(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  count_                          count(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  cycle_                          cycle(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  islice_                         islice(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  repeat_                         repeat(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  batched_                        batched(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  groupby_                        groupby(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  product_                        product(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  starmap_                        starmap(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  compress_                       compress(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  pairwise_                       pairwise(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  dropwhile_                      dropwhile(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  takewhile_                      takewhile(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  accumulate_                     accumulate(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  zip_longest_                    zip_longest(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  filterfalse_                    filterfalse(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  Element_                        Element(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  combinations_                   combinations(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  permutations_                   permutations(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  combinations_with_replacement_  combinations_with_replacement(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  chain_                          chain(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  chain_iter_                     chain.from_iterable()<c-o>i<c-r>=<SID>Eatchar()<cr>
-    # random
-    iabbr  <buffer>  randrange_                      randrange(<c-r>=<SID>Eatchar()<cr>
     # collections
-    iabbr  <buffer>  Counter_       Counter()<c-o>i<c-r>=<SID>Eatchar()<cr>
     iabbr  <buffer>  defaultdict1   defaultdict(int)<c-r>=<SID>Eatchar()<cr>
     iabbr  <buffer>  defaultdict_   defaultdict(set)<c-r>=<SID>Eatchar()<cr>
     iabbr  <buffer>  defaultdict3   defaultdict(lambda: '[default  value]')<c-r>=<SID>Eatchar()<cr>
     iabbr  <buffer>  dict_default1  defaultdict(int)<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  dict_default2  defaultdict(set)<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  dict_default3  defaultdict(lambda: '[default  value]')<c-r>=<SID>Eatchar()<cr>
-    # bisect
-    iabbr  <buffer>  bisect_       bisect(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  bisect_left   bisect_left(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  bisect_right  bisect_right(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  insort_left   insort_left(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  insort_       insort(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  insort_right  insort_right(<c-r>=<SID>Eatchar()<cr>
-    # re
-    iabbr  <buffer>  finditer_   re.finditer(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  findall_    re.findall(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  match_      re.match(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  fullmatch_  re.fullmatch(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  search_     re.search(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  sub_        re.sub(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  subn_       re.subn(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  split_      re.split(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  escape_     re.escape(<c-r>=<SID>Eatchar()<cr>
-    iabbr  <buffer>  compile_    re.compile(<c-r>=<SID>Eatchar()<cr>
     #
-    iabbr <buffer>   heapq_nlargest  heapq.nlargest(<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>   heapq_nsmallest heapq.nsmallest(<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>   deque_          deque(<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>   __init__        def __init__(self):<esc>hi<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>   __add__         def __add__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
@@ -490,7 +436,7 @@ def PythonCustomization()
     nnoremap <buffer> <leader>p :Ipython<cr>
     &l:formatprg = "black --quiet -"
     g:pyindent_open_paren = 'shiftwidth()' # https://github.com/vim/vim/blob/v8.2.0/runtime/indent/python.vim
-    set dictionary=$HOME/.vim/data/pythondict
+    set dictionary=$HOME/.vim/data/python.dict
 enddef
 
 def CppCustomization()
@@ -669,10 +615,9 @@ syntax on # turn on syntax highlighting
 
 def ColorSchemeSetup()
     if &background == 'dark'
-        # set termguicolors
-        # colorscheme quiet
-        # colorscheme slate
-        colorscheme xcodedarkhc
+        # Preview here: https://vimcolorschemes.com/vim/colorschemes
+        colorscheme quiet
+        # colorscheme sorbet # used for vhs terminal recording
 
         if execute('colorscheme') =~ 'quiet'
             highlight  helpHyperTextJump        cterm=underline
@@ -689,23 +634,22 @@ def ColorSchemeSetup()
             highlight  AS_SearchCompletePrefix  ctermfg=207
             highlight  LspSigActiveParameter    ctermfg=207
             # keep Pmenu bg high contrast to see insert mode completion clearly
-            highlight  Pmenu       ctermfg=none  ctermbg=22    cterm=none
+            highlight  Pmenu       ctermfg=none  ctermbg=53    cterm=none
             highlight  PmenuSel    ctermfg=none  ctermbg=none  cterm=reverse
             highlight  PmenuThumb  ctermfg=246   ctermbg=246
         elseif execute('colorscheme') =~ 'slate'
             highlight  Comment  ctermfg=246
             highlight  Type     ctermfg=71   cterm=bold
             highlight  ModeMsg  ctermfg=235  ctermbg=220  cterm=reverse
+        elseif execute('colorscheme') =~ 'sorbet'
+            highlight  AS_SearchCompletePrefix  ctermfg=124
         endif
     else
-        if execute('colorscheme') =~ 'github'
-            # use a slightly darker background, like GitHub inline code blocks
-            # g:github_colors_soft = 1
-        elseif execute('colorscheme') =~ 'slate'
+        if execute('colorscheme') =~ 'slate'
             highlight Normal ctermbg=None
             highlight Pmenu ctermbg=193
         endif
-        colorscheme github
+        colorscheme lunaperche
     endif
 enddef
 
@@ -772,8 +716,6 @@ Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 # XXX python-syntax does not highlight 'dectest' (test code inside comments)
 # Plug 'vim-python/python-syntax'
-Plug 'cormacrelf/vim-colors-github'
-Plug 'arzg/vim-colors-xcode'
 #
 Plug '~/git/autosuggest.vim'
 # Plug 'girishji/autosuggest.vim'

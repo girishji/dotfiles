@@ -765,7 +765,7 @@ var dictproperties = {
 var vcoptions = {
     completor: { shuffleEqualPriority: true, alwaysOn: true },
     buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true },
-    dictionary: { enable: true, filetypes: ['python'], properties: dictproperties },
+    dictionary: { enable: true, maxCount: 200, filetypes: ['python'], properties: dictproperties },
     abbrev: { enable: true },
     lsp: { enable: true, maxCount: 10 },
     omnifunc: { enable: false, priority: 10, filetypes: ['python', 'javascript'] },

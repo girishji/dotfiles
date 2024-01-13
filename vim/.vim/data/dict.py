@@ -6,10 +6,11 @@ Dictionary is written to stdout.
 Base on: https://github.com/vim-scripts/Pydiction
 """
 
-import sys
-import re
-import types
+import inspect
 import keyword
+import re
+import sys
+import types
 
 
 def get_python_version():
@@ -55,7 +56,8 @@ def get_format(imported_module, mod_attr, use_prefix):
         format_callable = '%s('
 
     try:
-        if callable(getattr(imported_module, mod_attr)):
+        attr_val = getattr(imported_module, mod_attr)
+        if callable(attr_val) and not (inspect.isclass(attr_val) and issubclass(attr_val, BaseException)):
             # If an attribute is callable, show an opening parentheses:
             format = format_callable
         else:

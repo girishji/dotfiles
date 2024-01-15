@@ -64,7 +64,8 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 ############################################################
 # Prompt
 if is_macos; then
-    PROMPT="%B%F{3}[%f%F{207}$(arch)%f%F{3}]%f%b "
+    # PROMPT="%B%F{3}[%f%F{207}$(arch)%f%F{3}]%f%b "
+    PROMPT="%F{3}[%f%F{1}$(arch)%f%F{3}]%f "
     PROMPT+='%40<..<%~%<< ' # shortened path
     autoload -Uz vcs_info
     precmd_vcs_info() { vcs_info }

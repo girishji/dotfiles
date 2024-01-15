@@ -619,6 +619,7 @@ def ColorSchemeSetup()
         # colorscheme sorbet |# used for vhs app terminal recording
 
         if execute('colorscheme') =~ 'quiet'
+            highlight  Normal                   ctermbg=None
             highlight  helpHyperTextJump        cterm=underline
             highlight  helpHyperTextEntry       cterm=italic
             highlight  helpHeader               cterm=bold
@@ -630,13 +631,17 @@ def ColorSchemeSetup()
             highlight  LineNr                   ctermfg=244
             highlight  PreProc                  cterm=bold
             highlight  helpExample              ctermfg=248
-            highlight  AS_SearchCompletePrefix  ctermfg=207
+            # highlight  AS_SearchCompletePrefix  ctermfg=207
             highlight  LspSigActiveParameter    ctermfg=207
             # keep Pmenu bg high contrast to see insert mode completion clearly
-            # highlight  Pmenu       ctermfg=none  ctermbg=53    cterm=none
-            highlight  Pmenu       ctermfg=231  ctermbg=28    cterm=none
-            highlight  PmenuSel    ctermfg=none  ctermbg=none  cterm=reverse
-            highlight  PmenuThumb  ctermfg=246   ctermbg=246
+            # # highlight  Pmenu       ctermfg=none  ctermbg=53    cterm=none
+            # highlight  Pmenu       ctermfg=231  ctermbg=28    cterm=none
+            # highlight  PmenuSel    ctermfg=none  ctermbg=none  cterm=reverse
+            # highlight  PmenuThumb  ctermfg=246   ctermbg=246
+            # iceberg iterm theme
+            highlight  Pmenu       ctermfg=232  ctermbg=2    cterm=none
+            highlight  PmenuSel    ctermbg=231
+            highlight  AS_SearchCompletePrefix  ctermfg=124
         elseif execute('colorscheme') =~ 'slate'
             highlight  Comment  ctermfg=246
             highlight  Type     ctermfg=71   cterm=bold
@@ -707,7 +712,7 @@ Plug 'rafamadriz/friendly-snippets'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 # colorschemes
-Plug 'zaki/zazen'
+Plug 'cocopon/iceberg.vim'
 # XXX python-syntax does not highlight 'doctest' (test code inside comments)
 # Plug 'vim-python/python-syntax'
 #
@@ -773,7 +778,9 @@ var vcoptions = {
         filetypesComments: ['c', 'cpp', 'python', 'java', 'lua', 'vim', 'zsh', 'r'],
     },
 }
-autocmd VimEnter * g:VimCompleteOptionsSet(vcoptions)
+if exists("*g:VimCompleteOptionsSet")
+    autocmd VimEnter * g:VimCompleteOptionsSet(vcoptions)
+endif
 
 #--------------------
 # autosuggest
@@ -796,7 +803,9 @@ var options = {
         editcmdworkaround: true,
     }
 }
-autocmd VimEnter * g:AutoSuggestSetup(options)
+if exists("*g:AutoSuggestSetup")
+    autocmd VimEnter * g:AutoSuggestSetup(options)
+endif
 
 
 #--------------------
@@ -875,7 +884,9 @@ endif
     #     },
     # },
 
-autocmd VimEnter * call LspAddServer(lspServers)
+if exists("*g:LspAddServer")
+    autocmd VimEnter * call LspAddServer(lspServers)
+endif
 # XXX registering for FileType event causes multiple instances of server jobs
 # autocmd FileType java,c,cpp,python call LspAddServer(lspServers)
 
@@ -897,7 +908,9 @@ var lspOpts = {
     # omniComplete: true,
 }
 
-autocmd BufEnter,VimEnter * call LspOptionsSet(lspOpts)
+if exists("*g:LspOptionsSet")
+    autocmd BufEnter,VimEnter * call LspOptionsSet(lspOpts)
+endif
 
 def LspHighlightsSet()
     if &background == 'dark'
@@ -986,8 +999,10 @@ nmap ]h <Plug>(GitGutterNextHunk)
 nmap [h <Plug>(GitGutterPrevHunk)
 hi GitGutterAdd ctermfg=5 | hi GitGutterChange ctermfg=5 | hi GitGutterDelete ctermfg=5
 # Disable these problematic autocmds, otherwise :vimgrep gives error when opening quickfix
-autocmd VimEnter * autocmd! gitgutter QuickFixCmdPre *vimgrep*
-autocmd VimEnter * autocmd! gitgutter QuickFixCmdPost *vimgrep*
+if exists("#gitgutter")
+    autocmd VimEnter * autocmd! gitgutter QuickFixCmdPre *vimgrep*
+    autocmd VimEnter * autocmd! gitgutter QuickFixCmdPost *vimgrep*
+endif
 
 
 #--------------------
@@ -1044,7 +1059,9 @@ def! g:MyStatuslineSetup()
     highlight! link StatusLineTerm statusline
     highlight! link StatusLineTermNC statuslinenc
     highlight link user3 statusline
-    g:BuflineSetup({ highlight: true, showbufnr: true })
+    if exists("*g:BuflineSetup")
+        g:BuflineSetup({ highlight: true, showbufnr: true })
+    endif
 enddef
 
 def BuflineStr(width: number): string

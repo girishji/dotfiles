@@ -13,7 +13,7 @@ g:mapleader = "\<Space>"
 g:maplocalleader = "\<Space>" # meant for certain file types
 map <BS> <Leader>
 
-# To make undercurl work in iterm2
+# To make undercurl work in iterm2 (:h E436, :h t_Cs)
 &t_Cs = "\e[4:3m"
 &t_Ce = "\e[4:0m"
 
@@ -453,7 +453,6 @@ def Ipython()
     if ipbufidx != -1
         var ipbufnr = listedbufs[ipbufidx].bufnr
         if bufwinnr(ipbufnr) == -1
-            echom listedbufs[ipbufidx].bufnr
             # ipython opthons can be placed in a config file
             exec $'sbuffer {listedbufs[ipbufidx].bufnr}'
         endif
@@ -617,7 +616,7 @@ def ColorSchemeSetup()
     if &background == 'dark'
         # Preview here: https://vimcolorschemes.com/vim/colorschemes
         colorscheme quiet
-        # colorscheme sorbet # used for vhs terminal recording
+        # colorscheme sorbet |# used for vhs app terminal recording
 
         if execute('colorscheme') =~ 'quiet'
             highlight  helpHyperTextJump        cterm=underline
@@ -634,7 +633,8 @@ def ColorSchemeSetup()
             highlight  AS_SearchCompletePrefix  ctermfg=207
             highlight  LspSigActiveParameter    ctermfg=207
             # keep Pmenu bg high contrast to see insert mode completion clearly
-            highlight  Pmenu       ctermfg=none  ctermbg=53    cterm=none
+            # highlight  Pmenu       ctermfg=none  ctermbg=53    cterm=none
+            highlight  Pmenu       ctermfg=231  ctermbg=28    cterm=none
             highlight  PmenuSel    ctermfg=none  ctermbg=none  cterm=reverse
             highlight  PmenuThumb  ctermfg=246   ctermbg=246
         elseif execute('colorscheme') =~ 'slate'
@@ -651,30 +651,32 @@ def ColorSchemeSetup()
         endif
         colorscheme lunaperche
     endif
+    PostColorSchemeSetup()
 enddef
 
 autocmd VimEnter * ColorSchemeSetup()
 
 def PostColorSchemeSetup()
-    # if &background == 'dark'
-    #     highlight  LspDiagVirtualTextError    ctermbg=0  ctermfg=1  cterm=underline
-    #     highlight  LspDiagVirtualTextWarning  ctermbg=0  ctermfg=3  cterm=underline
-    #     highlight  LspDiagVirtualTextHint     ctermbg=0  ctermfg=2  cterm=underline
-    #     highlight  LspDiagVirtualTextInfo     ctermbg=0  ctermfg=5  cterm=underline
-    # endif
-    # highlight  link  LspDiagSignErrorText    LspDiagVirtualTextError
-    # highlight  link  LspDiagSignWarningText  LspDiagVirtualTextWarning
-    # highlight  link  LspDiagSignHintText     LspDiagVirtualTextHint
-    # highlight  link  LspDiagSignInfoText     LspDiagVirtualTextInfo
+    if &background == 'dark'
+        highlight  LspDiagVirtualTextError    ctermbg=0  ctermfg=1  cterm=underline
+        highlight  LspDiagVirtualTextWarning  ctermbg=0  ctermfg=3  cterm=underline
+        highlight  LspDiagVirtualTextHint     ctermbg=0  ctermfg=2  cterm=underline
+        highlight  LspDiagVirtualTextInfo     ctermbg=0  ctermfg=5  cterm=underline
+    endif
+    highlight  link  LspDiagSignErrorText    LspDiagVirtualTextError
+    highlight  link  LspDiagSignWarningText  LspDiagVirtualTextWarning
+    highlight  link  LspDiagSignHintText     LspDiagVirtualTextHint
+    highlight  link  LspDiagSignInfoText     LspDiagVirtualTextInfo
+    :highlight TrailingWhitespace ctermbg=196
+    :match TrailingWhitespace /\s\+\%#\@<!$/
 enddef
 
-augroup ColorSchemeCustomization | autocmd!
-    # autocmd FileType c,cmake ++nested colorscheme slate
-    # Trailing spaces show up in red
-    autocmd ColorScheme * highlight TrailingWhitespace ctermbg=196
-                \ | match TrailingWhitespace /\s\+\%#\@<!$/
-                \ | PostColorSchemeSetup()
-augroup END
+# Not needed
+# augroup ColorSchemeCustomization | autocmd!
+#     # autocmd FileType c,cmake ++nested colorscheme slate
+#     # Trailing spaces show up in red
+#     autocmd ColorScheme * PostColorSchemeSetup()
+# augroup END
 
 #--------------------
 # Plugins
@@ -714,7 +716,9 @@ Plug 'yegappan/lsp'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
-# XXX python-syntax does not highlight 'dectest' (test code inside comments)
+# colorschemes
+Plug 'zaki/zazen'
+# XXX python-syntax does not highlight 'doctest' (test code inside comments)
 # Plug 'vim-python/python-syntax'
 #
 Plug '~/git/autosuggest.vim'

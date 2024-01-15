@@ -657,16 +657,6 @@ enddef
 autocmd VimEnter * ColorSchemeSetup()
 
 def PostColorSchemeSetup()
-    if &background == 'dark'
-        highlight  LspDiagVirtualTextError    ctermbg=0  ctermfg=1  cterm=underline
-        highlight  LspDiagVirtualTextWarning  ctermbg=0  ctermfg=3  cterm=underline
-        highlight  LspDiagVirtualTextHint     ctermbg=0  ctermfg=2  cterm=underline
-        highlight  LspDiagVirtualTextInfo     ctermbg=0  ctermfg=5  cterm=underline
-    endif
-    highlight  link  LspDiagSignErrorText    LspDiagVirtualTextError
-    highlight  link  LspDiagSignWarningText  LspDiagVirtualTextWarning
-    highlight  link  LspDiagSignHintText     LspDiagVirtualTextHint
-    highlight  link  LspDiagSignInfoText     LspDiagVirtualTextInfo
     :highlight TrailingWhitespace ctermbg=196
     :match TrailingWhitespace /\s\+\%#\@<!$/
 enddef
@@ -906,7 +896,23 @@ var lspOpts = {
     # autoComplete: false,
     # omniComplete: true,
 }
+
 autocmd BufEnter,VimEnter * call LspOptionsSet(lspOpts)
+
+def LspHighlightsSet()
+    if &background == 'dark'
+        highlight  LspDiagVirtualTextError    ctermbg=0  ctermfg=1  cterm=underline
+        highlight  LspDiagVirtualTextWarning  ctermbg=0  ctermfg=3  cterm=underline
+        highlight  LspDiagVirtualTextHint     ctermbg=0  ctermfg=2  cterm=underline
+        highlight  LspDiagVirtualTextInfo     ctermbg=0  ctermfg=5  cterm=underline
+    endif
+    highlight  link  LspDiagSignErrorText    LspDiagVirtualTextError
+    highlight  link  LspDiagSignWarningText  LspDiagVirtualTextWarning
+    highlight  link  LspDiagSignHintText     LspDiagVirtualTextHint
+    highlight  link  LspDiagSignInfoText     LspDiagVirtualTextInfo
+enddef
+
+autocmd VimEnter * call LspHighlightsSet()
 
 ## Make jdtls 'code actions' do 'organize imports', 'add unimplemented methods', etc.,
 #var jfname = $'{$HOME}/.vim/plugged/lsp/autoload/lsp/textedit.vim'

@@ -7,21 +7,16 @@ vim9script
 # 'Find', 'Grep', 'Buffer', and 'Keymap' commands for live 'fuzzy' search.
 #
 # USAGE:
-#   :Find /start_of_line [regex]+
-#   :Find start_of_line/foo/bar [regex]+
-#   :Find start_of_file [regex]+
-#   :Grep pat [regex_for_file_content]+
-#   :Grep pat /start_of_line [regex_for_file_content]+
-#   :Buffer [regex_for_file_name]+
-#   :Keymap [regex]+
+#   Find /start_of_line [regex]+
+#   Find start_of_line/foo/bar [regex]+
+#   Find start_of_file [regex]+
+#   Grep pat [regex_for_file_content]+
+#   Grep pat /start_of_line [regex_for_file_content]+
+#   Buffer [regex_for_file_name]+
+#   Keymap [regex]+
 #
 # NOTE: In regex, .* is greedy while .\{-} is non-greedy (:h non-greedy)
 
-var findcmd = 'fd -tf'
-if exepath('fd')->empty()
-    var exclude_dirs = ['build', 'qmk_firmware']
-    var findcmd = 'find . ' .. exclude_dirs->map((_, v) => $'-type d -name {v} -prune')->join(' -o ') .. ' -o -type f -name *.swp -prune -o -path */.* -prune -o -type f -print'
-endif
 
 var grepcmd = 'ag --vimgrep --smart-case'
 if exepath('ag')->empty()
@@ -50,6 +45,74 @@ var job: job
 
 var Smartcase = (pat) => pat =~ '\u' ? $'\C{pat}' : $'\c{pat}'
 var Case = (pat) => pat =~ '\u' ? '\C' : '\c'
+def UpdatePopup(lines: list<string>)
+    if processed
+        return
+    endif
+    if winid->popup_getoptions() == {}
+        winid = popup_menu([], GetAttr())
+    endif
+    winid->popup_setoptions({cursorline: false})
+    index = 0
+    if !lines->empty()
+        winid->popup_settext(lines)
+        winid->popup_show()
+        clearmatches()
+        if !highlight_pat->empty()
+            matchadd('FuzzyHint', highlight_pat, 10, -1, {window: winid})
+        endif
+        if !anti_highlight_pat->empty()
+            matchadd('FuzzyDeEmphasize', anti_highlight_pat, 10, -1, {window: winid})
+        endif
+    else
+        winid->popup_close()
+    endif
+    :redraw
+enddef
+
+def BuildList(cmd: list<string>, isfilename=false)
+    # ch_logfile('/tmp/channellog', 'w')
+    # ch_log('BuildList call')
+    var start = reltime()
+    items = []
+    if job->job_status() ==# 'run'
+        job->job_stop('kill')
+    endif
+    job = job_start(cmd, {
+        out_cb: (ch, str) => {
+            if isfilename
+                items->add(str->slice(2))
+            else
+                items->add(str)
+            endif
+            if start->reltime()->reltimefloat() * 1000 > 100 # update every 100ms
+                UpdatePopup(items)
+                start = reltime()
+            endif
+        }, exit_cb: (jb, status) => {
+            UpdatePopup(items)
+        }
+    })
+enddef
+
+def GetFindCmd(): string
+    # 'fd' is garbage. It did not list .vim/autoload/*. Use 'find' instead, but with 'ignore' file.
+    var ignore_file = getenv('HOME') .. '/.config/fd/ignore'
+    var exclude_dirs = []
+    if ignore_file->filereadable()
+        exclude_dirs = readfile(ignore_file)->filter((_, v) => v != '' && v !~ '^#')
+    endif
+    var findcmd = 'find . '
+    if !exclude_dirs->empty()
+        findcmd ..= exclude_dirs->map((_, v) => $'-type d -name {v} -prune')->join(' -o ')
+    endif
+    findcmd ..= ' -o -type f -name *.swp -prune -o -path */.* -prune -o -type f -print'
+    return findcmd
+enddef
+
+export def Files()
+enddef
+
 
 def GetAttr(): dict<any>
 
@@ -129,52 +192,6 @@ def GetAttr(): dict<any>
 enddef
 
 
-def UpdatePopup(lines: list<string>)
-    if processed
-        return
-    endif
-    if winid->popup_getoptions() == {}
-        winid = popup_menu([], GetAttr())
-    endif
-    winid->popup_setoptions({cursorline: false})
-    index = 0
-    if !lines->empty()
-        winid->popup_settext(lines)
-        winid->popup_show()
-        clearmatches()
-        if !highlight_pat->empty()
-            matchadd('FuzzyHint', highlight_pat, 10, -1, {window: winid})
-        endif
-        if !anti_highlight_pat->empty()
-            matchadd('FuzzyDeEmphasize', anti_highlight_pat, 10, -1, {window: winid})
-        endif
-    else
-        winid->popup_close()
-    endif
-    :redraw
-enddef
-
-
-def BuildList(cmd: list<string>)
-    # ch_logfile('/tmp/channellog', 'w')
-    # ch_log('BuildList call')
-    var start = reltime()
-    items = []
-    if job->job_status() ==# 'run'
-        job->job_stop('kill')
-    endif
-    job = job_start(cmd, {
-        out_cb: (ch, str) => {
-            items->add(str)
-            if start->reltime()->reltimefloat() * 1000 > 100 # update every 100ms
-                UpdatePopup(items)
-                start = reltime()
-            endif
-        }, exit_cb: (jb, status) => {
-            UpdatePopup(items)
-        }
-    })
-enddef
 
 def FindProg(cmdline: string)
     var match = cmdline->matchlist($'\v%({findcmdname})!?\s+(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?%(\s+)?(\S+)?')
@@ -185,7 +202,7 @@ def FindProg(cmdline: string)
         # highlight_pat = '\v/\zs\w\ze[^/]*$'
         highlight_pat = ''
         anti_highlight_pat = '\v.*\ze/\w[^/]*$'
-        BuildList(findcmd->split())
+        BuildList(GetFindCmd()->split(), true)
     else
         var lines: list<string>
         try

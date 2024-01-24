@@ -268,7 +268,7 @@ def PythonAbbrevs()
                 \<cr>case _:<esc>3k_fm;i<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       enum_          Color = Enum('Color', ['RED', 'GRN'])<esc>_fC<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       pre            print(, file=stderr)<esc>F,i<c-r>=<SID>Eatchar()<cr>
-    iabbr <buffer>       pr             print()<c-o>i<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>       pri             print()<c-o>i<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       tuple_         Point = namedtuple('Point', 'x y')<esc>_<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>       tuple_named    Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=<SID>Eatchar()<cr>
     # collections
@@ -277,7 +277,7 @@ def PythonAbbrevs()
     iabbr  <buffer>  defaultdict3   defaultdict(lambda: '[default  value]')<c-r>=<SID>Eatchar()<cr>
     iabbr  <buffer>  dict_default1  defaultdict(int)<c-r>=<SID>Eatchar()<cr>
     #
-    iabbr <buffer>   deque_          deque(<c-r>=<SID>Eatchar()<cr>
+    iabbr <buffer>   cache_          @functools.cache<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>   __init__        def __init__(self):<esc>hi<c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>   __add__         def __add__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
     iabbr <buffer>   __sub__         def __sub__(self, other):<cr><c-r>=<SID>Eatchar()<cr>
@@ -424,7 +424,7 @@ def PythonCustomization()
     # NOTE: tidy-imports misses some imports. Put them in ~/.pyflyby
     # python help (:redraw! will fix any screen issues after shell command)
     nnoremap <buffer> <leader>vh :term ++close pydoc3<space>
-    nnoremap <leader>h :Help<space>
+    nnoremap <buffer> <leader>h :Help<space>
     nnoremap <buffer> <leader>vb :!open https://docs.python.org/3/search.html\?q=
     nnoremap <buffer> <leader>vi :% !tidy-imports --replace-star-imports -r -p --quiet --black<cr>
     nnoremap <buffer> <leader>vf :% !black -q -<cr>
@@ -434,7 +434,10 @@ def PythonCustomization()
     nnoremap <buffer><expr> <leader>vP <cmd>echo expand('%')<cr>
     setlocal makeprg=python3\ %
     nnoremap <buffer> <leader>p :Ipython<cr>
-    &l:formatprg = "black --quiet -"
+    # already in .vim/after/ftplugin
+    # if executable('black')
+    #     &l:formatprg = "black --quiet - 2>/dev/null"
+    # endif
     g:pyindent_open_paren = 'shiftwidth()' # https://github.com/vim/vim/blob/v8.2.0/runtime/indent/python.vim
     set dictionary=$HOME/.vim/data/python.dict
 enddef
@@ -571,7 +574,7 @@ enddef
 # NOTE: Use gp and gP for default purpose
 # gp	Just like "p", but leave the cursor just after the new text.
 # gP	Just like "P", but leave the cursor just after the new text.
-# visually select recent pasted text (or changed text);
+# visually select recent pasted (or typed) text
 nnoremap ga `[v`]
 # Type %% on Vim’s command-line prompt, it expands to the path of the active buffer
 # cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h') .. '/' : '%%'
@@ -623,25 +626,31 @@ def ColorSchemeSetup()
             highlight  helpHyperTextJump        cterm=underline
             highlight  helpHyperTextEntry       cterm=italic
             highlight  helpHeader               cterm=bold
-            highlight link PmenuKind Pmenu
-            highlight link PmenuKindSel    PmenuSel
-            highlight link PmenuExtra      Pmenu
-            highlight link PmenuExtraSel   PmenuSel
             highlight  Comment                  ctermfg=244
             highlight  LineNr                   ctermfg=244
             highlight  PreProc                  cterm=bold
             highlight  helpExample              ctermfg=248
-            # highlight  AS_SearchCompletePrefix  ctermfg=207
             highlight  LspSigActiveParameter    ctermfg=207
-            # keep Pmenu bg high contrast to see insert mode completion clearly
-            # # highlight  Pmenu       ctermfg=none  ctermbg=53    cterm=none
-            # highlight  Pmenu       ctermfg=231  ctermbg=28    cterm=none
-            # highlight  PmenuSel    ctermfg=none  ctermbg=none  cterm=reverse
-            # highlight  PmenuThumb  ctermfg=246   ctermbg=246
+            highlight  statusline    ctermbg=none  ctermfg=242  guibg=Grey35  cterm=none
+            highlight  statuslinenc  ctermbg=none  ctermfg=242  guibg=Grey35  cterm=none
+            highlight  user1         ctermbg=none  ctermfg=250  cterm=none
+            highlight  user2         ctermbg=none  ctermfg=250     cterm=none
+            highlight  user3         ctermbg=none  ctermfg=250     cterm=none
+            highlight  user4         ctermbg=none  ctermfg=3     cterm=none
+            highlight! link PmenuKind Pmenu
+            highlight! link PmenuKindSel    PmenuSel
+            highlight! link PmenuExtra      Pmenu
+            highlight! link PmenuExtraSel   PmenuSel
+            highlight  Pmenu       ctermfg=none  ctermbg=236   cterm=none
+            highlight  PmenuSel    ctermfg=none  ctermbg=25
+            highlight  PmenuThumb  ctermfg=244   ctermbg=244
+            highlight  AS_SearchCompletePrefix  ctermfg=209
+            # highlight user2 cterm=bold
+            # highlight user4 cterm=bold
             # iceberg iterm theme
-            highlight  Pmenu       ctermfg=232  ctermbg=2    cterm=none
-            highlight  PmenuSel    ctermbg=231
-            highlight  AS_SearchCompletePrefix  ctermfg=124
+            # highlight  Pmenu       ctermfg=232  ctermbg=2    cterm=none
+            # highlight  PmenuSel    ctermbg=231
+            # highlight  AS_SearchCompletePrefix  ctermfg=124
         elseif execute('colorscheme') =~ 'slate'
             highlight  Comment  ctermfg=246
             highlight  Type     ctermfg=71   cterm=bold
@@ -716,16 +725,16 @@ Plug 'cocopon/iceberg.vim'
 # XXX python-syntax does not highlight 'doctest' (test code inside comments)
 # Plug 'vim-python/python-syntax'
 #
-Plug '~/git/autosuggest.vim'
-# Plug 'girishji/autosuggest.vim'
+# Plug '~/git/autosuggest.vim'
+Plug 'girishji/autosuggest.vim'
 # Plug '~/git/declutter.vim'
 # Plug 'girishji/declutter.vim'
 Plug 'girishji/bufline.vim'
 # Plug '~/git/bufline.vim'
-Plug '~/git/vimcomplete'
-# Plug 'girishji/vimcomplete'
-Plug '~/git/ngram-complete.vim'
-# Plug 'girishji/ngram-complete.vim'
+# Plug '~/git/vimcomplete'
+Plug 'girishji/vimcomplete'
+# Plug '~/git/ngram-complete.vim'
+Plug 'girishji/ngram-complete.vim'
 # Plug '~/git/vimscript-complete.vim'
 # Plug 'girishji/vimscript-complete.vim', {'for': 'vim'}
 # Plug 'girishji/omnifunc-complete.vim'
@@ -741,10 +750,10 @@ plug#end()
 #---------------------
 # easyjump
 
-g:easyjump_default_keymap = false
-nmap , <Plug>EasyjumpJump;
-omap , <Plug>EasyjumpJump;
-vmap , <Plug>EasyjumpJump;
+# g:easyjump_default_keymap = false
+# nmap , <Plug>EasyjumpJump;
+# omap , <Plug>EasyjumpJump;
+# vmap , <Plug>EasyjumpJump;
 
 #--------------------
 # pythondoc
@@ -764,9 +773,9 @@ var dictproperties = {
 var vcoptions = {
     completor: { shuffleEqualPriority: true, alwaysOn: true },
     buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true },
-    dictionary: { enable: true, maxCount: 200, filetypes: ['python'], properties: dictproperties },
+    dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python'], properties: dictproperties },
     abbrev: { enable: true },
-    lsp: { enable: true, maxCount: 10 },
+    lsp: { enable: true, maxCount: 10, priority: 8 },
     omnifunc: { enable: false, priority: 10, filetypes: ['python', 'javascript'] },
     vsnip: { enable: true, adaptNonKeyword: true },
     vimscript: { enable: true, priority: 10 },
@@ -778,9 +787,8 @@ var vcoptions = {
         filetypesComments: ['c', 'cpp', 'python', 'java', 'lua', 'vim', 'zsh', 'r'],
     },
 }
-if exists("*g:VimCompleteOptionsSet")
-    autocmd VimEnter * g:VimCompleteOptionsSet(vcoptions)
-endif
+
+autocmd VimEnter * if exists("*g:VimCompleteOptionsSet") | g:VimCompleteOptionsSet(vcoptions) | endif
 
 #--------------------
 # autosuggest
@@ -803,10 +811,8 @@ var options = {
         editcmdworkaround: true,
     }
 }
-if exists("*g:AutoSuggestSetup")
-    autocmd VimEnter * g:AutoSuggestSetup(options)
-endif
 
+autocmd VimEnter * if exists("*g:AutoSuggestSetup") | g:AutoSuggestSetup(options) | endif
 
 #--------------------
 # lsp
@@ -884,23 +890,28 @@ endif
     #     },
     # },
 
-if exists("*g:LspAddServer")
-    autocmd VimEnter * call LspAddServer(lspServers)
-endif
+autocmd VimEnter * if exists("*g:LspAddServer") | call LspAddServer(lspServers) | endif
+
 # XXX registering for FileType event causes multiple instances of server jobs
 # autocmd FileType java,c,cpp,python call LspAddServer(lspServers)
 
 var lspOpts = {
     autoHighlightDiags: true,
     showDiagWithVirtualText: false, # when you set this false, set showDiagOnStatusLine true
-    highlightDiagInline: false,
+    highlightDiagInline: true,
     showDiagOnStatusLine: true,
     diagVirtualTextAlign: 'after',
     autoPopulateDiags: false, # add diags to location list automatically <- :lopen [l ]l
-    completionMatcher: 'fuzzy', # case/fuzzy/icase
-    # completionMatcher: 'case', # case/fuzzy/icase
+    # completionMatcher: 'fuzzy', # case/fuzzy/icase
+    completionMatcher: 'icase', # case/fuzzy/icase
+    diagSignErrorText: '●',
+    diagSignHintText: '●',
+    diagSignInfoText: '●',
+    diagSignWarningText: '●',
     outlineWinSize: 30,
-    useBufferCompletion: true,
+    showSignature: false,
+    echoSignature: true,
+    useBufferCompletion: false,
     completionTextEdit: false,
     snippetSupport: false, # snippets from lsp server
     vsnipSupport: false,
@@ -908,21 +919,25 @@ var lspOpts = {
     # omniComplete: true,
 }
 
-if exists("*g:LspOptionsSet")
-    autocmd BufEnter,VimEnter * call LspOptionsSet(lspOpts)
-endif
+autocmd BufEnter,VimEnter * if exists("*g:LspOptionsSet") | call LspOptionsSet(lspOpts) | endif
 
 def LspHighlightsSet()
     if &background == 'dark'
-        highlight  LspDiagVirtualTextError    ctermbg=0  ctermfg=1  cterm=underline
-        highlight  LspDiagVirtualTextWarning  ctermbg=0  ctermfg=3  cterm=underline
-        highlight  LspDiagVirtualTextHint     ctermbg=0  ctermfg=2  cterm=underline
-        highlight  LspDiagVirtualTextInfo     ctermbg=0  ctermfg=5  cterm=underline
+        highlight  LspDiagVirtualTextError    ctermbg=none  ctermfg=1
+        highlight  LspDiagVirtualTextWarning  ctermbg=none  ctermfg=3
+        highlight  LspDiagVirtualTextHint     ctermbg=none  ctermfg=2
+        highlight  LspDiagVirtualTextInfo     ctermbg=none  ctermfg=5
     endif
     highlight  link  LspDiagSignErrorText    LspDiagVirtualTextError
     highlight  link  LspDiagSignWarningText  LspDiagVirtualTextWarning
     highlight  link  LspDiagSignHintText     LspDiagVirtualTextHint
     highlight  link  LspDiagSignInfoText     LspDiagVirtualTextInfo
+    highlight LspDiagInlineError ctermfg=none cterm=undercurl
+    highlight LspDiagInlineWarning ctermfg=none cterm=none
+    highlight LspDiagInlineHint ctermfg=none cterm=none
+    highlight LspDiagInlineInfo ctermfg=none cterm=none
+    highlight LspDiagVirtualText ctermfg=1
+    highlight LspDiagLine ctermbg=none
 enddef
 
 autocmd VimEnter * call LspHighlightsSet()
@@ -955,26 +970,24 @@ def LSPUserSetup()
     # setlocal formatexpr=lsp#lsp#FormatExpr()
     nnoremap <buffer> <leader>lf <cmd>LspFormat<cr>
     # NOTE: gd, gD work as expected in Vim without LSP (go to definition)
-    nnoremap <buffer> <C-W>gd <Cmd>topleft LspGotoDefinition<CR>| # jump to tag definition in split window
-    nnoremap <buffer> <leader>lt :call <SID>MyToggleDiagHighlight()<CR>
-    nnoremap <buffer> <leader>lH <cmd>LspCallHierarchyOutgoing<cr>
-    nnoremap <buffer> <leader>lP <cmd>LspPeekDeclaration<cr>| # open popup
-    nnoremap <buffer> <leader>lR <cmd>LspServer restart<cr>
-    nnoremap <buffer> <leader>ls <cmd>LspServer show status<cr>
-    nnoremap <buffer> <leader>ld <cmd>LspServer debug messages<cr>
-    nnoremap <buffer> <leader>la <cmd>LspCodeAction<cr>
-    nnoremap <buffer> <leader>lh <cmd>LspCallHierarchyIncoming<cr>
-    nnoremap <buffer> <leader>ll <cmd>LspDiagShow<cr>| # add diags to location list
-    nnoremap <buffer> <leader>lo <cmd>LspOutline<cr>
-    nnoremap <buffer> <leader>lp <cmd>LspPeekDeclaration<cr>
-    nnoremap <buffer> <leader>lr <cmd>LspRename<cr>| # rename symbol under cursor
-    nnoremap <buffer> <leader>lS <cmd>LspShowSignature<cr>| # for symbol under cursor
+    # nnoremap <buffer> <C-W>gd <Cmd>topleft LspGotoDefinition<CR>| # jump to tag definition in split window
+    # nnoremap <buffer> <leader>lt :call <SID>MyToggleDiagHighlight()<CR>
+    # nnoremap <buffer> <leader>lH <cmd>LspCallHierarchyOutgoing<cr>
+    # nnoremap <buffer> <leader>lP <cmd>LspPeekDeclaration<cr>| # open popup
+    # nnoremap <buffer> <leader>lR <cmd>LspServer restart<cr>
+    # nnoremap <buffer> <leader>ls <cmd>LspServer show status<cr>
+    # nnoremap <buffer> <leader>ld <cmd>LspServer debug messages<cr>
+    # nnoremap <buffer> <leader>la <cmd>LspCodeAction<cr>
+    # nnoremap <buffer> <leader>lh <cmd>LspCallHierarchyIncoming<cr>
+    # nnoremap <buffer> <leader>ll <cmd>LspDiagShow<cr>| # add diags to location list
+    # nnoremap <buffer> <leader>lo <cmd>LspOutline<cr>
+    # nnoremap <buffer> <leader>lp <cmd>LspPeekDeclaration<cr>
+    # nnoremap <buffer> <leader>lr <cmd>LspRename<cr>| # rename symbol under cursor
+    # nnoremap <buffer> <leader>lS <cmd>LspShowSignature<cr>| # for symbol under cursor
     nnoremap <buffer> [e :LspDiagPrev<CR>| # think as 'error' message
     nnoremap <buffer> ]e :LspDiagNext<CR>
     nnoremap <buffer> K :LspHover<CR>
     nnoremap <buffer> gl :LspDiagCurrent<CR>| # display all diag messages under cursor in a popup
-    highlight LspDiagVirtualText ctermfg=1
-    highlight LspDiagLine ctermbg=none
     set completepopup+=highlight:normal,border:on
 enddef
 autocmd User LspAttached LSPUserSetup()
@@ -999,10 +1012,13 @@ nmap ]h <Plug>(GitGutterNextHunk)
 nmap [h <Plug>(GitGutterPrevHunk)
 hi GitGutterAdd ctermfg=5 | hi GitGutterChange ctermfg=5 | hi GitGutterDelete ctermfg=5
 # Disable these problematic autocmds, otherwise :vimgrep gives error when opening quickfix
-if exists("#gitgutter")
-    autocmd VimEnter * autocmd! gitgutter QuickFixCmdPre *vimgrep*
-    autocmd VimEnter * autocmd! gitgutter QuickFixCmdPost *vimgrep*
-endif
+def GitGutterModify()
+    if exists("#gitgutter")
+        autocmd! gitgutter QuickFixCmdPre *vimgrep*
+        autocmd! gitgutter QuickFixCmdPost *vimgrep*
+    endif
+enddef
+autocmd VimEnter * GitGutterModify()
 
 
 #--------------------
@@ -1040,10 +1056,10 @@ def! g:MyStatuslineSetup()
             highlight link user4 statusline
         else
             # guibg is needed to avoid carets, when both active/non-active statusline have same bg
-            exec $'highlight statusline cterm=none ctermfg=7 ctermbg=none guibg=red'
-            exec $'highlight statuslinenc cterm=none ctermfg=7 ctermbg=none guibg=green'
-            highlight user2 cterm=none ctermfg=7 ctermbg=none
-            highlight user4 ctermfg=3 cterm=none
+            # highlight statusline cterm=none ctermfg=7 ctermbg=none guibg=red
+            # highlight statuslinenc cterm=none ctermfg=7 ctermbg=none guibg=green
+            # highlight user2 cterm=none ctermfg=7 ctermbg=none
+            # highlight user4 ctermfg=3 cterm=none
         endif
     else
         # highlight statusline cterm=none ctermfg=8 ctermbg=7 guibg=red
@@ -1087,7 +1103,7 @@ timer_start(60 * 1000, function(UpdateElapsed))
 def! g:MyActiveStatusline(): string
     var gitstr = Gitstr()
     var diagstr = Diagstr()
-    var shortpath = expand('%:h')
+    var shortpath = expand('%:h') .. '/'
     var shortpathmax = 20
     if shortpath->len() > shortpathmax
         shortpath = shortpath->split('/')->map((_, v) => v->slice(0, 2))->join('/')->slice(0, shortpathmax)
@@ -1095,7 +1111,7 @@ def! g:MyActiveStatusline(): string
     var elapsed = GetElapsed()
     var width = winwidth(0) - 30 - gitstr->len() - diagstr->len() - shortpath->len() - elapsed->len()
     var buflinestr = BuflineStr(width)
-    return $'%4*{diagstr}%* {buflinestr} %= %4*{elapsed}%* {shortpath}%4*{gitstr}%* %y %P (%l:%c) %*'
+    return $'%4*{diagstr}%* {buflinestr} %= %4*{elapsed}%* %2*{shortpath}%*%4*{gitstr}%* %3*%y %P (%l:%c) %*'
     # return $'%4*{diagstr}%* {buflinestr} %= %f%4*{gitstr}%* %y %P (%l:%c) %*'
     # return $'{diagstr} {buflinestr} %={gitstr} %y %P (%l:%c) '
 enddef

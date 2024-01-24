@@ -38,9 +38,9 @@ alias -g X=$'| xargs -I {} echo {}'
 alias -g T=' 2>&1 | tee tee.txt'
 
 # cannot alias 'fi' since it is a reserved keyword, 'fg' is foreground cmd
-alias -g find='find . -path pat_path -name pat_last_component -exec echo {} \;'
-alias -g findd='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print -exec grep --color -Ei x {} \;'
-alias -g finddd='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print'
+alias -g find_='find . -path pat_path -name pat_last_component -exec echo {} \;'
+alias -g find__='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print -exec grep --color -Ei x {} \;'
+alias -g find___='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print'
 
 alias -g fdf='fd -tf -tl' # search file, ex: fdf foo
 alias -g fdd='fd -td' # search dir, ex: fdd foo

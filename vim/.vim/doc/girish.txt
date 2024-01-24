@@ -2,6 +2,20 @@
 ----------------------------------------
 Quick navigation tags~
 
+`v` after an operator (`c`, `d`, etc.) will not start visual mode, but selects
+characterwise:
+ex:
+asdbXXXXYasdf (cursor under Y)
+`cv4h` will delete all Xs and enter insert mode
+
+`X` deletes [count] characters before cursor (just as  `x` deletes under/after
+cursor)
+ex:
+asdbYasdf (cursor under Y)
+`4Xs` will deletes all Xs (and Y) and enter insert mode.
+
+`s` is synonym for `cl`
+
 `K` will look for help for word under cursor. 
 (make sure `:setlocal keywordprg=:help`)
 

@@ -3,8 +3,27 @@
 ------------------------------------------------------------------------------
 When you are looking for some 'minimum' in what looks like graph traversal~
 use BFS or Dijkshtra. Do not use DFS/recursion even if it looks easy to
-implement, and even with remoization/DP.
+implement, and even with memoization/DP.
 
+BFS: When using a que and marking the level, you can get the length of que at
+every level, pop all the elements at that level before moving on to next
+level. No need to use sentinel dummy entry into the que to mark the level.
+
+------------------------------------------------------------------------------
+Basics~
+- to check if list is empty:~
+	 if 'list == []' DOES NOT WORK. Do 'if not list' or 'if len(list) == 0'
+
+- single element tuple~
+  OK: x = (3,)
+  NO: x = (3) # x = 3 (not tuple)
+  NO: ((0, 3)) does not give you a tuple of (0, 3) tuple
+  OK: Instead do ((0, 3),)
+
+- can concatenate tuples:~
+  (cannot concatenate mix of tuples and lists)
+  atree = tree[:i] + (num,) + tree[i:] # tree is a tuple
+	
 ------------------------------------------------------------------------------
 Perf speedup for string contactinations~
 use an array and then join().
@@ -222,10 +241,14 @@ copy a dictionary~
 	y = dict(x)
 
 ------------------------------------------------------------------------------
-Iterator raises StopIteration exception when next(iter) fails.~
+Iterator raises StopIteration exception when next(iter) fails.
 
-list.count(val) counts (not itertools.count() which does something different)
-p.283
+`list.count(val)` counts how many occurances of `val` is in the list
+
+`itertools.count()` counts an infinite sequence of numers.
+>
+	counter = itertools.count()     # unique sequence count
+	count = next(counter)
 
 ------------------------------------------------------------------------------
 check list or deque x is empty:~
@@ -978,12 +1001,38 @@ variable has no effect. It gets overridden when next iteration begins.
 
 ------------------------------------------------------------------------------
 heap~
->
+
+> Our pop method returns the smallest item, not the largest (called
+  a “min heap” in textbooks)
+> The interesting property of a heap is that its smallest element is always
+  the root, "heap[0]".
+
+
 	import heapq
         heap = []
 	heapq.heappush(heap, val)
         while heap:
             val = heapq.heappop(heap)
+
+   # priority task que immplementation
+   pq = []                         # list of entries arranged in a heap
+   entry_finder = {}               # mapping of tasks to entries
+   REMOVED = '<removed-task>'      # placeholder for a removed task
+   counter = itertools.count()     # unique sequence count
+
+   def add_task(task, priority=0):
+       'Add a new task or update the priority of an existing task'
+       if task in entry_finder:
+           remove_task(task)
+       count = next(counter)
+       entry = [priority, count, task]
+       entry_finder[task] = entry
+       heappush(pq, entry)
+
+   def remove_task(task):
+       'Mark an existing task as REMOVED.  Raise KeyError if not found.'
+       entry = entry_finder.pop(task)
+       entry[-1] = REMOVED
 
 ------------------------------------------------------------------------------
 any() all() sum() with generator~
@@ -994,6 +1043,15 @@ or use a lambda expression to create new generator on demand.
 
 ------------------------------------------------------------------------------
 binary search and bisect~
+
+See :Help for more functions like this:
+>
+	def index(a, x):
+	    'Locate the leftmost value exactly equal to x'
+	    i = bisect_left(a, x)
+	    if i != len(a) and a[i] == x:
+	        return i
+	    raise ValueError
 
 bisect.bisect_left(a, x, ...) returns index ip where x < a[0:ip]
    The returned insertion point _ip_ partitions the array _a_ into two
@@ -1052,11 +1110,6 @@ Do not use variables named 'I', 'O', or 'l' (E741)~
 Variables named I, O, and l can be very hard to read. This is because the
 letter I and the letter l are easily confused, and the letter O and the number
 0 can be easily confused.
-
------------------------------------------------------------------------------- 
-single tuple inside a tuple trick~
-((0, 3)) does not give you a tuple of (0, 3). Instead do ((0, 3),)
-Documented in python tutorial.
 
 ------------------------------------------------------------------------------ 
 Increase recursion stack size~
@@ -1183,12 +1236,19 @@ use takewhile() and dropwhile()
           # dropwhile(lambda x: x<5, [1,4,6,4,1]) --> 6 4 1
 
 ------------------------------------------------------------------------------ 
-Truthiness: 'if foo is None' not 'if not foo' (False: foo==0 and foo==None)~
+Truthiness:~
+
+- Do 'if foo is None', NOT 'if not foo' (False: foo==0 and foo==None)~
 Bugs happend when you do:
  >
             idxneg = next((idx for idx in range(mid, en) if nums[idx] < 0), None)
 	    if not idxneg: # WRONG
             if idxneg is None: # OK
+<
+   'not' operator: Return the outcome of "not" _obj_.  (Note that there is no
+   "__not__()" method for object instances; only the interpreter core
+   defines this operation.  The result is affected by the "__bool__()"
+   and "__len__()" methods.)
 
 ------------------------------------------------------------------------------
 Use functools.partial():
@@ -1324,6 +1384,51 @@ https://leetcode.com/problems/valid-number/solutions/23728/a-simple-solution-in-
 	>>> '{:-9} YES votes  {:2.2%}'.format(yes_votes, percentage)
 
 ------------------------------------------------------------------------------
+Template for finding longest or shortest substring~
+
+For most substring problem, we are given a string and need to find a substring
+of it which satisfy some restrictions. A general way is to use a hashmap
+assisted with two pointers.
+
+1. Use two pointers: start and end (initiallized to start) to represent a window.
+2. Increment end to find a valid window.
+3. When a valid window is found, move start to find a smaller window.
+
+ex.
+- Longest Substring with At Most Two Distinct Characters
+- Longest Substring Without Repeating Characters
+- p.76
+
 ------------------------------------------------------------------------------
+Binary Search Tree (BST):~
+
+How to verify if tree is BST?~
+
+We can use the fact that an inorder traversal visits keys in
+sorted order. Furthermore, if an inorder traversal of a binary tree visits
+keys in sorted order, then that binary tree must be a BST.
+
+Given a array that represents Pre-order traversal (root->left->right), is~
+this a BST?~
+
+Do not construct a tree. Recursively partition the array and see if left
+subtree < root, and right subtree > root.
+
+------------------------------------------------------------------------------
+# Speedup BFS by searching from both ends~
+//BFS， two-end method
+//traverse the path simultaneously from start node and end node, and merge in the middle
+//the speed will increase (logN/2)^2 times compared with one-end method
+- start with beginset and endset
+- pick smaller set as starting set
+- if any item from smaller set's next() occurs in larger set, then done
+- otherwise keep intermediate set of next items and assign to smaller set
+
+problems 127
+https://leetcode.com/problems/word-ladder/solutions/40708/Share-my-two-end-BFS-in-C++-80ms./
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
 
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

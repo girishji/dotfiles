@@ -110,10 +110,6 @@ def GetFindCmd(): string
     return findcmd
 enddef
 
-export def Files()
-enddef
-
-
 def GetAttr(): dict<any>
 
     def ProcessTabKey(id: number, key: string)
@@ -384,17 +380,17 @@ def FuzzySetup()
     processed = false
 enddef
 
-def Teardown()
-    if winid->popup_getoptions() != {}
-        winid->popup_close()
-        :redraw
-    endif
-enddef
+# def Teardown()
+#     if winid->popup_getoptions() != {}
+#         winid->popup_close()
+#         :redraw
+#     endif
+# enddef
 
 
-augroup FindCmdAutocmds | autocmd!
-    autocmd VimEnter * Setup()
-    autocmd CmdlineEnter : FuzzySetup()
-    autocmd CmdlineChanged : Fuzzy()
-    autocmd CmdlineLeave : Teardown()
-augroup END
+# augroup FindCmdAutocmds | autocmd!
+#     autocmd VimEnter * Setup()
+#     autocmd CmdlineEnter : FuzzySetup()
+#     autocmd CmdlineChanged : Fuzzy()
+#     autocmd CmdlineLeave : Teardown()
+# augroup END

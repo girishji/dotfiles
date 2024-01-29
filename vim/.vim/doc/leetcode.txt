@@ -192,11 +192,7 @@ class Solution:
         return ''.join(next(it) if ch.lower() in 'aeiou' else ch for ch in s)
 p345
 ------------------------------------------------------------------------------
-python:
-    In insert mode <c-d> unindents; in normal mode use << and >> (hold shift
-key)
-
-" vs ` ~
+" vs ' ~
 They are interchangeable. You can use one inside another.
 
 ------------------------------------------------------------------------------
@@ -1427,8 +1423,84 @@ subtree < root, and right subtree > root.
 problems 127
 https://leetcode.com/problems/word-ladder/solutions/40708/Share-my-two-end-BFS-in-C++-80ms./
 ------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
+fast palindrome check~
+s == s[::-1]
 
+------------------------------------------------------------------------------
+sorting by key and lambda~
+sort by length using lambda:
+>
+	lst.sort(key=lambda x: (len(x), x))
+
+You are converting an item to a tuple before sorting. Key can only be a simple
+function. Alternately:
+>
+	lst.sort(key=len)
+
+------------------------------------------------------------------------------
+xor keeps memory~
+xor n once => memory coded for n
+xor n twice => memory erased for n the second time
+In general, you are counting how often bit position i is 1 among all numbers.
+
+Given a non-empty array of integers nums, every element appears twice except
+for one. Find that single one.
+>
+	xor = 0
+	for n in nums:
+	    xor ^= n
+	return xor
+
+Given an integer array nums where every element appears three times except for
+one, which appears exactly once. Find the single element and return it.
+
+Generalizing above solution, you can count how many times bit position i
+is 1 among nums, and if it is divisible by 3 consider it balanced. Create a
+bit mask setting balanced positions 0 and unbalanced to 1 and extract the
+required number.
+p.137
+------------------------------------------------------------------------------
+bit manipulation gotcha~
+
+-1 is not 0b1111111111... but -0b1
+
+Python's integers already use two's complement, but since they have arbitrary
+precision, the binary representation of negative numbers would have an
+infinite string of 1s at the start, much like positive numbers have an
+infinite string of 0s. Since this obviously can't be shown, it is represented
+with a minus sign instead.
+
+If you want the binary representation for a specific width, you can just use modulo.
+
+>>> bin(-5)
+'-0b101'
+>>> bin(-5 % (1<<32))
+'0b11111111111111111111111111111011'
+
+Improtant~
+You can do bit arithmatic just fine:
+>
+            for j in range(32):
+                if n & 1 > 0:
+                    ones[j] += 1
+                n >>= 1
+
+But if you construct a number by shifting 1s, and if it is supposed to be a
+negative number you'll not get it. You'll get a large positive number instead.
+To fix this, check if 31-st bit (in a 32 bit signed int) is a 1 and convert:
+>
+        if num & (1 << 31) > 0:
+            num = num - (1 << 32)
+
+------------------------------------------------------------------------------
+Find loop in linked list~
+- to know if there is loop keep 2 ptrs and advance once by 2x speed
+- to know where the head of loop is, you count the loop length, advance a ptr
+from beginnig by loop length and another from beginning and see where they
+meet.
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

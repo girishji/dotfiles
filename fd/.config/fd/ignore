@@ -17,6 +17,7 @@
 # avoid these if they are anywhere in the path
 build/
 qmk_firmware/
+plugged/
 
 # following works only when 'fd' from above qmk_firmware dir
 qmk_firmware/platforms/

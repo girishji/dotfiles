@@ -57,6 +57,7 @@ alias -g lc='leetcode '
 # alias -g vim_='vim -Nu NONE -S <(cat <<EOF
 #     " vim:ts=4:ft=vim
 #     vim9script
+#     :set shortmess=I
 # EOF
 # )'
 alias rg='rg --smart-case'

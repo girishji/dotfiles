@@ -68,16 +68,15 @@ set wildignore+=*/build/*,build/,*/pycache/*,pycache/,*/venv/*,venv/,*/dist/*,di
 # Note: Following works (respects wildignore) but slow
 nnoremap <leader>ff :e<space>**/
 
-nnoremap <leader><space> :Find<space>
 nnoremap <leader>g :Grep<space>
 # nnoremap <expr> <leader>G $':Grep {expand("<cword>")}'
 nnoremap <leader>G :FGrep<space>
 nnoremap <leader><tab> :Keymap<space>
 
-nnoremap <leader><bs> :Buffer<space>
-nnoremap <leader>B :buffer<space>
-# nnoremap <leader><bs> :buffer<space>
-# nnoremap <leader>B :Buffer<space>
+import autoload 'fuzzy.vim'
+nnoremap <leader><bs> <scriptcmd>fuzzy.Buffer()<CR>
+nnoremap <leader><space> <scriptcmd>fuzzy.File()<CR>
+# nnoremap <leader><space> :Find<space>
 
 if executable("rg")
     set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
@@ -584,7 +583,7 @@ nnoremap <leader>d <cmd>bdelete<cr>| # use :hide instead
 nnoremap <leader>H <cmd>hide<cr>| # hide window
 # nnoremap <leader>u <cmd>unhide<cr><c-w>w| # unhide = one window for each loaded buffer (splits horizontally, not useful)
 tnoremap <c-w>h <c-w>:hide<cr>| # hide window (when terminal window is active)
-nnoremap <leader>t <cmd>!tree <bar> more<cr>
+nnoremap <leader>T <cmd>!tree <bar> more<cr>
 nnoremap <leader>w <cmd>w<cr>
 nnoremap <leader>q <cmd>qa<cr>
 nnoremap <leader>Q <cmd>qa!<cr>
@@ -596,8 +595,10 @@ nnoremap <leader>o <c-w>w| # next window in CCW direction
 nnoremap <leader>r <cmd>registers<cr>
 nnoremap <leader>m <cmd>marks<cr>
 vnoremap <leader>a :!column -t<cr>| # align columns
+# Toggle group
+nnoremap <leader>ts :set spell!<CR><Bar>:echo "Spell Check: " .. strpart("OffOn", 3 * &spell, 3)<CR>
+nnoremap <silent> <leader>tt <cmd>call text#Toggle()<CR>
 # Vim group
-nnoremap <leader>vs :set spell!<CR><Bar>:echo "Spell Check: " .. strpart("OffOn", 3 * &spell, 3)<CR>
 nnoremap <leader>vr :new \| exec "nn <buffer> q :bd!\<cr\>" \| r ! | # redirect shell command, use :il /foo to filter lines
 nnoremap <leader>vR :enew \| exec "nn <buffer> q :bd!\<cr\>" \| put = execute('map')<left><left>| # redirect vim cmd, use <leader>fi to filter
 nnoremap <expr> <leader>vc empty(filter(getwininfo(), 'v:val.quickfix')) ? ':copen<CR>' : ':cclose<CR>'
@@ -637,13 +638,18 @@ def ColorSchemeSetup()
             highlight  user2         ctermbg=none  ctermfg=250     cterm=none
             highlight  user3         ctermbg=none  ctermfg=250     cterm=none
             highlight  user4         ctermbg=none  ctermfg=3     cterm=none
-            highlight! link PmenuKind Pmenu
+            highlight FilterMenuMatch ctermfg=209
+            highlight PopupBorderHighlight ctermfg=244
+            # highlight! link PmenuKind Pmenu
+            highlight  PmenuKind       ctermfg=246  ctermbg=236   cterm=none
             highlight! link PmenuKindSel    PmenuSel
-            highlight! link PmenuExtra      Pmenu
+            # highlight! link PmenuExtra      Pmenu
+            highlight  PmenuExtra       ctermfg=246  ctermbg=236   cterm=none
             highlight! link PmenuExtraSel   PmenuSel
             highlight  Pmenu       ctermfg=none  ctermbg=236   cterm=none
             highlight  PmenuSel    ctermfg=none  ctermbg=25
-            highlight  PmenuThumb  ctermfg=244   ctermbg=244
+            highlight  PmenuSbar   ctermfg=none  ctermbg=236
+            highlight  PmenuThumb  ctermfg=none  ctermbg=240
             highlight  AS_SearchCompletePrefix  ctermfg=209
             # highlight user2 cterm=bold
             # highlight user4 cterm=bold
@@ -750,10 +756,15 @@ plug#end()
 #---------------------
 # easyjump
 
+g:easyjump_default_keymap = false
+nmap s <Plug>EasyjumpJump;
+omap s <Plug>EasyjumpJump;
+vmap s <Plug>EasyjumpJump;
+
 # g:easyjump_default_keymap = false
-# nmap , <Plug>EasyjumpJump;
-# omap , <Plug>EasyjumpJump;
-# vmap , <Plug>EasyjumpJump;
+# nmap <expr> , g:EasyJumpable() ? '<Plug>EasyjumpJump;' : ','
+# omap <expr> , g:EasyJumpable() ? '<Plug>EasyjumpJump;' : ','
+# vmap <expr> , g:EasyJumpable() ? '<Plug>EasyjumpJump;' : ','
 
 #--------------------
 # pythondoc
@@ -805,8 +816,8 @@ var options = {
         pum: true,
         hidestatusline: false,
         fuzzy: false,
-        exclude: ['^buffer ', '^Find', '^Buffer'],
-        # onspace: ['buffer', 'Find'],
+        exclude: ['^buffer '],
+        # exclude: ['^buffer ', '^Find', '^Buffer'],
         onspace: ['buffer'],
         editcmdworkaround: true,
     }
@@ -1049,7 +1060,8 @@ enddef
 
 def! g:MyStatuslineSetup()
     if &background == 'dark'
-        set fillchars+=stl:―,stlnc:—
+        # set fillchars+=stl:―,stlnc:—
+        set fillchars+=stl:─,stlnc:─
         if &termguicolors
             highlight link user1 statusline
             highlight link user2 statusline

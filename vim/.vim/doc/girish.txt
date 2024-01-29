@@ -222,6 +222,10 @@ Vim indentation logic and |i_CTRL-F|
 To insert enough spaces to align with appropriate indentation type CTRL_F
 For the full help see |indentkeys-format|
 
+python indentation:
+    In insert mode <c-d> unindents; in normal mode use << and >> (hold shift
+key)
+
 ----------------------------------------
 timeout vs ttimeout
 https://vi.stackexchange.com/questions/24925/usage-of-timeoutlen-and-ttimeoutlen

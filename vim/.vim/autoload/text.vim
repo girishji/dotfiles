@@ -192,12 +192,12 @@ enddef
 # i_ i. i: i, i; i| i/ i\ i* i+ i- i# i<tab>
 # a_ a. a: a, a; a| a/ a\ a* a+ a- a# a<tab>
 # Usage:
-for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', '#', '<tab>' ]
-    execute 'xnoremap <silent> i' .. char .. ' :<C-u>call text#Obj("' .. char .. '", 1)<CR>'
-    execute 'xnoremap <silent> a' .. char .. ' :<C-u>call text#Obj("' .. char .. '", 0)<CR>'
-    execute 'onoremap <silent> i' .. char .. ' :normal vi' .. char .. '<CR>'
-    execute 'onoremap <silent> a' .. char .. ' :normal va' .. char .. '<CR>'
-endfor
+# for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', '#', '<tab>' ]
+#     execute 'xnoremap <silent> i' .. char .. ' :<C-u>call text#Obj("' .. char .. '", 1)<CR>'
+#     execute 'xnoremap <silent> a' .. char .. ' :<C-u>call text#Obj("' .. char .. '", 0)<CR>'
+#     execute 'onoremap <silent> i' .. char .. ' :normal vi' .. char .. '<CR>'
+#     execute 'onoremap <silent> a' .. char .. ' :normal va' .. char .. '<CR>'
+# endfor
 export def Obj(char: string, inner: bool)
     var lnum = line('.')
     var echar = escape(char, '.*')

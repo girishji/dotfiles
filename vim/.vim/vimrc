@@ -65,6 +65,14 @@ set tags=./tags,./../tags,./*/tags # this dir, just one level above, and all sub
 
 syntax on # turn on syntax highlighting
 
+if executable("rg")
+    set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case\ --follow
+    set grepformat=%f:%l:%c:%m,%f:%l:%m
+elseif executable("ag")
+    set grepprg=ag\ --vimgrep
+    set grepformat=%f:%l:%c:%m
+endif
+
 #--------------------
 # Plugins
 #--------------------

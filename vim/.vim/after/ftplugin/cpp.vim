@@ -6,5 +6,5 @@ def ListCppKeywords(ArgLead: string, CmdLine: string, CursorPos: number): string
     return system($'cppman -f {ArgLead}')
 enddef
 
-nnoremap <buffer> <leader>h :Cppman<space>
+nnoremap <buffer> <leader>H :Cppman<space>
 

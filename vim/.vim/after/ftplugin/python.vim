@@ -16,11 +16,15 @@ setlocal define=^\\s*def
 setl dictionary=$HOME/.vim/data/python.dict
 setl makeprg=python3\ %
 
+if exists("g:loaded_pythondoc")
+    g:pythondoc_hh_expand = 1 # use cabbr :hh<space>
+    nnoremap <buffer> <leader>H :Help<space>
+endif
+
 # NOTE: tidy-imports misses some imports. Put them in ~/.pyflyby
 # nnoremap <buffer> <leader>vh :term ++close pydoc3<space>
 # nnoremap <buffer> <leader>vb :!open https://docs.python.org/3/search.html\?q=
 # nnoremap <buffer> <leader>vf :% !black -q -<cr>
-nnoremap <buffer> <leader>h :Help<space>
 nnoremap <buffer> <leader>vi :% !tidy-imports --replace-star-imports -r -p --quiet --black<cr>
 nnoremap <buffer><expr> <leader>vt $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode test {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"
 nnoremap <buffer><expr> <leader>vx $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode exec {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"

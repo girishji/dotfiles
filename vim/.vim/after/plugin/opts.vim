@@ -8,10 +8,6 @@ if exists("g:loaded_easyjump")
     # vmap , <Plug>EasyjumpJump;
 endif
 
-if exists("g:loaded_pythondoc")
-    g:pythondoc_hh_expand = 1
-endif
-
 if exists("g:loaded_vimcomplete")
     g:vimcomplete_tab_enable = 1
     var dictproperties = {

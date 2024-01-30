@@ -193,49 +193,19 @@ def Printify(itemsAny: list<any>, props: list<any>): list<any>
 enddef
 
 # Popup menu with fuzzy filtering
-# Example usage 1:
-# FilterMenu("Echo Text",
-#            ["He was aware there were numerous wonders of this world including the",
-#             "unexplained creations of humankind that showed the wonder of our",
-#             "ingenuity. There are huge heads on Easter Island. There are the",
-#             "Egyptian pyramids. There's Stonehenge. But he now stood in front of a",
-#             "newly discovered monument that simply didn't make any sense and he",
-#             "wondered how he was ever going to be able to explain it.",
-#             "The wave crashed and hit the sandcastle head-on. The sandcastle began",
-#             "to melt under the waves force and as the wave receded, half the",
-#             "sandcastle was gone. The next wave hit, not quite as strong, but still",
-#             "managed to cover the remains of the sandcastle and take more of it",
-#             "away. The third wave, a big one, crashed over the sandcastle completely",
-#             "covering and engulfing it. When it receded, there was no trace the",
-#             "sandcastle ever existed and hours of hard work disappeared forever." ],
-#            (res, key) => {
-#               echo res
-#            })
-# Example usage 2:
-# FilterMenu("Buffers",
-#         getbufinfo({'buflisted': 1})->mapnew((_, v) => {
-#                 return {bufnr: v.bufnr, text: (v.name ?? $'[{v.bufnr}: No Name]')}
-#             }),
-#         (res, key) => {
-#             if key == "\<c-t>"
-#                 exe $":tab sb {res.bufnr}"
-#             elseif key == "\<c-j>"
-#                 exe $":sb {res.bufnr}"
-#             elseif key == "\<c-v>"
-#                 exe $":vert sb {res.bufnr}"
-#             else
-#                 exe $":b {res.bufnr}"
-#             endif
-#         })
-export def FilterMenu(title: string, items: list<any>, Callback: func(any, string) = null_function, Setup: func(number) = null_function, close_on_bs: bool = false)
+export def FilterMenu(title: string, items: list<any>, Callback: func(any, string) = null_function, Setup: func(number) = null_function, FilterItems: func(list<any>, string): list<any> = null_function, close_on_bs: bool = false)
+    var FilterFunc = FilterItems
+    if FilterItems == null_function
+        FilterFunc = (lst, prompt) => lst->matchfuzzypos(prompt, {key: "text"})
+    endif
     var popup = FilterMenuPopup.new()
-    popup.PopupCreate(title, items, Callback, Setup,
-        (lst, prompt) => lst->matchfuzzypos(prompt, {key: "text", limit: 100}),
+    popup.PopupCreate(title, items, Callback, Setup, FilterFunc,
         (lst) => Printify(lst, []),
         close_on_bs)
 enddef
 
 var job: job
+# Popup menu with fuzzy filtering, using separate job to extract the menu list.
 export def FilterMenuAsync(title: string,
         items_cmd: list<string>,
         Callback: func(any, string) = null_function,

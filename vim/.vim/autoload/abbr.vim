@@ -20,3 +20,13 @@ export def InsertDashes(): string
     endfor
     return s
 enddef
+
+export def ExpandCmd(cmd: string): bool
+    if getcmdtype() == ':'
+        var context = getcmdline()->strpart(0, getcmdpos() - 1)
+        if context == cmd
+            return true
+        endif
+    endif
+    return false
+enddef

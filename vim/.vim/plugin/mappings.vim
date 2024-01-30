@@ -1,101 +1,28 @@
 vim9script
 
-
+# search
 import autoload 'fuzzy.vim'
 nnoremap <leader><bs> <scriptcmd>fuzzy.Buffer()<CR>
 nnoremap <leader><space> <scriptcmd>fuzzy.File()<CR>
 var findcmd = "find /Users/gp/.vim -type d -path */plugged -prune -o -name *.swp -prune -o -path */.vim/.* -prune -o -type f -print -follow"
 # var findcmd = 'fd -tf -L . /Users/gp/.vim'
-nnoremap <leader>vv <scriptcmd>fuzzy.File(findcmd, true)<CR>
-nnoremap <leader><tab> <scriptcmd>fuzzy.Keymap()<CR>
+nnoremap <leader>fv <scriptcmd>fuzzy.File(findcmd, true)<CR>
+nnoremap <leader>fV <scriptcmd>fuzzy.File("find " .. $VIMRUNTIME .. " -type f -print", true)<CR>
+nnoremap <leader>fh <scriptcmd>fuzzy.File("find " .. $HOME .. "/help -type f -print", true)<CR>
+nnoremap <leader>ft <scriptcmd>fuzzy.Template()<CR>
+nnoremap <leader>fm <scriptcmd>fuzzy.MRU()<CR>
+nnoremap <leader>fk <scriptcmd>fuzzy.Keymap()<CR>
+# search files with same extension
+nnoremap <expr> <leader>fg $':silent grep {expand("<cword>")} {expand("%:e") == "" ? "" : "**/*." .. expand("%:e")}<c-left><left>'
+nnoremap <expr> <leader>g $':silent grep {expand("<cword>")}'
 
-# nnoremap <leader>g :Grep<space>
-# nnoremap <expr> <leader>G $':Grep {expand("<cword>")}'
-# nnoremap <leader>G :FGrep<space>
-
-
-if executable("rg")
-    set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
-    set grepformat=%f:%l:%c:%m,%f:%l:%m
-elseif executable("ag")
-    set grepprg=ag\ --vimgrep
-    set grepformat=%f:%l:%c:%m
-endif
-
-# (grep, vimgrep) https://vim.fandom.com/wiki/Find_in_files_within_Vim
-#
-# NOTE: <c-w> will delete the word before cursor
-# Search only files with same extension. Remove *.x to search everywhere.
-# nnoremap <expr> <leader>G $':silent grep {expand("<cword>")} {expand("%:e") == "" ? "" : "**/*." .. expand("%:e")}<c-left><left>'
-# nnoremap <expr> <leader>vG $':vim /{expand("<cword>")}/gj **{expand("%:e") == "" ? "" : "/*." .. expand("%:e")}<c-left><left><left><left>'
-# Search everywhere
-# nnoremap <expr> <leader>g $':silent grep {expand("<cword>")}'
-# nnoremap <expr> <leader>vg $':vim /{expand("<cword>")}/j **<c-left><left><left><left>'
-
-# symbol-based navigation (:h E387 include-search)
-# -----------------------
-# Search included files recursively for variable, function or macro (#define).
-#
-# The commands that start with "[" start searching from the start of the current
-# file.  The commands that start with "]" start at the current cursor position.
-#
-# ilist is for symbols (include), dlist (#define list) looks for 'macros' (in C, it is #define)
-#
-# [<tab> " go to first occurance (definition, in many casesa). similar to 'gd'
-# :ijump Template  " :ij (:dj) jump to first match of 'Template' in includes
-# :ij /Tem         " jump to first match of pattern 'Tem' in includes
-# :ili[st] /pattern or dli[st] /pattern  " list all symbols / macros
-# :is[earch] /pattern/ " Like "[i"  and "]i", but search whole file or range and show first match
-# ]i [i	        ]d [d  " same as [id]search except for word under cursor
-# [<C-i>	[<C-d> " jump to first line that has symbol/macro
-# [I	        [D  " display all lines with matches for word under cursor
-nnoremap <leader>fi :ilist<space>/| # search /pattern/ for symbols, <num> [<tab> to jump; Similar as :g /pat except this shows jump numbers
-# (girish: above will search all files for variable, fn name etc.)
-nnoremap <leader>fd :dlist<space>/| # :dli
-# (girish: above will list all #define when you do / and search in all files)
-
-
-# My workflow for this tends to be to create a list of files I need to visit in
-# a buffer with find then I go through them quickly using `gf` then bounce back
-# using <C-o> and mark that file as checked by deleting it with dd.
-# See below about using :argadd
-# nnoremap <leader>vF :enew \| :r !find . -type f -name "*.log"<left>
-
-# Open all files of a certina type.
-# you can use :arga[dd] **/*.c open all the .c files in your project
-# nnoremap <expr> <leader>vf $':argadd **/*.{expand("%:e")}'
-
-# NOTE: Cannot automatically open quickfix window with caddexpr (:g/pat/caddexpr ...)
-#   since it adds entries
-# :g search file for pattern and put resulting lines in quickfix list
-# cadde[xpr] {expr}	Evaluate {expr} and add the resulting lines to the quickfix list
-# Since caddexpr does not open qf-list automatically, open it manunally :copen or :cwindow or <leader>vc
-nnoremap <leader>vg :g//caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<c-left><c-left><right><right>
-
-
-# ctags will search the following for 'tags' file
-# default: set tags=./tags,./../tags,./*/tags
-
-#---------------------
-# AUTOCOMPLETE:
-#---------------------
-
-# # ctrl-n is the easiest way to autocomplete (ctrl-p for backwards selection)
-# # Insert a <Tab> if after whitespace, else start a <c-n> completion
-# def WhitespaceOnly(): bool
-#     # strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
-#     return strpart(getline('.'), col('.') - 2, 1) =~ '^\s*$'
-# enddef
-# inoremap <expr> <Tab>   WhitespaceOnly() ? "\<tab>" : "\<c-n>"
-# inoremap <expr> <s-Tab> WhitespaceOnly() ? "\<s-tab>" : "\<c-p>"
-
-# Let omnicomplete (<c-x><c-o>) complete keywords from syntax file
-# if has("autocmd") && exists("+omnifunc")
-#     autocmd Filetype *
-#                 \ if &omnifunc == "" |
-#                 \   setlocal omnifunc=syntaxcomplete#Complete |
-#                 \ endif
-# endif
+# autocomplete with <c-n> and <c-p> when plugins are not available
+def WhitespaceOnly(): bool
+    # strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
+    return strpart(getline('.'), col('.') - 2, 1) =~ '^\s*$'
+enddef
+inoremap <expr> <Tab>   WhitespaceOnly() ? "\<tab>" : "\<c-n>"
+inoremap <expr> <s-Tab> WhitespaceOnly() ? "\<s-tab>" : "\<c-p>"
 
 # Y mapping, more natural but not vi compatible
 map Y y$
@@ -110,7 +37,7 @@ nnoremap <leader>k 5k
 # g* selects foo in foobar while * selects <foo>, <> is word boundary. make * behave like g*
 # nnoremap * g*
 # nnoremap # g#
-#  Resize window using <ctrl> arrow keys
+# Resize window using <ctrl> arrow keys
 # nnoremap <silent> <C-Up> :resize +2<cr>
 # nnoremap <silent> <C-Down> :resize -2<cr>
 # nnoremap <silent> <C-Right> :vertical resize -2<cr>
@@ -120,8 +47,8 @@ nnoremap <silent> [b :bprevious<CR>
 nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [B :bfirst<CR>
 nnoremap <silent> ]B :blast<CR>
-# nnoremap <silent> <leader>h :bprevious<CR>
-# nnoremap <silent> <leader>l :bnext<CR>
+nnoremap <silent> <leader>h :bprevious<CR>
+nnoremap <silent> <leader>l :bnext<CR>
 # Replace [[ ]] mappings that get redefined by ftplugin/vim.vim
 # autocmd FileType * nnoremap <silent><buffer> [[ :bprevious<CR>
 # autocmd FileType * nnoremap <silent><buffer> ]] :bnext<CR>
@@ -183,24 +110,94 @@ nnoremap <leader>o <c-w>w| # next window in CCW direction
 nnoremap <leader>r <cmd>registers<cr>
 nnoremap <leader>m <cmd>marks<cr>
 vnoremap <leader>a :!column -t<cr>| # align columns
+
 # Toggle group
 nnoremap <leader>ts :set spell!<CR><Bar>:echo "Spell Check: " .. strpart("OffOn", 3 * &spell, 3)<CR>
 nnoremap <silent> <leader>tt <cmd>call text#Toggle()<CR>
+nnoremap <expr> <leader>tc empty(filter(getwininfo(), 'v:val.quickfix')) ? ':copen<CR>' : ':cclose<CR>'
+nnoremap <expr> <leader>tl empty(filter(getwininfo(), 'v:val.loclist')) ? ':lopen<CR>' : ':lclose<CR>'
+
 # Vim group
 nnoremap <leader>vr :new \| exec "nn <buffer> q :bd!\<cr\>" \| r ! | # redirect shell command, use :il /foo to filter lines
 nnoremap <leader>vR :enew \| exec "nn <buffer> q :bd!\<cr\>" \| put = execute('map')<left><left>| # redirect vim cmd, use <leader>fi to filter
-nnoremap <expr> <leader>vc empty(filter(getwininfo(), 'v:val.quickfix')) ? ':copen<CR>' : ':cclose<CR>'
-nnoremap <expr> <leader>vL empty(filter(getwininfo(), 'v:val.loclist')) ? ':lopen<CR>' : ':lclose<CR>'
-nnoremap <leader>vl <cmd>set buflisted!<cr>
+# nnoremap <leader>vl <cmd>set buflisted!<cr>
 nnoremap <leader>vm <cmd>messages<cr>
 nnoremap <leader>vd <cmd>GitDiffThisFile<cr>
-nnoremap <leader>ve <cmd>e ~/.vimrc<cr>
+nnoremap <leader>ve <cmd>e ~/.vim/vimrc<cr>
 nnoremap <leader>vz <scriptcmd>FoldingToggle()<cr>
 nnoremap <leader>vp <cmd>echo expand('%')<cr>
+
+import autoload 'text.vim'
+
+# simple text objects
+# -------------------
+# i_ i. i: i, i; i| i/ i\ i* i+ i- i# i<tab>
+# a_ a. a: a, a; a| a/ a\ a* a+ a- a# a<tab>
+for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', '#', '<tab>' ]
+    execute 'xnoremap <silent> i' .. char .. ' <esc><scriptcmd>text.Obj("' .. char .. '", 1)<CR>'
+    execute 'xnoremap <silent> a' .. char .. ' <esc><scriptcmd>text.Obj("' .. char .. '", 0)<CR>'
+    execute 'onoremap <silent> i' .. char .. ' :normal vi' .. char .. '<CR>'
+    execute 'onoremap <silent> a' .. char .. ' :normal va' .. char .. '<CR>'
+endfor
+
+nnoremap <silent> <space># <scriptcmd>text.Underline('#')<CR>
+nnoremap <silent> <space>* <scriptcmd>text.Underline('*')<CR>
+nnoremap <silent> <space>= <scriptcmd>text.Underline('=')<CR>
+nnoremap <silent> <space>- <scriptcmd>text.Underline('-')<CR>
+nnoremap <silent> <space>^ <scriptcmd>text.Underline('^')<CR>
+nnoremap <silent> <space>. <scriptcmd>text.Underline('.')<CR>
 
 # Notes:
 # ======
 #
+# NOTE: <c-w> will delete the word before cursor
+# Search only files with same extension. Remove *.x to search everywhere.
+# nnoremap <expr> <leader>G $':silent grep {expand("<cword>")} {expand("%:e") == "" ? "" : "**/*." .. expand("%:e")}<c-left><left>'
+# nnoremap <expr> <leader>vG $':vim /{expand("<cword>")}/gj **{expand("%:e") == "" ? "" : "/*." .. expand("%:e")}<c-left><left><left><left>'
+# Search everywhere
+# nnoremap <expr> <leader>g $':silent grep {expand("<cword>")}'
+# nnoremap <expr> <leader>vg $':vim /{expand("<cword>")}/j **<c-left><left><left><left>'
+
+# symbol-based navigation (:h E387 include-search)
+# -----------------------
+# Search included files recursively for variable, function or macro (#define).
+#
+# The commands that start with "[" start searching from the start of the current
+# file.  The commands that start with "]" start at the current cursor position.
+#
+# ilist is for symbols (include), dlist (#define list) looks for 'macros' (in C, it is #define)
+#
+# [<tab> " go to first occurance (definition, in many casesa). similar to 'gd'
+# :ijump Template  " :ij (:dj) jump to first match of 'Template' in includes
+# :ij /Tem         " jump to first match of pattern 'Tem' in includes
+# :il[ist] /pattern or dli[st] /pattern  " list all symbols / macros
+# :is[earch] /pattern/ " Like "[i"  and "]i", but search whole file or range and show first match
+# ]i [i	        ]d [d  " same as [id]search except for word under cursor
+# [<C-i>	[<C-d> " jump to first line that has symbol/macro
+# [I	        [D  " display all lines with matches for word under cursor
+# nnoremap <leader>fi :il<space>/| # search /pattern/ for symbols, <num> [<tab> to jump; Similar as :g /pat except this shows jump numbers
+# (girish: above will search all files for variable, fn name etc.)
+# nnoremap <leader>fd :dli<space>/| # :dli
+# (girish: above will list all #define when you do / and search in all files)
+
+
+# My workflow for this tends to be to create a list of files I need to visit in
+# a buffer with find then I go through them quickly using `gf` then bounce back
+# using <C-o> and mark that file as checked by deleting it with dd.
+# See below about using :argadd
+# nnoremap <leader>vF :enew \| :r !find . -type f -name "*.log"<left>
+
+# Open all files of a certina type.
+# you can use :arga[dd] **/*.c open all the .c files in your project
+# nnoremap <expr> <leader>vf $':argadd **/*.{expand("%:e")}'
+
+# NOTE: Cannot automatically open quickfix window with caddexpr (:g/pat/caddexpr ...)
+#   since it adds entries
+# :g search file for pattern and put resulting lines in quickfix list
+# cadde[xpr] {expr}	Evaluate {expr} and add the resulting lines to the quickfix list
+# Since caddexpr does not open qf-list automatically, open it manunally :copen or :cwindow or <leader>vc
+# nnoremap <leader>vg :g//caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<c-left><c-left><right><right>
+
 # - :h gnavigation
 #
 #	  "[{": "Previous {",

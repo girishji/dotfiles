@@ -1,11 +1,8 @@
 vim9script
 
-# https://github.com/habamax/.vim/blob/master/after/ftplugin/python.vim
-
 if executable('black')
     &l:formatprg = "black -q - 2>/dev/null"
 elseif executable('yapf')
-    # pip install yapf
     &l:formatprg = "yapf"
 endif
 
@@ -13,24 +10,106 @@ setlocal foldignore=
 
 b:undo_ftplugin ..= ' | setl foldignore< formatprg<'
 
-# def PydocHelp(symbol: string)
-#     :Help symbol<cr>
-# enddef
+# Convince python that 'def' is a macro like C's #define
+setlocal define=^\\s*def
 
-# nnoremap <buffer> <F5> <scriptcmd>exe "Sh python" expand("%:p")<cr>
-# b:undo_ftplugin ..= ' | exe "nunmap <buffer> <F5>"'
+setl dictionary=$HOME/.vim/data/python.dict
+setl makeprg=python3\ %
 
-# if exists("g:loaded_lsp")
-#     setlocal keywordprg=:LspHover
-#     nnoremap <silent><buffer> gd <scriptcmd>LspGotoDefinition<CR>
-#     b:undo_ftplugin ..= ' | setl keywordprg<'
-#     b:undo_ftplugin ..= ' | exe "nunmap <buffer> gd"'
-# else
-#     nnoremap <silent><buffer> K <scriptcmd>PydocHelp(expand("<cfile>"))<CR>
-#     xnoremap <silent><buffer> K y<scriptcmd>PydocHelp(getreg('"'))<CR>
-#     b:undo_ftplugin ..= ' | exe "nunmap <buffer> K"'
-#     b:undo_ftplugin ..= ' | exe "xunmap <buffer> K"'
-# endif
+# NOTE: tidy-imports misses some imports. Put them in ~/.pyflyby
+# nnoremap <buffer> <leader>vh :term ++close pydoc3<space>
+# nnoremap <buffer> <leader>vb :!open https://docs.python.org/3/search.html\?q=
+# nnoremap <buffer> <leader>vf :% !black -q -<cr>
+nnoremap <buffer> <leader>h :Help<space>
+nnoremap <buffer> <leader>vi :% !tidy-imports --replace-star-imports -r -p --quiet --black<cr>
+nnoremap <buffer><expr> <leader>vt $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode test {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"
+nnoremap <buffer><expr> <leader>vx $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode exec {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"
+nnoremap <buffer><expr> <leader>vp $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| r !python3 #<cr>"
+nnoremap <buffer><expr> <leader>vP <cmd>echo expand('%')<cr>
+nnoremap <buffer> <leader>p :Ipython<cr>
+g:pyindent_open_paren = 'shiftwidth()' # https://github.com/vim/vim/blob/v8.2.0/runtime/indent/python.vim
+
+# Abbreviations
+
+def GetSurroundingFn(): string
+    var fpat = '\vdef\s+\zs\k+'
+    var lnum = search(fpat, 'nb')
+    if lnum > 0
+        var fname = getline(lnum)->matchstr(fpat) .. '()'
+        var cpat = '\vclass\s+\zs\k+'
+        lnum = search(cpat, 'nb')
+        if lnum > 0
+            return getline(lnum)->matchstr(cpat) .. '().' .. fname
+        endif
+        return fname
+    endif
+    return ''
+enddef
+
+iabbr <buffer><expr> def      abbr#NotCtx() ? 'def' : 'def ):<cr><esc>-f)i<c-r>=abbr#Eatchar()<cr>'
+iabbr <buffer><expr> def_     abbr#NotCtx() ? 'def' : 'def ():<cr>"""."""<esc>-f(i<c-r>=abbr#Eatchar()<cr>'
+iabbr <buffer><expr> def__    def ():<c-o>o'''<cr>>>> print()<cr><cr>'''<esc>4k_f(i<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       try_ try:
+            \<cr>pass
+            \<cr>except Exception as err:
+            \<cr>print(f"Unexpected {err=}, {type(err)=}")
+            \<cr>raise<cr>else:
+            \<cr>pass<esc>5kcw<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       __main__
+            \ if __name__ == "__main__":
+            \<cr>import doctest
+            \<cr>doctest.testmod()<esc><c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       '''_ '''
+            \<cr>>>> print(<c-r>=<SID>GetSurroundingFn()<cr>)
+            \<cr>'''<esc>ggOfrom sys import stderr<esc>Go<c-u><esc>o<esc>
+            \:normal i__main__<cr>
+            \?>>> print<cr>:nohl<cr>g_hi<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       """            """."""<c-o>3h<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       case_ match myval:
+            \<cr>case 10:
+            \<cr>pass
+            \<cr>case _:<esc>3k_fm;i<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       match_case_ match myval:
+            \<cr>case 10:
+            \<cr>pass
+            \<cr>case _:<esc>3k_fm;i<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       enum_          Color = Enum('Color', ['RED', 'GRN'])<esc>_fC<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       pre            print(, file=stderr)<esc>F,i<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       pr             print()<c-o>i<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       tuple_         Point = namedtuple('Point', 'x y')<esc>_<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       tuple_named    Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=abbr#Eatchar()<cr>
+# collections
+iabbr  <buffer>  defaultdict1   defaultdict(int)<c-r>=abbr#Eatchar()<cr>
+iabbr  <buffer>  defaultdict_   defaultdict(set)<c-r>=abbr#Eatchar()<cr>
+iabbr  <buffer>  defaultdict3   defaultdict(lambda: '[default  value]')<c-r>=abbr#Eatchar()<cr>
+iabbr  <buffer>  dict_default1  defaultdict(int)<c-r>=abbr#Eatchar()<cr>
+#
+iabbr <buffer>   cache_          @functools.cache<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>   __init__        def __init__(self):<esc>hi<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>   __add__         def __add__(self, other):<cr><c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>   __sub__         def __sub__(self, other):<cr><c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>   __mul__         def __mul__(self, other):<cr><c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>   __truediv__     def __truediv__(self, other):<cr><c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>   __floordiv__    def __floordiv__(self, other):<cr><c-r>=abbr#Eatchar()<cr>
+
+# commands
+
+def Ipython()
+    var listedbufs = getbufinfo({buflisted: 1})
+    var ipbufidx = listedbufs->indexof((_, v) => v.name =~? 'ipython')
+    if ipbufidx != -1
+        var ipbufnr = listedbufs[ipbufidx].bufnr
+        if bufwinnr(ipbufnr) == -1
+            # ipython opthons can be placed in a config file
+            exec $'sbuffer {listedbufs[ipbufidx].bufnr}'
+        endif
+    else
+        :term ++close ++kill=term ipython3 --no-confirm-exit --colors=Linux
+    endif
+enddef
+command Ipython Ipython()
+
+# popup menu
 
 import autoload 'popup.vim'
 
@@ -54,4 +133,3 @@ def Things()
         })
 enddef
 nnoremap <buffer> <space>z <scriptcmd>Things()<CR>
-b:undo_ftplugin ..= ' | exe "nunmap <buffer> <space>z"'

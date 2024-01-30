@@ -15,16 +15,16 @@
 # ex. foo/, bar/
 
 # avoid these if they are anywhere in the path
-build/
-qmk_firmware/
+# build/
+# qmk_firmware/
 plugged/
 
 # following works only when 'fd' from above qmk_firmware dir
-qmk_firmware/platforms/
-qmk_firmware/users/
-qmk_firmware/lib/
-qmk_firmware/drivers/
-qmk_firmware/lib/
-qmk_firmware/keyboards/
-qmk_firmware/layouts/
-qmk_firmware/docs/
+# qmk_firmware/platforms/
+# qmk_firmware/users/
+# qmk_firmware/lib/
+# qmk_firmware/drivers/
+# qmk_firmware/lib/
+# qmk_firmware/keyboards/
+# qmk_firmware/layouts/
+# qmk_firmware/docs/

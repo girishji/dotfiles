@@ -5,7 +5,21 @@ vim9script
 setl textwidth=80
 setl keywordprg=:help
 
+iab <buffer> #--- #------------------------------<c-r>=abbr#Eatchar()<cr>
+iab <buffer><expr> augroup abbr#NotCtx() ? 'augroup' : 'augroup  \| autocmd!<cr>augroup END<esc>k_ela<c-r>=abbr#Eatchar()<cr>'
+iab <buffer><expr> def     abbr#NotCtx() ? 'def' : 'def <c-o>oenddef<esc>k_ffla<c-r>=abbr#Eatchar()<cr>'
+iab <buffer><expr> def!    abbr#NotCtx() ? 'def!' : 'def! <c-o>oenddef<esc>k_ffla<c-r>=abbr#Eatchar()<cr>'
+iab <buffer><expr> if      abbr#NotCtx() ? 'if' : 'if <c-o>oendif<esc>k_ela<c-r>=abbr#Eatchar()<cr>'
+iab <buffer><expr> while   abbr#NotCtx() ? 'while' : 'while <c-o>oendwhile<esc>k_ela<c-r>=abbr#Eatchar()<cr>'
+iab <buffer><expr> for     abbr#NotCtx() ? 'for' : 'for <c-o>oendfor<esc>k_ela<c-r>=abbr#Eatchar()<cr>'
+iab <buffer> v9 vim9script<c-r>=abbr#Eatchar()<cr>
+
+# Convince vim that 'def' is a macro like C's #define
+setlocal define=^\\s*def
+b:undo_ftplugin ..= ' | setlocal define<'
+
 import autoload 'popup.vim'
+
 def Things()
     var things = []
     for nr in range(1, line('$'))
@@ -35,5 +49,3 @@ def Things()
         })
 enddef
 nnoremap <buffer> <space>z <scriptcmd>Things()<CR>
-
-iab <buffer> v9 vim9script

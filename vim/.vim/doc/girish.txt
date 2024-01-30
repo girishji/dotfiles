@@ -1,5 +1,20 @@
 *girish.txt*
 ----------------------------------------
+File organization~
+
+- after/ftplugin/ft.vim can be split into ft_foo1.vim, ft_foo2.vim, etc., or
+  after/ftplugin/ft/foo1.vim etc. ft is filetype 'python', 'c', etc.
+- when variables and options are set through :setl then no need to undo. same
+  is true for mappings done through <buffer>
+- some variables are local to window (like 'spell'), and some are buffer
+  local. Former need to be unset after leaving buffer.
+b:undo_ftplugin. examples: 
+b:undo_ftplugin ..= ' | setl foldignore< formatprg<'
+b:undo_ftplugin ..= ' | exe "nunmap <space>z"'
+
+see https://github.com/habamax/.vim
+
+----------------------------------------
 Quick navigation tags~
 
 `v` after an operator (`c`, `d`, etc.) will not start visual mode, but selects

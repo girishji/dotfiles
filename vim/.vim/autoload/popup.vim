@@ -73,9 +73,9 @@ class FilterMenuPopup
                 elseif ["\<cr>", "\<C-j>", "\<C-v>", "\<C-t>", "\<C-o>"]->index(key) > -1
                         && this._filtered_items[0]->len() > 0 && items_count > 0
                     popup_close(id, {idx: getcurpos(id)[1], key: key})
-                elseif key == "\<Right>"
+                elseif key == "\<Right>" || key == "\<PageDown>"
                     win_execute(id, 'normal! ' .. "\<C-d>")
-                elseif key == "\<Left>"
+                elseif key == "\<Left>" || key == "\<PageUp>"
                     win_execute(id, 'normal! ' .. "\<C-u>")
                 elseif key == "\<tab>" || key == "\<C-n>" || key == "\<Down>" || key == "\<ScrollWheelDown>"
                     var ln = getcurpos(id)[1]

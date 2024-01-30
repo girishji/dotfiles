@@ -80,12 +80,6 @@ o = open
 ------------------------------------------------------------------------
 Navigation tricks 					*gnavigation*
 
-- When you are just exploring new project you search for filenames and symbols
-  within them
-    - use fzf or :edit :file :grep
-- When you have some idea you look for specific symbols and their definitions
-    - use lsp (or :ilist :dlist :tags)
-
 Navigation [ and ]
 *gkeymap-sq-brkt*
 

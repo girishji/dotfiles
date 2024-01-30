@@ -7,6 +7,8 @@ syn match vimExMarkRange /\(^\|\s\):['`][\[a-zA-Z0-9<][,;]['`][\]a-zA-Z0-9>]/
 syn clear vimFuncName
 syn clear vimVar
 syn clear vimOperParen
+syn clear vimFTError
 syn clear vimOperError
 syn clear vimUserAttrbError
 syn clear vimFunctionError
+syn clear vimSynCaseError

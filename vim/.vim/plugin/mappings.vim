@@ -14,7 +14,9 @@ nnoremap <leader>fm <scriptcmd>fuzzy.MRU()<CR>
 nnoremap <leader>fk <scriptcmd>fuzzy.Keymap()<CR>
 # search files with same extension
 nnoremap <expr> <leader>fg $':silent grep {expand("<cword>")} {expand("%:e") == "" ? "" : "**/*." .. expand("%:e")}<c-left><left>'
+# search all files
 nnoremap <expr> <leader>g $':silent grep {expand("<cword>")}'
+nnoremap <expr> <leader>vg $':vim /{expand("<cword>")}/j **<c-left><left><left><left>'
 
 # autocomplete with <c-n> and <c-p> when plugins are not available
 def WhitespaceOnly(): bool
@@ -146,110 +148,3 @@ nnoremap <silent> <space>= <scriptcmd>text.Underline('=')<CR>
 nnoremap <silent> <space>- <scriptcmd>text.Underline('-')<CR>
 nnoremap <silent> <space>^ <scriptcmd>text.Underline('^')<CR>
 nnoremap <silent> <space>. <scriptcmd>text.Underline('.')<CR>
-
-# Notes:
-# ======
-#
-# NOTE: <c-w> will delete the word before cursor
-# Search only files with same extension. Remove *.x to search everywhere.
-# nnoremap <expr> <leader>G $':silent grep {expand("<cword>")} {expand("%:e") == "" ? "" : "**/*." .. expand("%:e")}<c-left><left>'
-# nnoremap <expr> <leader>vG $':vim /{expand("<cword>")}/gj **{expand("%:e") == "" ? "" : "/*." .. expand("%:e")}<c-left><left><left><left>'
-# Search everywhere
-# nnoremap <expr> <leader>g $':silent grep {expand("<cword>")}'
-# nnoremap <expr> <leader>vg $':vim /{expand("<cword>")}/j **<c-left><left><left><left>'
-
-# symbol-based navigation (:h E387 include-search)
-# -----------------------
-# Search included files recursively for variable, function or macro (#define).
-#
-# The commands that start with "[" start searching from the start of the current
-# file.  The commands that start with "]" start at the current cursor position.
-#
-# ilist is for symbols (include), dlist (#define list) looks for 'macros' (in C, it is #define)
-#
-# [<tab> " go to first occurance (definition, in many casesa). similar to 'gd'
-# :ijump Template  " :ij (:dj) jump to first match of 'Template' in includes
-# :ij /Tem         " jump to first match of pattern 'Tem' in includes
-# :il[ist] /pattern or dli[st] /pattern  " list all symbols / macros
-# :is[earch] /pattern/ " Like "[i"  and "]i", but search whole file or range and show first match
-# ]i [i	        ]d [d  " same as [id]search except for word under cursor
-# [<C-i>	[<C-d> " jump to first line that has symbol/macro
-# [I	        [D  " display all lines with matches for word under cursor
-# nnoremap <leader>fi :il<space>/| # search /pattern/ for symbols, <num> [<tab> to jump; Similar as :g /pat except this shows jump numbers
-# (girish: above will search all files for variable, fn name etc.)
-# nnoremap <leader>fd :dli<space>/| # :dli
-# (girish: above will list all #define when you do / and search in all files)
-
-
-# My workflow for this tends to be to create a list of files I need to visit in
-# a buffer with find then I go through them quickly using `gf` then bounce back
-# using <C-o> and mark that file as checked by deleting it with dd.
-# See below about using :argadd
-# nnoremap <leader>vF :enew \| :r !find . -type f -name "*.log"<left>
-
-# Open all files of a certina type.
-# you can use :arga[dd] **/*.c open all the .c files in your project
-# nnoremap <expr> <leader>vf $':argadd **/*.{expand("%:e")}'
-
-# NOTE: Cannot automatically open quickfix window with caddexpr (:g/pat/caddexpr ...)
-#   since it adds entries
-# :g search file for pattern and put resulting lines in quickfix list
-# cadde[xpr] {expr}	Evaluate {expr} and add the resulting lines to the quickfix list
-# Since caddexpr does not open qf-list automatically, open it manunally :copen or :cwindow or <leader>vc
-# nnoremap <leader>vg :g//caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<c-left><c-left><right><right>
-
-# - :h gnavigation
-#
-#	  "[{": "Previous {",
-#	  "[(": "Previous (",
-#	  "[<lt>": "Previous <",
-#	  "[m": "Previous method start",
-#	  "[M": "Previous method end",
-#	  "[%": "Previous unmatched group",
-#	  "[s": "Previous misspelled word",
-#	  "]{": "Next {",
-#	  "](": "Next (",
-#	  "]<lt>": "Next <",
-#	  "]m": "Next method start",
-#	  "]M": "Next method end",
-#	  "]%": "Next unmatched group",
-#	  "]s": "Next misspelled word",
-#	  "H": "Home line of window (top)",
-#	  "M": "Middle line of window",
-#	  "L": "Last line of window",
-#	  "]i": "Search symbol in include file (forward)",
-#	  "[i": "Search symbol in include file (backward",
-#	  "]d": "Search macro (#define) symbols",
-#	  "[d": "Search macro (#define) symbols",
-#
-# Bram says `[<tab>` will jump to symbol definition. It does look for included
-# files and other files in dir. `gd` also goes to definition, but it searches
-# within the file and highlights all matches unlike `[<tab>`.
-#
-#       "gf": open files under import statements or #include
-#
-# :find uses 'path', while :edit does not. Both respect wildignore. Both open file.
-# '**' refers to directories. Recursively search directories (ex> :e **/foo, :e **/*foo)
-# :checkpath!  " to list all included files
-# set path-=/usr/include
-# set path=.,**
-# path set to '**' does not consider wildignore dirs because it does not use full path
-# set wildignore appropriately
-# https://vi.stackexchange.com/questions/15457/what-does-wildignore-actually-do-and-what-functions-tools-respect-it
-# https://stackoverflow.com/questions/4296201/vim-ignore-special-path-in-search
-# */build/* form is needed for :find to ignore, while build/ is needed for :edit to ignore 'build' dir.
-# set wildignore+=*/build/*,build/,*/pycache/*,pycache/,*/venv/*,venv/,*/dist/*,dist/,*.o,*.obj
-#
-#   :find does not show full path (if you set path to '**'), except when same filename is in different dirs
-#   :edit does not ignore dirs when used with '**'
-# nnoremap <leader>f :call feedkeys(":find \<Tab>", 'tn')<cr>
-
-# Note: problem with wildcharm is that it automatically inserts first item in menu
-# :set wildcharm=<c-z>
-# nnoremap <leader><space> :find<space><c-z>
-#
-# Note: need autosuggest plugin for following mappings
-# nnoremap <leader><space> :e<space>**/*<left>
-# Note: Following works (respects wildignore) but slow
-# nnoremap <leader>ff :e<space>**/
-

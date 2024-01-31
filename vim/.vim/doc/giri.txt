@@ -1,6 +1,6 @@
-*girish.txt*
+*giri.txt*
 ----------------------------------------
-File organization~
+File organization                    *giri-vim-file-org*
 
 - after/ftplugin/ft.vim can be split into ft_foo1.vim, ft_foo2.vim, etc., or
   after/ftplugin/ft/foo1.vim etc. ft is filetype 'python', 'c', etc.
@@ -303,11 +303,6 @@ https://vim.fandom.com/wiki/Find_in_files_within_Vim
 - Recursive search
   You can use ** in the file pattern to search recursively.
   :vimgrep /dostuff()/j ../**/*.c
-
-----------------------------------------
-popup fundas and examples
-https://groups.google.com/g/vim_dev/c/5gbS9ZAtqPk
-https://vi.stackexchange.com/questions/24462/what-are-the-new-popup-windows-in-vim-8-2/24463#24463
 
 ----------------------------------------
 Legacy script:
@@ -677,91 +672,6 @@ Examples: >
 
 
 ----------------------------------------
-https://vimways.org/2018/death-by-a-thousand-files/
- 
-	# To make <c-z> show popup (just like <tab>)
-	# set wildcharm=<C-z>
-	nnoremap <leader>e :e **/*| # type 'foo<tab>'
-	# :find is same as :edit except you can specify 'path' to tell where to search
-	# see :echo &path
-	set path-=/usr/include
-	set path+=**
-	set path-=
-	# :find foo<Tab>
-	nnoremap <leader>ff :find<space>
-	# NOTE: use 'gf' on import statements in java to jump to that file
-	#   :checkpath!
-	if executable("rg")
-	    # set grepprg=ag\ --nogroup\ --nocolor\ --ignore-case\ --column
-	    set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
-	    set grepformat=%f:%l:%c:%m,%f:%l:%m
-	endif
-	nnoremap <leader>g :silent grep<space>
-	# nnoremap <Leader>g :silent lgrep<Space>
-	# https://www.vi-improved.org/recommendations/
-	# nnoremap <leader>a :argadd <c-r>=fnameescape(expand('%:p:h'))<cr>/*<C-d>| # add files, like **/*.md
-	# nnoremap <leader>j :tjump /
-	# nnoremap <leader>m :make<cr>
-	# Convince java that 'class' is a macro like C's #define
-	autocmd FileType java setlocal define=^\\s*class
-	autocmd FileType python,vim setlocal define=^\\s*def
-
-	# symbol-based navigation (i = include files, d = #define/macro )
-	# -----------------------
-	# :ilist :dlist and tags
-	# :ijump Template  " jump to first match of 'Template' in includes
-	# :ij /Tem         " jump to first match of pattern 'Tem' in includes
-	# Say: import {escapeForHTML} from './helpers';
-	#   :isearch /esca<CR>   " explains what escapeForHTML does (or '[i' if under cursor) 
-	# NOTE: ilist is for symbols within visible context (#included or imported files)
-	#  dlist looks for 'macros'
-	#
-	#'define' commands have the same syntax as their 'include' counterparts. You just have to replace i with d:
-	# Include	Define
-	# :ijump (:ij)	:djump (:dj)
-	# :isearch	:dsearch
-	# :ilist	:dlist (:[id]list / <- lists everything)
-	# [<C-i>	[<C-d>
-	# [I	[D
-	# ]i	]d
-	nnoremap <leader>fi :ilist<space>| # search for pattern (for symbols), :il
-	(girish: above will search all files for variable, fn name etc.)
-	nnoremap <leader>fd :dlist<space>/<cr>| # :dli
-	(girish: above will list all #define when you do / and search in all files)
-
-	#---------------------
-	# TAG JUMPING:
-	#---------------------
-	
-	# Bram (in video): ctags will help you go to definition, but if you
-	#   want to list all usages of a function you need cscope
-	#
-	# Create 'tags' file' (install ctags)
-	command! MakeTags !ctags -R .
-	# ctrl-] to jump to tag under cursor
-	# g ctrl-] for ambiguous tags (get a list of all instances of tag)
-	# ctrl-t to jump back up the tag stack
-	# :tjump :tselect
-	
- 
-Macros in command mode
- 
-	# Macros, work like abbrevs, :h wcm <- Use <c-n> and <c-p> for history
-	# XXX they expand while typing command (say :h feedback)
-	# set wcm=<C-Z>
-	# cnoremap <expr> ee getcmdtype() == ':' ? 'e ~/.zshenv<C-Z>' : 'ev'
-	# cnoremap <expr> ez getcmdtype() == ':' ? 'e ~/.zshrc<C-Z>' : 'ez'
-	# cnoremap <expr> pu getcmdtype() == ':' ? 'PlugUpdate<C-Z>' : 'pu'
- 
-BUILD INTEGRATION:
- 
-	# set makeprg=bundle\ exec\ rspec\ -f
-	# run :make
-	# :cl to list errors
-	# :cn and :cp to navigate errors
-	# :cc# to jump to numbered error
-
-----------------------------------------
 Insert mode completion popup items cannot be modified
 
 No new items can be added (unlike popup_menu())
@@ -799,7 +709,7 @@ Abbrev with args
   fu s:FF(i, n)
       let t = "for (int a = 0; a < b; ++a) {\e"
       let t1 = substitute(t, 'a', a:i, 'g')
-      exe 'normal! A'.substitute(t1, 'b', a:x, 'g')
+      exe 'normal! A' . substitute(t1, 'b', a:x, 'g')
       exe "normal o\<space>\<BS>\e"
   endf
 
@@ -808,6 +718,11 @@ at insert mode FF e 10<cr> will be for (int e = 0; e < 10; ++e) {<cr>.
 ----------------------------------------
 Naming Styles (from pep8)
 
+functions that return something after doing something are named according to 'verbs'
+functions that modify state without returning are named by their 'nouns'.
+
+"Names should be as short as possible while still being clear."
+
 Function	function, my_function
 Variable	x, var, my_variable
 Class		Model, MyClass
@@ -815,14 +730,6 @@ Method		class_method, method
 Constant	CONSTANT, MY_CONSTANT, MY_LONG_CONSTANT
 Module		module.py, my_module.py
 Package		package, mypackage
-
-functions that return something after doing something are named according to 'verbs'
-functions that modify state without returning are named by their 'nouns'.
-
-tpope names functions and variables all lowercase without underscore:
-dosurround(), newchar, opfunc(), inputreplacement(), extractbefore(), etc.
-
-"Names should be as short as possible while still being clear."
 
 ----------------------------------------
 glob vs regex~
@@ -874,10 +781,6 @@ Try:
 %s/.\{-},//
 
 ----------------------------------------
-Spelling
-z= will show spelling options
-
-----------------------------------------
 Tags~
 https://gist.github.com/romainl/f2d0727bdb9bde063531cd237f47775f
 https://gist.github.com/romainl/27c1c29462a8c6c868f1a9bf244bc71d
@@ -910,7 +813,7 @@ declared, but also where it is used.  See |cscope|.
 Preview window and finding right arguments to function~
 
 :ptag foo
-Vim will open a window, and jumps to the tag "write_char".  Then it takes you
+Vim will open a window, and jumps to the tag "foo".  Then it takes you
 back to the original position.  Thus you can continue typing without the need
 to use a CTRL-W command.
 
@@ -941,250 +844,21 @@ Note:
 		window. Don't need a tags file and it will also find matches in system
 		include files.
 
-------------------------------------------------------------------------------
-*29.3*	Moving through a program~
-
-Since a program is structured, Vim can recognize items in it.  Specific
-commands can be used to move around.
-   C programs often contain constructs like this:
-
-	#ifdef USE_POPEN ~
-	    fd = popen("ls", "r") ~
-	#else ~
-	    fd = fopen("tmp", "w") ~
-	#endif ~
-
-But then much longer, and possibly nested.  Position the cursor on the
-"#ifdef" and press %.  Vim will jump to the "#else".  Pressing % again takes
-you to the "#endif".  Another % takes you to the "#ifdef" again.
-
-   When you are somewhere inside a "#if" - "#endif", you can jump to the start
-of it with: >
-
-	[#
-
-If you are not after a "#if" or "#ifdef" Vim will beep.  To jump forward to
-the next "#else" or "#endif" use: >
-
-	]#
-
-
-MOVING IN CODE BLOCKS
-
-   An overview:
-
-			function(int a)
-	   +->		{
-	   |		    if (a)
-	   |	   +->	    {
-	[[ |	   |		for (;;)	       --+
-	   |	   |	  +->	{			 |
-	   |	[{ |	  |	    foo(32);		 |     --+
-	   |	   |   [{ |	    if (bar(a))  --+	 | ]}	 |
-	   +--	   |	  +--		break;	   | ]}  |	 |
-		   |		}		 <-+	 |	 | ][
-		   +--		foobar(a)		 |	 |
-			    }			       <-+	 |
-			}				       <-+
-
-The next level of {} is for a method.  When somewhere inside a class use "[m" to find the
-previous start of a method.  "]m" finds the next start of a method.
-
-				int func1(void)
-				{
-					return 1;
-		  +---------->  }
-		  |
-	      []  |		int func2(void)
-		  |	   +->	{
-		  |    [[  |		if (flag)
-	start	  +--	   +--			return flag;
-		  |    ][  |		return 2;
-		  |	   +->	}
-	      ]]  |
-		  |		int func3(void)
-		  +---------->	{
-					return 3;
-				}
-
-Don't forget you can also use "%" to move between matching (), {} and [].
-That also works when they are many lines apart.
-
-
-MOVING IN BRACES
-
-The "[(" and "])" commands work similar to "[{" and "]}", except that they
-work on () pairs instead of {} pairs.
->
-				  [(
-<		    <--------------------------------
-			      <-------
-		if (a == b && (c == d || (e > f)) && x > y) ~
-				  -------------->
-			  --------------------------------> >
-				       ])
-
-MOVING IN COMMENTS
-
-To move back to the start of a comment use "[/".  Move forward to the end of a
-comment with "]/".  This only works for /* - */ comments.
-
-*29.4*	Finding global identifiers
-
-You are editing a C program and wonder if a variable is declared as "int" or
-"unsigned".  A quick way to find this is with the "[I" command.
-   Suppose the cursor is on the word "column".  Type: >
-
-	[I
-
-Vim will list the matching lines it can find.  Not only in the current file,
-but also in all included files (and files included in them, etc.).  The result
-looks like this:
-
-	structs.h ~
-	 1:   29     unsigned     column;    /* column number */ ~
-
-The advantage over using tags or the preview window is that included files are
-searched.  In most cases this results in the right declaration to be found.
-
-
-LOCATING INCLUDED FILES
-
-   Vim will find included files in the places specified with the 'path'
-option.  If a directory is missing, some include files will not be found.  You
-can discover this with this command: >
-
-	:checkpath
-
-It will list the include files that could not be found.  Also files included
-by the files that could be found.  An example of the output:
-
-	--- Included files not found in path --- ~
-	<io.h> ~
-	vim.h --> ~
-	  <functions.h> ~
-	  <clib/exec_protos.h> ~
-
-The "io.h" file is included by the current file and can't be found.  "vim.h"
-can be found, thus ":checkpath" goes into this file and checks what it
-includes.  The "functions.h" and "clib/exec_protos.h" files, included by
-"vim.h" are not found.
-
-	Note:
-	Vim is not a compiler.  It does not recognize "#ifdef" statements.
-	This means every "#include" statement is used, also when it comes
-	after "#if NEVER".
-
-To fix the files that could not be found, add a directory to the 'path'
-option.  A good place to find out about this is the Makefile.  Look out for
-lines that contain "-I" items, like "-I/usr/local/X11".  To add this directory
-use: >
-
-	:set path+=/usr/local/X11
-
-When there are many subdirectories, you can use the "*" wildcard.  Example: >
-
-	:set path+=/usr/*/include
-
-When working on a project with a whole nested tree of included files, the "**"
-items is useful.  This will search down in all subdirectories.  Example: >
-
-	:set path+=/projects/invent/**/include
-
-If you want to see which included files are actually found, use this
-command: >
-
-	:checkpath!
-
-
-JUMPING TO A MATCH
-
-"[I" produces a list with only one line of text per line.  When you want to have a
-closer look at the first item, you can jump to that line with the command: >
-
-	[<Tab>
-
-The list that "[I" produces has a number at the start of each line.  When you
-want to jump to another item than the first one, type the number first: >
-
-	3[<Tab>
-
-Will jump to the third item in the list.  Remember that you can use CTRL-O to
-jump back to where you started from.
-
-
-RELATED COMMANDS
-
-	[i		only lists the first match
-	]I		only lists items below the cursor
-	]i		only lists the first item below the cursor
-
-
-FINDING DEFINED IDENTIFIERS
-
-The "[I" command finds any identifier.  To find only macros, defined with
-"#define" use: >
-
-	[D
-
-Again, this searches in included files.  The 'define' option specifies what a
-line looks like that defines the items for "[D".  You could change it to make
-it work with other languages than C or C++.
-   The commands related to "[D" are:
-
-	[d		only lists the first match
-	]D		only lists items below the cursor
-	]d		only lists the first item below the cursor
-
-
-*29.5*	Finding local identifiers
-
-The "[I" command searches included files.  To search in the current file only,
-and jump to the first place where the word under the cursor is used: >
-
-	gD
-
-Hint: Goto Definition.  This command is very useful to find a variable or
-function that was declared locally ("static", in C terms).  Example (cursor on
-"counter"):
-
-	   +->   static int counter = 0;
-	   |
-	   |     int get_counter(void)
-	gD |     {
-	   |	     ++counter;
-	   +--	     return counter;
-		 }
-
-To restrict the search even further, and look only in the current function,
-use this command: >
-
-	gd
-
-This will go back to the start of the current function and find the first
-occurrence of the word under the cursor.  Actually, it searches backwards to
-an empty line above a "{" in the first column.  From there it searches forward
-for the identifier.  Example (cursor on "idx"):
-
-		int find_entry(char *name)
-		{
-	   +->	    int idx;
-	   |
-	gd |	    for (idx = 0; idx < table_len; ++idx)
-	   |		if (strcmp(table[idx].name, name) == 0)
-	   +--		    return idx;
-		}
-
-
-------------------------------------------------------------------------------
-Indenting a block~
-
-In Visual mode "=" indents the selected lines.  A useful text
-object is "a{".  This selects the current {} block.  Thus, to re-indent the
-code block the cursor is in: >
-
-	=a{
-
+--------------------------------------------------------------------------
+Notes:
+
+# :find uses 'path', while :edit does not. Both respect wildignore. Both open file.
+# :checkpath!  " to list all included files
+# set path=.,**
+# path set to '**' does not consider wildignore dirs because it does not use full path
+# */build/* form is needed for :find to ignore, while build/ is needed for :edit to ignore 'build' dir.
+# set wildignore+=*/build/*,build/,*/pycache/*,pycache/,*/venv/*,venv/,*/dist/*,dist/,*.o,*.obj
+#   :find does not show full path (if you set path to '**'), except when same filename is in different dirs
+#   :edit does not ignore dirs when used with '**'
+
+# Note: problem with wildcharm is that it automatically inserts first item in menu
+# :set wildcharm=<c-z>
+# nnoremap <leader><space> :find<space><c-z>
 
 ----------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

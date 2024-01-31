@@ -17,7 +17,7 @@ cabbr <expr> v9  abbr#ExpandCmd('v9') ? 'vim9cmd :<c-r>=abbr#Eatchar()<cr>' : 'v
 cabbr <expr> maek  abbr#ExpandCmd('maek') ? 'make' : 'maek'
 # :g search file for pattern and put resulting lines in quickfix list
 # <leader>tc or :cw to open the quickfix window
-# cabbr <expr> G  abbr#ExpandCmd('G') ? "g//caddexpr $'{expand(\"%\")}:{line(\".\")}:{getline(\".\")}'<c-left><c-left><right><right><c-r>=abbr#Eatchar()<cr>" : G
+cabbr <expr> gg  abbr#ExpandCmd('gg') ? "g//caddexpr $'{expand(\"%\")}:{line(\".\")}:{getline(\".\")}'<c-left><c-left><right><right><c-r>=abbr#Eatchar()<cr>" : gg
 # alternative to g:// is :il /pattern (searches current file and #include'd files)
 
 iabbr vimhelpfilepostfix vim:tw=78:ts=4:ft=help:norl:modifiable:noreadonly:listchars=tab\:\ \ ,trail\:~:<c-r>=abbr#Eatchar()<cr>

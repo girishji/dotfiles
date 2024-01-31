@@ -70,9 +70,9 @@ if exists("g:loaded_lsp")
         diagSignHintText: '●',
         diagSignInfoText: '●',
         diagSignWarningText: '●',
-        outlineWinSize: 30,
-        showSignature: false,
-        echoSignature: true,
+        # outlineWinSize: 30,
+        showSignature: true,
+        echoSignature: false,
         useBufferCompletion: false,
         completionTextEdit: false,
         snippetSupport: false, # snippets from lsp server

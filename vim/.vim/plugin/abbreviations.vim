@@ -28,26 +28,8 @@ inorea ddd <C-r>=strftime("%Y-%m-%d %H:%M")<CR><C-R>=abbr#Eatchar()<CR>
 
 inorea adn and
 inorea teh the
-inorea tihs this
-inorea thsi this
-inorea taht that
-inorea thta that
-inorea htat that
-inorea waht what
-inorea whta what
-inorea hwat what
-inorea rigth right
-inorea lenght length
-inorea knwo know
-inorea kwno know
-inorea konw know
-inorea clena clean
-inorea maek make
 
 inorea todo: TODO:
 inorea fixme: FIXME:
 inorea xxx: XXX:
 inorea task: TASK:
-
-inorea smth something
-inorea Smth Something

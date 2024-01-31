@@ -416,6 +416,7 @@ venvdeactivate() {
 # Configure zoxide completion
 eval "$(zoxide init zsh)"
 
+# zsh-autosuggestions
 if is_macos; then
     # leetcode-api
     # Rust
@@ -427,18 +428,16 @@ if is_macos; then
 else
     source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
-
-
 # Make PgDn accept suggestion; by default right-arrow accepts suggestion
 bindkey '^[[6~' autosuggest-accept
 # XXX: Setting fg color does not work properly. It does not repaint the screen
 # after right-arrow completion.
 # bg_color="${COLORFGBG:-0;-1}" # if not set, use default value of 0;-1 (fg;bg)
-# if [[ ${bg_color} == "0;15" ]]; then # light background
-#   typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+if [[ ${bg_color} == "0;15" ]]; then # light background
+  typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
 # else
 #   typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=7'
-# fi
+fi
 
 ############################################################
 

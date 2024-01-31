@@ -29,6 +29,7 @@ gtoc	giri.txt	/*gtoc*
 gvim9script	giri.txt	/*gvim9script*
 gvimscript	giri.txt	/*gvimscript*
 gvimvariables	giri.txt	/*gvimvariables*
-leetcode.txt	leetcode.txt	/*leetcode.txt*
+leetcode-cpp.txt	leetcode-cpp.txt	/*leetcode-cpp.txt*
+leetcode-py.txt	leetcode-py.txt	/*leetcode-py.txt*
 vim-wiki	giri.txt	/*vim-wiki*
 vimtips.txt	vimtips.txt	/*vimtips.txt*

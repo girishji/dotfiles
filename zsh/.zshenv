@@ -54,12 +54,16 @@ alias -g gp='git push'
 alias -g gu='git pull --no-rebase'
 alias pipi='pip install --user '
 alias -g lc='leetcode '
+alias -g ug_='ug -j -R -Q'
+alias -g ug_='ug -j -R -Q'
+alias -g ug__='ug -%% -j -w -R -Q' # google search with regex, see https://ugrep.com/
 # alias -g vim_='vim -Nu NONE -S <(cat <<EOF
 #     " vim:ts=4:ft=vim
 #     vim9script
 #     :set shortmess=I
 # EOF
 # )'
+alias ug='ug -j -R' # smart-case and follow symlinks recursively
 alias rg='rg --smart-case'
 alias ag='ag --smart-case'
 

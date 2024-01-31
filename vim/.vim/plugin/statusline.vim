@@ -2,7 +2,7 @@ vim9script
 
 def Gitstr(): string
     var [a, m, r] = exists('*g:GitGutterGetHunkSummary') ? g:GitGutterGetHunkSummary() : [0, 0, 0]
-    return (a + m + r) > 0 ? $' {{git:{a + m + r}}}' : ''
+    return (a + m + r) > 0 ? $' (git:{a + m + r})' : ''
 enddef
 
 def Diagstr(): string
@@ -30,7 +30,6 @@ def MyStatuslineSetup()
         highlight link user1 statusline
         highlight link user2 statusline
         highlight link user4 statusline
-
     endif
     highlight! link StatusLineTerm statusline
     highlight! link StatusLineTermNC statuslinenc
@@ -63,15 +62,19 @@ timer_start(60 * 1000, function(UpdateElapsed))
 def! g:MyActiveStatusline(): string
     var gitstr = Gitstr()
     var diagstr = Diagstr()
-    var shortpath = expand('%:h') .. '/'
+    var shortpath = expand('%:h')
     var shortpathmax = 20
     if shortpath->len() > shortpathmax
         shortpath = shortpath->split('/')->map((_, v) => v->slice(0, 2))->join('/')->slice(0, shortpathmax)
     endif
+    if !shortpath->empty()
+        shortpath = ' ' .. shortpath .. '/'
+    endif
     var elapsed = GetElapsed()
     var width = winwidth(0) - 30 - gitstr->len() - diagstr->len() - shortpath->len() - elapsed->len()
     var buflinestr = BuflineStr(width)
-    return $'%4*{diagstr}%* {buflinestr} %= %4*{elapsed}%* %2*{shortpath}%*%4*{gitstr}%* %3*%y %P (%l:%c) %*'
+    # return $'%4*{diagstr}%* {buflinestr} %= %y %4*{elapsed}%*%4*{gitstr}%*%2*{shortpath}%* ≡ %P (%l:%c) %*'
+    return $'%4*{diagstr}%* {buflinestr} %= %y %4*{elapsed}%*%2*{shortpath}%* ≡ %P (%l:%c) %*'
 enddef
 
 def! g:MyInactiveStatusline(): string

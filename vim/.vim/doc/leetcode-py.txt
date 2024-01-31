@@ -1,4 +1,4 @@
-*leetcode.txt*
+*leetcode-py.txt*
 
 ------------------------------------------------------------------------------
 When you are looking for some 'minimum' in what looks like graph traversal~

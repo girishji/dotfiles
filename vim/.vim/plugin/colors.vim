@@ -1,42 +1,46 @@
 vim9script
 
 def Quiet()
-    highlight  Normal                   ctermbg=None
-    highlight  helpHyperTextJump        cterm=underline
-    highlight  helpHyperTextEntry       cterm=italic
-    highlight  helpHeader               cterm=bold
-    highlight  helpCommand              ctermfg=248
-    highlight  link helpNote            Normal
-    highlight  Comment                  ctermfg=244
-    highlight  LineNr                   ctermfg=244
-    highlight  PreProc                  cterm=bold
-    highlight  helpExample              ctermfg=248
-    highlight  LspSigActiveParameter    ctermfg=207
-    highlight  statusline    ctermbg=none  ctermfg=242  guibg=Grey35  cterm=none
-    highlight  statuslinenc  ctermbg=none  ctermfg=242  guibg=Grey35  cterm=none
-    highlight  user1         ctermbg=none  ctermfg=250  cterm=none
-    highlight  user2         ctermbg=none  ctermfg=250     cterm=none
-    highlight  user3         ctermbg=none  ctermfg=250     cterm=none
-    highlight  user4         ctermbg=none  ctermfg=3     cterm=none
-    highlight FilterMenuMatch ctermfg=209
-    highlight PopupBorderHighlight ctermfg=244
-    # highlight! link PmenuKind Pmenu
-    highlight  PmenuKind       ctermfg=246  ctermbg=236   cterm=none
-    highlight! link PmenuKindSel    PmenuSel
-    # highlight! link PmenuExtra      Pmenu
-    highlight  PmenuExtra       ctermfg=246  ctermbg=236   cterm=none
-    highlight! link PmenuExtraSel   PmenuSel
-    highlight  Pmenu       ctermfg=none  ctermbg=236   cterm=none
-    highlight  PmenuSel    ctermfg=none  ctermbg=25
-    highlight  PmenuSbar   ctermfg=none  ctermbg=236
-    highlight  PmenuThumb  ctermfg=none  ctermbg=240
-    highlight  AS_SearchCompletePrefix  ctermfg=209
-    # highlight user2 cterm=bold
-    # highlight user4 cterm=bold
-    # iceberg iterm theme
-    # highlight  Pmenu       ctermfg=232  ctermbg=2    cterm=none
-    # highlight  PmenuSel    ctermbg=231
-    # highlight  AS_SearchCompletePrefix  ctermfg=124
+    if &background == 'dark'
+        highlight  Normal                   ctermbg=None
+        highlight  helpHyperTextJump        cterm=underline
+        highlight  helpHyperTextEntry       cterm=italic
+        highlight  helpHeader               cterm=bold
+        highlight  helpCommand              ctermfg=248
+        highlight  link helpNote            Normal
+        highlight  Comment                  ctermfg=244
+        highlight  LineNr                   ctermfg=244
+        highlight  PreProc                  cterm=bold
+        highlight  helpExample              ctermfg=248
+        highlight  LspSigActiveParameter    ctermfg=207
+        highlight  statusline    ctermbg=none  ctermfg=242  guibg=Grey35  cterm=none
+        highlight  statuslinenc  ctermbg=none  ctermfg=242  guibg=Grey35  cterm=none
+        highlight  user1         ctermbg=none  ctermfg=250  cterm=none
+        highlight  user2         ctermbg=none  ctermfg=250     cterm=none
+        highlight  user3         ctermbg=none  ctermfg=250     cterm=none
+        highlight  user4         ctermbg=none  ctermfg=3     cterm=none
+        highlight FilterMenuMatch ctermfg=209
+        highlight PopupBorderHighlight ctermfg=244
+        highlight  PmenuKind       ctermfg=246  ctermbg=236   cterm=none
+        highlight! link PmenuKindSel    PmenuSel
+        highlight  PmenuExtra       ctermfg=246  ctermbg=236   cterm=none
+        highlight! link PmenuExtraSel   PmenuSel
+        highlight  Pmenu       ctermfg=none  ctermbg=236   cterm=none
+        highlight  PmenuSel    ctermfg=none  ctermbg=25
+        highlight  PmenuSbar   ctermfg=none  ctermbg=236
+        highlight  PmenuThumb  ctermfg=none  ctermbg=240
+        highlight  AS_SearchCompletePrefix  ctermfg=209
+    else
+        highlight statusline cterm=none
+        highlight Comment  cterm=none ctermfg=242
+        highlight Pmenu ctermbg=250
+        highlight PmenuThumb ctermfg=none ctermbg=244
+        highlight  PmenuKind       ctermfg=242  ctermbg=250   cterm=none
+        highlight! link PmenuKindSel    PmenuSel
+        highlight  PmenuExtra       ctermfg=242  ctermbg=250   cterm=none
+        highlight! link PmenuExtraSel   PmenuSel
+        g:popupthumbhighlight  = 'statuslinenc'
+    endif
 enddef
 
 def Slate()
@@ -63,10 +67,11 @@ augroup END
 :highlight TrailingWhitespace ctermbg=196
 :match TrailingWhitespace /\s\+\%#\@<!$/
 
+# Preview here: https://vimcolorschemes.com/vim/colorschemes (ubunto mono font)
 if &background == 'dark'
-    # Preview here: https://vimcolorschemes.com/vim/colorschemes
     silent! colorscheme quiet
 else
-    silent! colorscheme lunaperche
+    silent! colorscheme quiet
+    # silent! colorscheme lunaperche
 endif
 

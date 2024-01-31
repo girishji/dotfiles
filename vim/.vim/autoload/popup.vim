@@ -12,6 +12,8 @@ if hlexists('PopupBorderHighlight')
     borderhighlight = ['PopupBorderHighlight']
 endif
 var popuphighlight  = get(g:, "popuphighlight", 'Normal')
+var popupscrollbarhighlight  = get(g:, "popupscrollbarhighlight", 'PmenuSbar')
+var popupthumbhighlight  = get(g:, "popupthumbhighlight", 'PmenuThumb')
 
 class FilterMenuPopup
     var _items: list<any>
@@ -55,6 +57,8 @@ class FilterMenuPopup
             borderchars: borderchars,
             borderhighlight: borderhighlight,
             highlight: popuphighlight,
+            scrollbarhighlight: popupscrollbarhighlight,
+            thumbhighlight: popupthumbhighlight,
             drag: 0,
             wrap: 1,
             cursorline: false,

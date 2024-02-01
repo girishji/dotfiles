@@ -6,29 +6,37 @@ vim9script
 
 import autoload 'popup.vim'
 
-def PrioritizeFilename(lst: list<any>, prompt: string): list<any>
-    var pat = prompt->trim()
-    if pat =~ '\s'
-        return lst
-    endif
-    var matches = lst->matchfuzzypos(pat, {key: "text", limit: 100})
-    if matches[0]->empty()
-        return matches
-    endif
-    # prefer filenames that match over directory names that match
-    var filtered = [[], [], []]
-    for Filterfn in [(x, y) => x =~ y, (x, y) => x !~ y]
-        for [i, v] in matches[0]->items()
-            if Filterfn(v.text->fnamemodify(':t'), $'^{pat}')
-                filtered[0]->add(matches[0][i])
-                filtered[1]->add(matches[1][i])
-                filtered[2]->add(matches[2][i])
-            endif
+def GetItems(lst: list<dict<any>>, prompt: string): list<any>
+    def PrioritizeFilename(matches: list<any>): list<any>
+        # prefer filenames that match over directory names that match
+        var filtered = [[], [], []]
+        var pat = prompt->trim()
+        for Filterfn in [(x, y) => x =~ y, (x, y) => x !~ y]
+            for [i, v] in matches[0]->items()
+                if Filterfn(v.text->fnamemodify(':t'), $'^{pat}')
+                    filtered[0]->add(matches[0][i])
+                    filtered[1]->add(matches[1][i])
+                    filtered[2]->add(matches[2][i])
+                endif
+            endfor
         endfor
-    endfor
-    return filtered
+        return filtered
+    enddef
+    if prompt->empty()
+        return [lst, [lst]]
+    else
+        var pat = prompt->trim()
+        # var matches = lst->matchfuzzypos(pat, {key: "text", limit: 1000})
+        var matches = lst->matchfuzzypos(pat, {key: "text"})
+        if matches[0]->empty() || pat =~ '\s'
+            return [lst, matches]
+        else
+            return [lst, PrioritizeFilename(matches)]
+        endif
+    endif
 enddef
 
+# fuzzy find files
 export def File(findCmd: string = '', do_sort: bool = false)
     def FindCmd(): string
         if !findCmd->empty()
@@ -77,7 +85,7 @@ export def File(findCmd: string = '', do_sort: bool = false)
             hi def link FilterMenuDirectorySubtle Comment
         },
         do_sort ? (lst: list<any>) => lst->sort() : null_function,
-        PrioritizeFilename)
+        GetItems)
 enddef
 
 export def Buffer()
@@ -111,14 +119,13 @@ export def Buffer()
             win_execute(winid, "syn match FilterMenuDirectorySubtle '^.*[\\/]'")
             hi def link FilterMenuDirectorySubtle Comment
         },
-        PrioritizeFilename)
+        GetItems)
 enddef
 
 export def Keymap()
     var items = execute('map')->split("\n")
     popup.FilterMenu("Keymap", items,
         (res, key) => {
-            exe $":echo Keymap"
         })
 enddef
 

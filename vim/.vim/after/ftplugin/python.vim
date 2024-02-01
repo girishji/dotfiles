@@ -136,4 +136,4 @@ def Things()
             hi def link FilterMenuLineNr Comment
         })
 enddef
-nnoremap <buffer> <space>z <scriptcmd>Things()<CR>
+nnoremap <buffer> <space>/ <scriptcmd>Things()<CR>

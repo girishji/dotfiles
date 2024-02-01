@@ -24,6 +24,7 @@ def Things()
     for nr in range(1, line('$'))
         var line = getline(nr)
         if line =~ '\(^\|\s\)def \k\+('
+        || line =~ '\(^\|\s\)class \k\+'
         || line =~ '\(^\|\s\)fu\%[nction]!\?\s\+\([sgl]:\)\?\k\+('
         || line =~ '^\s*com\%[mand]!\?\s\+\S\+'
         || line =~ '^\s*aug\%[roup]\s\+\S\+' && line !~ '\c^\s*aug\%[roup] end\s*$'
@@ -47,4 +48,4 @@ def Things()
             hi def link FilterMenuLineNr Comment
         })
 enddef
-nnoremap <buffer> <space>z <scriptcmd>Things()<CR>
+nnoremap <buffer> <space>/ <scriptcmd>Things()<CR>

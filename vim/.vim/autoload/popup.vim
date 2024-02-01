@@ -1,37 +1,36 @@
 vim9script
 
-# Credits:
-#   https://github.com/habamax/.vim/blob/master/autoload/popup.vim#L89-L89
-#   https://www.reddit.com/r/vim/comments/198rt3i/a_cool_piece_of_vimscript_to_navitate_userdefined/
+var options = {
+    borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+    bordertitle: ['─┐', '┌'],
+    borderhighlight: hlexists('PopupBorderHighlight') ? ['PopupBorderHighlight'] : [],
+    popuphighlight: get(g:, "popuphighlight", 'Normal'),
+    popupscrollbarhighlight: get(g:, "popupscrollbarhighlight", 'PmenuSbar'),
+    popupthumbhighlight: get(g:, "popupthumbhighlight", 'PmenuThumb')
+}
 
-var borderchars     = ['─', '│', '─', '│', '┌', '┐', '┘', '└']
-# var borderchars     = ['≃', '╎', '≂', '╎', '╒', '╕', '╛', '╘']
-var bordertitle     = ['─┐', '┌']
-var borderhighlight = []
-if hlexists('PopupBorderHighlight')
-    borderhighlight = ['PopupBorderHighlight']
-endif
-var popuphighlight  = get(g:, "popuphighlight", 'Normal')
-var popupscrollbarhighlight  = get(g:, "popupscrollbarhighlight", 'PmenuSbar')
-var popupthumbhighlight  = get(g:, "popupthumbhighlight", 'PmenuThumb')
+export class FilterMenuPopup
+    var prompt: string = ''
+    var id: number
+    var title: string
+    var items_dict: list<dict<any>>
+    var filtered_items: list<any>
 
-class FilterMenuPopup
-    var _items: list<any>
-    var _filtered_items: list<any>
-    var _prompt: string = ''
-    var _title: string
-    var _items_dict: list<dict<any>>
-    var _id: number
-
-    def PopupCreate(title: string, items: list<any>, Callback: func(any, string), Setup: func(number), FilterItems: func(list<any>, string): list<any>, Colorize: func(list<any>): list<any>, close_on_bs: bool = false, is_hidden: bool = false)
+    def PopupCreate(title: string, items_dict: list<dict<any>>, Callback: func(any, string), Setup: func(number) = null_function, GetItems: func(list<any>, string): list<any> = null_function, is_hidden: bool = false, winheight: number = 0)
         if empty(prop_type_get('FilterMenuMatch'))
-            hi def link FilterMenuMatch Constant
+            highlight default FilterMenuMatch term=bold cterm=bold gui=bold
             prop_type_add('FilterMenuMatch', {highlight: "FilterMenuMatch", override: true, priority: 1000, combine: true})
         endif
-
-        this._title = title
-        this._SetItems(items)
-        var height = min([&lines - 6, max([this._items->len(), 5])])
+        this.title = title
+        this.items_dict = items_dict
+        this.filtered_items = [this.items_dict]
+        var height: number
+        var items_count = this.items_dict->len()
+        if winheight > 0
+            height = winheight
+        else
+            height = min([&lines - 6, max([items_count, 5])])
+        endif
         var minwidth = (&columns * 0.6)->float2nr()
         var pos_top = ((&lines - height) / 2) - 1
         var ignore_input = ["\<cursorhold>", "\<ignore>", "\<Nul>",
@@ -45,20 +44,19 @@ class FilterMenuPopup
         # this sequence of bytes are generated when left/right mouse is pressed and
         # mouse wheel is rolled
         var ignore_input_wtf = [128, 253, 100]
-        var items_count = this._items->len()
-        var winid = popup_create(Colorize(this._filtered_items), {
-            title: $" ({items_count}/{items_count}) {this._title} {bordertitle[0]}  {bordertitle[1]}",
+        var winid = popup_create(this._Printify(this.filtered_items), {
+            title: $" ({items_count}/{items_count}) {this.title} {options.bordertitle[0]}  {options.bordertitle[1]}",
             line: pos_top,
             minwidth: minwidth,
             maxwidth: (&columns - 5),
             minheight: height,
             maxheight: height,
             border: [],
-            borderchars: borderchars,
-            borderhighlight: borderhighlight,
-            highlight: popuphighlight,
-            scrollbarhighlight: popupscrollbarhighlight,
-            thumbhighlight: popupthumbhighlight,
+            borderchars: options.borderchars,
+            borderhighlight: options.borderhighlight,
+            highlight: options.popuphighlight,
+            scrollbarhighlight: options.popupscrollbarhighlight,
+            thumbhighlight: options.popupthumbhighlight,
             drag: 0,
             wrap: 1,
             cursorline: false,
@@ -67,7 +65,7 @@ class FilterMenuPopup
             hidden: is_hidden,
             filter: (id, key) => {
                 var new_minwidth = popup_getpos(id).core_width
-                items_count = this._items->len()
+                items_count = this.items_dict->len()
                 if new_minwidth > minwidth
                     minwidth = new_minwidth
                     popup_move(id, {minwidth: minwidth})
@@ -75,7 +73,7 @@ class FilterMenuPopup
                 if key == "\<esc>"
                     popup_close(id, -1)
                 elseif ["\<cr>", "\<C-j>", "\<C-v>", "\<C-t>", "\<C-o>"]->index(key) > -1
-                        && this._filtered_items[0]->len() > 0 && items_count > 0
+                        && this.filtered_items[0]->len() > 0 && items_count > 0
                     popup_close(id, {idx: getcurpos(id)[1], key: key})
                 elseif key == "\<Right>" || key == "\<PageDown>"
                     win_execute(id, 'normal! ' .. "\<C-d>")
@@ -96,116 +94,106 @@ class FilterMenuPopup
                 # Ignoring fancy events and double clicks, which are 6 char long: `<80><fc> <80><fd>.`
                 elseif ignore_input->index(key) == -1 && strcharlen(key) != 6 && str2list(key) != ignore_input_wtf
                     if key == "\<C-U>"
-                        this._prompt = ""
-                        this._filtered_items = [this._items_dict]
-                    elseif (key == "\<C-h>" || key == "\<bs>")
-                        if empty(this._prompt) && close_on_bs
-                            popup_close(id, {idx: getcurpos(id)[1], key: key})
+                        if this.prompt == ""
                             return true
                         endif
-                        this._prompt = this._prompt->strcharpart(0, this._prompt->strchars() - 1)
-                        if empty(this._prompt)
-                            this._filtered_items = [this._items_dict]
-                        else
-                            this._filtered_items = FilterItems(this._items_dict, this._prompt)
+                        this.prompt = ""
+                    elseif (key == "\<C-h>" || key == "\<bs>")
+                        if this.prompt == ""
+                            return true
                         endif
+                        this.prompt = this.prompt->strcharpart(0, this.prompt->strchars() - 1)
                     elseif key =~ '\p'
-                        this._prompt = this._prompt .. key
-                        this._filtered_items = FilterItems(this._items_dict, this._prompt)
+                        this.prompt = this.prompt .. key
                     endif
-                    popup_setoptions(id, {title: $" ({items_count > 0 ? this._filtered_items[0]->len() : 0}/{items_count}) {this._title} {bordertitle[0]} {this._prompt} {bordertitle[1]}" })
-                    popup_settext(id, Colorize(this._filtered_items))
+                    var GetItemsFn = GetItems == null_function ? this._GetItems : GetItems
+                    [this.items_dict, this.filtered_items] = GetItemsFn(this.items_dict, this.prompt)
+                    popup_setoptions(id, {title: $" ({items_count > 0 ? this.filtered_items[0]->len() : 0}/{items_count}) {this.title} {options.bordertitle[0]} {this.prompt} {options.bordertitle[1]}" })
+                    popup_settext(id, this._Printify(this.filtered_items))
                 endif
                 return true
             },
             callback: (id, result) => {
                 if result->type() == v:t_number
                     if result > 0
-                        Callback(this._filtered_items[0][result - 1], "")
+                        Callback(this.filtered_items[0][result - 1], "")
                     endif
                 else
-                    Callback(this._filtered_items[0][result.idx - 1], result.key)
+                    Callback(this.filtered_items[0][result.idx - 1], result.key)
                 endif
             }
         })
-
         win_execute(winid, "setl nu cursorline cursorlineopt=both")
         if Setup != null_function
             Setup(winid)
         endif
-        this._id = winid
+        this.id = winid
     enddef
 
-    def PopupSetText(items: list<any>,
-            FilterItems: func(list<any>, string): list<any>,
-            Colorize: func(list<any>): list<any> = null_function)
+    def _GetItems(lst: list<dict<any>>, ctx: string): list<any>
+        if ctx->empty()
+            return [lst, [lst]]
+        else
+            var filtered = lst->matchfuzzypos(ctx, {key: "text"})
+            return [lst, filtered]
+        endif
+    enddef
+
+    def PopupSetText(items_dict: list<dict<any>>, GetItems: func(list<any>, string): list<any>, max_items: number = -1)
         if this.PopupClosed()
             return
         endif
-        this._SetItems(items)
-        var items_count = this._items->len()
-        if empty(this._prompt)
-            this._filtered_items = [this._items_dict]
-        else
-            this._filtered_items = FilterItems(this._items_dict, this._prompt)
+        var GetItemsFn = GetItems == null_function ? this._GetItems : GetItems
+        [this.items_dict, this.filtered_items] = GetItemsFn(items_dict, this.prompt)
+        if max_items > 0 && this.filtered_items[0]->len() > max_items && job->job_status() ==# 'run'
+            job->job_stop('kill')
         endif
-        popup_setoptions(this._id, {title: $" ({items_count > 0 ? this._filtered_items[0]->len() : 0}/{items_count}) {this._title} {bordertitle[0]} {this._prompt} {bordertitle[1]}"})
-        popup_settext(this._id, Colorize(this._filtered_items))
-        if !this._id->popup_getpos()->get('visible', true)
-            var height = min([&lines - 6, max([this._items->len(), 5])])
+        var items_count = this.items_dict->len()
+        popup_setoptions(this.id, {title: $" ({items_count > 0 ? this.filtered_items[0]->len() : 0}/{items_count}) {this.title} {options.bordertitle[0]} {this.prompt} {options.bordertitle[1]}"})
+        popup_settext(this.id, this._Printify(this.filtered_items))
+        if !this.id->popup_getpos()->get('visible', true)
+            var height = min([&lines - 6, max([items_count, 5])])
             var pos_top = ((&lines - height) / 2) - 1
-            popup_setoptions(this._id, {minheight: height, maxheight: height, line: pos_top})
-            this._id->popup_show()
+            popup_setoptions(this.id, {minheight: height, maxheight: height, line: pos_top})
+            this.id->popup_show()
             feedkeys("\<bs>", "nt")  # workaround for https://github.com/vim/vim/issues/13932
         endif
     enddef
 
     def PopupClosed(): bool
-        return this._id->popup_getpos()->empty()
+        return this.id->popup_getpos()->empty()
     enddef
 
-    def _SetItems(items: list<any>)
-        this._items = items
-        var items_count = items->len()
-        if items_count < 1
-            this._items_dict = [{text: ""}]
-        elseif items[0]->type() != v:t_dict
-            this._items_dict = items->mapnew((_, v) => {
-                return {text: v}
+    def _Printify(itemsAny: list<any>): list<any>
+        if itemsAny[0]->len() == 0 | return [] | endif
+        if itemsAny->len() > 1
+            return itemsAny[0]->mapnew((idx, v) => {
+                return {text: v.text, props: itemsAny[1][idx]->mapnew((_, c) => {
+                    return {col: v.text->byteidx(c) + 1, length: 1, type: 'FilterMenuMatch'}
+                })}
             })
         else
-            this._items_dict = items
+            return itemsAny[0]->mapnew((_, v) => {
+                return {text: v.text}
+            })
         endif
-        this._filtered_items = [this._items_dict]
     enddef
-
 endclass
 
-def Printify(itemsAny: list<any>, props: list<any>): list<any>
-    if itemsAny[0]->len() == 0 | return [] | endif
-    if itemsAny->len() > 1
-        return itemsAny[0]->mapnew((idx, v) => {
-            return {text: v.text, props: itemsAny[1][idx]->mapnew((_, c) => {
-                return {col: v.text->byteidx(c) + 1, length: 1, type: 'FilterMenuMatch'}
-            }) + (props->empty() ? [] : props) + v->get('props', [])}
+# Popup menu with fuzzy filtering
+export def FilterMenu(title: string, items: list<any>, Callback: func(any, string) = null_function, Setup: func(number) = null_function, GetItems: func(list<any>, string): list<any> = null_function)
+    var items_dict: list<dict<any>>
+    if items->len() < 1
+        items_dict = [{text: ""}]
+    elseif items[0]->type() != v:t_dict
+        items_dict = items->mapnew((_, v) => {
+            return {text: v}
         })
     else
-        return itemsAny[0]->mapnew((_, v) => {
-            return props->empty() ? {text: v.text} : {text: v.text, props: props}
-        })
-    endif
-enddef
-
-# Popup menu with fuzzy filtering
-export def FilterMenu(title: string, items: list<any>, Callback: func(any, string) = null_function, Setup: func(number) = null_function, FilterItems: func(list<any>, string): list<any> = null_function, close_on_bs: bool = false)
-    var FilterFunc = FilterItems
-    if FilterItems == null_function
-        FilterFunc = (lst, prompt) => lst->matchfuzzypos(prompt, {key: "text"})
+        items_dict = items
     endif
     var popup = FilterMenuPopup.new()
-    popup.PopupCreate(title, items, Callback, Setup, FilterFunc,
-        (lst) => Printify(lst, []),
-        close_on_bs)
+    popup.PopupCreate(title, items_dict, Callback, Setup, GetItems)
 enddef
 
 var job: job
@@ -215,9 +203,8 @@ export def FilterMenuAsync(title: string,
         Callback: func(any, string) = null_function,
         Setup: func(number) = null_function,
         ItemsPostProcess: func(list<any>): list<any> = null_function,
-        FilterItems: func(list<any>, string): list<any> = null_function,
-        Colorize: func(list<any>): list<any> = null_function,
-        close_on_bs: bool = false)
+        GetItems: func(list<any>, string): list<any> = null_function,
+        max_items: number = -1)
     def BuildItemsList(cmd: list<string>, CallbackFn: func(list<any>))
         # ch_logfile('/tmp/channellog', 'w')
         # ch_log('BuildItemsList call')
@@ -240,67 +227,23 @@ export def FilterMenuAsync(title: string,
         })
     enddef
     var popup = FilterMenuPopup.new()
-    var FilterFunc = FilterItems
-    if FilterItems == null_function
-        FilterFunc = (lst, prompt) => lst->matchfuzzypos(prompt, {key: "text", limit: 100})
-    endif
-    var ColorizeFunc = Colorize
-    if Colorize == null_function
-        ColorizeFunc = (lst) => Printify(lst, [])
-    endif
-    popup.PopupCreate(title, [], Callback, Setup, FilterFunc, ColorizeFunc, close_on_bs, true)
+    popup.PopupCreate(title, [{text: ''}], Callback, Setup, GetItems, true, &lines - 6)
     BuildItemsList(items_cmd, (items) => {
         if popup.PopupClosed()
             job->job_stop()
         endif
-        popup.PopupSetText(items, FilterFunc, ColorizeFunc)
+        var items_dict: list<dict<any>>
+        if items->len() < 1
+            items_dict = [{text: ""}]
+        else
+            items_dict = items->mapnew((_, v) => {
+                return {text: v}
+            })
+        endif
+        popup.PopupSetText(items_dict, GetItems, max_items)
     })
 enddef
 
-
-# Returns winnr of created popup window
-# export def ShowAtCursor(text: any, Setup: func(number) = null_function): number
-#     var new_text = text
-#     if text->type() == v:t_string
-#         new_text = text->trim("\<CR>")
-#     else
-#         new_text = text->mapnew((_, v) => v->trim("\<CR>"))
-#     endif
-#     var winid = popup_atcursor(new_text, {
-#         padding: [0, 1, 0, 1],
-#         border: [],
-#         borderchars: borderchars,
-#         borderhighlight: borderhighlight,
-#         highlight: popuphighlight,
-#         pos: "botleft",
-#         mapping: 0,
-#         filter: (winid, key) => {
-#             if key == "\<Space>"
-#                 win_execute(winid, "normal! \<C-d>\<C-d>")
-#                 return true
-#             elseif key == "j"
-#                 win_execute(winid, "normal! \<C-d>")
-#                 return true
-#             elseif key == "k"
-#                 win_execute(winid, "normal! \<C-u>")
-#                 return true
-#             elseif key == "g"
-#                 win_execute(winid, "normal! gg")
-#                 return true
-#             elseif key == "G"
-#                 win_execute(winid, "normal! G")
-#                 return true
-#             endif
-#             if key == "\<ESC>"
-#                 popup_close(winid)
-#                 return true
-#             endif
-#             return true
-#         }
-#     })
-#     if Setup != null_function
-#         Setup(winid)
-#     endif
-#     return winid
-# enddef
+# Credits:
+#   https://github.com/habamax/.vim/blob/master/autoload/popup.vim#L89-L89
 

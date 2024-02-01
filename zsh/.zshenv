@@ -54,9 +54,9 @@ alias -g gp='git push'
 alias -g gu='git pull --no-rebase'
 alias pipi='pip install --user '
 alias -g lc='leetcode '
-alias -g ug_='ug -j -R -Q'
-alias -g ug_='ug -j -R -Q'
-alias -g ug__='ug -%% -j -w -R -Q' # google search with regex, see https://ugrep.com/
+alias -g ug='ug -j -R'  # smartcase and follow symlinks
+alias -g ugg='ug -j -R -Q'
+alias -g ugg_='ug -%% -j -w -R -Q' # google search with regex, see https://ugrep.com/
 # alias -g vim_='vim -Nu NONE -S <(cat <<EOF
 #     " vim:ts=4:ft=vim
 #     vim9script

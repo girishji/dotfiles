@@ -19,7 +19,7 @@ def Quiet()
         highlight  user2         ctermbg=none  ctermfg=250     cterm=none
         highlight  user3         ctermbg=none  ctermfg=250     cterm=none
         highlight  user4         ctermbg=none  ctermfg=3     cterm=none
-        highlight FilterMenuMatch ctermfg=209
+        highlight FilterMenuMatch ctermfg=209 cterm=none
         highlight PopupBorderHighlight ctermfg=244
         highlight  PmenuKind       ctermfg=246  ctermbg=236   cterm=none
         highlight! link PmenuKindSel    PmenuSel
@@ -29,7 +29,6 @@ def Quiet()
         highlight  PmenuSel    ctermfg=none  ctermbg=25
         highlight  PmenuSbar   ctermfg=none  ctermbg=236
         highlight  PmenuThumb  ctermfg=none  ctermbg=240
-        highlight  AS_SearchCompletePrefix  ctermfg=209
     else
         highlight statusline cterm=none
         highlight Comment  cterm=none ctermfg=242
@@ -39,6 +38,10 @@ def Quiet()
         highlight! link PmenuKindSel    PmenuSel
         highlight  PmenuExtra       ctermfg=242  ctermbg=250   cterm=none
         highlight! link PmenuExtraSel   PmenuSel
+        # SpecialKey is used for 'listchars'
+        highlight SpecialKey ctermfg=248
+        highlight helpHyperTextJump cterm=underline
+        highlight helpHyperTextEntry cterm=underline
         g:popupthumbhighlight  = 'statuslinenc'
     endif
 enddef

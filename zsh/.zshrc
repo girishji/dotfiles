@@ -17,49 +17,49 @@ HISTFILE=~/.zsh_history
 autoload -Uz compinit
 compinit
 
-zstyle ':completion:*' auto-description 'specify: %d'
-# zstyle ':completion:*' completer _expand _complete _correct _approximate
-zstyle ':completion:*' completer _expand _expand_alias _complete _correct _approximate
-zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' menu select=2
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-# zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
-zstyle ':completion:*' menu select=long
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle ':completion:*' use-compctl false
-zstyle ':completion:*' verbose true
-
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+# From gcloud default file
+# zstyle ':completion:*' auto-description 'specify: %d'
+# # zstyle ':completion:*' completer _expand _complete _correct _approximate
+# zstyle ':completion:*' completer _expand _expand_alias _complete _correct _approximate
+# zstyle ':completion:*' format 'Completing %d'
+# zstyle ':completion:*' group-name ''
+# zstyle ':completion:*' menu select=2
+# zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+# zstyle ':completion:*' list-colors ''
+# zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+# # zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+# zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+# zstyle ':completion:*' menu select=long
+# zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+# zstyle ':completion:*' use-compctl false
+# zstyle ':completion:*' verbose true
+# zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+# zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 ## OLD ##
-# # Autocompletion prioritize files with suffix aliases ahead of commands
-# #   for completing first word typed
-# zstyle ':completion:*:complete:-command-:*:*' tag-order \
-#   suffix-aliases
+# prioritize files with suffix aliases ahead of commands
+#   for completing first word typed
+zstyle ':completion:*:complete:-command-:*:*' tag-order \
+  suffix-aliases
 
-# # Tab expand aliases (only global aliases)
-# zstyle ':completion:*' completer _expand_alias _complete _ignored
+# Tab expand aliases (only global aliases)
+zstyle ':completion:*' completer _expand_alias _complete _ignored
 
-# # activate color-completion
-# zstyle ':completion:*:default'         list-colors ${(s.:.)LS_COLORS}
+# activate color-completion
+zstyle ':completion:*:default'         list-colors ${(s.:.)LS_COLORS}
 
-# # match uppercase from lowercase
-# zstyle ':completion:*'                 matcher-list 'm:{a-z}={A-Z}'
+# match uppercase from lowercase
+zstyle ':completion:*'                 matcher-list 'm:{a-z}={A-Z}'
 
-# # separate matches into groups
-# zstyle ':completion:*:matches'         group 'yes'
-# zstyle ':completion:*'                 group-name ''
+# separate matches into groups
+zstyle ':completion:*:matches'         group 'yes'
+zstyle ':completion:*'                 group-name ''
 
-# # describe options in full
-# zstyle ':completion:*:options'         description 'yes'
+# describe options in full
+zstyle ':completion:*:options'         description 'yes'
 
-# # provide verbose completion information
-# zstyle ':completion:*'                 verbose true
+# provide verbose completion information
+zstyle ':completion:*'                 verbose true
 
 ############################################################
 # Prompt

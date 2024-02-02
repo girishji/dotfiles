@@ -7,8 +7,8 @@ nnoremap <leader><space> <scriptcmd>fuzzy.File()<CR>
 var findcmd = "find /Users/gp/.vim -type d -path */plugged -prune -o -name *.swp -prune -o -path */.vim/.* -prune -o -type f -print -follow"
 # var findcmd = 'fd -tf -L . /Users/gp/.vim'
 nnoremap <leader>fv <scriptcmd>fuzzy.File(findcmd, true)<CR>
-nnoremap <leader>fV <scriptcmd>fuzzy.File("find " .. $VIMRUNTIME .. " -type f -print", true)<CR>
-nnoremap <leader>fh <scriptcmd>fuzzy.File("find " .. $HOME .. "/help -type f -print", true)<CR>
+nnoremap <leader>fV <scriptcmd>fuzzy.File("find " .. $VIMRUNTIME .. " -type f -print -follow", true)<CR>
+nnoremap <leader>fh <scriptcmd>fuzzy.File("find " .. $HOME .. "/help -type f -print -follow", true)<CR>
 nnoremap <leader>ft <scriptcmd>fuzzy.Template()<CR>
 nnoremap <leader>fm <scriptcmd>fuzzy.MRU()<CR>
 nnoremap <leader>fk <scriptcmd>fuzzy.Keymap()<CR>
@@ -96,7 +96,7 @@ nnoremap ga `[v`]
 # cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h') .. '/' : '%%'
 # <leader> mappings
 nnoremap <leader>b <cmd>b#<cr>| # alternate buffer
-nnoremap <leader>d <cmd>bdelete<cr>| # use :hide instead
+nnoremap <leader>d <cmd>bw<cr>| # :bwipeout to purge, :bdelete still leaves buffer in unlisted state (:ls!)
 nnoremap <leader>H <cmd>hide<cr>| # hide window
 # nnoremap <leader>u <cmd>unhide<cr><c-w>w| # unhide = one window for each loaded buffer (splits horizontally, not useful)
 tnoremap <c-w>h <c-w>:hide<cr>| # hide window (when terminal window is active)

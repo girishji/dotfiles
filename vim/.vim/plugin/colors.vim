@@ -40,10 +40,18 @@ def Quiet()
         highlight! link PmenuExtraSel   PmenuSel
         # SpecialKey is used for 'listchars'
         highlight SpecialKey ctermfg=248
-        highlight helpHyperTextJump cterm=underline
-        highlight helpHyperTextEntry cterm=underline
         g:popupthumbhighlight  = 'statuslinenc'
     endif
+    highlight link helpHyperTextEntry Underlined
+    highlight link helpHyperTextJump Underlined
+    highlight link manReference Underlined
+    highlight manSectionHeading cterm=bold
+    highlight manSubHeading cterm=bold
+    highlight manOptionDesc cterm=bold
+    highlight manLongOptionDesc cterm=bold
+    highlight manFooter cterm=italic
+    highlight manHeader cterm=italic
+    highlight manCFuncDefinition cterm=bold
 enddef
 
 def Slate()

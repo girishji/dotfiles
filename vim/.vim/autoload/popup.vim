@@ -16,7 +16,7 @@ export class FilterMenuPopup
     var items_dict: list<dict<any>>
     var filtered_items: list<any>
 
-    def PopupCreate(title: string, items_dict: list<dict<any>>, Callback: func(any, string), Setup: func(number) = null_function, GetItems: func(list<any>, string): list<any> = null_function, is_hidden: bool = false, winheight: number = 0)
+    def PopupCreate(title: string, items_dict: list<dict<any>>, Callback: func(any, string), Setup: func(number) = null_function, GetItems: func(list<any>, string): list<any> = null_function, is_hidden: bool = false, winheight: number = 0, winwidth: number = 0)
         if empty(prop_type_get('FilterMenuMatch'))
             highlight default FilterMenuMatch term=bold cterm=bold gui=bold
             prop_type_add('FilterMenuMatch', {highlight: "FilterMenuMatch", override: true, priority: 1000, combine: true})
@@ -24,14 +24,16 @@ export class FilterMenuPopup
         this.title = title
         this.items_dict = items_dict
         this.filtered_items = [this.items_dict]
-        var height: number
         var items_count = this.items_dict->len()
+        var height = min([&lines - 6, max([items_count, 5])])
         if winheight > 0
             height = winheight
-        else
-            height = min([&lines - 6, max([items_count, 5])])
         endif
         var minwidth = (&columns * 0.6)->float2nr()
+        var maxwidth = (&columns - 5)
+        if winwidth > 0
+            [minwidth, maxwidth] = [winwidth, winwidth]
+        endif
         var pos_top = ((&lines - height) / 2) - 1
         var ignore_input = ["\<cursorhold>", "\<ignore>", "\<Nul>",
                     \ "\<LeftMouse>", "\<LeftRelease>", "\<LeftDrag>", $"\<2-LeftMouse>",
@@ -48,7 +50,7 @@ export class FilterMenuPopup
             title: $" ({items_count}/{items_count}) {this.title} {options.bordertitle[0]}  {options.bordertitle[1]}",
             line: pos_top,
             minwidth: minwidth,
-            maxwidth: (&columns - 5),
+            maxwidth: maxwidth,
             minheight: height,
             maxheight: height,
             border: [],
@@ -58,17 +60,19 @@ export class FilterMenuPopup
             scrollbarhighlight: options.popupscrollbarhighlight,
             thumbhighlight: options.popupthumbhighlight,
             drag: 0,
-            wrap: 1,
+            wrap: (winwidth > 0) ? 0 : 1,
             cursorline: false,
             padding: [0, 1, 0, 1],
             mapping: 0,
             hidden: is_hidden,
             filter: (id, key) => {
-                var new_minwidth = popup_getpos(id).core_width
                 items_count = this.items_dict->len()
-                if new_minwidth > minwidth
-                    minwidth = new_minwidth
-                    popup_move(id, {minwidth: minwidth})
+                if winwidth <= 0
+                    var new_minwidth = popup_getpos(id).core_width
+                    if new_minwidth > minwidth
+                        minwidth = new_minwidth
+                        popup_move(id, {minwidth: minwidth})
+                    endif
                 endif
                 if key == "\<esc>"
                     popup_close(id, -1)

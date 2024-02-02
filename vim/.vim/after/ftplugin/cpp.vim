@@ -11,6 +11,10 @@ enddef
 nnoremap <buffer> <leader>H :Cppman<space>
 cabbr <expr> hh  abbr#ExpandCmd('hh') ? 'Cppman <c-r>=abbr#Eatchar()<cr>' : 'hh'
 
+if exists(":LspDocumentSymbol") == 2
+    nnoremap <buffer> <leader>/ <cmd>LspDocumentSymbol<CR>
+endif
+
 if exists("g:loaded_vimcomplete")
     g:VimCompleteOptionsSet({
         lsp: { enable: true, maxCount: 50, priority: 11 },
@@ -18,6 +22,7 @@ if exists("g:loaded_vimcomplete")
 endif
 
 # fuzzy search cppman
+runtime! after/ftplugin/man.vim
 import '../../autoload/popup.vim'
 def CppmanFind()
     def GetItems(lst: list<dict<any>>, prompt: string): list<any>
@@ -45,14 +50,12 @@ def CppmanFind()
 
     popup.FilterMenuPopup.new().PopupCreate('cppreference', [],
         (res, key) => {
-            # exe $":term ++close cppman {res.text}"
-            # exe $":!cppman {res.text}"
-            exe $":!cppman vector"
+            exe $":Man {res.keyword}"
         },
         (winid) => {
-            win_execute(winid, "syn match FilterMenuDirectorySubtle '\v^\s*\S+\zs.*$'")
+            win_execute(winid, 'syn match FilterMenuDirectorySubtle " - .*$"')
             hi def link FilterMenuDirectorySubtle Comment
         },
-        GetItems, false, &lines - 6)
+        GetItems, false, &lines - 6, (&columns * 0.75)->float2nr())
 enddef
-nnoremap <leader>fh <scriptcmd>CppmanFind()<CR>
+nnoremap <buffer> <leader>fh <scriptcmd>CppmanFind()<CR>

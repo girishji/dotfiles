@@ -20,12 +20,12 @@ is_cloud_shell() {
 }
 
 # suffix aliases (executing these file types will open app).
-alias -s {lua,zshrc,cpp,c,cc,py,java,html,vim,md,markdown,scm,txt,vimrc}=vim
+# alias -s {lua,zshrc,cpp,c,cc,py,java,html,vim,md,markdown,scm,txt,vimrc}=vim
 # alias -s git="git clone" # clone repo by simply pasting git url
 
 # global aliases
 # http://www.zzapper.co.uk/AliasTypesCheatSheet.php
-alias -g G='| grep --color -iE'
+alias -g G='grep --color -iE'
 
 # alias -g fg='find . -path "*/.*" -prune -o -exec {} \;'
 alias -g H='| head '
@@ -38,9 +38,9 @@ alias -g X=$'| xargs -I {} echo {}'
 alias -g T=' 2>&1 | tee tee.txt'
 
 # cannot alias 'fi' since it is a reserved keyword, 'fg' is foreground cmd
-alias -g find_='find . -path pat_path -name pat_last_component -exec echo {} \;'
+alias -g find_='find . -path "*/pat_path*" -name pat_last_component -exec echo {} \;'
 alias -g find__='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print -exec grep --color -Ei x {} \;'
-alias -g find___='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print'
+alias -g find___='find . \( -path "*/.*" -o -name cscope.out -o -name tags \) -prune -o -type f -print 2>& /dev/null'
 
 alias -g fdf='fd -tf -tl' # search file, ex: fdf foo
 alias -g fdd='fd -td' # search dir, ex: fdd foo
@@ -54,9 +54,12 @@ alias -g gp='git push'
 alias -g gu='git pull --no-rebase'
 alias pipi='pip install --user '
 alias -g lc='leetcode '
-alias -g ug='ug -j -R'  # smartcase and follow symlinks
+alias -g ug='ug -j -R'  # smartcase and follow symlinks, --hidden for dot files
 alias -g ugg='ug -j -R -Q'
-alias -g ugg_='ug -%% -j -w -R -Q' # google search with regex, see https://ugrep.com/
+alias -g ug_='ug -j -R -Q'
+alias -g uggg='ug -%% -j -w -R -Q' # google search with regex, see https://ugrep.com/
+alias -g ug__='ug -%% -j -w -R -Q' # google search with regex, see https://ugrep.com/
+alias -g arch_='arch -x86_64 zsh'  # change arch
 # alias -g vim_='vim -Nu NONE -S <(cat <<EOF
 #     " vim:ts=4:ft=vim
 #     vim9script
@@ -81,10 +84,11 @@ else
 fi
 
 # NOTE: ERE (extended regex) vs BRE (basic): ERE escapes +. ? etc. like vim's 'magic'
-#       --color is --color=auto. It does not use color codes when pipe is used. To see colors use grep --color=always foo | less -R
-alias gr1='command grep --color -E' # ERE instead of BRE
-alias gr2='grep --color=always -E' # for 'less' command pipethrough
-alias -g gr='grep --color=always -Ei' # ERE and case insensitive
+#       --color is --color=auto. It does not use color codes when pipe is used.
+#       To see colors use grep --color=always foo | less -R
+#       https://stackoverflow.com/questions/6565471/how-can-i-exclude-directories-from-grep-r
+alias -g gr='grep --color=always -REi' # recursive, ERE, and case insensitive
+alias -g gr_="grep --color=always --exclude-dir={'dir*',dir} --exclude={file1,'file2*'} -REi" # recursive, ERE and case insensitive
 
 alias l1='ls -1' # one listing per line
 alias l='ls'

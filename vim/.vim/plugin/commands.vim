@@ -47,11 +47,11 @@ command StripTrailingWhitespace StripTrailingWhitespace()
 import autoload "text.vim"
 command! -range FixSpaces text.FixSpaces(<line1>, <line2>)
 
-# Wipe all hidden buffers
-def HiddenBuffersWipe()
-    var buffers = filter(getbufinfo(), (_, v) => v.hidden)
+# Wipe all unlisted buffers
+def WipeUnlistedBuffers()
+    var buffers = filter(getbufinfo(), (_, v) => v.unlisted)
     if !empty(buffers)
         execute 'confirm bwipeout' join(mapnew(buffers, (_, v) => v.bufnr))
     endif
 enddef
-command! HiddenBuffersWipe HiddenBuffersWipe()
+command! WipeUnlistedBuffers WipeUnlistedBuffers()

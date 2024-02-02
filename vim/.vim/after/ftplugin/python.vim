@@ -136,4 +136,11 @@ def Things()
             hi def link FilterMenuLineNr Comment
         })
 enddef
-nnoremap <buffer> <space>/ <scriptcmd>Things()<CR>
+
+if exists(":LspDocumentSymbol")
+    nnoremap <buffer> <leader>/ <cmd>LspDocumentSymbol<CR>
+    nnoremap <buffer> <space>z <scriptcmd>Things()<CR>
+else
+    nnoremap <buffer> <space>/ <scriptcmd>Things()<CR>
+endif
+

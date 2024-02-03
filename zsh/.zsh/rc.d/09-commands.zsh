@@ -54,9 +54,8 @@ READNULLCMD=$PAGER  # Set the program to use for this.
 
 # note: global aliases work even in the middle of command line. non-global ones work
 # only at the beginning of a command.
-alias -g G='| grep --color -iE'
 alias -g H='| head'
-alias -g L='| less'
+alias -g L='| less -R'
 alias -g AWK=$'| awk \'{print  cnt++,$3,$4}\'' # Ansi C quoting
 alias -g SED=$'| sed \'/color/ s/red/green/g\''
 alias -g X=$'| xargs -I {} echo {}'
@@ -85,34 +84,57 @@ alias ug='ug -j -R'  # smartcase and follow symlinks, --hidden for dot files
 alias ugg='ug -j -R -Q'
 alias uggg='ug -%% -j -w -R -Q' # google search with regex, see https://ugrep.com/
 alias ag='ag --smart-case'
+
 # grep
 # note: ERE (extended regex) vs BRE (basic): ERE escapes +. ? etc. like vim's 'magic'
 #       --color is --color=auto. It does not use color codes when pipe is used.
 #       To see colors use grep --color=always foo | less -R
 #       https://stackoverflow.com/questions/6565471/how-can-i-exclude-directories-from-grep-r
-alias -g gr='grep --color=always -REi' # recursive, ERE, and case insensitive
-alias -g grr="grep --color=always --exclude-dir={'dir*',dir} --exclude={file1,'file2*'} -REi" # recursive, ERE and case insensitive
+#       --exclude pattern -> Patterns are matched to the full path specified, not only to the filename component.
+#       --include pattern -> can be specified after --exclude
+#       --exclude-dir pattern -> If -R is specified, it excludes directories
+#         matching the given filename pattern from the search.  Note that --exclude-dir
+#         and --include-dir patterns are processed in the order given.
+#         --exclude-dir is dir-name(s) and not pathname(s). directory names cannot contain /.
+#         Following doesn't work:
+#         (NO) grep -r --exclude-dir={/var/cache,/var/lib}
+#       --include-dir pattern -> just like --include
+#       -F, --fixed-strings -> Interpret pattern as a set of fixed strings.
+#       Note: above pattern is globs pattern, not pattern as in regex. So it
+#       does not understand |. You can, however, get the same effect by
+#       specifying --exclude-dir multiple times, one for each directory that
+#       you want to exclude, or you can golf it shorter.
+#       --exclude-dir={git,log,assets}
+#       --exclude-dir={\*git,asset\*}
+#
+#       {} is brace expansion for command line flags.
+#       % foocmd -u{rspamd,postfix}
+#         Expands to: foocmd -urspamd -upostfix
+#       % foocmd --unit={rspamd,postfix}
+#         Expands to: foocmd --unit=rspamd --unit=postfix
+#       If you want space instead of '=', use a backslash or quote:
+#       % print -z foocmd --unit' '{rspamd,postfix}
+#       % foocmd --unit rspamd --unit postfix
+#       % print -z foocmd --unit\ {rspamd,postfix}
+#       % foocmd --unit rspamd --unit postfix
+#       note: does not work/expand if there is only one item inside {}. if you
+#       put {item,} it expands to 'item' and '' (test with 'print -z' like above).
+#
+#       -i ignore case, -n include line number, -R recursive, -w word regex
+#       as if surrounded by ‘[[:<:]]’ and ‘[[:>:]]’, see 'man re-format';
+#       -l prints files with matches only; -S (macos only) follow symlinks
+#
+alias gr="grep --color=always -RESin --exclude={'*.zwc','*.swp','*.git*'} --exclude-dir=plugged"
+alias -g G='| grep --color -iE'
 
-# others
 alias pipi='pip install --user '
-alias -g lc='leetcode '
-alias -g arch_='arch -x86_64 zsh'  # change arch
-# alias -g vim_='vim -Nu NONE -S <(cat <<EOF
+alias lc='leetcode '
+# alias vim_='vim -Nu NONE -S <(cat <<EOF
 #     " vim:ts=4:ft=vim
 #     vim9script
 #     :set shortmess=I
 # EOF
 # )'
-
-if is_mac; then
-    alias ba='bat --style=plain' # without line numbers
-    alias bc='bc -l'
-    # note: use 'py' which is ipython+pyflyby
-    # alias ip='ipython --no-confirm-exit --colors=Linux'
-    alias ls='ls -FG' # aliases the command /usr/bin/ls
-elif is_linux; then
-    alias ls='ls --color=always' # auto/always/never
-fi
 
 alias l1='ls -1' # one listing per line
 alias l='ls'
@@ -138,6 +160,11 @@ alias viclean='vim --clean'
 alias makedebug="make SHELL='sh -x'"
 
 if is_mac; then
+    alias ba='bat --style=plain' # without line numbers
+    alias bc='bc -l'
+    # note: use 'py' which is ipython+pyflyby
+    # alias ip='ipython --no-confirm-exit --colors=Linux'
+    alias ls='ls -FG' # aliases the command /usr/bin/ls
     alias x86="$env /usr/bin/arch -x86_64 /bin/zsh ---login"
     alias arm="$env /usr/bin/arch -arm64 /bin/zsh ---login"
     alias ibooks='cd /Users/gp/Library/Mobile Documents/iCloud~com~apple~iBooks/Documents'
@@ -147,7 +174,8 @@ if is_mac; then
     alias gscp='gcloud compute scp --recurse n2dstd:~/foo ~/bar'
     alias gstop='gcloud compute instances stop n2dstd'
     alias gcsh='gcloud cloud-shell ssh --authorize-session'
-else
+elif is_linux; then
+    alias ls='ls --color=always' # auto/always/never
     if [[ ! -d "$HOME/.config" ]]; then
         mkdir -p $HOME/.config
     fi

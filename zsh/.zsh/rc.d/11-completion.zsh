@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 ##
 # completion system
 #
@@ -70,7 +72,7 @@ _comp_options+=(globdots) # With hidden files
 
 # Modules are part of Zsh but optional, detached from the core of the shell. They
 # can be linked to the shell at build time or dynamically linked while the shell
-# is running.
+# is running. Modules are written in C. You can use zmodload to load a module.
 
 ## What’s zstyle?
 

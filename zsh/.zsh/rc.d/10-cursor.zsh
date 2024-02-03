@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 ##
 # Change cursor to beam for insert mode
 #

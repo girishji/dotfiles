@@ -118,7 +118,7 @@ Plug 'rafamadriz/friendly-snippets'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 # colorschemes
-Plug 'cocopon/iceberg.vim'
+# Plug 'cocopon/iceberg.vim'
 #
 # Plug '~/git/autosuggest.vim'
 Plug 'girishji/autosuggest.vim'

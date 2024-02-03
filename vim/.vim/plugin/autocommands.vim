@@ -24,10 +24,14 @@ augroup GeneralAutocmds | autocmd!
     autocmd FileType * setl formatoptions=qjlron
     # Tell vim to automatically open the quickfix and location window after :make,
     # :grep, :lvimgrep and friends if there are valid locations/errors:
-    # NOTE: Does not work with caddexpr (:g/pat/caddexpr ...) since it just adds entries, so exclude [^c].
+    # NOTE: Does not work with caddexpr (:g/pat/caddexpr ...) since it just adds entries.
     # ':make', ':grep' and so on are called quickfix commands, they trigger QuickFixCmdPost.
+    # [^l]* to match commands that don't start with l (l* does the opposite).
+    # quickfix commands are cgetexpr, lgetexpr, lgrep, grep, etc.
+    # exclude cadexppr also ([^c]*), otherwise g//caddexpr will open quickfix after the first match.
+    # https://gist.github.com/romainl/56f0c28ef953ffc157f36cc495947ab3
     autocmd QuickFixCmdPost [^lc]* cwindow
-    autocmd QuickFixCmdPost l*     lwindow
+    autocmd QuickFixCmdPost l*    lwindow
     # update tags in help file
     autocmd BufWritePost **/doc/*.txt helptags <afile>:p:h
     # make help files writeable

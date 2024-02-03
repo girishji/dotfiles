@@ -5,8 +5,17 @@ export def Eatchar(): string
     return (c =~ '\s') ? '' : c
 enddef
 
-export def NotCtx(): bool
-    return synID(line('.'), col('.') - 1, 1)->synIDattr('name') =~? '\vcomment|string|character|doxygen'
+export def NotCtx(s: string): bool
+    if synID(line('.'), col('.') - 1, 1)->synIDattr('name') =~? '\vcomment|string|character|doxygen'
+        return true
+    endif
+    if !s->empty()
+        var line = getline(line('.'))
+        if line->len() > (s->len() + 1) && line[col('.') - 2 - s->len()] != ' '
+            return true
+        endif
+    endif
+    return false
 enddef
 
 export def EOL(): bool

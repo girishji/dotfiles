@@ -172,3 +172,24 @@ endif
 if exists("g:loaded_highlightedyank")
     g:highlightedyank_highlight_duration = 300
 endif
+
+if exists("g:loaded_bufline")
+    if &background == 'dark'
+        # set fillchars+=stl:―,stlnc:—
+        set fillchars+=stl:─,stlnc:─
+        if &termguicolors
+            highlight link user1 statusline
+            highlight link user2 statusline
+            highlight link user4 statusline
+        endif
+    else
+        highlight link user1 statusline
+        highlight link user2 statusline
+        highlight link user4 statusline
+    endif
+    highlight! link StatusLineTerm statusline
+    highlight! link StatusLineTermNC statuslinenc
+    highlight link user3 statusline
+    g:BuflineSetup({ highlight: true, showbufnr: false })
+endif
+

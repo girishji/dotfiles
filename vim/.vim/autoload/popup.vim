@@ -30,7 +30,7 @@ export class FilterMenuPopup
             height = winheight
         endif
         var minwidth = (&columns * 0.6)->float2nr()
-        var maxwidth = (&columns - 5)
+        var maxwidth = (&columns - 8)
         if winwidth > 0
             [minwidth, maxwidth] = [winwidth, winwidth]
         endif
@@ -200,7 +200,33 @@ export def FilterMenu(title: string, items: list<any>, Callback: func(any, strin
     popup.PopupCreate(title, items_dict, Callback, Setup, GetItems)
 enddef
 
-var job: job
+export var job: job
+export def BuildItemsList(cmd: any, CallbackFn: func(list<any>))
+    # ch_logfile('/tmp/channellog', 'w')
+    # ch_log('BuildItemsList call')
+    var start = reltime()
+    var items = []
+    if job->job_status() ==# 'run'
+        job->job_stop('kill')
+    endif
+    if cmd->empty()
+        CallbackFn([])
+        return
+    endif
+    job = job_start(cmd, {
+        out_cb: (ch, str) => {
+            items->add(str)
+            if start->reltime()->reltimefloat() * 1000 > 100 # update every 100ms
+                CallbackFn(items)
+                start = reltime()
+            endif
+        },
+        exit_cb: (jb, status) => {
+            CallbackFn(items)
+        }
+    })
+enddef
+
 # Popup menu with fuzzy filtering, using separate job to extract the menu list.
 export def FilterMenuAsync(title: string,
         items_cmd: list<string>,
@@ -209,34 +235,17 @@ export def FilterMenuAsync(title: string,
         ItemsPostProcess: func(list<any>): list<any> = null_function,
         GetItems: func(list<any>, string): list<any> = null_function,
         max_items: number = -1)
-    def BuildItemsList(cmd: list<string>, CallbackFn: func(list<any>))
-        # ch_logfile('/tmp/channellog', 'w')
-        # ch_log('BuildItemsList call')
-        var start = reltime()
-        var items = []
-        if job->job_status() ==# 'run'
-            job->job_stop('kill')
-        endif
-        job = job_start(cmd, {
-            out_cb: (ch, str) => {
-                items->add(str)
-                if start->reltime()->reltimefloat() * 1000 > 100 # update every 100ms
-                    CallbackFn(ItemsPostProcess == null_function ? items : ItemsPostProcess(items))
-                    start = reltime()
-                endif
-            },
-            exit_cb: (jb, status) => {
-                CallbackFn(ItemsPostProcess == null_function ? items : ItemsPostProcess(items))
-            }
-        })
-    enddef
     var popup = FilterMenuPopup.new()
     popup.PopupCreate(title, [{text: ''}], Callback, Setup, GetItems, true, &lines - 6)
-    BuildItemsList(items_cmd, (items) => {
+    BuildItemsList(items_cmd, (raw_items) => {
         if popup.PopupClosed()
             job->job_stop()
         endif
         var items_dict: list<dict<any>>
+        var items = raw_items
+        if ItemsPostProcess != null_function
+            items = ItemsPostProcess(items)
+        endif
         if items->len() < 1
             items_dict = [{text: ""}]
         else

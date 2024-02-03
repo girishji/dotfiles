@@ -17,28 +17,6 @@ def Diagstr(): string
     return diagstr
 enddef
 
-def MyStatuslineSetup()
-    if &background == 'dark'
-        # set fillchars+=stl:―,stlnc:—
-        set fillchars+=stl:─,stlnc:─
-        if &termguicolors
-            highlight link user1 statusline
-            highlight link user2 statusline
-            highlight link user4 statusline
-        endif
-    else
-        highlight link user1 statusline
-        highlight link user2 statusline
-        highlight link user4 statusline
-    endif
-    highlight! link StatusLineTerm statusline
-    highlight! link StatusLineTermNC statuslinenc
-    highlight link user3 statusline
-    if exists("*g:BuflineSetup")
-        g:BuflineSetup({ highlight: true, showbufnr: true })
-    endif
-enddef
-
 def BuflineStr(width: number): string
     return exists('*g:BuflineGetstr') ? g:BuflineGetstr(width) : ''
 enddef
@@ -74,7 +52,9 @@ def! g:MyActiveStatusline(): string
     var width = winwidth(0) - 30 - gitstr->len() - diagstr->len() - shortpath->len() - elapsed->len()
     var buflinestr = BuflineStr(width)
     # return $'%4*{diagstr}%* {buflinestr} %= %y %4*{elapsed}%*%4*{gitstr}%*%2*{shortpath}%* ≡ %P (%l:%c) %*'
-    return $'%4*{diagstr}%* {buflinestr} %= %y %4*{elapsed}%*%2*{shortpath}%* ≡ %P (%l:%c) %*'
+    # return $'%4*{diagstr}%* {buflinestr} %= %y %4*{elapsed}%*%2*{shortpath}%* ≡ %P (%l:%c) '
+    # grep messes up statusline highlight while opening quickfix window; remove all highlight
+    return $'{diagstr} {buflinestr} %= %y {elapsed}{shortpath} ≡ %P (%l:%c) '
 enddef
 
 def! g:MyInactiveStatusline(): string
@@ -82,8 +62,7 @@ def! g:MyInactiveStatusline(): string
 enddef
 
 augroup MyStatusLine | autocmd!
-    autocmd VimEnter,ColorScheme * MyStatuslineSetup()
-    autocmd WinEnter,BufEnter,BufAdd * setl statusline=%{%g:MyActiveStatusline()%}
+    autocmd WinEnter,BufWinEnter,BufEnter,BufAdd * setl statusline=%{%g:MyActiveStatusline()%}
     autocmd User LspDiagsUpdated,BufLineUpdated,ElapsedTimeUpdated setl statusline=%{%g:MyActiveStatusline()%}
-    autocmd WinLeave,BufLeave * setl statusline=%{%g:MyInactiveStatusline()%}
+    autocmd WinLeave,BufWinLeave,BufLeave * setl statusline=%{%g:MyInactiveStatusline()%}
 augroup END

@@ -9,14 +9,19 @@ var findcmd = "find /Users/gp/.vim -type d -path */plugged -prune -o -name *.swp
 nnoremap <leader>fv <scriptcmd>fuzzy.File(findcmd, true)<CR>
 nnoremap <leader>fV <scriptcmd>fuzzy.File("find " .. $VIMRUNTIME .. " -type f -print -follow", true)<CR>
 nnoremap <leader>fh <scriptcmd>fuzzy.File("find " .. $HOME .. "/help -type f -print -follow", true)<CR>
+nnoremap <leader>g <scriptcmd>fuzzy.Grep()<CR>
 nnoremap <leader>ft <scriptcmd>fuzzy.Template()<CR>
 nnoremap <leader>fm <scriptcmd>fuzzy.MRU()<CR>
 nnoremap <leader>fk <scriptcmd>fuzzy.Keymap()<CR>
 # search files with same extension
-nnoremap <expr> <leader>fg $':silent grep {expand("<cword>")} {expand("%:e") == "" ? "" : "**/*." .. expand("%:e")}<c-left><left>'
-# search all files
-nnoremap <expr> <leader>g $':silent grep {expand("<cword>")}'
-nnoremap <expr> <leader>vg $':vim /{expand("<cword>")}/j **<c-left><left><left><left>'
+# nnoremap <expr> <leader>fg $':silent grep {expand("<cword>")} {expand("%:e") == "" ? "" : "**/*." .. expand("%:e")}<c-left><left>'
+# search all files (remove '!' after 'grep' to jump to first match)
+# XXX: even though prepending 'silent' obviates the need for pressing <enter>
+#      after search, it messes up highlighting of statusline. Either press
+#      additional <enter> or live with temporarily messed up statusline.
+#      (see the abbreviation for equivalent keymap)
+# nnoremap <expr> <leader>g $':silent grep! {expand("<cword>")}'
+# nnoremap <expr> <leader>vg $':vim /{expand("<cword>")}/j **<c-left><left><left><left>'
 
 # autocomplete with <c-n> and <c-p> when plugins are not available
 def WhitespaceOnly(): bool

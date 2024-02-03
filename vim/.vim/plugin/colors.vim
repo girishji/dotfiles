@@ -41,6 +41,8 @@ def Quiet()
         # SpecialKey is used for 'listchars'
         highlight SpecialKey ctermfg=248
         g:popupthumbhighlight  = 'statuslinenc'
+        highlight  user1         cterm=bold,reverse
+        highlight  user4         cterm=bold,reverse
     endif
     highlight link helpHyperTextEntry Underlined
     highlight link helpHyperTextJump Underlined

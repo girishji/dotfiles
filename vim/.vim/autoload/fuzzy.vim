@@ -4,7 +4,7 @@ endif
 
 vim9script
 
-import autoload 'popup.vim'
+import '../autoload/popup.vim'
 
 def GetItems(lst: list<dict<any>>, prompt: string): list<any>
     def PrioritizeFilename(matches: list<any>): list<any>
@@ -59,7 +59,7 @@ def ExcludedFindCmd(): string
 enddef
 
 # fuzzy find files
-export def File(findCmd: string = '', do_sort: bool = false)
+export def File(findCmd: string = '')
     def FindCmd(): list<any>
         if !findCmd->empty()
             return findCmd->split()
@@ -72,17 +72,17 @@ export def File(findCmd: string = '', do_sort: bool = false)
             for fname in ['*.zwc', '*.swp']
                 cmd->extend(['-name', fname, '-prune', '-o'])
             endfor
-            for fname in ['.git']
+            for fname in ['.git']  # matches .git/ and .gitrc through */git*
                 cmd->extend(['-path', $'*/{fname}*', '-prune', '-o'])
             endfor
             for fname in ['plugged']
                 cmd->extend(['-type', 'd', '-path', $'*/{fname}*', '-prune', '-o'])
             endfor
-            return cmd->extend(['-type', 'f', '-print'])
+            return cmd->extend(['-type', 'f', '-print', '-follow'])
         endif
     enddef
 
-    popup.FilterMenuAsync("Files", FindCmd(),
+    popup.FilterMenuAsync("File", FindCmd(),
         (res, key) => {
             if key == "\<C-j>"
                 exe $"split {res.text}"
@@ -98,8 +98,55 @@ export def File(findCmd: string = '', do_sort: bool = false)
             win_execute(winid, "syn match FilterMenuDirectorySubtle '^.*[\\/]'")
             hi def link FilterMenuDirectorySubtle Comment
         },
-        do_sort ? (lst: list<any>) => lst->sort() : null_function,
+        (lst: list<any>) => lst->len() < 200 ? lst->sort() : lst,
         GetItems)
+enddef
+
+# live grep, not fuzzy search. for space use '\ '.
+# cannot use >1 words unless spaces are escaped (grep pattern is: grep <pat>
+# <path1, path2, ...>, so it will interpret second word as path)
+export def Grep()
+    var menu = popup.FilterMenuPopup.new()
+    menu.PopupCreate('Grep', [{text: ''}],
+        (res, key) => {
+            # callback
+            var fl = res.text->split()[0]->split(':')
+            if key == "\<C-j>"
+                exe $"split +{fl[1]} {fl[0]}"
+            elseif key == "\<C-v>"
+                exe $"vert split +{fl[1]} {fl[0]}"
+            elseif key == "\<C-t>"
+                exe $"tabe +{fl[1]} {fl[0]}"
+            else
+                exe $":e +{fl[1]} {fl[0]}"
+            endif
+        },
+        null_function,
+        (lst: list<dict<any>>, prompt: string): list<any> => {
+            # GetItems
+            if !prompt->empty()
+                var cmd = &grepprg .. ' ' .. prompt
+                # do not convert cmd to list, as this will not quote space characters correctly.
+                popup.BuildItemsList(cmd, (items: list<any>) => {
+                    if menu.PopupClosed()
+                        popup.job->job_stop()
+                    endif
+                    var items_dict: list<dict<any>>
+                    if items->len() < 1
+                        items_dict = [{text: ""}]
+                    else
+                        items_dict = items->mapnew((_, v) => {
+                            return {text: v}
+                        })
+                    endif
+                    menu.PopupSetText(items_dict, (oldlst: list<dict<any>>, ctx: string): list<any> => {
+                        return [items_dict, [items_dict]]
+                    }, 100)  # max 100 items, and then kill the job
+                })
+            endif
+            return [lst, [lst]]
+        },
+        false, &lines - 6, &columns - 8)
 enddef
 
 export def Buffer()
@@ -113,7 +160,7 @@ export def Buffer()
     if buffer_list->len() > 1 && buffer_list[0].bufnr == bufnr()
         [buffer_list[0], buffer_list[1]] = [buffer_list[1], buffer_list[0]]
     endif
-    popup.FilterMenu("Buffers", buffer_list,
+    popup.FilterMenu("Buffer", buffer_list,
         (res, key) => {
             if key == "\<c-t>"
                 exe $":tab sb {res.bufnr}"

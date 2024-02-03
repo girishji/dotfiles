@@ -19,9 +19,10 @@ cabbr <expr> maek  abbr#ExpandCmd('maek') ? 'make' : 'maek'
 # <leader>tc or :cw to open the quickfix window
 #   alternative to g:// is :il /pattern (searches current file and #include'd files)
 cabbr <expr> gg  abbr#ExpandCmd('gg') ? "g//caddexpr $'{expand(\"%\")}:{line(\".\")}:{getline(\".\")}'<c-left><c-left><right><right><c-r>=abbr#Eatchar()<cr>" : gg
-cabbr <expr> zz  abbr#ExpandCmd('zz') ? 'e ~/.zshrc<cr>' : 'zz'
+cabbr <expr> zz  abbr#ExpandCmd('zz') ? 'e ~/.zsh/.zshrc<cr>' : 'zz'
 cabbr <expr> ze  abbr#ExpandCmd('ze') ? 'e ~/.zshenv<cr>' : 'ze'
-
+cabbr <expr> grr  abbr#ExpandCmd('grr') ? 'silent grep!' : 'grr'
+cabbr <expr> vgr  abbr#ExpandCmd('vgr') ? 'vim //j' : 'vgr'
 
 iabbr vimhelpfilepostfix vim:tw=78:ts=4:ft=help:norl:modifiable:noreadonly:listchars=tab\:\ \ ,trail\:~:<c-r>=abbr#Eatchar()<cr>
 

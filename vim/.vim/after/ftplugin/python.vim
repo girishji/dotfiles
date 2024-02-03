@@ -137,7 +137,7 @@ def Things()
         })
 enddef
 
-if exists(":LspDocumentSymbol")
+if exists(":LspDocumentSymbol") == 2
     nnoremap <buffer> <leader>/ <cmd>LspDocumentSymbol<CR>
     nnoremap <buffer> <space>z <scriptcmd>Things()<CR>
 else

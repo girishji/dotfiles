@@ -21,8 +21,8 @@ cabbr <expr> maek  abbr#ExpandCmd('maek') ? 'make' : 'maek'
 cabbr <expr> gg  abbr#ExpandCmd('gg') ? "g//caddexpr $'{expand(\"%\")}:{line(\".\")}:{getline(\".\")}'<c-left><c-left><right><right><c-r>=abbr#Eatchar()<cr>" : gg
 cabbr <expr> zz  abbr#ExpandCmd('zz') ? 'e ~/.zsh/.zshrc<cr>' : 'zz'
 cabbr <expr> ze  abbr#ExpandCmd('ze') ? 'e ~/.zshenv<cr>' : 'ze'
-cabbr <expr> grr  abbr#ExpandCmd('grr') ? 'silent grep!' : 'grr'
-cabbr <expr> vgr  abbr#ExpandCmd('vgr') ? 'vim //j' : 'vgr'
+cabbr <expr> gr  abbr#ExpandCmd('gr') ? 'silent grep!' : 'gr'
+cabbr <expr> vg  abbr#ExpandCmd('vg') ? 'vim //j' : 'vg'
 
 iabbr vimhelpfilepostfix vim:tw=78:ts=4:ft=help:norl:modifiable:noreadonly:listchars=tab\:\ \ ,trail\:~:<c-r>=abbr#Eatchar()<cr>
 

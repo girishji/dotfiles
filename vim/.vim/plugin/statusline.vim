@@ -37,6 +37,8 @@ def UpdateElapsed(timer: number)
 enddef
 timer_start(60 * 1000, function(UpdateElapsed))
 
+# Make this function global. 'statusline' option is processed in global context,
+# where script-local items are not accessible.
 def! g:MyActiveStatusline(): string
     var gitstr = Gitstr()
     var diagstr = Diagstr()
@@ -46,14 +48,13 @@ def! g:MyActiveStatusline(): string
         shortpath = shortpath->split('/')->map((_, v) => v->slice(0, 2))->join('/')->slice(0, shortpathmax)
     endif
     if !shortpath->empty()
-        shortpath = ' ' .. shortpath .. '/'
+        shortpath = ' | ' .. shortpath .. '/'
     endif
-    var elapsed = GetElapsed()
+    var elapsed = ((&ft)->empty() ? "" : '| ') .. GetElapsed()
     var width = winwidth(0) - 30 - gitstr->len() - diagstr->len() - shortpath->len() - elapsed->len()
     var buflinestr = BuflineStr(width)
     # return $'%4*{diagstr}%* {buflinestr} %= %y %4*{elapsed}%*%4*{gitstr}%*%2*{shortpath}%* ≡ %P (%l:%c) %*'
-    # return $'%4*{diagstr}%* {buflinestr} %= %y %4*{elapsed}%*%2*{shortpath}%* ≡ %P (%l:%c) '
-    # grep messes up statusline highlight while opening quickfix window; remove all highlight
+    # echom $'{diagstr} {buflinestr} %= %y {elapsed}{shortpath} ≡ %P (%l:%c) '
     return $'{diagstr} {buflinestr} %= %y {elapsed}{shortpath} ≡ %P (%l:%c) '
 enddef
 
@@ -62,7 +63,7 @@ def! g:MyInactiveStatusline(): string
 enddef
 
 augroup MyStatusLine | autocmd!
-    autocmd WinEnter,BufWinEnter,BufEnter,BufAdd * setl statusline=%{%g:MyActiveStatusline()%}
-    autocmd User LspDiagsUpdated,BufLineUpdated,ElapsedTimeUpdated setl statusline=%{%g:MyActiveStatusline()%}
-    autocmd WinLeave,BufWinLeave,BufLeave * setl statusline=%{%g:MyInactiveStatusline()%}
+    autocmd WinEnter,BufEnter * setl statusline=%!g:MyActiveStatusline()
+    autocmd User LspDiagsUpdated,BufLineUpdated,ElapsedTimeUpdated setl statusline=%!g:MyActiveStatusline()
+    autocmd WinLeave,BufLeave * setl statusline=%!g:MyInactiveStatusline()
 augroup END

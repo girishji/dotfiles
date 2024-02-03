@@ -91,7 +91,7 @@ export def File(findCmd: string = '')
             elseif key == "\<C-t>"
                 exe $"tabe {res.text}"
             else
-                exe $":e {res.text}"
+                exe $"e {res.text}"
             endif
         },
         (winid) => {

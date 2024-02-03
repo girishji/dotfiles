@@ -36,39 +36,53 @@ def GetItems(lst: list<dict<any>>, prompt: string): list<any>
     endif
 enddef
 
+def ExcludedFindCmd(): string
+    # exclude dirs from .config/fd/ignore and .gitignore
+    var excludes = []
+    var ignore_files = [getenv('HOME') .. '/.config/fd/ignore', '.gitignore']
+    for ignore in ignore_files
+        if ignore->filereadable()
+            excludes->extend(readfile(ignore)->filter((_, v) => v != '' && v !~ '^#'))
+        endif
+    endfor
+    var exclcmds = []
+    for item in excludes
+        var idx = item->strridx(sep)
+        if idx == item->len() - 1
+            exclcmds->add($'-type d -path */{item}* -prune')
+        else
+            exclcmds->add($'-path */{item}/* -prune')
+        endif
+    endfor
+    var cmd = 'find . ' .. (exclcmds->empty() ? '' : exclcmds->join(' -o '))
+    return cmd .. ' -o -name *.swp -prune -o -path */.* -prune -o -type f -print -follow'
+enddef
+
 # fuzzy find files
 export def File(findCmd: string = '', do_sort: bool = false)
-    def FindCmd(): string
+    def FindCmd(): list<any>
         if !findCmd->empty()
-            return findCmd
+            return findCmd->split()
         endif
         var sep = has("win32") ? '\' : '/'
         if executable('fd')
-            return 'fd -tf --follow'
+            return 'fd -tf --follow'->split()
         else
-            # exclude dirs from .config/fd/ignore and .gitignore
-            var excludes = []
-            var ignore_files = [getenv('HOME') .. '/.config/fd/ignore', '.gitignore']
-            for ignore in ignore_files
-                if ignore->filereadable()
-                    excludes->extend(readfile(ignore)->filter((_, v) => v != '' && v !~ '^#'))
-                endif
+            var cmd = ['find', '.']
+            for fname in ['*.zwc', '*.swp']
+                cmd->extend(['-name', fname, '-prune', '-o'])
             endfor
-            var exclcmds = []
-            for item in excludes
-                var idx = item->strridx(sep)
-                if idx == item->len() - 1
-                    exclcmds->add($'-type d -path */{item}* -prune')
-                else
-                    exclcmds->add($'-path */{item}/* -prune')
-                endif
+            for fname in ['.git']
+                cmd->extend(['-path', $'*/{fname}*', '-prune', '-o'])
             endfor
-            var cmd = 'find . ' .. (exclcmds->empty() ? '' : exclcmds->join(' -o '))
-            return cmd .. ' -o -name *.swp -prune -o -path */.* -prune -o -type f -print -follow'
+            for fname in ['plugged']
+                cmd->extend(['-type', 'd', '-path', $'*/{fname}*', '-prune', '-o'])
+            endfor
+            return cmd->extend(['-type', 'f', '-print'])
         endif
     enddef
 
-    popup.FilterMenuAsync("Files", FindCmd()->split(),
+    popup.FilterMenuAsync("Files", FindCmd(),
         (res, key) => {
             if key == "\<C-j>"
                 exe $"split {res.text}"

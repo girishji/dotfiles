@@ -8,7 +8,7 @@ import '../autoload/popup.vim'
 
 def GetItems(lst: list<dict<any>>, prompt: string): list<any>
     def PrioritizeFilename(matches: list<any>): list<any>
-        # prefer filenames that match over directory names that match
+        # prefer matching filenames over matching directory names
         var filtered = [[], [], []]
         var pat = prompt->trim()
         for Filterfn in [(x, y) => x =~ y, (x, y) => x !~ y]
@@ -127,9 +127,9 @@ export def Grep()
             if !prompt->empty()
                 var cmd = &grepprg .. ' ' .. prompt
                 # do not convert cmd to list, as this will not quote space characters correctly.
-                popup.BuildItemsList(cmd, (items: list<any>) => {
+                menu.BuildItemsList(cmd, (items: list<any>) => {
                     if menu.PopupClosed()
-                        popup.job->job_stop()
+                        menu.StopJob()
                     endif
                     var items_dict: list<dict<any>>
                     if items->len() < 1

@@ -15,6 +15,7 @@ export class FilterMenuPopup
     var title: string
     var items_dict: list<dict<any>>
     var filtered_items: list<any>
+    var job: job
 
     def PopupCreate(title: string, items_dict: list<dict<any>>, Callback: func(any, string), Setup: func(number) = null_function, GetItems: func(list<any>, string): list<any> = null_function, is_hidden: bool = false, winheight: number = 0, winwidth: number = 0)
         if empty(prop_type_get('FilterMenuMatch'))
@@ -149,8 +150,8 @@ export class FilterMenuPopup
         endif
         var GetItemsFn = GetItems == null_function ? this._GetItems : GetItems
         [this.items_dict, this.filtered_items] = GetItemsFn(items_dict, this.prompt)
-        if max_items > 0 && this.filtered_items[0]->len() > max_items && job->job_status() ==# 'run'
-            job->job_stop('kill')
+        if max_items > 0 && this.filtered_items[0]->len() > max_items && this.job->job_status() ==# 'run'
+            this.StopJob('kill')
         endif
         var items_count = this.items_dict->len()
         popup_setoptions(this.id, {title: $" ({items_count > 0 ? this.filtered_items[0]->len() : 0}/{items_count}) {this.title} {options.bordertitle[0]} {this.prompt} {options.bordertitle[1]}"})
@@ -166,6 +167,41 @@ export class FilterMenuPopup
 
     def PopupClosed(): bool
         return this.id->popup_getpos()->empty()
+    enddef
+
+    def StopJob(how: string = '')
+        if this.job->job_status() ==# 'run'
+            if how->empty()
+                this.job->job_stop()
+            else
+                this.job->job_stop(how)
+            endif
+        endif
+    enddef
+
+    # spawn a new process/thread and execute a command async. can add a timeout if necessary.
+    def BuildItemsList(cmd: any, CallbackFn: func(list<any>))
+        # ch_logfile('/tmp/channellog', 'w')
+        # ch_log('BuildItemsList call')
+        var start = reltime()
+        var items = []
+        this.StopJob('kill')
+        if cmd->empty()
+            CallbackFn([])
+            return
+        endif
+        this.job = job_start(cmd, {
+            out_cb: (ch, str) => {
+                items->add(str)
+                if start->reltime()->reltimefloat() * 1000 > 100 # update every 100ms
+                    CallbackFn(items)
+                    start = reltime()
+                endif
+            },
+            exit_cb: (jb, status) => {
+                CallbackFn(items)
+            }
+        })
     enddef
 
     def _Printify(itemsAny: list<any>): list<any>
@@ -200,33 +236,6 @@ export def FilterMenu(title: string, items: list<any>, Callback: func(any, strin
     popup.PopupCreate(title, items_dict, Callback, Setup, GetItems)
 enddef
 
-export var job: job
-export def BuildItemsList(cmd: any, CallbackFn: func(list<any>))
-    # ch_logfile('/tmp/channellog', 'w')
-    # ch_log('BuildItemsList call')
-    var start = reltime()
-    var items = []
-    if job->job_status() ==# 'run'
-        job->job_stop('kill')
-    endif
-    if cmd->empty()
-        CallbackFn([])
-        return
-    endif
-    job = job_start(cmd, {
-        out_cb: (ch, str) => {
-            items->add(str)
-            if start->reltime()->reltimefloat() * 1000 > 100 # update every 100ms
-                CallbackFn(items)
-                start = reltime()
-            endif
-        },
-        exit_cb: (jb, status) => {
-            CallbackFn(items)
-        }
-    })
-enddef
-
 # Popup menu with fuzzy filtering, using separate job to extract the menu list.
 export def FilterMenuAsync(title: string,
         items_cmd: list<string>,
@@ -237,9 +246,9 @@ export def FilterMenuAsync(title: string,
         max_items: number = -1)
     var popup = FilterMenuPopup.new()
     popup.PopupCreate(title, [{text: ''}], Callback, Setup, GetItems, true, &lines - 6)
-    BuildItemsList(items_cmd, (raw_items) => {
+    popup.BuildItemsList(items_cmd, (raw_items) => {
         if popup.PopupClosed()
-            job->job_stop()
+            popup.StopJob()
         endif
         var items_dict: list<dict<any>>
         var items = raw_items

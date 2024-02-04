@@ -65,7 +65,7 @@ set tags=./tags,./../tags,./*/tags # this dir, just one level above, and all sub
 
 syntax on # turn on syntax highlighting
 
-set grepprg=grep\ --color=never\ -RESiHn\ --exclude={'*.zwc','*.swp','*.git*'}\ --exclude-dir=plugged
+set grepprg=grep\ --color=never\ -RESIHin\ --exclude={'*.zwc','*.swp','*.git*'}\ --exclude-dir=plugged
 
 # if executable("ug")
 #     set grepprg=ug\ -HnjR\ --no-heading

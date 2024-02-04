@@ -123,9 +123,10 @@ alias ag='ag --smart-case'
 #       -i ignore case, -n include line number, -R recursive, -w word regex
 #       as if surrounded by ‘[[:<:]]’ and ‘[[:>:]]’, see 'man re-format';
 #       -l prints files with matches only; -S (macos only) follow symlinks
+#       -I ignores binary files (prevents a info message getting printed)
 #
-alias gr="grep --color=always -RESin --exclude={'*.zwc','*.swp','*.git*'} --exclude-dir=plugged"
-alias -g G='| grep --color -iE'
+alias gr="grep --color=always -RESIin --exclude={'*.zwc','*.swp','*.git*'} --exclude-dir=plugged"
+alias -g G='| grep --color -iEI'
 
 alias pipi='pip install --user '
 alias lc='leetcode '

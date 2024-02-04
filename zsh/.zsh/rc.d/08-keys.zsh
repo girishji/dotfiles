@@ -89,3 +89,20 @@ done
 # We loop through the two keymaps viopp (Vi OPERATOR-PENDING mode) and visual (Vi VISUAL mode).
 # We loop through a whole bunch of signs we want to consider as quotes (or brackets), and we add to each of them the prefix i or a (for inside and around, respectively).
 # We use the bindkey command to bind these new text-objects to both keymaps.
+
+# https://github.com/marlonrichert/zsh-autocomplete?tab=readme-ov-file#configuration
+# Make Tab go straight to the menu and cycle there
+bindkey '\t' menu-select "$terminfo[kcbt]" menu-select
+bindkey -M menuselect '\t' menu-complete "$terminfo[kcbt]" reverse-menu-complete
+# Make Enter submit the command line straight from the menu
+bindkey -M menuselect '\r' .accept-line
+# Limit number of lines shows:
+#   Autocompletion
+zstyle -e ':autocomplete:list-choices:*' list-lines 'reply=( $(( LINES / 3 )) )'
+#   Override history search.
+zstyle ':autocomplete:history-incremental-search-backward:*' list-lines 8
+#   History menu.
+zstyle ':autocomplete:history-search-backward:*' list-lines 256
+# Show history menu on ctrl-R/S
+bindkey '^R' history-incremental-search-backward
+bindkey '^S' history-incremental-search-forward

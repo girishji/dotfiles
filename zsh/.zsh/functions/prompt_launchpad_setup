@@ -34,6 +34,23 @@ fi
 # Strings in 'single quotes', on the other hand, are literal strings. They
 # always evaluate to the literal characters you see on your screen.
 
+# Make prompt stay about 30% above bottom of screen
+# https://superuser.com/questions/1389834/can-i-have-the-terminal-prompt-at-the-vertical-middle-of-a-window
+() {
+    # load terminfo modules to make the associative array $terminfo available
+    zmodload zsh/terminfo
+    local third_of_page=$((LINES/3))
+    # cud1 is cursor down one line, cuu1 is one line up.
+    local third_down=""
+    for i in {1..$third_of_page}; do
+        third_down="$third_down$terminfo[cud1]"
+    done
+    local third_up=""
+    for i in {1..$third_of_page}; do
+        third_up="$third_up$terminfo[cuu1]"
+    done
+    PS1="%{${third_down}${third_up}%}$PS1"
+}
 
 # Install our chpwd and precmd hook functions.
 # https://zsh.sourceforge.io/Doc/Release/Functions.html#Hook-Functions
@@ -49,7 +66,6 @@ done
 # added their parent dir to our $fpath.
 
 prompt_launchpad_chpwd  # Call once before the first prompt.
-
 
 ##
 # Continuation prompt

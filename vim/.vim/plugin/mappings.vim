@@ -6,9 +6,9 @@ nnoremap <leader><bs> <scriptcmd>fuzzy.Buffer()<CR>
 nnoremap <leader><space> <scriptcmd>fuzzy.File()<CR>
 var findcmd = "find /Users/gp/.vim -type d -path */plugged -prune -o -name *.swp -prune -o -path */.vim/.* -prune -o -type f -print -follow"
 # var findcmd = 'fd -tf -L . /Users/gp/.vim'
-nnoremap <leader>fv <scriptcmd>fuzzy.File(findcmd, true)<CR>
-nnoremap <leader>fV <scriptcmd>fuzzy.File("find " .. $VIMRUNTIME .. " -type f -print -follow", true)<CR>
-nnoremap <leader>fh <scriptcmd>fuzzy.File("find " .. $HOME .. "/help -type f -print -follow", true)<CR>
+nnoremap <leader>fv <scriptcmd>fuzzy.File(findcmd)<CR>
+nnoremap <leader>fV <scriptcmd>fuzzy.File("find " .. $VIMRUNTIME .. " -type f -print -follow")<CR>
+nnoremap <leader>fh <scriptcmd>fuzzy.File("find " .. $HOME .. "/help -type f -print -follow")<CR>
 nnoremap <leader>g <scriptcmd>fuzzy.Grep()<CR>
 nnoremap <leader>ft <scriptcmd>fuzzy.Template()<CR>
 nnoremap <leader>fm <scriptcmd>fuzzy.MRU()<CR>

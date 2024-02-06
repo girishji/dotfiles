@@ -3,14 +3,8 @@ vim9script
 def Quiet()
     if &background == 'dark'
         highlight  Normal                   ctermbg=None
-        highlight  helpHyperTextJump        cterm=underline
-        highlight  helpHyperTextEntry       cterm=italic
-        highlight  helpHeader               cterm=bold
-        highlight  helpCommand              ctermfg=248
-        highlight  link helpNote            Normal
         highlight  Comment                  ctermfg=244
         highlight  LineNr                   ctermfg=244
-        highlight  PreProc                  cterm=bold
         highlight  helpExample              ctermfg=248
         highlight  LspSigActiveParameter    ctermfg=207
         highlight  statusline    ctermbg=none  ctermfg=242  guibg=Grey35  cterm=none
@@ -44,6 +38,10 @@ def Quiet()
         highlight  user1         cterm=bold,reverse
         highlight  user4         cterm=bold,reverse
     endif
+    highlight  PreProc                  cterm=bold
+    highlight  helpHeader               cterm=bold
+    highlight  helpCommand              ctermfg=248
+    highlight  link helpNote            Normal
     highlight link helpHyperTextEntry Underlined
     highlight link helpHyperTextJump Underlined
     highlight link manReference Underlined

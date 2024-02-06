@@ -11,8 +11,8 @@ endif
 if exists("g:loaded_vimcomplete")
     g:vimcomplete_tab_enable = 1
     var dictproperties = {
-        python: { onlyWords: false, sortedDict: false},
-        text: { onlyWords: true, sortedDict: true, matcher: 'casematch' }
+        python: { sortedDict: false },
+        text: { sortedDict: true },
     }
     g:VimCompleteOptionsSet({
         completor: { shuffleEqualPriority: true, alwaysOn: true },
@@ -65,7 +65,7 @@ if exists("g:loaded_lsp")
         diagVirtualTextAlign: 'after',
         autoPopulateDiags: false, # add diags to location list automatically <- :lopen [l ]l
         # completionMatcher: 'fuzzy', # case/fuzzy/icase
-        completionMatcher: 'icase', # case/fuzzy/icase
+        completionMatcher: 'case', # case/fuzzy/icase
         diagSignErrorText: '●',
         diagSignHintText: '●',
         diagSignInfoText: '●',
@@ -75,10 +75,9 @@ if exists("g:loaded_lsp")
         echoSignature: false,
         useBufferCompletion: false,
         completionTextEdit: false,
-        snippetSupport: false, # snippets from lsp server
-        vsnipSupport: false,
-        # autoComplete: false,
-        # omniComplete: true,
+        # snippetSupport: false, # snippets from lsp server
+        # vsnipSupport: false,
+        ignoreMissingServer: true,
     })
     if executable('clangd')
         g:LspAddServer([{

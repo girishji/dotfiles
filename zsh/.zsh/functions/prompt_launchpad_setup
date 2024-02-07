@@ -23,9 +23,9 @@
 # girish: print current directory in a separate line
 # assign prompt in one line: https://superuser.com/questions/382503/how-can-i-put-a-newline-in-my-zsh-prompt-without-causing-terminal-redraw-issues
 if [[ $OSTYPE == darwin* && $(arch) != arm64 ]]; then
-    PS1="%F{%(?,10,9)}<$(arch)> [%40<..<%~%<<]"$'\n'"%#%f "  # 10 is bright green; 9 is bright red.
+    PS1="%F{244}<$(arch)> %40<..<%~%<<%f"$'\n'"%F{%(?,10,9)}%#%f "  # 10 is bright green; 9 is bright red.
 else
-    PS1="%F{%(?,10,9)}[%40<..<%~%<<]"$'\n'"%#%f "  # 10 is bright green; 9 is bright red.
+    PS1="%F{244}%40<..<%~%<<%f"$'\n'"%K{%(?,10,9)}%F{7}%#%f%k "  # 10 is bright green; 9 is bright red.
 fi
 
 # Strings in "double quotes" are what is in some languages called "template

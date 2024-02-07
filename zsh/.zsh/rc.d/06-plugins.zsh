@@ -49,7 +49,7 @@ else
     source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 # Make PgDn accept suggestion; by default right-arrow accepts suggestion
-bindkey '^[[6~' autosuggest-accept
+bindkey -v '^[[6~' autosuggest-accept
 # XXX: Setting fg color does not work properly. It does not repaint the screen
 # after right-arrow completion.
 # bg_color="${COLORFGBG:-0;-1}" # if not set, use default value of 0;-1 (fg;bg)

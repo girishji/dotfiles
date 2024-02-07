@@ -36,7 +36,8 @@ prompt_launchpad_vcs-info() {
     [[ $RPS1 == $REPLY ]] &&
         return   # Don't repaint if there's no change.
 
-    RPS1=$REPLY
+    # RPS1=$REPLY
+    RPS1="[$REPLY]"
 
     [[ $CONTEXT == start ]] &&
         zle .reset-prompt   # Repaint only if $RPS1 is actually visible.

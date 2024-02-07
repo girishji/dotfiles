@@ -17,7 +17,17 @@
 # prepend _expand_alias.
 zstyle ':completion:*' completer _expand_alias _expand _complete _correct _approximate _complete:-fuzzy _prefix _ignored
 
-# Blurb from https://thevaluable.dev/zsh-completion-guide-examples/
+# git directories show up as ~[dir]. This is because of dynamic naming of dirs.
+# During file name expansion, a ~[string] is provided to the
+# zsh_directory_name() function which will eventually reply with a directory
+# name (path).
+# https://vincent.bernat.ch/en/blog/2015-zsh-directory-bookmarks
+# https://zsh.sourceforge.io/Doc/Release/User-Contributions.html#Other-Directory-Functions
+# https://zsh.sourceforge.io/Doc/Release/Expansion.html#Filename-Expansion
+
+############################################################
+## Blurb from https://thevaluable.dev/zsh-completion-guide-examples/
+#
 
 # To initialize the completion for the current Zsh session, you’ll need to call
 # the function compinit.

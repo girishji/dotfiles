@@ -60,10 +60,11 @@ bindkey '^[w' where-is
 } .sudo
 
 # To see the key combo you want to use just do:
-# cat > /dev/null
-# And press it
+# https://superuser.com/questions/169920/binding-fn-delete-in-zsh-on-mac-os-x/169930#169930
+# cat > /dev/null or ctrl-v and then type key
 
 # Edit line in vim with ctrl-e:
+# https://zsh.sourceforge.io/Doc/Release/User-Contributions.html#ZLE-Functions
 autoload edit-command-line
 zle -N edit-command-line
 bindkey -M viins '^e' edit-command-line
@@ -96,13 +97,19 @@ bindkey '\t' menu-select "$terminfo[kcbt]" menu-select
 bindkey -M menuselect '\t' menu-complete "$terminfo[kcbt]" reverse-menu-complete
 # Make Enter submit the command line straight from the menu
 bindkey -M menuselect '\r' .accept-line
-# Limit number of lines shows:
+# Limit number of lines shown:
 #   Autocompletion
 zstyle -e ':autocomplete:list-choices:*' list-lines 'reply=( $(( LINES / 3 )) )'
-#   Override history search.
+#   8 lines in history search.
 zstyle ':autocomplete:history-incremental-search-backward:*' list-lines 8
-#   History menu.
+#   History menu (can be scrolled).
 zstyle ':autocomplete:history-search-backward:*' list-lines 256
 # Show history menu on ctrl-R/S
 bindkey '^R' history-incremental-search-backward
 bindkey '^S' history-incremental-search-forward
+# Offer recent files first.
+# _path_files throws an error
+# autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+# add-zsh-hook chpwd chpwd_recent_dirs
+# zstyle ':chpwd:*' recent-dirs-max 200
+

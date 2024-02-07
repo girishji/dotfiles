@@ -457,6 +457,14 @@ Can add methods:~
 	    def __lt__(self, other):
 	        return True
 
+leetcode does not support, do:
+class Item:
+    def __init__(self, key=0, val=0, next=None, prev=None):
+        self.key = key
+        self.value = val
+        self.next = next
+        self.prev = prev
+
 ------------------------------------------------------------------------------
 Inheritance: super() is very different than in Java.~
 super() alone returns a temporary object of the superclass that then allows you
@@ -1498,8 +1506,22 @@ Find loop in linked list~
 - to know where the head of loop is, you count the loop length, advance a ptr
 from beginnig by loop length and another from beginning and see where they
 meet.
+
 ------------------------------------------------------------------------------
+Sort a linked list:~
+- easier to **merge** linked lists, so use merge sort
+- split lists where each list ends in a None and has a dummy head
+- watch out for trap where they give a problem earlier where insertion sort
+  would be a good solution for sorting (O(n**2) acceptable, and then they say
+  now do it in O(nlogn).
+
 ------------------------------------------------------------------------------
+Division beware: 6 // -7 => -1 (not 0): ~
+6 // 7  => 0
+It does not round towards 0 when number is negative. Same with math.floor()
+To always round to zero (even -ve numbers), do:
+int(6 / -7) => convert to float and force it to int.
+
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 

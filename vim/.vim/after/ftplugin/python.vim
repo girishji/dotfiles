@@ -17,7 +17,8 @@ setl dictionary=$HOME/.vim/data/python.dict
 setl makeprg=python3\ %
 
 if exists("g:loaded_pythondoc")
-    g:pythondoc_hh_expand = 1 # use cabbr :hh<space>
+    import 'pythondoc_abbrev.vim' as abbrev
+    abbrev.ExpandHH()
     nnoremap <buffer> <leader>H :Help<space>
 endif
 
@@ -50,9 +51,9 @@ def GetSurroundingFn(): string
     return ''
 enddef
 
-iabbr <buffer><expr> def      abbr#NotCtx() ? 'def' : 'def ):<cr><esc>-f)i<c-r>=abbr#Eatchar()<cr>'
-iabbr <buffer><expr> def_     abbr#NotCtx() ? 'def' : 'def ():<cr>"""."""<esc>-f(i<c-r>=abbr#Eatchar()<cr>'
-iabbr <buffer><expr> def__    def ():<c-o>o'''<cr>>>> print()<cr><cr>'''<esc>4k_f(i<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer><expr> def      abbr#NotCtx('def') ? 'def' : 'def ):<cr><esc>-f)i<c-r>=abbr#Eatchar()<cr>'
+iabbr <buffer>       def_     def ():<cr>"""."""<esc>-f(i<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       def__    def ():<c-o>o'''<cr>>>> print()<cr><cr>'''<esc>4k_f(i<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer>       try_ try:
             \<cr>pass
             \<cr>except Exception as err:

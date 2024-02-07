@@ -191,4 +191,3 @@ if exists("g:loaded_bufline")
     highlight link user3 statusline
     g:BuflineSetup({ highlight: true, showbufnr: false })
 endif
-

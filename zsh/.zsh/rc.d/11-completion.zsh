@@ -3,7 +3,6 @@
 ##
 # completion system
 #
-# https://thevaluable.dev/zsh-completion-guide-examples/
 
 # 1) When you’re not sure why you end up with some matches and not others, you can
 # hit CTRL+x h (for help) before completing your command. It will display some
@@ -12,9 +11,8 @@
 # 2) You can run 'zstyle' in your shell to display the styles set in your current
 # session as well as their patterns.
 
-# zsh-autocomplete plugin initializes the completion system.
-# It does not expand aliases after TAB. Get the style from 'zstyle' command and
-# prepend _expand_alias.
+# zsh-autocomplete plugin initializes the completion system (no need for 'compinit' here)
+# zsh by default does not include aliases in autocompletion. Prepend _expand_alias.
 zstyle ':completion:*' completer _expand_alias _expand _complete _correct _approximate _complete:-fuzzy _prefix _ignored
 
 # git directories show up as ~[dir]. This is because of dynamic naming of dirs.

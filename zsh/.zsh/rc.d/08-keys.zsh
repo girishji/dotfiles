@@ -92,9 +92,31 @@ done
 # We use the bindkey command to bind these new text-objects to both keymaps.
 
 # https://github.com/marlonrichert/zsh-autocomplete?tab=readme-ov-file#configuration
-# Make Tab go straight to the menu and cycle there
-bindkey '\t' menu-select "$terminfo[kcbt]" menu-select
-bindkey -M menuselect '\t' menu-complete "$terminfo[kcbt]" reverse-menu-complete
+# Make Tab and ShiftTab cycle completions on the command line
+bindkey '\t' menu-complete "$terminfo[kcbt]" reverse-menu-complete
+
+# First insert the common substring
+#
+# You can make any completion widget first insert the longest sequence of
+# characters that will complete to all completions shown, if any, before
+# inserting actual completions:
+#
+# all Tab widgets
+zstyle ':autocomplete:*complete*:*' insert-unambiguous yes
+#
+# all history widgets
+zstyle ':autocomplete:*history*:*' insert-unambiguous yes
+#
+# ^S
+zstyle ':autocomplete:menu-search:*' insert-unambiguous yes
+
+# Insert prefix instead of substring
+#
+# When using the above, if you want each widget to first try to insert only the
+# longest prefix that will complete to all completions shown, if any, then add
+# the following:
+zstyle ':completion:*:*' matcher-list 'm:{[:lower:]-}={[:upper:]_}' '+r:|[.]=**'
+
 # Make Enter submit the command line straight from the menu
 bindkey -M menuselect '\r' .accept-line
 # Limit number of lines shown:

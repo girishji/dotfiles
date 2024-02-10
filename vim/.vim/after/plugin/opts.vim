@@ -1,6 +1,5 @@
 vim9script
 
-
 if exists("g:loaded_easyjump")
     # g:easyjump_default_keymap = false
     # nmap , <Plug>EasyjumpJump;
@@ -15,7 +14,7 @@ if exists("g:loaded_vimcomplete")
         text: { sortedDict: true },
     }
     g:VimCompleteOptionsSet({
-        completor: { shuffleEqualPriority: true, alwaysOn: true },
+        completor: { shuffleEqualPriority: true, alwaysOn: false, kindDisplayType: 'icontext', noNewlineInCompletion: true },
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true },
         dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'text'], properties: dictproperties },
         abbrev: { enable: true },

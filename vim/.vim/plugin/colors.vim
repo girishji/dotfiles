@@ -23,6 +23,7 @@ def Quiet()
         highlight  PmenuSel    ctermfg=none  ctermbg=25
         highlight  PmenuSbar   ctermfg=none  ctermbg=236
         highlight  PmenuThumb  ctermfg=none  ctermbg=240
+        highlight  helpCommand ctermfg=248   ctermbg=236
     else
         highlight statusline cterm=none
         highlight Comment  cterm=none ctermfg=242
@@ -37,10 +38,10 @@ def Quiet()
         g:popupthumbhighlight  = 'statuslinenc'
         highlight  user1         cterm=bold,reverse
         highlight  user4         cterm=bold,reverse
+        highlight  helpCommand ctermbg=254 ctermfg=240
     endif
     highlight  PreProc                  cterm=bold
     highlight  helpHeader               cterm=bold
-    highlight  helpCommand              ctermfg=248
     highlight  link helpNote            Normal
     highlight link helpHyperTextEntry Underlined
     highlight link helpHyperTextJump Underlined

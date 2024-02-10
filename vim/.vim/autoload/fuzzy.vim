@@ -105,7 +105,7 @@ enddef
 # live grep, not fuzzy search. for space use '\ '.
 # cannot use >1 words unless spaces are escaped (grep pattern is: grep <pat>
 # <path1, path2, ...>, so it will interpret second word as path)
-export def Grep()
+export def Grep(grepcmd: string = '')
     var menu = popup.FilterMenuPopup.new()
     menu.PopupCreate('Grep', [{text: ''}],
         (res, key) => {
@@ -125,7 +125,8 @@ export def Grep()
         (lst: list<dict<any>>, prompt: string): list<any> => {
             # GetItems
             if !prompt->empty()
-                var cmd = &grepprg .. ' ' .. prompt
+                var cmd = (grepcmd ?? &grepprg) .. ' ' .. prompt
+                echom cmd
                 # do not convert cmd to list, as this will not quote space characters correctly.
                 menu.BuildItemsList(cmd, (items: list<any>) => {
                     if menu.PopupClosed()
@@ -143,6 +144,8 @@ export def Grep()
                         return [items_dict, [items_dict]]
                     }, 100)  # max 100 items, and then kill the job
                 })
+                win_execute(menu.id, "syn clear")
+                win_execute(menu.id, $"syn match FilterMenuMatch \"{menu.prompt->escape('~ \')}\"")
             endif
             return [lst, [lst]]
         },

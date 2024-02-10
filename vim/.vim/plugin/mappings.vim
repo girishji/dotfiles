@@ -9,7 +9,10 @@ var findcmd = "find /Users/gp/.vim -type d -path */plugged -prune -o -name *.swp
 nnoremap <leader>fv <scriptcmd>fuzzy.File(findcmd)<CR>
 nnoremap <leader>fV <scriptcmd>fuzzy.File("find " .. $VIMRUNTIME .. " -type f -print -follow")<CR>
 nnoremap <leader>fh <scriptcmd>fuzzy.File("find " .. $HOME .. "/help -type f -print -follow")<CR>
+nnoremap <leader>fz <scriptcmd>fuzzy.File("find " .. $HOME .. "/.zsh -type f -print -follow")<CR>
 nnoremap <leader>g <scriptcmd>fuzzy.Grep()<CR>
+var case_sensitive_grepcmd = 'grep --color=never -RESIHn --exclude={"*.zwc","*.swp","*.git*"} --exclude-dir=plugged'
+nnoremap <leader>G <scriptcmd>fuzzy.Grep(case_sensitive_grepcmd)<CR>
 nnoremap <leader>ft <scriptcmd>fuzzy.Template()<CR>
 nnoremap <leader>fm <scriptcmd>fuzzy.MRU()<CR>
 nnoremap <leader>fk <scriptcmd>fuzzy.Keymap()<CR>

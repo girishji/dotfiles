@@ -134,8 +134,8 @@ Plug 'girishji/autosuggest.vim'
 Plug 'girishji/bufline.vim'
 Plug '~/git/vimcomplete'
 # Plug 'girishji/vimcomplete'
-# Plug '~/git/ngram-complete.vim'
-Plug 'girishji/ngram-complete.vim'
+Plug '~/git/ngram-complete.vim'
+# Plug 'girishji/ngram-complete.vim'
 # Plug 'girishji/pythondoc.vim', {'for': 'python'}
 Plug '~/git/pythondoc.vim', {'for': 'python'}
 # Plug '~/git/easyjump.vim'

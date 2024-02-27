@@ -75,8 +75,8 @@ export def File(findCmd: string = '')
             for fname in ['.git']  # matches .git/ and .gitrc through */git*
                 cmd->extend(['-path', $'*/{fname}*', '-prune', '-o'])
             endfor
-            for fname in ['plugged']
-                cmd->extend(['-type', 'd', '-path', $'*/{fname}*', '-prune', '-o'])
+            for dname in ['plugged', '.zsh_sessions']
+                cmd->extend(['-type', 'd', '-path', $'*/{dname}*', '-prune', '-o'])
             endfor
             return cmd->extend(['-type', 'f', '-print', '-follow'])
         endif
@@ -152,8 +152,14 @@ export def Grep(grepcmd: string = '')
         false, &lines - 6, &columns - 8)
 enddef
 
+var list_all_buffers = false
+def ListAllBuffersToggle()
+    list_all_buffers = !list_all_buffers
+enddef
+command ListAllBuffersToggle ListAllBuffersToggle()
 export def Buffer()
-    var buffer_list = getbufinfo({'buflisted': 1})->mapnew((_, v) => {
+    var blist = list_all_buffers ? getbufinfo({buloaded: 1}) : getbufinfo({buflisted: 1})
+    var buffer_list = blist->mapnew((_, v) => {
         return {bufnr: v.bufnr,
                 text: (bufname(v.bufnr) ?? $'[{v.bufnr}: No Name]'),
                 lastused: v.lastused,

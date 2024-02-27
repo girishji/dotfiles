@@ -2,6 +2,7 @@ vim9script
 
 var options = {
     borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+    # borderchars: ['─', '│', '─', '│', '╭', '╮', '╯', '╰'],
     bordertitle: ['─┐', '┌'],
     borderhighlight: hlexists('PopupBorderHighlight') ? ['PopupBorderHighlight'] : [],
     popuphighlight: get(g:, "popuphighlight", 'Normal'),
@@ -192,15 +193,19 @@ export class FilterMenuPopup
         endif
         this.job = job_start(cmd, {
             out_cb: (ch, str) => {
+                # out_cb is invoked when channel reads 1 line; if you don't care
+                # about intermediate output use close_cb
                 items->add(str)
                 if start->reltime()->reltimefloat() * 1000 > 100 # update every 100ms
                     CallbackFn(items)
                     start = reltime()
                 endif
             },
-            exit_cb: (jb, status) => {
-                CallbackFn(items)
-            }
+            close_cb: (ch) =>  CallbackFn(items),
+            err_cb: (chan: channel, msg: string) => {
+                # ignore errors
+                # :echohl ErrorMsg | echoerr $'error: {msg} from {cmd}' | echohl None
+            },
         })
     enddef
 

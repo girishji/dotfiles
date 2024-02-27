@@ -71,7 +71,7 @@ alias F="for x (**/*(.));do ;done"  # use *** to follow symlink
 #  - when using glob chars like *, ?, use single quotes to escape shell interpretation
 #  - cannot alias 'fi' since it is a reserved keyword, 'fg' is foreground cmd
 alias ff="find . \( -name '*.zwc' -o -name '*.swp' -o -path '*/.git*' -o -path '*/plugged*' \) -prune -o -type f -print -follow"
-alias fff="find . -name '*/.c' -print -follow -exec grep --color -Ei xxx {} \;"
+alias fff="find . -name '*.c' -print -follow -exec grep --color -EHni xxx {} \;"
 
 # git
 alias ga='git add .; gitcommit '
@@ -96,7 +96,7 @@ alias ag='ag --smart-case'
 #       --exclude-dir pattern -> If -R is specified, it excludes directories
 #         matching the given filename pattern from the search.  Note that --exclude-dir
 #         and --include-dir patterns are processed in the order given.
-#         --exclude-dir is dir-name(s) and not pathname(s). directory names cannot contain /.
+#         --exclude-dir is dir-name(s) and not pathname(s). directory names cannot contain '/'
 #         Following doesn't work:
 #         (NO) grep -r --exclude-dir={/var/cache,/var/lib}
 #       --include-dir pattern -> just like --include

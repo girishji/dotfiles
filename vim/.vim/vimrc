@@ -70,6 +70,7 @@ set whichwrap+=<,>,h,l # make arrows and h, l, push cursor to next line
 # ctags can get slow if it seaches dirs for tags file
 set tags=./tags,./../tags,./*/tags # this dir, just one level above, and all subdirs
 # set tags=~/git/zmk/app/tags
+set virtualedit=block # allows selection of rectangular text in visual block mode
 
 syntax on # turn on syntax highlighting
 
@@ -128,10 +129,13 @@ Plug 'hrsh7th/vim-vsnip-integ'
 # colorschemes
 # Plug 'cocopon/iceberg.vim'
 #
-# Plug '~/git/autosuggest.vim'
-Plug 'girishji/autosuggest.vim'
+Plug '~/git/declutter.vim'
+# Plug 'girishji/declutter.vim'
+Plug '~/git/autosuggest.vim'
+# Plug 'girishji/autosuggest.vim'
 # Plug '~/git/bufline.vim'
 Plug 'girishji/bufline.vim'
+Plug 'girishji/fFtT.vim'
 Plug '~/git/vimcomplete'
 # Plug 'girishji/vimcomplete'
 Plug '~/git/ngram-complete.vim'
@@ -140,6 +144,7 @@ Plug '~/git/ngram-complete.vim'
 Plug '~/git/pythondoc.vim', {'for': 'python'}
 # Plug '~/git/easyjump.vim'
 Plug 'girishji/easyjump.vim'
+Plug '~/git/devdocs.vim'
 plug#end()
 
 # vim: ts=8 sts=4 sw=4 et fdm=marker

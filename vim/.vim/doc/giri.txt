@@ -1,5 +1,8 @@
 *giri.txt*
 ----------------------------------------
+See |tips.txt|
+
+----------------------------------------
 File organization                    *giri-vim-file-org*
 
 - after/ftplugin/ft.vim can be split into ft_foo1.vim, ft_foo2.vim, etc., or
@@ -657,9 +660,9 @@ to where the cursor is.
 See :h E16
 this will copy a line with 'foo' to here.
 
-	/{pattern}[/]	the next line where {pattern} matches	  *:/*
+	/{pattern}[/]	the next line where {pattern} matches
 				also see |:range-pattern| below
-	?{pattern}[?]	the previous line where {pattern} matches *:?*
+	?{pattern}[?]	the previous line where {pattern} matches
 				also see |:range-pattern| below
 
 When separated with ';' the cursor position will be set to that line

@@ -14,13 +14,13 @@ if exists("g:loaded_vimcomplete")
         text: { sortedDict: true },
     }
     g:VimCompleteOptionsSet({
-        completor: { shuffleEqualPriority: true, alwaysOn: false, kindDisplayType: 'icontext', noNewlineInCompletion: true },
-        buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true },
+        completor: { shuffleEqualPriority: true, alwaysOn: true, kindDisplayType: 'icontext' },
+        buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
         dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'text'], properties: dictproperties },
         abbrev: { enable: true },
-        lsp: { enable: true, maxCount: 10, priority: 8 },
-        omnifunc: { enable: false, priority: 10, filetypes: ['python', 'javascript'] },
-        vsnip: { enable: true, adaptNonKeyword: true },
+        lsp: { enable: false, maxCount: 10, priority: 8 },
+        omnifunc: { enable: true, priority: 10, filetypes: ['python', 'javascript'] },
+        vsnip: { enable: true, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },
         vimscript: { enable: true, priority: 10 },
         ngram: {
             enable: true,
@@ -54,8 +54,6 @@ if exists("g:loaded_autosuggest")
 endif
 
 if exists("g:loaded_lsp")
-    nnoremap <buffer> [e :LspDiagPrev<CR>| # think as 'error' message
-    nnoremap <buffer> ]e :LspDiagNext<CR>
     g:LspOptionsSet({
         autoHighlightDiags: true,
         showDiagWithVirtualText: false, # when you set this false, set showDiagOnStatusLine true
@@ -123,22 +121,27 @@ if exists("g:loaded_lsp")
             },
         }])
     endif
-    if &background == 'dark'
-        highlight  LspDiagVirtualTextError    ctermbg=none  ctermfg=1
-        highlight  LspDiagVirtualTextWarning  ctermbg=none  ctermfg=3
-        highlight  LspDiagVirtualTextHint     ctermbg=none  ctermfg=2
-        highlight  LspDiagVirtualTextInfo     ctermbg=none  ctermfg=5
-    endif
-    highlight  link  LspDiagSignErrorText    LspDiagVirtualTextError
-    highlight  link  LspDiagSignWarningText  LspDiagVirtualTextWarning
-    highlight  link  LspDiagSignHintText     LspDiagVirtualTextHint
-    highlight  link  LspDiagSignInfoText     LspDiagVirtualTextInfo
-    highlight LspDiagInlineError ctermfg=none cterm=undercurl
-    highlight LspDiagInlineWarning ctermfg=none cterm=none
-    highlight LspDiagInlineHint ctermfg=none cterm=none
-    highlight LspDiagInlineInfo ctermfg=none cterm=none
-    highlight LspDiagVirtualText ctermfg=1
-    highlight LspDiagLine ctermbg=none
+    def LSPUserSetup()
+        nnoremap <buffer> [e :LspDiagPrev<CR>| # think as 'error' message
+        nnoremap <buffer> ]e :LspDiagNext<CR>
+        if &background == 'dark'
+            highlight  LspDiagVirtualTextError    ctermbg=none  ctermfg=1
+            highlight  LspDiagVirtualTextWarning  ctermbg=none  ctermfg=3
+            highlight  LspDiagVirtualTextHint     ctermbg=none  ctermfg=2
+            highlight  LspDiagVirtualTextInfo     ctermbg=none  ctermfg=5
+        endif
+        highlight  link  LspDiagSignErrorText    LspDiagVirtualTextError
+        highlight  link  LspDiagSignWarningText  LspDiagVirtualTextWarning
+        highlight  link  LspDiagSignHintText     LspDiagVirtualTextHint
+        highlight  link  LspDiagSignInfoText     LspDiagVirtualTextInfo
+        highlight LspDiagInlineWarning ctermfg=none
+        highlight LspDiagInlineHint ctermfg=none
+        highlight LspDiagInlineInfo ctermfg=none
+        highlight LspDiagInlineError ctermfg=none cterm=undercurl
+        highlight LspDiagVirtualText ctermfg=1
+        highlight LspDiagLine ctermbg=none
+    enddef
+    autocmd User LspAttached LSPUserSetup()
 endif
 
 if exists("g:loaded_swap")

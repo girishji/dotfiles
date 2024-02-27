@@ -68,6 +68,17 @@ enddef
 
 def Sorbet()
     highlight  AS_SearchCompletePrefix  ctermfg=124
+    highlight PmenuKind ctermfg=246 ctermbg=8 cterm=none
+    highlight! link PmenuKindSel PmenuSel
+    highlight PmenuExtra ctermfg=246 ctermbg=8 cterm=none
+    highlight! link PmenuExtraSel PmenuSel
+    highlight Pmenu ctermfg=none ctermbg=8 cterm=none
+    # highlight PmenuSel ctermfg=none ctermbg=24
+    highlight PmenuSel ctermfg=none ctermbg=58
+    highlight PmenuSbar ctermfg=none ctermbg=8
+    highlight PmenuThumb ctermfg=none ctermbg=240
+    highlight statusline ctermbg=none ctermfg=248 guibg=Grey35 cterm=none
+    highlight statuslinenc ctermbg=none ctermfg=242 guibg=Grey35 cterm=none
 enddef
 
 augroup colorschemes | autocmd!
@@ -81,7 +92,12 @@ augroup END
 
 # Preview here: https://vimcolorschemes.com/vim/colorschemes (ubunto mono font)
 if &background == 'dark'
-    silent! colorscheme quiet
+    # silent! colorscheme quiet
+    # silent! colorscheme sorbet
+
+    silent! colorscheme declutter
+    autocmd BufEnter * g:DeclutterUseTerminalFGBG()
+    # autocmd BufEnter * g:DeclutterBrightenBoldFont()
 else
     silent! colorscheme quiet
     # silent! colorscheme lunaperche

@@ -47,7 +47,7 @@ augroup GeneralAutocmds | autocmd!
     # :expandtab replaces tab to spaces
     # gitdiff by default uses 8 for tab width
     # Use <c-v><tab> to insert real tab character
-    autocmd FileType c,cpp,java,vim set softtabstop=4 shiftwidth=4 expandtab
+    autocmd FileType c,cpp,java,vim,lua set softtabstop=4 shiftwidth=4 expandtab
     # Remove any trailing whitespace that is in the file
     autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
     # for competitive programming  (book by Antti Laaksonen); install gcc using homebrew

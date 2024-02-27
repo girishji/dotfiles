@@ -55,6 +55,6 @@ bindkey -v '^[[6~' autosuggest-accept
 bg_color="${COLORFGBG:-0;-1}" # if not set, use default value of 0;-1 (fg;bg)
 if [[ ${bg_color} == "0;15" ]]; then # light background
   typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
-# else
-#   typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=7'
+else
+  typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
 fi

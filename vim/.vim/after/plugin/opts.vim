@@ -18,8 +18,8 @@ if exists("g:loaded_vimcomplete")
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
         dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'text'], properties: dictproperties },
         abbrev: { enable: true },
-        lsp: { enable: false, maxCount: 10, priority: 8 },
-        omnifunc: { enable: true, priority: 10, filetypes: ['python', 'javascript'] },
+        lsp: { enable: true, maxCount: 10, priority: 8 },
+        omnifunc: { enable: false, priority: 10, filetypes: ['python', 'javascript'] },
         vsnip: { enable: true, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },
         vimscript: { enable: true, priority: 10 },
         ngram: {
@@ -29,6 +29,9 @@ if exists("g:loaded_vimcomplete")
             filetypes: ['text', 'help', 'markdown'],
             filetypesComments: ['c', 'cpp', 'python', 'java', 'lua', 'vim', 'zsh', 'r'],
         },
+    })
+    g:VimCompleteInfoPopupOptionsSet({
+        borderhighlight: ['Comment'],
     })
 endif
 
@@ -175,21 +178,58 @@ if exists("g:loaded_highlightedyank")
 endif
 
 if exists("g:loaded_bufline")
-    if &background == 'dark'
-        # set fillchars+=stl:―,stlnc:—
-        set fillchars+=stl:─,stlnc:─
-        if &termguicolors
-            highlight link user1 statusline
-            highlight link user2 statusline
-            highlight link user4 statusline
-        endif
-    else
-        highlight link user1 statusline
-        highlight link user2 statusline
-        highlight link user4 statusline
-    endif
-    highlight! link StatusLineTerm statusline
-    highlight! link StatusLineTermNC statuslinenc
+    highlight link user1 statusline
+    highlight link user2 statusline
     highlight link user3 statusline
+    highlight link user4 statusline
     g:BuflineSetup({ highlight: true, showbufnr: false })
+endif
+
+# another way
+# if exists('g:loaded_devdocs')
+#     import autoload 'devdocs/install.vim'
+#     import autoload 'devdocs/uninstall.vim'
+#     import autoload 'devdocs/find.vim'
+#     nnoremap <leader>I <scriptcmd>install.Install()<CR>
+#     nnoremap <leader>U <scriptcmd>uninstall.Uninstall()<CR>
+#     nnoremap <leader>h <scriptcmd>find.Find()<CR>
+#     hi link DevdocCode CursorLine
+# endif
+
+if exists('g:loaded_devdocs')
+    nnoremap <leader>h <cmd>DevdocsFind<CR>
+    nnoremap <leader>I <cmd>DevdocsInstall<CR>
+    nnoremap <leader>U <cmd>DevdocsUninstall<CR>
+    # hi link DevdocCode CursorLine
+    g:DevdocsPopupOptionsSet({borderhighlight: ['Comment']})
+endif
+
+if exists('g:loaded_scope')
+    g:ScopePopupOptionsSet({borderhighlight: ['Comment']})
+    import autoload 'scope/fuzzy.vim'
+
+    nnoremap <leader><bs> <scriptcmd>fuzzy.Buffer()<CR>
+    nnoremap <leader>fb <scriptcmd>fuzzy.Buffer(true)<CR>
+
+    nnoremap <leader><space> <scriptcmd>fuzzy.File()<CR>
+    # note: <scriptcmd> sets the context of execution to the fuzzyscope.vim script, so 'findcmd' var is not visible
+    # var findcmd = 'fd -tf -L . /Users/gp/.vim'
+    nnoremap <leader>fv <scriptcmd>fuzzy.File("find " .. $HOME .. "/.vim -type d -path */plugged -prune -o -name *.swp -prune -o -path */.vim/.* -prune -o -type f -print -follow")<CR>
+    nnoremap <leader>fV <scriptcmd>fuzzy.File("find " .. $VIMRUNTIME .. " -type f -print -follow")<CR>
+    nnoremap <leader>fh <scriptcmd>fuzzy.File("find " .. $HOME .. "/help -type f -print -follow")<CR>
+    nnoremap <leader>fuzzy <scriptcmd>fuzzy.File("find " .. $HOME .. "/.zsh -type f -print -follow")<CR>
+
+    nnoremap <leader>g <scriptcmd>fuzzy.Grep()<CR>
+    # case sensitive grep
+    nnoremap <leader>G <scriptcmd>fuzzy.Grep('grep --color=never -RESIHn --exclude="*.git*" --exclude="*.swp" --exclude="*.zwc" --exclude-dir=plugged', false)<CR>
+
+    nnoremap <leader>ft <scriptcmd>fuzzy.Template()<CR>
+    # nnoremap <leader>fm <scriptcmd>fuzzy.MRU()<CR>
+    nnoremap <leader>fk <scriptcmd>fuzzy.Keymap()<CR>
+    nnoremap <leader>fH <scriptcmd>fuzzy.Help()<CR>
+    nnoremap <leader>fl <scriptcmd>fuzzy.Highlight()<CR>
+    nnoremap <leader>fw <scriptcmd>fuzzy.Window()<CR>
+    nnoremap <leader>fC <scriptcmd>fuzzy.Colorscheme()<CR>
+    nnoremap <leader>fc <scriptcmd>fuzzy.CmdHistory()<CR>
+    nnoremap <leader>f* <scriptcmd>fuzzy.JumpToWord()<CR>
 endif

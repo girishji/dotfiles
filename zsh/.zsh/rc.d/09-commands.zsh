@@ -131,12 +131,12 @@ alias -g G='| grep --color -iEI'
 
 alias pipi='pip install --user '
 alias lc='leetcode '
-# alias vim_='vim -Nu NONE -S <(cat <<EOF
-#     " vim:ts=4:ft=vim
-#     vim9script
-#     :set shortmess=I
-# EOF
-# )'
+alias vim_='vim -Nu NONE -S <(cat <<EOF
+    " vim:ts=4:ft=vim
+    vim9script
+    :set shortmess=I
+EOF
+)'
 
 alias l1='ls -1' # one listing per line
 alias l='ls'

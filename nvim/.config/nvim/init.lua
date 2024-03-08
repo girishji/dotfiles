@@ -70,6 +70,17 @@ require('lazy').setup({
     },
   },
 
+  -- {
+  --   'glacambre/firenvim',
+
+  --   -- Lazy load firenvim
+  --   -- Explanation: https://github.com/folke/lazy.nvim/discussions/463#discussioncomment-4819297
+  --   lazy = not vim.g.started_by_firenvim,
+  --   build = function()
+  --     vim.fn["firenvim#install"](0)
+  --   end
+  -- },
+
   {
     -- formatting and linting
     'jose-elias-alvarez/null-ls.nvim',
@@ -229,31 +240,31 @@ require('lazy').setup({
     opts = { showbufnr = true, highlight = true }
   },
 
-  {
-    -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
-    -- See `:help indent_blankline.txt`
-    opts = {
-      -- https://www.compart.com/en/unicode/search?q=vertical#characters
-      char = '⋮', -- '│' -- char = '┊', char = '▏',|⏐│ |❘ ⁞❚ ⋮┊
-      show_trailing_blankline_indent = false,
-      char_highlight_list = {
-        "IndentBlanklineIndent1",
-      },
-    },
-  },
+  -- {
+  --   -- Add indentation guides even on blank lines
+  --   'lukas-reineke/indent-blankline.nvim',
+  --   -- See `:help indent_blankline.txt`
+  --   opts = {
+  --     -- https://www.compart.com/en/unicode/search?q=vertical#characters
+  --     char = '⋮', -- '│' -- char = '┊', char = '▏',|⏐│ |❘ ⁞❚ ⋮┊
+  --     show_trailing_blankline_indent = false,
+  --     char_highlight_list = {
+  --       "IndentBlanklineIndent1",
+  --     },
+  --   },
+  -- },
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim',         opts = {} },
 
   -- Code overview
-  {
-    'stevearc/aerial.nvim',
-    opts = {},
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-    },
-  },
+  -- {
+  --   'stevearc/aerial.nvim',
+  --   opts = {},
+  --   dependencies = {
+  --     "nvim-treesitter/nvim-treesitter",
+  --   },
+  -- },
 
   -- autopairs
   -- { 'windwp/nvim-autopairs',         opts = {} },

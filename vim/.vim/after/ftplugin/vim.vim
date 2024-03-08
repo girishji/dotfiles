@@ -17,35 +17,40 @@ iab <buffer><expr> for     abbr#NotCtx('for' ) ? 'for' : 'for <c-o>oendfor<esc>k
 setlocal define=^\\s*def
 b:undo_ftplugin ..= ' | setlocal define<'
 
-import autoload 'popup.vim'
+# setl softtabstop=4 shiftwidth=4 expandtab
+# exe 'setlocal listchars=tab:\│\ ,multispace:\│' .. repeat('\ ', &sw - 1) .. ',trail:~'
 
-def Things()
-    var things = []
-    for nr in range(1, line('$'))
-        var line = getline(nr)
-        if line =~ '\(^\|\s\)def \k\+('
-        || line =~ '\(^\|\s\)class \k\+'
-        || line =~ '\(^\|\s\)fu\%[nction]!\?\s\+\([sgl]:\)\?\k\+('
-        || line =~ '^\s*com\%[mand]!\?\s\+\S\+'
-        || line =~ '^\s*aug\%[roup]\s\+\S\+' && line !~ '\c^\s*aug\%[roup] end\s*$'
-            if line =~ '^\s*com\%[mand]!\?\s\+\S\+'
-                line = line->substitute(' -\(range\|count\|nargs\)\(=.\)\?', '', 'g')
-                line = line->substitute(' -\(bang\|buffer\)', '', '')
-                line = line->substitute(' -complete=\S\+', '', '')
-                line = line->substitute('^\s*com\%[mand]!\?\s\+\S\+\zs.*', '', '')
-                line = line->substitute('^\s*com\%[mand]!\?\s\+', '', '')
+if exists('g:loaded_scope')
+    import autoload 'scope/fuzzy.vim'
+
+    def Things()
+        var things = []
+        for nr in range(1, line('$'))
+            var line = getline(nr)
+            if line =~ '\(^\|\s\)def \k\+('
+                    || line =~ '\(^\|\s\)class \k\+'
+                    || line =~ '\(^\|\s\)fu\%[nction]!\?\s\+\([sgl]:\)\?\k\+('
+                    || line =~ '^\s*com\%[mand]!\?\s\+\S\+'
+                    || line =~ '^\s*aug\%[roup]\s\+\S\+' && line !~ '\c^\s*aug\%[roup] end\s*$'
+                if line =~ '^\s*com\%[mand]!\?\s\+\S\+'
+                    line = line->substitute(' -\(range\|count\|nargs\)\(=.\)\?', '', 'g')
+                    line = line->substitute(' -\(bang\|buffer\)', '', '')
+                    line = line->substitute(' -complete=\S\+', '', '')
+                    line = line->substitute('^\s*com\%[mand]!\?\s\+\S\+\zs.*', '', '')
+                    line = line->substitute('^\s*com\%[mand]!\?\s\+', '', '')
+                endif
+                things->add({text: $"{line} ({nr})", linenr: nr})
             endif
-            things->add({text: $"{line} ({nr})", linenr: nr})
-        endif
-    endfor
-    popup.FilterMenu("Vim Things", things,
-        (res, key) => {
-            exe $":{res.linenr}"
-            normal! zz
-        },
-        (winid) => {
-            win_execute(winid, $"syn match FilterMenuLineNr '(\\d\\+)$'")
-            hi def link FilterMenuLineNr Comment
-        })
-enddef
-nnoremap <buffer> <space>/ <scriptcmd>Things()<CR>
+        endfor
+        fuzzy.FilterMenu.new("Vim Things", things,
+            (res, key) => {
+                exe $":{res.linenr}"
+                normal! zz
+            },
+            (winid, _) => {
+                win_execute(winid, $"syn match FilterMenuLineNr '(\\d\\+)$'")
+                hi def link FilterMenuLineNr Comment
+            })
+    enddef
+    nnoremap <buffer> <space>/ <scriptcmd>Things()<CR>
+endif

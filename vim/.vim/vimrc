@@ -40,7 +40,8 @@ source $VIMRUNTIME/defaults.vim
 set listchars=tab:→·,trail:~
 set list
 
-set fillchars=vert:│,fold:۰,diff:·
+# set fillchars=vert:│,fold:۰,diff:·
+set fillchars=vert:│,fold:۰,diff:·,stl:─,stlnc:═
 set clipboard=unnamed # Always use the system clipboard
 set number # line numbering
 # set relativenumber
@@ -74,7 +75,10 @@ set virtualedit=block # allows selection of rectangular text in visual block mod
 
 syntax on # turn on syntax highlighting
 
-set grepprg=grep\ --color=never\ -RESIHin\ --exclude={'*.zwc','*.swp','*.git*'}\ --exclude-dir=plugged
+# job_start does not pass --exclude={foo, bar} correctly to shell. single quotes
+# also don't work, need double quotes. but all of these work for :grep
+# set grepprg=grep\ --color=never\ -RESIHin\ --exclude={'*.zwc','*.swp','*.git*'}\ --exclude-dir=plugged
+set grepprg=grep\ --color=never\ -RESIHin\ --exclude="*.git*"\ --exclude="*.swp"\ --exclude="*.zwc"\ --exclude-dir=plugged
 
 # if executable("ug")
 #     set grepprg=ug\ -HnjR\ --no-heading
@@ -127,7 +131,8 @@ Plug 'rafamadriz/friendly-snippets'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 # colorschemes
-# Plug 'cocopon/iceberg.vim'
+Plug 'cocopon/iceberg.vim'
+Plug 'dracula/vim'
 #
 Plug '~/git/declutter.vim'
 # Plug 'girishji/declutter.vim'
@@ -135,15 +140,17 @@ Plug '~/git/autosuggest.vim'
 # Plug 'girishji/autosuggest.vim'
 # Plug '~/git/bufline.vim'
 Plug 'girishji/bufline.vim'
-Plug 'girishji/fFtT.vim'
+Plug '~/git/scope.vim'
 Plug '~/git/vimcomplete'
 # Plug 'girishji/vimcomplete'
 Plug '~/git/ngram-complete.vim'
 # Plug 'girishji/ngram-complete.vim'
 # Plug 'girishji/pythondoc.vim', {'for': 'python'}
-Plug '~/git/pythondoc.vim', {'for': 'python'}
+# Plug '~/git/pythondoc.vim', {'for': 'python'}
 # Plug '~/git/easyjump.vim'
 Plug 'girishji/easyjump.vim'
+# Plug 'girishji/fFtT.vim'
+Plug '~/git/fFtT.vim'
 Plug '~/git/devdocs.vim'
 plug#end()
 

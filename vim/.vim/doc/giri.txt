@@ -18,7 +18,41 @@ b:undo_ftplugin ..= ' | exe "nunmap <space>z"'
 see https://github.com/habamax/.vim
 
 ----------------------------------------
-Quick navigation tags~
+import autoload ~
+
+Every script under "autoload" (of every plugin) should have a different name,
+since relying on finding the right one is not a good idea.
+
+Specifying relative name with `import autoload` speeds up since Vim does not
+have to search all autoload subdirs in the runtimepath.
+
+If you 'import autoload foo.vim' in a file inside import dir, and some other
+file does 'import foo.vim', then the second import fails. You are trying to
+source foo.vim right away in the second instance, which conflicts with first
+instance where autoload keyword is used for lazy loading. Just remove the
+first import.
+
+You can use "import autoload" with a relative path to find it quickly. But
+having "autoload" in the path of the script still has a special meaning,
+causing the path#file#item names to be used for exported items. This is so
+that the same script can both be found in 'runtimepath' directories and also
+loaded directly by scripts that know where it is. If you only want to use the
+items from scripts that know what file to source, then make sure not to use an
+"autoload" directory in the path.
+
+when plugin1/autoload/splicelib/util/log.vim is sourced the Log() function is
+exported, and given a name in the global namespace: splicelib#util#log#Log()
+Notice that plugin1 is not part of the global name.
+
+If you want your function to be private, it needs to be under an import/
+directory.
+If you want your function to be lazy-loaded, it needs to be under an autoload/
+directory.
+
+https://github.com/vim/vim/issues/10114
+
+----------------------------------------
+Quick navigation tags 
 
 `v` after an operator (`c`, `d`, etc.) will not start visual mode, but selects
 characterwise:
@@ -71,7 +105,7 @@ https://vimhelp.org/usr_41.txt.html#41.6
 https://vimhelp.org/vim9.txt.html#inline-function
 
 ----------------------------------------
-Folds~
+Folds 
 zR -> open all folds in window
 zM -> close all folds in window
 zo -> open fold under cursor (zO for recursive levels)
@@ -94,7 +128,7 @@ Vim REPL: Start 'ex' or 'vim -e'.
 Align columns according to '#' character, and align 2 columns. `\=` evaluates expression.
 Use `<c-v>` to highlight a column and `<`, `>` to shift text. Mapped to abbrev
 `align`.
->
+ 
 	:s/\v(.*)(#)(.*)$/\=printf("%-22s %s%s", submatch(1), submatch(2), submatch(3))
 	:%s/\v(.*)\.(.*)/\=printf("%-16s %s", submatch(1), submatch(2))/
 
@@ -182,7 +216,7 @@ callback is called with windid and result only. Here it is accepting [output]
 https://github.com/vim/vim/issues/6171
 
 ----------------------------------------
-## substitute~
+## substitute 
 
 :[range]s[ubstitute]/{pattern}/{string}/[flags]
 
@@ -216,7 +250,7 @@ lines)
 %s/^/\=rand() . " "/
 
 ----------------------------------------
-Filtering the Contents of a Buffer Through an External Command~
+Filtering the Contents of a Buffer Through an External Command 
 
 The :!{cmd} command takes on a different meaning when it’s given a range. The
 lines specified by [range] are passed as standard input for the {cmd}, and
@@ -269,7 +303,7 @@ equalprg and formatprg are used to define what external program to use for ==, g
 
 https://www.reddit.com/r/vim/comments/7bj837/favorite_console_tools_to_use_with_vim/
 
-vim pipes (read, write, filter):~
+vim pipes (read, write, filter): 
 
 :r !cmd, :w !cmd and :%! cmd
 read: from cmd to vim
@@ -310,7 +344,7 @@ https://vim.fandom.com/wiki/Find_in_files_within_Vim
 ----------------------------------------
 Legacy script:
 How to quickly test some vim9script in shell 
->
+ 
     vim -Nu NONE -S <(cat <<EOF
         vim9script
         var n: number = 123
@@ -322,7 +356,7 @@ Note: <() is process substitution
 (https://tldp.org/LDP/abs/html/process-sub.html)
 
 ----------------------------------------
-unit testing~
+unit testing 
 
 https://stackoverflow.com/questions/16739300/redirect-ex-command-to-stdout-in-vim
 
@@ -525,7 +559,7 @@ dependency when you feedkey() <space>x since only <space> is mapped to
 internal function. 
 
 ----------------------------------------
-QuickFix~
+QuickFix 
 
 :cex[pr] [] - Empty the current quickfix list.
 
@@ -621,7 +655,7 @@ Link has info about 'include' and 'define', and everything about `[I`,
 `ijump`, etc.
 
 ----------------------------------------
-include-search~
+include-search 
 Search in all included files (not just this file but all files in project
 within the context of this file)
 
@@ -651,7 +685,7 @@ go back and forth using:
 
 
 ----------------------------------------
-Ex commands line range~
+Ex commands line range 
 https://www.youtube.com/watch?v=Gs1VDYnS-Ac at 25:00 at 42:00
 use range (single line or a rangel of lines) based Ex commands to copy a line
 to where the cursor is.
@@ -667,11 +701,11 @@ this will copy a line with 'foo' to here.
 
 When separated with ';' the cursor position will be set to that line
 before interpreting the next line specifier.  This doesn't happen for ','.
-Examples: >
+Examples:  
    4,/this line/
-<	from line 4 till match with "this line" after the cursor line. >
+ 	from line 4 till match with "this line" after the cursor line.  
    5;/that line/
-<	from line 5 till match with "that line" after line 5.
+ 	from line 5 till match with "that line" after line 5.
 
 
 ----------------------------------------
@@ -735,12 +769,12 @@ Module		module.py, my_module.py
 Package		package, mypackage
 
 ----------------------------------------
-glob vs regex~
-	Glob pattern >
+glob vs regex 
+	Glob pattern  
 	if filename =~ glob2regpat('Make*.mak')
-<	This is equivalent to: >
+ 	This is equivalent to:  
 	if filename =~ '^Make.*\.mak$'
-<	
+ 	
 
 ----------------------------------------
 Batch mode and headless vim
@@ -750,13 +784,13 @@ To execute vim in non-interactive mode, you can use either +{command}/-c
 commands after the first file has been read.
 
 To parse file and send it to pipeline's output, you may try the following:
->
+ 
 	$ cat /etc/hosts | vim -es '+:0,$s/127/128/g' '+%print' '+:q!' /dev/stdin | cat
 	$ echo Example | vim -es '+:wq! /dev/stdout' /dev/stdin | cat
 	$ cat file1 file2 | vim - -es '+:0,$s/foo/test/g' '+:wq! file3'
 
 To edit file in-place, you can use -s {scriptin} so the script file is read.
->
+ 
 	$ echo ':0,$s/foo/test/ge' > cmds.txt
 	$ echo ':wq' >> cmds.txt
 	$ vim -s cmds.txt -es file
@@ -764,7 +798,7 @@ To edit file in-place, you can use -s {scriptin} so the script file is read.
 https://unix.stackexchange.com/questions/14107/is-it-possible-to-execute-a-vim-script-in-a-non-interactive-mode
 
 ----------------------------------------
-<SID>~
+<SID> 
 You can use it in abbrev, map, menu etc. You can also do `expand('<SID>') .. fn` (see :help)
 It prepends function name with name of script and a number. This way your
 script local functions can be used from global scope.
@@ -773,7 +807,7 @@ script local functions can be used from global scope.
 To find if something is truthy, see |truthy|
 
 ----------------------------------------
-non-greedy search~
+non-greedy search 
 
 .* is greedy. So is .+ etc.
 
@@ -784,7 +818,7 @@ Try:
 %s/.\{-},//
 
 ----------------------------------------
-Tags~
+Tags 
 https://gist.github.com/romainl/f2d0727bdb9bde063531cd237f47775f
 https://gist.github.com/romainl/27c1c29462a8c6c868f1a9bf244bc71d
 
@@ -809,11 +843,11 @@ Guessing names:
 :tag /block -> Suppose you want to jump to a tag that contains "block"
 :tag /foo$  -> ends with foo, for example
 
-Fing places where tag is called from:~
+Fing places where tag is called from: 
 Cscope not only find places where an identifier is
 declared, but also where it is used.  See |cscope|.
 
-Preview window and finding right arguments to function~
+Preview window and finding right arguments to function 
 
 :ptag foo
 Vim will open a window, and jumps to the tag "foo".  Then it takes you
@@ -824,22 +858,22 @@ c-w }
    If the name of a function appears in the text, you can get its definition
 in the preview window.
 
-To close the preview window use this command: >
+To close the preview window use this command:  
 	:pclose 9 (or c-w z)
 
 To edit a specific file in the preview window, use ":pedit".  This can be
-useful to edit a header file, for example: >
+useful to edit a header file, for example:  
 	:pedit defs.h
 
 Finally, ":psearch" can be used to find a word in the current file and any
 included files and display the match in the preview window.  This is
 especially useful when using library functions, for which you do not have a
-tags file.  Example: >
+tags file.  Example:  
 	:psearch popen
 
 This will show the "stdio.h" file in the preview window, with the function
 prototype for popen():
-	FILE	*popen __P((const char *, const char *)); ~
+	FILE	*popen __P((const char *, const char *));  
 
 Note:
 :[range]ps[earch][!] [count] [/]pattern[/]

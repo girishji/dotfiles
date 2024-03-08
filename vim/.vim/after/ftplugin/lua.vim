@@ -8,27 +8,28 @@ iab <buffer> function      function ()<c-o>oend<esc>k_2wa<c-r>=abbr#Eatchar()<cr
 
 # popup menu
 
-import autoload 'popup.vim'
+if exists('g:loaded_scope')
+    import autoload 'scope/fuzzy.vim'
 
-def Things()
-    var things = []
-    for nr in range(1, line('$'))
-        var line = getline(nr)
-        if line =~ '\v(^|\s)function' || line =~ '\v^\k+\s+\='
-            things->add({text: $"{line} ({nr})", linenr: nr})
-        endif
-    endfor
-    things->filter((_, v) => v.text !~ '\v^\s*--')
-    popup.FilterMenu("Lua Things", things,
-        (res, key) => {
-            exe $":{res.linenr}"
-            normal! zz
-        },
-        (winid) => {
-            win_execute(winid, $"syn match FilterMenuLineNr '(\\d\\+)$'")
-            hi def link FilterMenuLineNr Comment
-        })
-enddef
+    def Things()
+        var things = []
+        for nr in range(1, line('$'))
+            var line = getline(nr)
+            if line =~ '\v(^|\s)function' || line =~ '\v^\k+\s+\='
+                things->add({text: $"{line} ({nr})", linenr: nr})
+            endif
+        endfor
+        things->filter((_, v) => v.text !~ '\v^\s*--')
+        fuzzy.FilterMenu.new("Lua Things", things,
+            (res, key) => {
+                exe $":{res.linenr}"
+                normal! zz
+            },
+            (winid) => {
+                win_execute(winid, $"syn match FilterMenuLineNr '(\\d\\+)$'")
+                hi def link FilterMenuLineNr Comment
+            })
+    enddef
 
-nnoremap <buffer> <space>/ <scriptcmd>Things()<CR>
-
+    nnoremap <buffer> <space>/ <scriptcmd>Things()<CR>
+endif

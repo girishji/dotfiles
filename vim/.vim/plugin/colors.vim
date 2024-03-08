@@ -34,7 +34,7 @@ def Quiet()
         highlight  PmenuExtra       ctermfg=242  ctermbg=250   cterm=none
         highlight! link PmenuExtraSel   PmenuSel
         # SpecialKey is used for 'listchars'
-        highlight SpecialKey ctermfg=248
+        highlight SpecialKey ctermfg=250
         g:popupthumbhighlight  = 'statuslinenc'
         highlight  user1         cterm=bold,reverse
         highlight  user4         cterm=bold,reverse
@@ -81,10 +81,20 @@ def Sorbet()
     highlight statuslinenc ctermbg=none ctermfg=242 guibg=Grey35 cterm=none
 enddef
 
+def Dracula()
+    hi link DevdocLink DraculaLink
+    set termguicolors
+    # highlight link user1 statusline
+    # highlight link user2 statusline
+    # highlight link user3 statusline
+    # highlight link user4 statusline
+enddef
+
 augroup colorschemes | autocmd!
     autocmd ColorScheme quiet Quiet()
     autocmd ColorScheme slate Slate()
     autocmd ColorScheme sorbet Sorbet()
+    autocmd ColorScheme dracula Dracula()
 augroup END
 
 :highlight TrailingWhitespace ctermbg=196
@@ -93,13 +103,17 @@ augroup END
 # Preview here: https://vimcolorschemes.com/vim/colorschemes (ubunto mono font)
 if &background == 'dark'
     # silent! colorscheme quiet
-    # silent! colorscheme sorbet
+    # silent! colorscheme dracula
 
     silent! colorscheme declutter
     autocmd BufEnter * g:DeclutterUseTerminalFGBG()
+
     # autocmd BufEnter * g:DeclutterBrightenBoldFont()
 else
-    silent! colorscheme quiet
+    silent! colorscheme declutter
+    # autocmd BufEnter * g:DeclutterUseTerminalFGBG()
+
+    # silent! colorscheme quiet
     # silent! colorscheme lunaperche
 endif
 

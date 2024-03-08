@@ -48,10 +48,10 @@ import autoload "text.vim"
 command! -range FixSpaces text.FixSpaces(<line1>, <line2>)
 
 # Wipe all unlisted buffers
-def WipeUnlistedBuffers()
+def UnlistedBuffersWipe()
     var buffers = filter(getbufinfo(), (_, v) => v.unlisted)
     if !empty(buffers)
         execute 'confirm bwipeout' join(mapnew(buffers, (_, v) => v.bufnr))
     endif
 enddef
-command! WipeUnlistedBuffers WipeUnlistedBuffers()
+command! UnlistedBuffersWipe UnlistedBuffersWipe()

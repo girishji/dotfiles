@@ -116,32 +116,33 @@ command Ipython Ipython()
 
 # popup menu
 
-import autoload 'popup.vim'
-
-def Things()
-    var things = []
-    for nr in range(1, line('$'))
-        var line = getline(nr)
-        if line =~ '\(^\|\s\)\(def\|class\) \k\+('
-                || line =~ 'if __name__ == "__main__":'
-            things->add({text: $"{line} ({nr})", linenr: nr})
-        endif
-    endfor
-    popup.FilterMenu("Py Things", things,
-        (res, key) => {
-            exe $":{res.linenr}"
-            normal! zz
-        },
-        (winid) => {
-            win_execute(winid, $"syn match FilterMenuLineNr '(\\d\\+)$'")
-            hi def link FilterMenuLineNr Comment
-        })
-enddef
+if exists('g:loaded_scope')
+    import autoload 'scope/fuzzy.vim'
+    def Things()
+        var things = []
+        for nr in range(1, line('$'))
+            var line = getline(nr)
+            if line =~ '\(^\|\s\)\(def\|class\) \k\+('
+                    || line =~ 'if __name__ == "__main__":'
+                things->add({text: $"{line} ({nr})", linenr: nr})
+            endif
+        endfor
+        fuzzy.FilterMenu.new("Py Things", things,
+            (res, key) => {
+                exe $":{res.linenr}"
+                normal! zz
+            },
+            (winid, _) => {
+                win_execute(winid, $"syn match FilterMenuLineNr '(\\d\\+)$'")
+                hi def link FilterMenuLineNr Comment
+            })
+    enddef
+endif
 
 if exists(":LspDocumentSymbol") == 2
     nnoremap <buffer> <leader>/ <cmd>LspDocumentSymbol<CR>
     nnoremap <buffer> <space>z <scriptcmd>Things()<CR>
-else
+elseif exists('g:loaded_scope')
     nnoremap <buffer> <space>/ <scriptcmd>Things()<CR>
 endif
 

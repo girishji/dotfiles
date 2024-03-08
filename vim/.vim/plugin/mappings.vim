@@ -1,31 +1,5 @@
 vim9script
 
-# search
-import autoload 'fuzzy.vim'
-nnoremap <leader><bs> <scriptcmd>fuzzy.Buffer()<CR>
-nnoremap <leader><space> <scriptcmd>fuzzy.File()<CR>
-var findcmd = "find /Users/gp/.vim -type d -path */plugged -prune -o -name *.swp -prune -o -path */.vim/.* -prune -o -type f -print -follow"
-# var findcmd = 'fd -tf -L . /Users/gp/.vim'
-nnoremap <leader>fv <scriptcmd>fuzzy.File(findcmd)<CR>
-nnoremap <leader>fV <scriptcmd>fuzzy.File("find " .. $VIMRUNTIME .. " -type f -print -follow")<CR>
-nnoremap <leader>fh <scriptcmd>fuzzy.File("find " .. $HOME .. "/help -type f -print -follow")<CR>
-nnoremap <leader>fz <scriptcmd>fuzzy.File("find " .. $HOME .. "/.zsh -type f -print -follow")<CR>
-nnoremap <leader>g <scriptcmd>fuzzy.Grep()<CR>
-var case_sensitive_grepcmd = 'grep --color=never -RESIHn --exclude={"*.zwc","*.swp","*.git*"} --exclude-dir=plugged'
-nnoremap <leader>G <scriptcmd>fuzzy.Grep(case_sensitive_grepcmd)<CR>
-nnoremap <leader>ft <scriptcmd>fuzzy.Template()<CR>
-nnoremap <leader>fm <scriptcmd>fuzzy.MRU()<CR>
-nnoremap <leader>fk <scriptcmd>fuzzy.Keymap()<CR>
-# search files with same extension
-# nnoremap <expr> <leader>fg $':silent grep {expand("<cword>")} {expand("%:e") == "" ? "" : "**/*." .. expand("%:e")}<c-left><left>'
-# search all files (remove '!' after 'grep' to jump to first match)
-# XXX: even though prepending 'silent' obviates the need for pressing <enter>
-#      after search, it messes up highlighting of statusline. Either press
-#      additional <enter> or live with temporarily messed up statusline.
-#      (see the abbreviation for equivalent keymap)
-# nnoremap <expr> <leader>g $':silent grep! {expand("<cword>")}'
-# nnoremap <expr> <leader>vg $':vim /{expand("<cword>")}/j **<c-left><left><left><left>'
-
 # autocomplete with <c-n> and <c-p> when plugins are not available
 def WhitespaceOnly(): bool
     # strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
@@ -79,11 +53,14 @@ nnoremap <silent> [f :previous<CR>
 nnoremap <silent> ]f :next<CR>
 nnoremap <silent> [F :first<CR>
 nnoremap <silent> ]F :last<CR>
+
 # Map C-/ to do search within visually selected text
 # (C-_ produces the same hex code as C-/)
 vnoremap <C-_> <Esc>/\%V
+
 # Mute search highlighting.
-nnoremap <silent> <esc> :nohlsearch<CR>
+autocmd VimEnter * nnoremap <silent> <expr> <esc> exists('g:loaded_fFtTplus') ? ':nohls<cr><Plug>(fFtTplus-esc)' : ':nohls<cr><esc>'
+
 # Emacs C-s C-w like solution: hightlight in visual mode and then type * or #
 # SID means script local function; cgn to replace text
 # https://vonheikemen.github.io/devlog/tools/how-to-survive-without-multiple-cursors-in-vim/
@@ -133,7 +110,7 @@ nnoremap <leader>vR :enew \| exec "nn <buffer> q :bd!\<cr\>" \| put = execute('m
 # nnoremap <leader>vl <cmd>set buflisted!<cr>
 nnoremap <leader>vm <cmd>messages<cr>
 nnoremap <leader>vd <cmd>GitDiffThisFile<cr>
-nnoremap <leader>ve <cmd>e ~/.vim/vimrc<cr>
+nnoremap <leader>ve <cmd>e $MYVIMRC<cr>
 nnoremap <leader>vz <scriptcmd>FoldingToggle()<cr>
 nnoremap <leader>vp <cmd>echo expand('%')<cr>
 

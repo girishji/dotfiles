@@ -21,7 +21,7 @@ b:undo_ftplugin ..= ' | setlocal define<'
 # exe 'setlocal listchars=tab:\│\ ,multispace:\│' .. repeat('\ ', &sw - 1) .. ',trail:~'
 
 if exists('g:loaded_scope')
-    import autoload 'scope/fuzzy.vim'
+    import autoload 'scope/popup.vim'
 
     def Things()
         var things = []
@@ -42,7 +42,7 @@ if exists('g:loaded_scope')
                 things->add({text: $"{line} ({nr})", linenr: nr})
             endif
         endfor
-        fuzzy.FilterMenu.new("Vim Things", things,
+        popup.FilterMenu.new("Vim Things", things,
             (res, key) => {
                 exe $":{res.linenr}"
                 normal! zz

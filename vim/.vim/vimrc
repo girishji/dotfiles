@@ -68,9 +68,6 @@ set signcolumn=yes # always show column for lsp diagnostics etc
 set dictionary+=/usr/share/dict/words
 set whichwrap+=<,>,h,l # make arrows and h, l, push cursor to next line
 # set pumheight=7 # max number of items in popup menu (pmenu)
-# ctags can get slow if it seaches dirs for tags file
-set tags=./tags,./../tags,./*/tags # this dir, just one level above, and all subdirs
-# set tags=~/git/zmk/app/tags
 set virtualedit=block # allows selection of rectangular text in visual block mode
 
 syntax on # turn on syntax highlighting
@@ -114,7 +111,7 @@ endif
 
 # Run PlugInstall if there are missing plugins
 autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) > 0
-            \| PlugInstall --sync | source ~/.vimrc
+            \| PlugInstall --sync | source $MYVIMRC
             \| endif
 
 plug#begin("~/.vim/plugged")
@@ -152,6 +149,7 @@ Plug 'girishji/easyjump.vim'
 # Plug 'girishji/fFtT.vim'
 Plug '~/git/fFtT.vim'
 Plug '~/git/devdocs.vim'
+# Plug 'girishji/devdocs.vim'
 plug#end()
 
 # vim: ts=8 sts=4 sw=4 et fdm=marker

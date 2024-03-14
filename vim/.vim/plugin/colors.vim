@@ -102,7 +102,7 @@ augroup END
 
 # Preview here: https://vimcolorschemes.com/vim/colorschemes (ubunto mono font)
 if &background == 'dark'
-    # silent! colorscheme quiet
+    # for vhs tapes:
     # silent! colorscheme dracula
 
     silent! colorscheme declutter

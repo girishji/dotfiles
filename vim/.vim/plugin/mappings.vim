@@ -17,15 +17,17 @@ nnoremap j gj
 nnoremap k gk
 # Jump lines faster (use with H, M, L)
 nnoremap <leader>j 5j
+vnoremap <leader>j 5j
 nnoremap <leader>k 5k
+vnoremap <leader>k 5k
 # g* selects foo in foobar while * selects <foo>, <> is word boundary. make * behave like g*
 # nnoremap * g*
 # nnoremap # g#
 # Resize window using <ctrl> arrow keys
-# nnoremap <silent> <C-Up> :resize +2<cr>
-# nnoremap <silent> <C-Down> :resize -2<cr>
-# nnoremap <silent> <C-Right> :vertical resize -2<cr>
-# nnoremap <silent> <C-Left> :vertical resize +2<cr>
+nnoremap <silent> <C-Up> :resize +2<cr>
+nnoremap <silent> <C-Down> :resize -2<cr>
+nnoremap <silent> <C-Right> :vertical resize -2<cr>
+nnoremap <silent> <C-Left> :vertical resize +2<cr>
 # Buffer navigation
 nnoremap <silent> [b :bprevious<CR>
 nnoremap <silent> ]b :bnext<CR>
@@ -82,7 +84,7 @@ nnoremap ga `[v`]
 # <leader> mappings
 nnoremap <leader>b <cmd>b#<cr>| # alternate buffer
 nnoremap <leader>d <cmd>bw<cr>| # :bwipeout to purge, :bdelete still leaves buffer in unlisted state (:ls!)
-nnoremap <leader>H <cmd>hide<cr>| # hide window
+nnoremap <leader>h <cmd>hide<cr>| # hide window
 # nnoremap <leader>u <cmd>unhide<cr><c-w>w| # unhide = one window for each loaded buffer (splits horizontally, not useful)
 tnoremap <c-w>h <c-w>:hide<cr>| # hide window (when terminal window is active)
 nnoremap <leader>T <cmd>!tree <bar> more<cr>

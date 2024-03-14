@@ -18,6 +18,15 @@ b:undo_ftplugin ..= ' | exe "nunmap <space>z"'
 see https://github.com/habamax/.vim
 
 ----------------------------------------
+Measure performance of a function ~
+
+> for i in {1..10}; do
+> vim -es -N -u NONE -U NONE -i NONE -S /tmp/test.vim /tmp/version8.txt
+> done
+>
+see https://groups.google.com/g/vim_dev/c/xVOqj_CL4dw
+
+----------------------------------------
 import autoload ~
 
 Every script under "autoload" (of every plugin) should have a different name,

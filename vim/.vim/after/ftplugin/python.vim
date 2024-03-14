@@ -117,7 +117,7 @@ command Ipython Ipython()
 # popup menu
 
 if exists('g:loaded_scope')
-    import autoload 'scope/fuzzy.vim'
+    import autoload 'scope/popup.vim'
     def Things()
         var things = []
         for nr in range(1, line('$'))
@@ -127,7 +127,7 @@ if exists('g:loaded_scope')
                 things->add({text: $"{line} ({nr})", linenr: nr})
             endif
         endfor
-        fuzzy.FilterMenu.new("Py Things", things,
+        popup.FilterMenu.new("Py Things", things,
             (res, key) => {
                 exe $":{res.linenr}"
                 normal! zz

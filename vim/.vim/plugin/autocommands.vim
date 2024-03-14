@@ -17,7 +17,8 @@ augroup GeneralAutocmds | autocmd!
     autocmd FileType vim,cmake,sh,zsh setl sw=4|setl ts=8|setl sts=4|setl et
     autocmd TextYankPost * SaveLastReg()
     # windows to close
-    autocmd FileType help,vim-plug,qf nnoremap <buffer><silent> q :close<CR>
+    autocmd FileType help,vim-plug,qf nnoremap <buffer> Q q
+                \| nnoremap <buffer><silent> q :close<CR>
     # create directories when needed, when saving a file
     autocmd BufWritePre * mkdir(expand('<afile>:p:h'), 'p')
     # Format usin 'gq'. :h fo-table
@@ -54,3 +55,12 @@ augroup GeneralAutocmds | autocmd!
     # autocmd FileType cpp,c setlocal makeprg=g++\ -std=c++11\ -O2\ -Wall\ %\ -o\ %<
     #
 augroup END
+
+# testing
+# augroup scope-quickfix-history
+#     autocmd!
+#     autocmd QuickFixCmdPost chistory cwindow
+#     autocmd QuickFixCmdPost lhistory lwindow
+#     autocmd QuickFixCmdPost clist cwindow
+#     autocmd QuickFixCmdPost llist lwindow
+# augroup END

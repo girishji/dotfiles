@@ -197,16 +197,24 @@ endif
 # endif
 
 if exists('g:loaded_devdocs')
-    nnoremap <leader>h <cmd>DevdocsFind<CR>
+    nnoremap <leader>H <cmd>DevdocsFind<CR>
     nnoremap <leader>I <cmd>DevdocsInstall<CR>
     nnoremap <leader>U <cmd>DevdocsUninstall<CR>
     # hi link DevdocCode CursorLine
-    g:DevdocsPopupOptionsSet({borderhighlight: ['Comment']})
+    # g:DevdocsPopupOptionsSet({borderhighlight: ['Comment']})
+    import autoload 'devdocs/popup.vim' as dp
+    dp.OptionsSet({borderhighlight: ['Comment']})
 endif
 
 if exists('g:loaded_scope')
-    g:ScopePopupOptionsSet({borderhighlight: ['Comment']})
+    import autoload 'scope/popup.vim' as sp
+    sp.OptionsSet({borderhighlight: ['Comment']})
+
     import autoload 'scope/fuzzy.vim'
+    fuzzy.OptionsSet({
+        grep_highlight_ignore_case: false,
+        grep_echo_cmd: true,
+    })
 
     nnoremap <leader><bs> <scriptcmd>fuzzy.Buffer()<CR>
     nnoremap <leader>fb <scriptcmd>fuzzy.Buffer(true)<CR>
@@ -219,17 +227,32 @@ if exists('g:loaded_scope')
     nnoremap <leader>fh <scriptcmd>fuzzy.File("find " .. $HOME .. "/help -type f -print -follow")<CR>
     nnoremap <leader>fuzzy <scriptcmd>fuzzy.File("find " .. $HOME .. "/.zsh -type f -print -follow")<CR>
 
+    # for testing
+    # nnoremap <leader>g <scriptcmd>fuzzy.Grep('rg --vimgrep --no-heading --smart-case')<CR>
+    # nnoremap <leader>g <scriptcmd>fuzzy.Grep('ag --vimgrep')<CR>
     nnoremap <leader>g <scriptcmd>fuzzy.Grep()<CR>
     # case sensitive grep
     nnoremap <leader>G <scriptcmd>fuzzy.Grep('grep --color=never -RESIHn --exclude="*.git*" --exclude="*.swp" --exclude="*.zwc" --exclude-dir=plugged', false)<CR>
 
-    nnoremap <leader>ft <scriptcmd>fuzzy.Template()<CR>
-    # nnoremap <leader>fm <scriptcmd>fuzzy.MRU()<CR>
-    nnoremap <leader>fk <scriptcmd>fuzzy.Keymap()<CR>
-    nnoremap <leader>fH <scriptcmd>fuzzy.Help()<CR>
-    nnoremap <leader>fl <scriptcmd>fuzzy.Highlight()<CR>
-    nnoremap <leader>fw <scriptcmd>fuzzy.Window()<CR>
-    nnoremap <leader>fC <scriptcmd>fuzzy.Colorscheme()<CR>
-    nnoremap <leader>fc <scriptcmd>fuzzy.CmdHistory()<CR>
     nnoremap <leader>f* <scriptcmd>fuzzy.JumpToWord()<CR>
+    nnoremap <leader>f/ <scriptcmd>fuzzy.BufSearch()<CR>
+    nnoremap <leader>fC <scriptcmd>fuzzy.Colorscheme()<CR>
+    # nnoremap <leader>fC <scriptcmd>fuzzy.Command()<CR>
+    nnoremap <leader>fH <scriptcmd>fuzzy.Help()<CR>
+    # nnoremap <leader>fH <scriptcmd>fuzzy.Highlight()<CR>
+    # nnoremap <leader>fM <scriptcmd>fuzzy.MRU()<CR>
+    nnoremap <leader>fa <scriptcmd>fuzzy.Autocmd()<CR>
+    # nnoremap <leader>fc <scriptcmd>fuzzy.CmdHistory()<CR>
+    nnoremap <leader>fk <scriptcmd>fuzzy.Keymap()<CR>
+    # nnoremap <leader>fg <scriptcmd>fuzzy.GitFile()<CR>
+    nnoremap <leader>fm <scriptcmd>fuzzy.Mark()<CR>
+    nnoremap <leader>fo <scriptcmd>fuzzy.Option()<CR>
+    nnoremap <leader>fr <scriptcmd>fuzzy.Register()<CR>
+    nnoremap <leader>ft <scriptcmd>fuzzy.Tag()<CR>
+    # nnoremap <leader>ft <scriptcmd>fuzzy.Template()<CR>
+    nnoremap <leader>fw <scriptcmd>fuzzy.Window()<CR>
+    nnoremap <leader>fQ <scriptcmd>fuzzy.QuickfixHistory()<CR>
+    nnoremap <leader>fL <scriptcmd>fuzzy.LoclistHistory()<CR>
+    nnoremap <leader>fq <scriptcmd>fuzzy.Quickfix()<CR>
+    nnoremap <leader>fl <scriptcmd>fuzzy.Loclist()<CR>
 endif

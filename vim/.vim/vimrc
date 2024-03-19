@@ -114,7 +114,7 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) > 
             \| PlugInstall --sync | source $MYVIMRC
             \| endif
 
-plug#begin("~/.vim/plugged")
+plug#begin("~/.local/share/vim-plug/")
 # Make sure you use single quotes
 Plug 'tpope/vim-commentary'
 Plug 'airblade/vim-gitgutter'

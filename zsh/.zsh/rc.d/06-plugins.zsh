@@ -44,7 +44,8 @@ eval "$(zoxide init zsh)"
 
 # zsh-autosuggestions: offers suggestions as you type
 if is_mac; then
-    source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    # source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    source $gitdir/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh
 else
     source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi

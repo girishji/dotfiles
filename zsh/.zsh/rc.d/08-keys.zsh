@@ -115,7 +115,11 @@ zstyle ':autocomplete:menu-search:*' insert-unambiguous yes
 # When using the above, if you want each widget to first try to insert only the
 # longest prefix that will complete to all completions shown, if any, then add
 # the following:
-zstyle ':completion:*:*' matcher-list 'm:{[:lower:]-}={[:upper:]_}' '+r:|[.]=**'
+# zstyle ':completion:*:*' matcher-list 'm:{[:lower:]-}={[:upper:]_}' '+r:|[.]=**'
+# https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Completion-System-Configuration
+# https://zsh.sourceforge.io/Doc/Release/Completion-Widgets.html#Completion-Matching-Control
+# case-sensitive matching only (otherwise it spams upper-case matches first)
+zstyle ':completion:*:*' matcher-list 'm:{a-z}={a-z}' '+r:|[.]=**'
 
 # Make Enter submit the command line straight from the menu
 bindkey -M menuselect '\r' .accept-line

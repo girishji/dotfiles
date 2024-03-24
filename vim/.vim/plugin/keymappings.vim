@@ -79,8 +79,10 @@ enddef
 # gP	Just like "P", but leave the cursor just after the new text.
 # visually select recent pasted (or typed) text
 nnoremap ga `[v`]
+
 # Type %% on Vim’s command-line prompt, it expands to the path of the active buffer
 # cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h') .. '/' : '%%'
+
 # <leader> mappings
 nnoremap <leader>b <cmd>b#<cr>| # alternate buffer
 nnoremap <leader>d <cmd>bw<cr>| # :bwipeout to purge, :bdelete still leaves buffer in unlisted state (:ls!)
@@ -98,7 +100,10 @@ nnoremap <leader>\ <c-w>v| # vertical split
 nnoremap <leader>o <c-w>w| # next window in CCW direction
 nnoremap <leader>r <cmd>registers<cr>
 nnoremap <leader>m <cmd>marks<cr>
-vnoremap <leader>a :!column -t<cr>| # align columns
+
+# align
+vnoremap <leader>A :!column -t<cr>| # align columns
+vnoremap <leader>a :'<,'>s/\v(.*)\.(.*)/\=printf("%-16s %s", submatch(1), submatch(2))
 
 # Toggle group
 nnoremap <leader>ts :set spell!<CR><Bar>:echo "Spell Check: " .. strpart("OffOn", 3 * &spell, 3)<CR>

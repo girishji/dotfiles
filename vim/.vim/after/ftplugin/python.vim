@@ -140,7 +140,7 @@ if exists('g:loaded_scope')
 endif
 
 if exists(":LspDocumentSymbol") == 2
-    nnoremap <buffer> <leader>/ <cmd>LspDocumentSymbol<CR>
+    # nnoremap <buffer> <leader>/ <cmd>LspDocumentSymbol<CR>
     nnoremap <buffer> <space>z <scriptcmd>Things()<CR>
 elseif exists('g:loaded_scope')
     nnoremap <buffer> <space>/ <scriptcmd>Things()<CR>

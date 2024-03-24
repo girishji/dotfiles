@@ -906,5 +906,10 @@ Notes:
 # :set wildcharm=<c-z>
 # nnoremap <leader><space> :find<space><c-z>
 
-----------------------------------------
+------------------------------------------------------------------------------
+utf-8 composing character ~
+
+https://dev.to/bbkr/utf-8-decomposition-1n3m
+
+------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

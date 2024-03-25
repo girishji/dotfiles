@@ -4,6 +4,7 @@ vim9script
 
 setl textwidth=80
 setl keywordprg=:help
+setl sw=4 ts=8 sts=4 et
 
 iab <buffer> #--- #------------------------------<c-r>=abbr#Eatchar()<cr>
 iab <buffer><expr> augroup abbr#NotCtx() ? 'augroup' : 'augroup  \| autocmd!<cr>augroup END<esc>k_ela<c-r>=abbr#Eatchar()<cr>'

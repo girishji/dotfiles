@@ -18,7 +18,7 @@ if exists("g:loaded_vimcomplete")
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
         dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'text'], properties: dictproperties },
         abbrev: { enable: true },
-        lsp: { enable: true, maxCount: 10, priority: 8 },
+        lsp: { maxCount: 10, priority: 8 },
         omnifunc: { enable: false, priority: 10, filetypes: ['python', 'javascript'] },
         vsnip: { enable: true, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },
         vimscript: { enable: true, priority: 10 },
@@ -26,7 +26,7 @@ if exists("g:loaded_vimcomplete")
             enable: true,
             priority: 10,
             bigram: false,
-            filetypes: ['text', 'help', 'markdown'],
+            filetypes: ['text', 'help', 'markdown', 'txt'],
             filetypesComments: ['c', 'cpp', 'python', 'java', 'lua', 'vim', 'zsh', 'r'],
         },
     })
@@ -103,6 +103,14 @@ if exists("g:loaded_lsp")
             path: 'typescript-language-server',
             args: ['--stdio'],
             rootSearch: ['tsconfig.json', 'package.json', 'jsconfig.json', '.git'],
+        }])
+    endif
+    if executable('gopls')
+        g:LspAddServer([{
+            name: 'gopls',
+            filetype: 'go',
+            path: 'gopls',
+            args: ['serve']
         }])
     endif
     if executable('jdtls')

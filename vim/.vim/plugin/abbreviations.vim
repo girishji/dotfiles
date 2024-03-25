@@ -24,7 +24,8 @@ cabbr <expr> ze  abbr#ExpandCmd('ze') ? 'e ~/.zshenv<cr>' : 'ze'
 cabbr <expr> gr  abbr#ExpandCmd('gr') ? 'silent grep!' : 'gr'
 cabbr <expr> vg  abbr#ExpandCmd('vg') ? 'vim //j' : 'vg'
 
-iabbr vimhelpfilepostfix vim:tw=78:ts=4:ft=help:norl:modifiable:noreadonly:listchars=tab\:\ \ ,trail\:~:<c-r>=abbr#Eatchar()<cr>
+iabbr vimhelpftpostfix vim:tw=78:ts=4:ft=help:norl:ma:noro:ai:lcs=tab\:\ \ ,trail\:~:<c-r>=abbr#Eatchar()<cr>
+iabbr txtftpostfix vim:ft=txt:<c-r>=abbr#Eatchar()<cr>
 
 iabbr  --* <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=abbr#Eatchar()<cr>
 inorea dd <C-r>=strftime("%Y-%m-%d")<CR><C-R>=abbr#Eatchar()<CR>

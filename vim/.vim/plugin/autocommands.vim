@@ -13,8 +13,11 @@ def SaveLastReg()
     endif
 enddef
 
-augroup GeneralAutocmds | autocmd!
-    autocmd FileType vim,cmake,sh,zsh setl sw=4|setl ts=8|setl sts=4|setl et
+augroup MyVimrc | autocmd!
+    # set unnamed file type to 'txt'
+    # autocmd BufEnter * if @% == "" | setfiletype txt | endif
+    #
+    autocmd FileType cmake,sh,zsh setl sw=4|setl ts=8|setl sts=4|setl et
     autocmd TextYankPost * SaveLastReg()
     # windows to close
     autocmd FileType help,vim-plug,qf nnoremap <buffer> Q q

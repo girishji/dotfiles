@@ -12,11 +12,11 @@ else
 endif
 
 syn match helpBold		"ぼ[^ぼ \t]\+ぼ"hs=s+1,he=e-1 contains=helpBold
-syn match helpBold		"\(^\|[^a-z"[]\)\zsぼ[^ぼ]\+ぼ\ze\([^a-z\t."']\|$\)"hs=s+1,he=e-1 contains=helpBold
+syn match helpBold		"\(^\|[^a-z"[]\)\zsぼ[^ぼ]\+ぼ\ze\([^a-z\t"']\|$\)"hs=s+1,he=e-1 contains=helpBold
 syn match helpItalic		"і[^і \t]\+і"hs=s+1,he=e-1 contains=helpItalic
-syn match helpItalic		"\(^\|[^a-z"[]\)\zsі[^і]\+і\ze\([^a-z\t."']\|$\)"hs=s+1,he=e-1 contains=helpItalic
+syn match helpItalic		"\(^\|[^a-z"[]\)\zsі[^і]\+і\ze\([^a-z\t"']\|$\)"hs=s+1,he=e-1 contains=helpItalic
 syn match helpUnderline		"ぬ[^ぬ \t]\+ぬ"hs=s+1,he=e-1 contains=helpUnderline
-syn match helpUnderline		"\(^\|[^a-z"[]\)\zsぬ[^ぬ]\+ぬ\ze\([^a-z\t."']\|$\)"hs=s+1,he=e-1 contains=helpUnderline
+syn match helpUnderline		"\(^\|[^a-z"[]\)\zsぬ[^ぬ]\+ぬ\ze\([^a-z\t"']\|$\)"hs=s+1,he=e-1 contains=helpUnderline
 
 hi def helpBold cterm=bold term=bold gui=bold
 hi def helpItalic cterm=italic term=italic gui=italic

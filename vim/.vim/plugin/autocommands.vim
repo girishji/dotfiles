@@ -20,8 +20,10 @@ augroup MyVimrc | autocmd!
     autocmd FileType cmake,sh,zsh setl sw=4|setl ts=8|setl sts=4|setl et
     autocmd TextYankPost * SaveLastReg()
     # windows to close
-    autocmd FileType help,vim-plug,qf nnoremap <buffer> Q q
-                \| nnoremap <buffer><silent> q :close<CR>
+    autocmd FileType help,vim-plug,qf {
+        nnoremap <buffer> Q q
+        nnoremap <buffer><silent> q :close<CR>
+    }
     # create directories when needed, when saving a file
     autocmd BufWritePre * mkdir(expand('<afile>:p:h'), 'p')
     # Format usin 'gq'. :h fo-table

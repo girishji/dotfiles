@@ -18,8 +18,8 @@ if exists("g:loaded_vimcomplete")
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
         dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'text'], properties: dictproperties },
         abbrev: { enable: true },
-        lsp: { maxCount: 10, priority: 8 },
-        omnifunc: { enable: false, priority: 10, filetypes: ['python', 'javascript'] },
+        lsp: { enable: false, maxCount: 10, priority: 8 },
+        omnifunc: { enable: true, priority: 10, filetypes: ['python', 'javascript'] },
         vsnip: { enable: true, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },
         vimscript: { enable: true, priority: 10 },
         ngram: {
@@ -105,14 +105,14 @@ if exists("g:loaded_lsp")
             rootSearch: ['tsconfig.json', 'package.json', 'jsconfig.json', '.git'],
         }])
     endif
-    if executable('gopls')
-        g:LspAddServer([{
-            name: 'gopls',
-            filetype: 'go',
-            path: 'gopls',
-            args: ['serve']
-        }])
-    endif
+    # if executable('gopls')
+    #     g:LspAddServer([{
+    #         name: 'gopls',
+    #         filetype: 'go',
+    #         path: 'gopls',
+    #         args: ['serve']
+    #     }])
+    # endif
     if executable('jdtls')
         g:LspAddServer([{
             # Note:
@@ -162,33 +162,6 @@ if exists("g:loaded_lsp")
         highlight LspDiagLine ctermbg=none
     enddef
     autocmd User LspAttached LSPUserSetup()
-
-    # # Global mapping
-    # nmap <silent> gd :LspGotoDefinition<CR>
-    # nmap <silent> gD :LspGotoDeclaration<CR>
-    # nmap <silent> gi :LspGotoImp<CR>
-    # nmap <silent> gh :LspHover<CR>
-    # nmap <silent> gr :LspShowReferences<CR>
-    # nmap <silent> gc :LspCodeLens<CR>
-
-    # var lspOpts = {
-    #     autoComplete: false,
-    #     autoHighlightDiags: true,
-    #     autoHighlight: false,
-    #     echoSignature: true,
-    #     hoverInPreview: false,
-    #     bufferCompletionTimeout: 100,
-    # }
-    # autocmd User LspSetup call LspOptionsSet(lspOpts)
-
-    # var lspServers = [{
-    #     name: 'golang',
-    #     filetype: ['go', 'gomod'],
-    #     path: '/usr/local/bin/gopls',
-    #     args: ['serve'],
-    #     syncInit: true
-    # }]
-    # autocmd User LspSetup call LspAddServer(lspServers)
 endif
 
 if exists("g:loaded_swap")
@@ -211,9 +184,11 @@ endif
 
 if exists("g:loaded_commentary")
     augroup MyVimCommentary | autocmd!
-        autocmd FileType c,cpp setlocal commentstring=//\ %s |
-                    \ command! CommentBlock setlocal commentstring=/*%s*/ |
-                    \ command! CommentLines setlocal commentstring=//\ %s
+        autocmd FileType c,cpp {
+            setlocal commentstring=//\ %s
+            # command! CommentBlock setlocal commentstring=/*%s*/
+            # command! CommentLines setlocal commentstring=//\ %s
+        }
     augroup END
 endif
 

@@ -126,7 +126,7 @@ alias ag='ag --smart-case'
 #       -l prints files with matches only; -S (macos only) follow symlinks
 #       -I ignores binary files (prevents a info message getting printed)
 #
-alias gr="grep --color=always -RESIin --exclude={'*.zwc','*.swp','*.git*','*.dict'} --exclude-dir=plugged"
+alias gr="grep --color=always -RESIins --exclude={'*.zwc','*.swp','*.git*','*.dict'}"
 alias -g G='| grep --color -iEI'
 
 alias pipi='pip install --user '

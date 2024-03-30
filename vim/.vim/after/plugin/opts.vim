@@ -234,6 +234,7 @@ if exists('g:loaded_scope')
     fuzzy.OptionsSet({
         grep_highlight_ignore_case: false,
         grep_echo_cmd: true,
+        find_echo_cmd: true,
     })
 
     nnoremap <leader><bs> <scriptcmd>fuzzy.Buffer()<CR>
@@ -242,10 +243,12 @@ if exists('g:loaded_scope')
     nnoremap <leader><space> <scriptcmd>fuzzy.File()<CR>
     # note: <scriptcmd> sets the context of execution to the fuzzyscope.vim script, so 'findcmd' var is not visible
     # var findcmd = 'fd -tf -L . /Users/gp/.vim'
-    nnoremap <leader>fv <scriptcmd>fuzzy.File("find " .. $HOME .. "/.vim -type d -path */plugged -prune -o -name *.swp -prune -o -path */.vim/.* -prune -o -type f -print -follow")<CR>
+
+    nnoremap <leader>fv <scriptcmd>fuzzy.File($'find {$HOME}/.vim -path "*/.vim/.*" -prune -o -not ( -name "*.swp" -o -name ".*" ) -type f -print -follow')<CR>
+    nnoremap <leader>fV <scriptcmd>fuzzy.File($'find {$VIMRUNTIME} -not -name "*.swp" -type f -print -follow')<CR>
     nnoremap <leader>fV <scriptcmd>fuzzy.File("find " .. $VIMRUNTIME .. " -type f -print -follow")<CR>
-    nnoremap <leader>fh <scriptcmd>fuzzy.File("find " .. $HOME .. "/help -type f -print -follow")<CR>
-    nnoremap <leader>fz <scriptcmd>fuzzy.File("find " .. $HOME .. "/.zsh -type f -print -follow")<CR>
+    nnoremap <leader>fh <scriptcmd>fuzzy.File($'find {$HOME}/help -path "*/.*" -prune -o -not ( -name "*.swp" -o -name ".*" ) -type f -print -follow')<CR>
+    nnoremap <leader>fz <scriptcmd>fuzzy.File($'find {$HOME}/.zsh -path "*/.zsh/.*" -prune -o -not ( -name "*.zwc" -o -name "*.swp" -o -name ".*" ) -type f -print -follow')<CR>
 
     # for testing
     # nnoremap <leader>g <scriptcmd>fuzzy.Grep('rg --vimgrep --no-heading --smart-case')<CR>

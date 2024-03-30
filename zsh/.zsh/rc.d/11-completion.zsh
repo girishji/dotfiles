@@ -12,8 +12,17 @@
 # session as well as their patterns.
 
 # zsh-autocomplete plugin initializes the completion system (no need for 'compinit' here)
-# zsh by default does not include aliases in autocompletion. Prepend _expand_alias.
-zstyle ':completion:*' completer _expand_alias _expand _complete _correct _approximate _complete:-fuzzy _prefix _ignored
+
+# zsh by default does not include aliases in autocompletion. Prepend
+# _expand_alias. It needs to appear before _complete.
+# defaults: https://github.com/marlonrichert/zsh-autocomplete/blob/main/Functions/Init/.autocomplete__config
+# see https://thevaluable.dev/zsh-completion-guide-examples/
+# 'completer': this is the zstyle you want to configure
+# _foo, _bar are actual completors. The order matter: the completion system will
+# try each of these completer one after the other. The completion stop when
+# some matches are found or when the completer stop it by itself.
+builtin zstyle ':completion:*' completer \
+    _expand _expand_alias _complete _correct _approximate _complete:-fuzzy _prefix _ignored
 
 # git directories show up as ~[dir]. This is because of dynamic naming of dirs.
 # During file name expansion, a ~[string] is provided to the
@@ -26,7 +35,6 @@ zstyle ':completion:*' completer _expand_alias _expand _complete _correct _appro
 ############################################################
 ## Blurb from https://thevaluable.dev/zsh-completion-guide-examples/
 #
-
 # To initialize the completion for the current Zsh session, you’ll need to call
 # the function compinit.
 
@@ -48,9 +56,8 @@ zstyle ':completion:*' completer _expand_alias _expand _complete _correct _appro
 # - It will load the function only when it’s needed (lazy-loading). It comes in
 #   handy to speed up Zsh startup.
 
-_comp_options+=(globdots) # With hidden files
-
 # This line will complete dotfiles.
+_comp_options+=(globdots) # With hidden files
 
 ## How Does the Zsh Completion System Work
 

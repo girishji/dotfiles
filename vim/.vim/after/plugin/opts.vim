@@ -255,7 +255,7 @@ if exists('g:loaded_scope')
     # nnoremap <leader>g <scriptcmd>fuzzy.Grep('ag --vimgrep')<CR>
     nnoremap <leader>g <scriptcmd>fuzzy.Grep()<CR>
     # case sensitive grep
-    nnoremap <leader>fG <scriptcmd>fuzzy.Grep('grep --color=never -RESIHn --exclude="*.git*" --exclude="*.swp" --exclude="*.zwc" --exclude-dir=plugged', false)<CR>
+    nnoremap <leader>fG <scriptcmd>fuzzy.Grep('grep --color=never -RESIHns --exclude-dir="*.git*" --exclude="*.swp" --exclude="*.zwc"', false)<CR>
     # cword
     nnoremap <leader>G <scriptcmd>fuzzy.Grep(null_string, true, '<cword>')<CR>
     #

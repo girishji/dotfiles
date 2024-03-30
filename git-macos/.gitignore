@@ -2,3 +2,4 @@
 *.zwc
 .DS_Store
 cscope.out
+.zsh_history

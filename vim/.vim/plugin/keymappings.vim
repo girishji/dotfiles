@@ -118,8 +118,10 @@ nnoremap <leader>vR :enew \| exec "nn <buffer> q :bd!\<cr\>" \| put = execute('m
 nnoremap <leader>vm <cmd>messages<cr>
 nnoremap <leader>vd <cmd>GitDiffThisFile<cr>
 nnoremap <leader>ve <cmd>e $MYVIMRC<cr>
-nnoremap <leader>vz <scriptcmd>FoldingToggle()<cr>
-nnoremap <leader>vp <cmd>echo expand('%')<cr>
+nnoremap <leader>vz <cmd>FoldingToggle<cr>
+# Following not needed: use 1<c-g> for absolute path, or <c-g> for relative path
+# nnoremap <leader>vp <cmd>echo expand('%')<cr>
+nnoremap <leader>vi <cmd>ShowImage<cr>
 
 import autoload 'text.vim'
 

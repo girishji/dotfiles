@@ -18,6 +18,16 @@ b:undo_ftplugin ..= ' | exe "nunmap <space>z"'
 see https://github.com/habamax/.vim
 
 ----------------------------------------
+Spelling ~
+
+z= 	suggest options
+zg 	add good word to dict (goes into .vim/spell/en-utf8.add)
+zug 	undo above add 
+zw 	like "zg" but opposite. mark it as bad word. if it is added, then turn it into comment
+]s 	move to next misspelled word
+[s, [S, ]S etc.
+
+----------------------------------------
 Measure performance of a function ~
 
 > for i in {1..10}; do
@@ -25,6 +35,24 @@ Measure performance of a function ~
 > done
 >
 see https://groups.google.com/g/vim_dev/c/xVOqj_CL4dw
+
+----------------------------------------
+Command-line key mapping ~
+
+`<Left>` | Cursor one character left
+`<Right>` | Cursor one character right
+`<C-e>/<End>` | Move cursor to the end of line
+`<C-b>/<Home>` | Move cursor to the beginning of line
+`<C-u>` | Delete characters between cursor and beginning of line
+`<C-w>` | Delete word before the cursor
+`<S-Left>/<C-Left>` | Cursor one WORD left
+`<S-Right>/<C-Right>` | Cursor one WORD right
+`<C-Up>/<S-Up>` | Recall history previous
+`<C-Down>/<S-Down>` | Recall history next
+`<C-r><C-w>` | Insert word under cursor (`<cword>`) into prompt
+`<C-r><C-a>` | Insert WORD under cursor (`<cWORD>`) into prompt
+`<C-r><C-l>` | Insert line under cursor into prompt
+`<C-r>` {register} | Insert the contents of a numbered or named register. Between typing CTRL-R and the second character '"' will be displayed to indicate that you are expected to enter the name of a register.
 
 ----------------------------------------
 import autoload ~
@@ -567,6 +595,15 @@ uses feedkeys() to send keycode combination (>= 2); There is no circular
 dependency when you feedkey() <space>x since only <space> is mapped to
 internal function. 
 
+----------------------------------------'
+Comment code using gc:
+
+gcap –> comment a paragraph
+gcj –> comment current line and line bellow
+gc3j –> comment current line and 3 lines bellow
+gcgg –> comment current line and all the lines including first line in file
+gcG –> comment current line and all the lines including last line in file
+
 ----------------------------------------
 QuickFix 
 
@@ -784,6 +821,10 @@ glob vs regex
  	This is equivalent to:  
 	if filename =~ '^Make.*\.mak$'
  	
+
+----------------------------------------
+Path to current buffer
+    Use 1<c-g> or <c-g> to get path (abs or relative) to current buffer
 
 ----------------------------------------
 Batch mode and headless vim

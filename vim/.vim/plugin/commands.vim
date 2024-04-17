@@ -24,6 +24,21 @@ def FoldingToggle()
     exec myfoldingtoggleflag ? 'normal! zR' : 'normal! zM'
     myfoldingtoggleflag = !myfoldingtoggleflag
 enddef
+command FoldingToggle FoldingToggle()
+
+# Open image in MacOs
+def ShowImage()
+    if expand('<cfile>') != null_string
+        :silent vim9cmd system($'qlmanage -p {expand("<cfile>:p")}')
+    else
+        for word in getline('.')->split()
+            if filereadable(expand(word))
+                :silent vim9cmd system($'qlmanage -p {fnamemodify(expand(word), ":p")}')
+            endif
+        endfor
+    endif
+enddef
+command ShowImage ShowImage()
 
 # git diff
 def GitDiffThisFile()

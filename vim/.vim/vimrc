@@ -69,6 +69,7 @@ set dictionary+=/usr/share/dict/words
 set whichwrap+=<,>,h,l # make arrows and h, l, push cursor to next line
 # set pumheight=7 # max number of items in popup menu (pmenu)
 set virtualedit=block # allows selection of rectangular text in visual block mode
+set wildignore+=.git/*,.gitignore,*.swp,*.zwc,tags
 
 syntax on # turn on syntax highlighting
 
@@ -121,14 +122,14 @@ Plug 'airblade/vim-gitgutter'
 # Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 # Plug 'junegunn/fzf.vim'
 Plug 'machakann/vim-highlightedyank'
-Plug 'machakann/vim-swap'
-Plug 'yegappan/lsp'
-# Plug '~/git/lsp'
+# Plug 'machakann/vim-swap'
+# Plug 'yegappan/lsp'
+Plug '~/git/lsp'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 # colorschemes
-Plug 'cocopon/iceberg.vim'
+# Plug 'cocopon/iceberg.vim'
 Plug 'dracula/vim'
 #
 Plug '~/git/declutter.vim'

@@ -42,20 +42,23 @@ timer_start(60 * 1000, function(UpdateElapsed))
 def! g:MyActiveStatusline(): string
     var gitstr = Gitstr()
     var diagstr = Diagstr()
-    var shortpath = expand('%:h')
-    var shortpathmax = 20
-    if shortpath->len() > shortpathmax
-        shortpath = shortpath->split('/')->map((_, v) => v->slice(0, 2))->join('/')->slice(0, shortpathmax)
-    endif
-    if !shortpath->empty()
-        shortpath = ' | ' .. shortpath .. '/'
-    endif
+    # Use 1<c-g> or <c-g> to get path to current buffer
+    # var shortpath = expand('%:h')
+    # var shortpathmax = 20
+    # if shortpath->len() > shortpathmax
+    #     shortpath = shortpath->split('/')->map((_, v) => v->slice(0, 2))->join('/')->slice(0, shortpathmax)
+    # endif
+    # if !shortpath->empty()
+    #     shortpath = ' | ' .. shortpath .. '/'
+    # endif
     var elapsed = ((&ft)->empty() ? "" : '| ') .. GetElapsed()
-    var width = winwidth(0) - 30 - gitstr->len() - diagstr->len() - shortpath->len() - elapsed->len()
+    # var width = winwidth(0) - 30 - gitstr->len() - diagstr->len() - shortpath->len() - elapsed->len()
+    var width = winwidth(0) - 30 - gitstr->len() - diagstr->len() - elapsed->len()
     var buflinestr = BuflineStr(width)
     # return $'%4*{diagstr}%* {buflinestr} %= %y %4*{elapsed}%*%4*{gitstr}%*%2*{shortpath}%* ≡ %P (%l:%c) %*'
     # echom $'{diagstr} {buflinestr} %= %y {elapsed}{shortpath} ≡ %P (%l:%c) '
-    return $'{diagstr} {buflinestr} %= %y {elapsed}{shortpath} ≡ %P (%l:%c) '
+    # return $'{diagstr} {buflinestr} %= %y {elapsed}{shortpath} ≡ %P (%l:%c) '
+    return $'{diagstr} {buflinestr} %= %y {elapsed} ≡ %P (%l:%c) '
 enddef
 
 def! g:MyInactiveStatusline(): string

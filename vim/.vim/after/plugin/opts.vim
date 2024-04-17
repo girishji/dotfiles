@@ -18,8 +18,8 @@ if exists("g:loaded_vimcomplete")
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
         dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'text'], properties: dictproperties },
         abbrev: { enable: true },
-        lsp: { enable: false, maxCount: 10, priority: 8 },
-        omnifunc: { enable: true, priority: 10, filetypes: ['python', 'javascript'] },
+        lsp: { enable: true, maxCount: 10, priority: 8 },
+        omnifunc: { enable: false, priority: 10 },
         vsnip: { enable: true, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },
         vimscript: { enable: true, priority: 10 },
         ngram: {
@@ -48,9 +48,9 @@ if exists("g:loaded_autosuggest")
             pum: true,
             hidestatusline: false,
             fuzzy: false,
-            exclude: ['^buffer '],
+            exclude: ['^buffer ', '^e$'],
             # exclude: ['^buffer ', '^Find', '^Buffer'],
-            onspace: ['buffer'],
+            onspace: ['buffer', 'e'],
             editcmdworkaround: true,
         }
     })

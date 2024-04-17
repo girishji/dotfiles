@@ -13,16 +13,16 @@ vim9script
 
 # align text around # symbol; modify it as needed
 cabbr <expr> al  abbr#ExpandCmd('al') ? 's/\v(.*)#(.*)/\=printf("%-16s # %s", submatch(1), submatch(2))/<c-r>=abbr#Eatchar()<cr>' : 'al'
-cabbr <expr> v9  abbr#ExpandCmd('v9') ? 'vim9cmd :<c-r>=abbr#Eatchar()<cr>' : 'v9'
+cabbr <expr> v9  abbr#ExpandCmd('v9') ? 'vim9cmd <c-r>=abbr#Eatchar()<cr>' : 'v9'
 cabbr <expr> maek  abbr#ExpandCmd('maek') ? 'make' : 'maek'
 # :g search file for pattern and put resulting lines in quickfix list
 # <leader>tc or :cw to open the quickfix window
 #   alternative to g:// is :il /pattern (searches current file and #include'd files)
-cabbr <expr> gg  abbr#ExpandCmd('gg') ? "g//caddexpr $'{expand(\"%\")}:{line(\".\")}:{getline(\".\")}'<c-left><c-left><right><right><c-r>=abbr#Eatchar()<cr>" : gg
-cabbr <expr> zz  abbr#ExpandCmd('zz') ? 'e ~/.zsh/.zshrc<cr>' : 'zz'
-cabbr <expr> ze  abbr#ExpandCmd('ze') ? 'e ~/.zshenv<cr>' : 'ze'
-cabbr <expr> gr  abbr#ExpandCmd('gr') ? 'silent grep!' : 'gr'
-cabbr <expr> vg  abbr#ExpandCmd('vg') ? 'vim //j' : 'vg'
+# cabbr <expr> gg  abbr#ExpandCmd('gg') ? "g//caddexpr $'{expand(\"%\")}:{line(\".\")}:{getline(\".\")}'<c-left><c-left><right><right><c-r>=abbr#Eatchar()<cr>" : gg
+# cabbr <expr> zz  abbr#ExpandCmd('zz') ? 'e ~/.zsh/.zshrc<cr>' : 'zz'
+# cabbr <expr> ze  abbr#ExpandCmd('ze') ? 'e ~/.zshenv<cr>' : 'ze'
+# cabbr <expr> gr  abbr#ExpandCmd('gr') ? 'silent grep!' : 'gr'
+# cabbr <expr> vg  abbr#ExpandCmd('vg') ? 'vim //j' : 'vg'
 
 iabbr vimhelpftpostfix vim:tw=78:ts=4:ft=help:norl:ma:noro:ai:lcs=tab\:\ \ ,trail\:~:<c-r>=abbr#Eatchar()<cr>
 iabbr txtftpostfix vim:ft=txt:<c-r>=abbr#Eatchar()<cr>

@@ -197,11 +197,15 @@ if exists("g:loaded_highlightedyank")
 endif
 
 if exists("g:loaded_bufline")
-    highlight link user1 statusline
-    highlight link user2 statusline
-    highlight link user3 statusline
-    highlight link user4 statusline
-    g:BuflineSetup({ highlight: true, showbufnr: false })
+    # - `User1`: Active buffer
+    # - `User2`: Alternate buffer
+    # - `User3`: Other buffers
+    # - `User4`: Emphasis characters if specified (see Options)
+    highlight user1 cterm=bold
+    highlight user2 cterm=underline
+    highlight user3 cterm=none
+    highlight user4 cterm=bold
+    g:BuflineSetup({ highlight: true, showbufnr: false, emphasize: '' })
 endif
 
 # another way

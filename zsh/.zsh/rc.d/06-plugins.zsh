@@ -11,7 +11,7 @@ local -a plugins=(
     # marlonrichert/zsh-hist              # Edit history from the command line.
     # marlonrichert/zcolors               # Colors for completions and Git
     zsh-users/zsh-autosuggestions       # Inline suggestions
-    zsh-users/zsh-syntax-highlighting   # Command-line syntax highlighting
+    # zsh-users/zsh-syntax-highlighting   # Command-line syntax highlighting
 )
 
 # The Zsh Autocomplete plugin sends *a lot* of characters to your terminal.

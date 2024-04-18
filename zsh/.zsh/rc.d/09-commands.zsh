@@ -138,14 +138,10 @@ alias vim_='vim -Nu NONE -S <(cat <<EOF
 EOF
 )'
 
-alias l1='ls -1' # one listing per line
-alias l='ls'
-alias ll='ls -l'
 alias c='z'
 alias ca='cat'
 alias cl='clear'
 alias diffw='diff -w'  # ignore white spaces
-
 alias less='command less -R' # -R for interpreting Ansi color codes
 alias le='less'
 alias p3='python3'
@@ -158,7 +154,7 @@ alias jsonformat='python3 -m json.tool'
 
 alias v='vim'
 alias vd='vi -d'  # diff mode - pass 2 files
-alias vr='vim -c "normal '\''0"'  # restore last opened buffer
+# alias vr='vim -c "normal '\''0"'  # restore last opened buffer
 alias viclean='vim --clean'
 
 alias makedebug="make SHELL='sh -x'"
@@ -166,19 +162,31 @@ alias makedebug="make SHELL='sh -x'"
 if is_mac; then
     alias ba='bat --style=plain' # without line numbers
     alias bc='bc -l'
-    # note: use 'py' which is ipython+pyflyby
+    # TIP: use 'py' which is ipython+pyflyby
     # alias ip='ipython --no-confirm-exit --colors=Linux'
-    alias ls='ls -FG' # aliases the command /usr/bin/ls
+    if which gls >/dev/null ; then
+        # TIP: brew install coreutils
+        # All the gnu commands will be prefixed with 'g'. Can do 'man gls'.
+        # Note: https://apple.stackexchange.com/questions/432386/use-ls-colors-not-lscolors-on-mac-os
+        # export LS_COLORS='di=1:ln=3:ex=4'
+        export LS_COLORS='di=1:ln=3:ex=3'
+        alias ls='gls --color=always -F' # auto/always/never
+    else
+        alias ls='ls -FG' # aliases the command /usr/bin/ls
+    fi
+    alias l='ls'
+    alias ll='ls -l'
     alias x86="$env /usr/bin/arch -x86_64 /bin/zsh ---login"
     alias arm="$env /usr/bin/arch -arm64 /bin/zsh ---login"
     alias ibooks='cd /Users/gp/Library/Mobile Documents/iCloud~com~apple~iBooks/Documents'
     alias obsidian='cd /Users/gp/Library/Mobile Documents/iCloud~md~obsidian/Documents'
     alias op='open'
-    alias gssh='gcloud compute ssh --zone "us-central1-a" "n2dstd" --project "sandbox-403316" --ssh-flag="-ServerAliveInterval=30"'
-    alias gscp='gcloud compute scp --recurse n2dstd:~/foo ~/bar'
-    alias gstop='gcloud compute instances stop n2dstd'
-    alias gcsh='gcloud cloud-shell ssh --authorize-session'
+    # alias gssh='gcloud compute ssh --zone "us-central1-a" "n2dstd" --project "sandbox-403316" --ssh-flag="-ServerAliveInterval=30"'
+    # alias gscp='gcloud compute scp --recurse n2dstd:~/foo ~/bar'
+    # alias gstop='gcloud compute instances stop n2dstd'
+    # alias gcsh='gcloud cloud-shell ssh --authorize-session'
 elif is_linux; then
+    export LS_COLORS='di=1:ln=3'
     alias ls='ls --color=always' # auto/always/never
     if [[ ! -d "$HOME/.config" ]]; then
         mkdir -p $HOME/.config

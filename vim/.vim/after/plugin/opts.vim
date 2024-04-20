@@ -14,7 +14,7 @@ if exists("g:loaded_vimcomplete")
         text: { sortedDict: true },
     }
     g:VimCompleteOptionsSet({
-        completor: { shuffleEqualPriority: true, alwaysOn: true, kindDisplayType: 'icontext' },
+        completor: { shuffleEqualPriority: true, alwaysOn: true, kindDisplayType: 'symbol' },
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
         dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'text'], properties: dictproperties },
         abbrev: { enable: true },
@@ -248,21 +248,26 @@ if exists('g:loaded_scope')
     # note: <scriptcmd> sets the context of execution to the fuzzyscope.vim script, so 'findcmd' var is not visible
     # var findcmd = 'fd -tf -L . /Users/gp/.vim'
 
-    nnoremap <leader>fv <scriptcmd>fuzzy.File($'find {$HOME}/.vim -path "*/.vim/.*" -prune -o -not ( -name "*.swp" -o -name ".*" ) -type f -print -follow')<CR>
-    nnoremap <leader>fV <scriptcmd>fuzzy.File($'find {$VIMRUNTIME} -not -name "*.swp" -type f -print -follow')<CR>
+    command -nargs=1 -complete=dir ScopeFile fuzzy.File($'find {<f-args>} -type f -print -follow')
+    # command -nargs=1 -complete=dir ScopeFile fuzzy.File($'fd -tf --follow . {<f-args>}')
+    nnoremap <leader>ff :ScopeFile<space>
+    nnoremap <leader>fv <scriptcmd>fuzzy.File($'find {$HOME}/.vim -path "*/.vim/.*" -prune -o -name "*.swp" -o -name ".*" -o -type f -print -follow')<CR>
     nnoremap <leader>fV <scriptcmd>fuzzy.File("find " .. $VIMRUNTIME .. " -type f -print -follow")<CR>
     nnoremap <leader>fh <scriptcmd>fuzzy.File($'find {$HOME}/help -path "*/.*" -prune -o -not ( -name "*.swp" -o -name ".*" ) -type f -print -follow')<CR>
     nnoremap <leader>fz <scriptcmd>fuzzy.File($'find {$HOME}/.zsh -path "*/.zsh/.*" -prune -o -not ( -name "*.zwc" -o -name "*.swp" -o -name ".*" ) -type f -print -follow')<CR>
 
-    # for testing
-    # nnoremap <leader>g <scriptcmd>fuzzy.Grep('rg --vimgrep --no-heading --smart-case')<CR>
-    # nnoremap <leader>g <scriptcmd>fuzzy.Grep('ag --vimgrep')<CR>
+    command -nargs=1 -complete=dir ScopeGrep fuzzy.Grep(null_string, true, null_string, <f-args>)
+    # command -nargs=1 -complete=dir ScopeGrep fuzzy.Grep('rg --vimgrep', true, null_string, <f-args>)
+    nnoremap <leader>fg :ScopeGrep<space>
     nnoremap <leader>g <scriptcmd>fuzzy.Grep()<CR>
     # case sensitive grep
     nnoremap <leader>fG <scriptcmd>fuzzy.Grep('grep --color=never -RESIHns --exclude-dir="*.git*" --exclude="*.swp" --exclude="*.zwc"', false)<CR>
     # cword
     nnoremap <leader>G <scriptcmd>fuzzy.Grep(null_string, true, '<cword>')<CR>
-    #
+    # for testing
+    # nnoremap <leader>g <scriptcmd>fuzzy.Grep('rg --vimgrep --no-heading --smart-case')<CR>
+    # nnoremap <leader>g <scriptcmd>fuzzy.Grep('ag --vimgrep')<CR>
+
     nnoremap <leader>f/ <scriptcmd>fuzzy.BufSearch()<CR>
     nnoremap <leader>fH <scriptcmd>fuzzy.Highlight()<CR>
     nnoremap <leader>fk <scriptcmd>fuzzy.Keymap()<CR>

@@ -12,29 +12,38 @@ vim9script
 # (https://gurdiga.com/blog/2016/04/08/vim-recursive-iabbrev/)
 
 # align text around # symbol; modify it as needed
-cabbr <expr> al  abbr#ExpandCmd('al') ? 's/\v(.*)#(.*)/\=printf("%-16s # %s", submatch(1), submatch(2))/<c-r>=abbr#Eatchar()<cr>' : 'al'
-cabbr <expr> v9  abbr#ExpandCmd('v9') ? 'vim9cmd <c-r>=abbr#Eatchar()<cr>' : 'v9'
-cabbr <expr> maek  abbr#ExpandCmd('maek') ? 'make' : 'maek'
+cabbr <expr> al  abbr#CmdAbbr('al', 's/\v(.*)#(.*)/\=printf("%-16s # %s", submatch(1), submatch(2))/<c-r>=abbr#Eatchar()<cr>')
+
+cabbr <expr> v9  abbr#CmdAbbr('v9', 'vim9cmd <c-r>=abbr#Eatchar()<cr>')
+cabbr <expr> vim9  abbr#CmdAbbr('vim9', 'vim9cmd <c-r>=abbr#Eatchar()<cr>')
+cabbr <expr> maek  abbr#CmdAbbr('maek', 'make')
+
 # :g search file for pattern and put resulting lines in quickfix list
 # <leader>tc or :cw to open the quickfix window
 #   alternative to g:// is :il /pattern (searches current file and #include'd files)
-# cabbr <expr> gg  abbr#ExpandCmd('gg') ? "g//caddexpr $'{expand(\"%\")}:{line(\".\")}:{getline(\".\")}'<c-left><c-left><right><right><c-r>=abbr#Eatchar()<cr>" : gg
-# cabbr <expr> zz  abbr#ExpandCmd('zz') ? 'e ~/.zsh/.zshrc<cr>' : 'zz'
-# cabbr <expr> ze  abbr#ExpandCmd('ze') ? 'e ~/.zshenv<cr>' : 'ze'
-# cabbr <expr> gr  abbr#ExpandCmd('gr') ? 'silent grep!' : 'gr'
-# cabbr <expr> vg  abbr#ExpandCmd('vg') ? 'vim //j' : 'vg'
+# cabbr <expr> gg  abbr#CmdAbbr('gg') ? "g//caddexpr $'{expand(\"%\")}:{line(\".\")}:{getline(\".\")}'<c-left><c-left><right><right><c-r>=abbr#Eatchar()<cr>" : gg
+
+# cabbr <expr> zz  abbr#CmdAbbr('zz') ? 'e ~/.zsh/.zshrc<cr>' : 'zz'
+# cabbr <expr> ze  abbr#CmdAbbr('ze') ? 'e ~/.zshenv<cr>' : 'ze'
+# cabbr <expr> gr  abbr#CmdAbbr('gr') ? 'silent grep!' : 'gr'
+# cabbr <expr> vg  abbr#CmdAbbr('vg') ? 'vim //j' : 'vg'
 
 iabbr vimhelpftpostfix vim:tw=78:ts=4:ft=help:norl:ma:noro:ai:lcs=tab\:\ \ ,trail\:~:<c-r>=abbr#Eatchar()<cr>
 iabbr txtftpostfix vim:ft=txt:<c-r>=abbr#Eatchar()<cr>
 
+# dashes to match previous line length
 iabbr  --* <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=abbr#Eatchar()<cr>
-inorea dd <C-r>=strftime("%Y-%m-%d")<CR><C-R>=abbr#Eatchar()<CR>
-inorea ddd <C-r>=strftime("%Y-%m-%d %H:%M")<CR><C-R>=abbr#Eatchar()<CR>
+iabbr  ==* <esc>d^a<c-r>=repeat('=', getline(line('.') - 1)->trim()->len())<cr><c-r>=abbr#Eatchar()<cr>
+iabbr  ~~* <esc>d^a<c-r>=repeat('~', getline(line('.') - 1)->trim()->len())<cr><c-r>=abbr#Eatchar()<cr>
+
+# insert date, and time
+# inorea dd <C-r>=strftime("%Y-%m-%d")<CR><C-R>=abbr#Eatchar()<CR>
+# inorea ddd <C-r>=strftime("%Y-%m-%d %H:%M")<CR><C-R>=abbr#Eatchar()<CR>
 
 inorea adn and
 inorea teh the
 
-inorea todo: TODO:
+# inorea todo: TODO:
 inorea fixme: FIXME:
 inorea xxx: XXX:
-inorea task: TASK:
+# inorea task: TASK:

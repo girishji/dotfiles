@@ -22,20 +22,12 @@ export def EOL(): bool
     return col('.') == col('$') || getline('.')->strpart(col('.')) =~ '^\s\+$'
 enddef
 
-export def InsertDashes(): string
-    var s = ''
-    for _ in range(getline(line('.') - 1)->len())
-        s = s .. '-'
-    endfor
-    return s
-enddef
-
-export def ExpandCmd(cmd: string): bool
+export def CmdAbbr(abbr: string, expn: string): string
     if getcmdtype() == ':'
         var context = getcmdline()->strpart(0, getcmdpos() - 1)
-        if context == cmd
-            return true
+        if context == abbr
+            return expn
         endif
     endif
-    return false
+    return abbr
 enddef

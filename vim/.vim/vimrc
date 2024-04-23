@@ -119,10 +119,6 @@ plug#begin("~/.local/share/vim-plug/")
 # Make sure you use single quotes
 Plug 'tpope/vim-commentary'
 Plug 'airblade/vim-gitgutter'
-# Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-# Plug 'junegunn/fzf.vim'
-# Plug 'machakann/vim-highlightedyank'
-# Plug 'machakann/vim-swap'
 # Plug 'yegappan/lsp'
 Plug '~/git/lsp'
 Plug 'rafamadriz/friendly-snippets'

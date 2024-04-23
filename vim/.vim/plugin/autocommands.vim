@@ -60,6 +60,7 @@ augroup MyVimrc | autocmd!
     # autocmd FileType cpp,c setlocal makeprg=g++\ -std=c++11\ -O2\ -Wall\ %\ -o\ %<
     #
     # hightlighted yank
+    # https://github.com/justinmk/config/blob/a93dc73fafbdeb583ce177a9d4ebbbdfaa2d17af/.config/nvim/init.vim#L1087
     autocmd TextYankPost * {
         if v:event.operator ==? 'y'
             var [lnum1, col1, off1] = getpos("'[")[1 : 3]
@@ -67,9 +68,10 @@ augroup MyVimrc | autocmd!
             col2 += !v:event.inclusive ? 1 : 0
             var pos = []
             var maxcol = v:maxcol / 2
-            for lnum in lnum1 < lnum2 ? range(lnum1, lnum2) : range(lnum2, lnum1)
-                var c1 = (lnum == lnum1 || v:event.regtype =~? "\<C-V>") ? (col1 + off1) : 1
-                var c2 = (lnum == lnum2 || v:event.regtype =~? "\<C-V>") ? (col2 + off2) : maxcol
+            var visualregion = v:event.regtype =~? "\<C-V>"
+            for lnum in (lnum1 < lnum2) ? range(lnum1, lnum2) : range(lnum2, lnum1)
+                var c1 = (lnum == lnum1 || visualregion) ? (col1 + off1) : 1
+                var c2 = (lnum == lnum2 || visualregion) ? (col2 + off2) : maxcol
                 pos->add([lnum, c1, min([c2 - c1 + 1, maxcol])])
             endfor
             var m = matchaddpos('IncSearch', pos)

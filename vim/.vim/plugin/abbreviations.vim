@@ -31,7 +31,7 @@ cabbr <expr> maek  abbr#CmdAbbr('maek', 'make')
 iabbr vimhelpftpostfix vim:tw=78:ts=4:ft=help:norl:ma:noro:ai:lcs=tab\:\ \ ,trail\:~:<c-r>=abbr#Eatchar()<cr>
 iabbr txtftpostfix vim:ft=txt:<c-r>=abbr#Eatchar()<cr>
 
-# dashes to match previous line length
+# dashes to match previous line length (there are also key maps in keymappings.vim)
 iabbr  --* <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=abbr#Eatchar()<cr>
 iabbr  ==* <esc>d^a<c-r>=repeat('=', getline(line('.') - 1)->trim()->len())<cr><c-r>=abbr#Eatchar()<cr>
 iabbr  ~~* <esc>d^a<c-r>=repeat('~', getline(line('.') - 1)->trim()->len())<cr><c-r>=abbr#Eatchar()<cr>

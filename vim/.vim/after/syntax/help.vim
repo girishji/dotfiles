@@ -21,3 +21,7 @@ syn match helpUnderline		"\(^\|[^a-z"[]\)\zsぬ[^ぬ]\+ぬ\ze\([^a-z\t"']\|$\)"h
 hi def helpBold cterm=bold term=bold gui=bold
 hi def helpItalic cterm=italic term=italic gui=italic
 hi def helpUnderline cterm=underline term=underline gui=underline
+
+" Only spell check <word> and <Word>, ignoring utf-8 chars
+syn match wordWord "\<\a\l\+\>" contains=@Spell
+

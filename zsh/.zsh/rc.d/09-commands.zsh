@@ -16,6 +16,10 @@
 #   /   to go to the root dir
 setopt AUTO_CD
 
+# Load zprof so that shell startup can be profiled.
+# See https://www.bigbinary.com/blog/zsh-profiling
+zmodload zsh/zprof
+
 # Type '-' to return to your previous dir.
 alias -- -='cd -'
 # '--' signifies the end of options. Otherwise, '-=...' would be interpreted as

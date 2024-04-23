@@ -232,6 +232,7 @@ endif
 if exists('g:loaded_scope')
     import autoload 'scope/popup.vim' as sp
     import autoload 'scope/fuzzy.vim'
+    import autoload 'scope/util.vim'
 
     sp.OptionsSet({borderhighlight: ['Comment']})
 
@@ -245,23 +246,30 @@ if exists('g:loaded_scope')
     nnoremap <leader>fb <scriptcmd>fuzzy.Buffer(true)<CR>
 
     nnoremap <leader><space> <scriptcmd>fuzzy.File()<CR>
-    # note: <scriptcmd> sets the context of execution to the fuzzyscope.vim script, so 'findcmd' var is not visible
+    # note: <scriptcmd> sets the context of execution to the fuzzy.vim script, so 'findcmd' var is not visible
     # var findcmd = 'fd -tf -L . /Users/gp/.vim'
 
-    command -nargs=1 -complete=dir ScopeFile fuzzy.File($'find {<f-args>} -type f -print -follow')
+    command -nargs=1 -complete=dir ScopeFile fuzzy.File(fuzzy.FindCmd(<f-args>))
     # command -nargs=1 -complete=dir ScopeFile fuzzy.File($'fd -tf --follow . {<f-args>}')
     nnoremap <leader>ff :ScopeFile<space>
-    nnoremap <leader>fv <scriptcmd>fuzzy.File($'find {$HOME}/.vim -path "*/.vim/.*" -prune -o -name "*.swp" -o -name ".*" -o -type f -print -follow')<CR>
-    nnoremap <leader>fV <scriptcmd>fuzzy.File("find " .. $VIMRUNTIME .. " -type f -print -follow")<CR>
-    nnoremap <leader>fh <scriptcmd>fuzzy.File($'find {$HOME}/help -path "*/.*" -prune -o -not ( -name "*.swp" -o -name ".*" ) -type f -print -follow')<CR>
-    nnoremap <leader>fz <scriptcmd>fuzzy.File($'find {$HOME}/.zsh -path "*/.zsh/.*" -prune -o -not ( -name "*.zwc" -o -name "*.swp" -o -name ".*" ) -type f -print -follow')<CR>
+    nnoremap <leader>fv <scriptcmd>fuzzy.File(fuzzy.FindCmd($'{$HOME}/.vim'))<CR>
+    nnoremap <leader>fV <scriptcmd>fuzzy.File(fuzzy.FindCmd($VIMRUNTIME))<CR>
+    nnoremap <leader>fh <scriptcmd>fuzzy.File(fuzzy.FindCmd($'{$HOME}/help'))<CR>
+    nnoremap <leader>fz <scriptcmd>fuzzy.File(fuzzy.FindCmd($'{$HOME}/.zsh'))<CR>
+
+    # def FindGit()
+    #     var gitdir = system("git rev-parse --show-toplevel 2>/dev/null \|\| true")->trim()
+    #     fuzzy.File(fuzzy.FindCmd(gitdir))
+    # enddef
+    # nnoremap <leader>ff <scriptcmd>FindGit()<cr>
+    # nnoremap <leader>ff <scriptcmd>fuzzy.File(fuzzy.FindCmd($'{system("git rev-parse --show-toplevel 2>/dev/null \|\| true")->trim()}'))<cr>
 
     command -nargs=1 -complete=dir ScopeGrep fuzzy.Grep(null_string, true, null_string, <f-args>)
     # command -nargs=1 -complete=dir ScopeGrep fuzzy.Grep('rg --vimgrep', true, null_string, <f-args>)
     nnoremap <leader>fg :ScopeGrep<space>
     nnoremap <leader>g <scriptcmd>fuzzy.Grep()<CR>
     # case sensitive grep
-    nnoremap <leader>fG <scriptcmd>fuzzy.Grep('grep --color=never -RESIHns --exclude-dir="*.git*" --exclude="*.swp" --exclude="*.zwc"', false)<CR>
+    nnoremap <leader>fG <scriptcmd>fuzzy.Grep(fuzzy.GrepCmd('-RESIHns'))<CR>
     # cword
     nnoremap <leader>G <scriptcmd>fuzzy.Grep(null_string, true, '<cword>')<CR>
     # for testing

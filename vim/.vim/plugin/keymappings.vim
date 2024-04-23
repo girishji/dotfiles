@@ -136,9 +136,10 @@ for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', 
     execute 'onoremap <silent> a' .. char .. ' :normal va' .. char .. '<CR>'
 endfor
 
-nnoremap <silent> <space># <scriptcmd>text.Underline('#')<CR>
-nnoremap <silent> <space>* <scriptcmd>text.Underline('*')<CR>
-nnoremap <silent> <space>= <scriptcmd>text.Underline('=')<CR>
-nnoremap <silent> <space>- <scriptcmd>text.Underline('-')<CR>
-nnoremap <silent> <space>^ <scriptcmd>text.Underline('^')<CR>
-nnoremap <silent> <space>. <scriptcmd>text.Underline('.')<CR>
+# underline using following chars, to match length of line
+nnoremap <silent> <leader># <scriptcmd>text.Underline('#')<CR>
+nnoremap <silent> <leader>* <scriptcmd>text.Underline('*')<CR>
+nnoremap <silent> <leader>= <scriptcmd>text.Underline('=')<CR>
+nnoremap <silent> <leader>- <scriptcmd>text.Underline('-')<CR>
+nnoremap <silent> <leader>^ <scriptcmd>text.Underline('^')<CR>
+nnoremap <silent> <leader>. <scriptcmd>text.Underline('.')<CR>

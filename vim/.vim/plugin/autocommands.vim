@@ -68,10 +68,10 @@ augroup MyVimrc | autocmd!
             col2 += !v:event.inclusive ? 1 : 0
             var pos = []
             var maxcol = v:maxcol / 2
-            var visualregion = v:event.regtype =~? "\<C-V>"
+            var visualblock = v:event.regtype[0] ==? "\<C-V>"
             for lnum in (lnum1 < lnum2) ? range(lnum1, lnum2) : range(lnum2, lnum1)
-                var c1 = (lnum == lnum1 || visualregion) ? (col1 + off1) : 1
-                var c2 = (lnum == lnum2 || visualregion) ? (col2 + off2) : maxcol
+                var c1 = (lnum == lnum1 || visualblock) ? (col1 + off1) : 1
+                var c2 = (lnum == lnum2 || visualblock) ? (col2 + off2) : maxcol
                 pos->add([lnum, c1, min([c2 - c1 + 1, maxcol])])
             endfor
             var m = matchaddpos('IncSearch', pos)

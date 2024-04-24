@@ -89,7 +89,7 @@ nnoremap <leader>d <cmd>bw<cr>| # :bwipeout to purge, :bdelete still leaves buff
 nnoremap <leader>h <cmd>hide<cr>| # hide window
 # nnoremap <leader>u <cmd>unhide<cr><c-w>w| # unhide = one window for each loaded buffer (splits horizontally, not useful)
 tnoremap <c-w>h <c-w>:hide<cr>| # hide window (when terminal window is active)
-nnoremap <leader>T <cmd>!tree <bar> more<cr>
+nnoremap <leader>t <cmd>!tree <bar> more<cr>
 nnoremap <leader>w <cmd>w<cr>
 nnoremap <leader>q <cmd>qa<cr>
 nnoremap <leader>Q <cmd>qa!<cr>
@@ -106,10 +106,10 @@ vnoremap <leader>A :!column -t<cr>| # align columns
 vnoremap <leader>a :'<,'>s/\v(.*)\.(.*)/\=printf("%-16s %s", submatch(1), submatch(2))
 
 # Toggle group
-nnoremap <leader>ts :set spell!<CR><Bar>:echo "Spell Check: " .. strpart("OffOn", 3 * &spell, 3)<CR>
-nnoremap <silent> <leader>tt <cmd>call text#Toggle()<CR>
-nnoremap <expr> <leader>tc empty(filter(getwininfo(), 'v:val.quickfix')) ? ':copen<CR>' : ':cclose<CR>'
-nnoremap <expr> <leader>tl empty(filter(getwininfo(), 'v:val.loclist')) ? ':lopen<CR>' : ':lclose<CR>'
+nnoremap <leader>vs :set spell!<CR><Bar>:echo "Spell Check: " .. strpart("OffOn", 3 * &spell, 3)<CR>
+# nnoremap <silent> <leader>vt <cmd>call text#Toggle()<CR>
+# nnoremap <expr> <leader>vc empty(filter(getwininfo(), 'v:val.quickfix')) ? ':copen<CR>' : ':cclose<CR>'
+# nnoremap <expr> <leader>vl empty(filter(getwininfo(), 'v:val.loclist')) ? ':lopen<CR>' : ':lclose<CR>'
 
 # Vim group
 nnoremap <leader>vr :new \| exec "nn <buffer> q :bd!\<cr\>" \| r ! | # redirect shell command, use :il /foo to filter lines
@@ -125,6 +125,11 @@ nnoremap <leader>vi <cmd>ShowImage<cr>
 
 import autoload 'text.vim'
 
+# surround ', ", and `
+vnoremap <silent> <leader>' <scriptcmd>text.Surround('''')<cr>
+vnoremap <silent> <leader>" <scriptcmd>text.Surround('"')<cr>
+vnoremap <silent> <leader>` <scriptcmd>text.Surround('`')<cr>
+
 # simple text objects
 # -------------------
 # i_ i. i: i, i; i| i/ i\ i* i+ i- i# i<tab>
@@ -135,11 +140,3 @@ for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', 
     execute 'onoremap <silent> i' .. char .. ' :normal vi' .. char .. '<CR>'
     execute 'onoremap <silent> a' .. char .. ' :normal va' .. char .. '<CR>'
 endfor
-
-# underline using following chars, to match length of line
-nnoremap <silent> <leader># <scriptcmd>text.Underline('#')<CR>
-nnoremap <silent> <leader>* <scriptcmd>text.Underline('*')<CR>
-nnoremap <silent> <leader>= <scriptcmd>text.Underline('=')<CR>
-nnoremap <silent> <leader>- <scriptcmd>text.Underline('-')<CR>
-nnoremap <silent> <leader>^ <scriptcmd>text.Underline('^')<CR>
-nnoremap <silent> <leader>. <scriptcmd>text.Underline('.')<CR>

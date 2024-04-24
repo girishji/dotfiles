@@ -59,7 +59,7 @@ augroup MyVimrc | autocmd!
     # for competitive programming  (book by Antti Laaksonen); install gcc using homebrew
     # autocmd FileType cpp,c setlocal makeprg=g++\ -std=c++11\ -O2\ -Wall\ %\ -o\ %<
     #
-    # hightlighted yank
+    # highlighted yank
     # https://github.com/justinmk/config/blob/a93dc73fafbdeb583ce177a9d4ebbbdfaa2d17af/.config/nvim/init.vim#L1087
     autocmd TextYankPost * {
         if v:event.operator ==? 'y'
@@ -67,7 +67,7 @@ augroup MyVimrc | autocmd!
             var [lnum2, col2, off2] = getpos("']")[1 : 3]
             col2 += !v:event.inclusive ? 1 : 0
             var pos = []
-            var maxcol = v:maxcol / 2
+            var maxcol = v:maxcol - 1
             var visualblock = v:event.regtype[0] ==? "\<C-V>"
             for lnum in (lnum1 < lnum2) ? range(lnum1, lnum2) : range(lnum2, lnum1)
                 var c1 = (lnum == lnum1 || visualblock) ? (col1 + off1) : 1

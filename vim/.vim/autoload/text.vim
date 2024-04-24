@@ -1,8 +1,26 @@
 vim9script
 
-# Name: autoload/text.vim
-# Author: Maxim Kim <habamax@gmail.com>
-# Desc: Text manipulation functions.
+export def Surround(c: string)
+    if mode() == 'CTRL-V'
+        return
+    endif
+    var [line_start, col_start] = getpos('v')[1 : 2]
+    var [line_end, col_end] = getpos('.')[1 : 2]
+    if mode() == 'V'
+        col_start = 0
+        col_end = v:maxcol
+    endif
+    var reverse = line_start > line_end || (line_start == line_end && col_start > col_end)
+    for lnum in range(line_start, line_end, reverse ? -1 : 1)
+        var line = lnum->getline()
+        var start = lnum == line_start ? col_start - 1 : (reverse ? line->len() : 0)
+        var end = lnum == line_end ? col_end - 1 : (reverse ? 0 : line->len())
+        var newline = reverse ?
+            $'{line->strpart(0, end)}{c}{line->strpart(end, start - end + 1)}{c}{line->strpart(start + 1)}' :
+            $'{line->strpart(0, start)}{c}{line->strpart(start, end - start + 1)}{c}{line->strpart(end + 1)}'
+        newline->setline(lnum)
+    endfor
+enddef
 
 # Fix text:
 # * replace non-breaking spaces with spaces
@@ -31,161 +49,6 @@ export def FixSpaces(line1: number, line2: number)
     exe printf('silent :%d,%ds/\s*$//ge', line1, line2)
     winrestview(view)
 enddef
-
-
-# Underline current line with a chars
-# example mappings:
-# nnoremap <silent> <space>= :call text#Underline('=')<CR>
-# nnoremap <silent> <space>- :call text#Underline('-')<CR>
-# nnoremap <silent> <space>~ :call text#Underline('~')<CR>
-# nnoremap <silent> <space>^ :call text#Underline('^')<CR>
-# nnoremap <silent> <space>+ :call text#Underline('+')<CR>
-export def Underline(char: string)
-    var nextnr = line('.') + 1
-    var line = matchlist(getline('.'), '^\(\s*\)\(.*\)$')
-    if empty(line[2]) | return | endif
-    var underline = line[1] .. repeat(char, strchars(line[2]))
-    if getline(nextnr) =~ '^\s*' .. escape(char, '*\~^.') .. '\+$'
-        setline(nextnr, underline)
-    else
-        append('.', underline)
-    endif
-enddef
-
-
-# Dates (text object and stuff)
-var mons_en = ['Jan', 'Feb', 'Mar', 'Apr',
-               'May', 'Jun', 'Jul', 'Aug',
-               'Sep', 'Oct', 'Nov', 'Dec']
-var months_en = ['January',   'February', 'March',    'April',
-                 'May',       'June',     'July',     'August',
-                 'September', 'October',  'November', 'December']
-var months_ru = ['января',   'февраля', 'марта',  'апреля',
-                 'мая',      'июня',    'июля',   'августа',
-                 'сентября', 'октября', 'ноября', 'декабря']
-
-var months = extend(months_en, months_ru)
-months = extend(months, mons_en)
-g:months = copy(months)
-
-# * ISO-8601 2020-03-21
-# * RU 21 марта 2020
-# * EN 10 December 2012
-# * EN December 10, 2012
-# * EN 10 Dec 2012
-# * EN Dec 10, 2012
-# Usage:
-# xnoremap <silent> id :<C-u>call text#ObjDate(1)<CR>
-# onoremap id :<C-u>normal vid<CR>
-# xnoremap <silent> ad :<C-u>call text#ObjDate(0)<CR>
-# onoremap ad :<C-u>normal vad<CR>
-export def ObjDate(inner: bool)
-    var view = winsaveview()
-    var cword = expand("<cword>")
-    if  cword =~ '\d\{4}'
-        # var rx = '^\|'
-        var rx = '\%(\D\d\{1,2}\s\+\%(' .. join(months, '\|') .. '\)\)'
-        rx ..= '\|'
-        rx ..= '\%(\s*\%(' .. join(months, '\|') .. '\)\s\+\d\{1,2},\)'
-        if !search(rx, 'bcW', line('.'))
-            search('\s*\D', 'bcW', line('.'))
-        endif
-    elseif cword =~ join(months, '\|')
-        search('^\|\D\ze\d\{1,2}\s\+', 'bceW')
-    elseif cword =~ '\d\{1,2}'
-        if !search('^\|\S\ze\%(' .. join(months, '\|') .. '\)\s\+\d\{1,2}', 'bceW')
-            search('^\|[^0-9\-]', 'becW')
-        endif
-    endif
-
-    var rxdate = '\%(\d\{4}-\d\{2}-\d\{2}\)'
-    rxdate ..= '\|'
-    rxdate ..= '\%(\d\{1,2}\s\+\%(' .. join(months, '\|') .. '\)\s\+\d\{4}\)'
-    rxdate ..= '\|'
-    rxdate ..= '\%(\%(' .. join(months, '\|') .. '\)\s\+\d\{1,2},\s\+\d\{4}\)'
-    if !inner
-        rxdate = '\s*\%(' .. rxdate .. '\)\s*'
-    endif
-
-    if search(rxdate, 'cW') > 0
-        normal v
-        search(rxdate, 'ecW')
-        return
-    endif
-    winrestview(view)
-enddef
-
-
-export def ObjDateRu()
-    var [year, month, day] = split(strftime("%Y-%m-%d"), '-')
-    return printf("%d %s %s", day, months_ru[month-1], year)
-enddef
-
-
-# number text object
-export def ObjNumber()
-    var rx_num = '\d\+\(\.\d\+\)*'
-    if search(rx_num, 'ceW') > 0
-        normal! v
-        search(rx_num, 'bcW')
-    endif
-enddef
-
-
-# Line text object
-export def ObjLine(inner: bool)
-    if inner
-        normal! g_v^
-    else
-        normal! $v0
-    endif
-enddef
-
-
-# Indent text object
-# Usage:
-# onoremap <silent>ii :<C-u>call text#obj_indent(v:true)<CR>
-# onoremap <silent>ai :<C-u>call text#obj_indent(v:false)<CR>
-# xnoremap <silent>ii :<C-u>call text#obj_indent(v:true)<CR>
-# xnoremap <silent>ai :<C-u>call text#obj_indent(v:false)<CR>
-export def ObjIndent(inner: bool)
-    var ln_start: number
-    var ln_end: number
-    if getline('.') =~ '^\s*$'
-        ln_start = prevnonblank('.') ?? 1
-        ln_end = ln_start
-    else
-        ln_start = line('.')
-        ln_end = ln_start
-    endif
-
-    var indent = indent(ln_start)
-
-    while ln_start > 0 && indent(ln_start) >= indent
-        ln_start = prevnonblank(ln_start - 1)
-    endwhile
-
-    while ln_end <= line('$') && indent(ln_end) >= indent
-        ln_end = nextnonblank(ln_end + 1) ?? line('$') + 1
-    endwhile
-
-    if inner
-        ln_start = nextnonblank(ln_start + 1) ?? line('$') + 1
-        ln_end = prevnonblank(ln_end - 1)
-    else
-        ln_start += 1
-        ln_end -= 1
-    endif
-
-    if ln_end < ln_start
-        ln_end = ln_start
-    endif
-
-    exe ":" ln_end
-    normal! V
-    exe ":" ln_start
-enddef
-
 
 # 26 simple text objects
 # ----------------------

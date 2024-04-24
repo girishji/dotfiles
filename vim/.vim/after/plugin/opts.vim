@@ -192,10 +192,6 @@ if exists("g:loaded_commentary")
     augroup END
 endif
 
-if exists("g:loaded_highlightedyank")
-    g:highlightedyank_highlight_duration = 300
-endif
-
 if exists("g:loaded_bufline")
     # - `User1`: Active buffer
     # - `User2`: Alternate buffer

@@ -18,6 +18,23 @@ b:undo_ftplugin ..= ' | exe "nunmap <space>z"'
 see https://github.com/habamax/.vim
 
 ----------------------------------------
+vim9 assemler ~
+
+:disassemble
+also, use this plugin:
+https://github.com/lacygoill/vim9asm
+
+----------------------------------------
+Compile vim9 ~
+
+To check that the code compiles in a given script, write :defcompile at the end, and source it. For example:
+
+$ echo 'defcompile' >>plugin/editorconfig.vim
+$ vim -Nu NONE -S plugin/editorconfig.vim
+
+https://github.com/lacygoill/editorconfig-vim?tab=readme-ov-file
+
+----------------------------------------
 Spelling ~
 
 z= 	suggest options
@@ -951,6 +968,22 @@ Notes:
 utf-8 composing character ~
 
 https://dev.to/bbkr/utf-8-decomposition-1n3m
+
+------------------------------------------------------------------------------
+shell~
+
+Why you cannot do job_start( $'for p in {panes}; do {cmd} -t $p; done', ...)
+But you need to do $'sh -c "for p in {panes}; do {cmd} -t $p; done"'
+
+https://vi.stackexchange.com/questions/19867/whats-wrong-with-terminal-cd-in-vim-8-1
+The issue is that the bare :terminal command (or job_start(), or system())
+doesn’t ever execute a shell—it executes the name of the external program you
+give it (which, by default, happens to be the shell). 'for' is not a
+executable, but a shell command. So is 'cd', and cannot be used. So, "terminal cd ." tries
+to run a command on disk named cd. For reasons, you don’t have one, and it
+wouldn’t work if you did.
+
+Also: only arguments in double quotes can contain white space.
 
 ------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

@@ -78,7 +78,7 @@ enddef
 # gp	Just like "p", but leave the cursor just after the new text.
 # gP	Just like "P", but leave the cursor just after the new text.
 # visually select recent pasted (or typed) text
-nnoremap ga `[v`]
+nnoremap gs `[v`]
 
 # Type %% on Vim’s command-line prompt, it expands to the path of the active buffer
 # cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h') .. '/' : '%%'
@@ -123,7 +123,7 @@ nnoremap <leader>vz <cmd>FoldingToggle<cr>
 # nnoremap <leader>vp <cmd>echo expand('%')<cr>
 nnoremap <leader>vi <cmd>ShowImage<cr>
 
-import autoload 'text.vim'
+import '../autoload/text.vim'
 
 # surround ', ", and `
 vnoremap <silent> <leader>' <scriptcmd>text.Surround('''')<cr>
@@ -140,3 +140,9 @@ for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', 
     execute 'onoremap <silent> i' .. char .. ' :normal vi' .. char .. '<CR>'
     execute 'onoremap <silent> a' .. char .. ' :normal va' .. char .. '<CR>'
 endfor
+
+import '../autoload/comment.vim'
+
+nnoremap <silent> <expr> gc comment.Toggle()
+xnoremap <silent> <expr> gc comment.Toggle()
+nnoremap <silent> <expr> gcc comment.Toggle() .. '_'

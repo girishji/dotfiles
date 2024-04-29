@@ -54,6 +54,8 @@ augroup MyVimrc | autocmd!
     # gitdiff by default uses 8 for tab width
     # Use <c-v><tab> to insert real tab character
     autocmd FileType c,cpp,java,vim,lua set softtabstop=4 shiftwidth=4 expandtab
+    # spell : When a word is CamelCased, assume "Cased" is a separate word
+    autocmd FileType help,markdown set spelloptions=camel
     # Remove any trailing whitespace that is in the file
     autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
     # for competitive programming  (book by Antti Laaksonen); install gcc using homebrew
@@ -63,19 +65,20 @@ augroup MyVimrc | autocmd!
     # https://github.com/justinmk/config/blob/a93dc73fafbdeb583ce177a9d4ebbbdfaa2d17af/.config/nvim/init.vim#L1087
     autocmd TextYankPost * {
         if v:event.operator ==? 'y'
-            var [lnum1, col1, off1] = getpos("'[")[1 : 3]
-            var [lnum2, col2, off2] = getpos("']")[1 : 3]
-            col2 += !v:event.inclusive ? 1 : 0
-            var pos = []
+            # use getregionpos()
+            var [lnum_beg, col_beg, off_beg] = getpos("'[")[1 : 3]
+            var [lnum_end, col_end, off_end] = getpos("']")[1 : 3]
+            col_end += !v:event.inclusive ? 1 : 0
             var maxcol = v:maxcol - 1
-            var visualblock = v:event.regtype[0] ==? "\<C-V>"
-            for lnum in (lnum1 < lnum2) ? range(lnum1, lnum2) : range(lnum2, lnum1)
-                var c1 = (lnum == lnum1 || visualblock) ? (col1 + off1) : 1
-                var c2 = (lnum == lnum2 || visualblock) ? (col2 + off2) : maxcol
-                pos->add([lnum, c1, min([c2 - c1 + 1, maxcol])])
+            var visualblock = v:event.regtype[0] ==# "\<C-V>"
+            var pos = []
+            for lnum in range(lnum_beg, lnum_end, lnum_beg < lnum_end ? 1 : -1)
+                var col_b = (lnum == lnum_beg || visualblock) ? (col_beg + off_beg) : 1
+                var col_e = (lnum == lnum_end || visualblock) ? (col_end + off_end) : maxcol
+                pos->add([lnum, col_b, min([col_e - col_b + 1, maxcol])])
             endfor
             var m = matchaddpos('IncSearch', pos)
-            timer_start(300, (t) => m->matchdelete())
+            timer_start(300, (_) => m->matchdelete())
         endif
     }
 augroup END

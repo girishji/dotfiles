@@ -2,7 +2,7 @@ vim9script
 
 export def Eatchar(): string
     var c = nr2char(getchar(0))
-    return (c =~ '\s') ? '' : c
+    return (c =~ '\m\s\<bar>/') ? '' : c  # eat space and '/'
 enddef
 
 export def NotCtx(s: string): bool
@@ -31,3 +31,8 @@ export def CmdAbbr(abbr: string, expn: string): string
     endif
     return abbr
 enddef
+
+# Can have iabs that inserted #replaceme# at various places and have a
+# keymap that jumped to the next #replaceme# and did ciW.
+# Can set a buffer variable that abbrev is expanded, and map <tab> to hop to
+# specific locations.

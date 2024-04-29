@@ -31,13 +31,16 @@ autocmd VimEnter,VimResume * silent execute '!echo -ne "\e[2 q"' | redraw!
 # Format usin 'gq'. :h fo-table
 set formatoptions=qjl
 
-# Some sane defaults since vim8
-# https://github.com/vim/vim/blob/master/runtime/defaults.vim
+# Some sane defaults
 source $VIMRUNTIME/defaults.vim
+# disable message from 'defaults.vim' when entering cmdwin
+autocmd! vimHints
+
 # NOTE: $VIMRUNTIME/ftplugin/python.vim sets tabstop, shiftwidth, etc.
 
+# Turn on for Noname/scratch files and non-help files
+autocmd BufEnter,FileType * if &ft == null_string || '<amatch>' != 'help' | setlocal listchars=tab:→·,trail:~ | endif
 # set listchars=tab:→\ ,trail:~
-set listchars=tab:→·,trail:~
 set list
 
 # set fillchars=vert:│,fold:۰,diff:·
@@ -117,10 +120,10 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) > 
 
 plug#begin("~/.local/share/vim-plug/")
 # Make sure you use single quotes
-Plug 'tpope/vim-commentary'
 Plug 'airblade/vim-gitgutter'
-# Plug 'yegappan/lsp'
-Plug '~/git/lsp'
+# Plug 'lacygoill/vim9asm'
+Plug 'yegappan/lsp'
+# Plug '~/git/lsp'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'

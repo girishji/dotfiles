@@ -22,7 +22,7 @@ export def Surround(c: string)
     endfor
 enddef
 
-# Fix text:
+# Fix spaces in text:
 # * replace non-breaking spaces with spaces
 # * replace multiple spaces with a single space (preserving indent)
 # * remove spaces between closed braces: ) ) -> ))
@@ -77,7 +77,6 @@ export def Obj(char: string, inner: bool)
         return
     endif
 enddef
-
 
 # Toggle current word
 # nnoremap <silent> <BS> <cmd>call text#Toggle()<CR>

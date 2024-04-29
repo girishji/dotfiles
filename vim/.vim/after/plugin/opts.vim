@@ -22,6 +22,7 @@ if exists("g:loaded_vimcomplete")
         omnifunc: { enable: false, priority: 10 },
         vsnip: { enable: true, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },
         vimscript: { enable: true, priority: 10 },
+        tmux: { enable: true },
         ngram: {
             enable: true,
             priority: 10,
@@ -241,7 +242,7 @@ if exists('g:loaded_scope')
     nnoremap <leader><bs> <scriptcmd>fuzzy.Buffer()<CR>
     nnoremap <leader>fb <scriptcmd>fuzzy.Buffer(true)<CR>
 
-    # nnoremap <leader><space> <scriptcmd>fuzzy.File()<CR>
+    nnoremap <leader>ff <scriptcmd>fuzzy.File()<CR>
     def FindGit()
         var gitdir = system("git rev-parse --show-toplevel 2>/dev/null")->trim()
         if v:shell_error != 0 || gitdir == getcwd()
@@ -250,7 +251,9 @@ if exists('g:loaded_scope')
         fuzzy.File(fuzzy.FindCmd(gitdir))
     enddef
     nnoremap <leader><space> <scriptcmd>FindGit()<cr>
-    # note: <scriptcmd> sets the context of execution to the fuzzy.vim script, so 'findcmd' var is not visible
+    # nnoremap <leader>ff <scriptcmd>fuzzy.File(fuzzy.FindCmd($'{system("git rev-parse --show-toplevel 2>/dev/null \|\| true")->trim()}'))<cr>
+
+    # note: <scriptcmd> sets the context of execution to the fuzzy.vim script, so 'findcmd' var is not visible, as in:
     # var findcmd = 'fd -tf -L . /Users/gp/.vim'
 
     command -nargs=1 -complete=dir ScopeFile fuzzy.File(fuzzy.FindCmd(<f-args>))
@@ -260,14 +263,6 @@ if exists('g:loaded_scope')
     nnoremap <leader>fV <scriptcmd>fuzzy.File(fuzzy.FindCmd($VIMRUNTIME))<CR>
     nnoremap <leader>fh <scriptcmd>fuzzy.File(fuzzy.FindCmd($'{$HOME}/help'))<CR>
     nnoremap <leader>fz <scriptcmd>fuzzy.File(fuzzy.FindCmd($'{$HOME}/.zsh'))<CR>
-
-    # def FindGit()
-    #     var gitdir = system("git rev-parse --show-toplevel 2>/dev/null")->trim()
-    #     gitdir = (v:shell_error != 0) ? '.' : gitdir
-    #     fuzzy.File(fuzzy.FindCmd(gitdir))
-    # enddef
-    # nnoremap <leader>ff <scriptcmd>FindGit()<cr>
-    # nnoremap <leader>ff <scriptcmd>fuzzy.File(fuzzy.FindCmd($'{system("git rev-parse --show-toplevel 2>/dev/null \|\| true")->trim()}'))<cr>
 
     command -nargs=1 -complete=dir ScopeGrep fuzzy.Grep(null_string, true, null_string, <f-args>)
     # command -nargs=1 -complete=dir ScopeGrep fuzzy.Grep('rg --vimgrep', true, null_string, <f-args>)

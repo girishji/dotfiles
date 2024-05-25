@@ -39,7 +39,9 @@ autocmd! vimHints
 # NOTE: $VIMRUNTIME/ftplugin/python.vim sets tabstop, shiftwidth, etc.
 
 # Turn on for Noname/scratch files and non-help files
+# 'listchars' is not local to buffer, only local to window
 autocmd BufEnter,FileType * if &ft == null_string || '<amatch>' != 'help' | setlocal listchars=tab:→·,trail:~ | endif
+autocmd BufEnter,FileType *.txt if &ft == 'help' | setlocal listchars= | endif
 # set listchars=tab:→\ ,trail:~
 set list
 
@@ -105,6 +107,10 @@ g:loaded_netrw = 1
 # avoid commented brackets through. and this plugin avoids that.
 if has('syntax') && has('eval')
     packadd! matchit
+endif
+
+if v:version >= 901
+    packadd comment
 endif
 
 # Download plug.vim if it doesn't exist yet

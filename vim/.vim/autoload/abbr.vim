@@ -2,7 +2,8 @@ vim9script
 
 export def Eatchar(): string
     var c = nr2char(getchar(0))
-    return (c =~ '\m\s\<bar>/') ? '' : c  # eat space and '/'
+    # return (c =~ '\m\s\<bar>/') ? '' : c  # eat space and '/'
+    return (c =~ '\s\|/') ? '' : c  # eat space and '/'
 enddef
 
 export def NotCtx(s: string): bool

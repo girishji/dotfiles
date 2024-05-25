@@ -140,9 +140,3 @@ for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', 
     execute 'onoremap <silent> i' .. char .. ' :normal vi' .. char .. '<CR>'
     execute 'onoremap <silent> a' .. char .. ' :normal va' .. char .. '<CR>'
 endfor
-
-import '../autoload/comment.vim'
-
-nnoremap <silent> <expr> gc comment.Toggle()
-xnoremap <silent> <expr> gc comment.Toggle()
-nnoremap <silent> <expr> gcc comment.Toggle() .. '_'

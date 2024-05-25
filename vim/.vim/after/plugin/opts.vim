@@ -23,6 +23,7 @@ if exists("g:loaded_vimcomplete")
         vsnip: { enable: true, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },
         vimscript: { enable: true, priority: 10 },
         tmux: { enable: true },
+        tag: { enable: true },
         ngram: {
             enable: true,
             priority: 10,
@@ -198,8 +199,8 @@ if exists("g:loaded_bufline")
     # - `User2`: Alternate buffer
     # - `User3`: Other buffers
     # - `User4`: Emphasis characters if specified (see Options)
-    highlight user1 cterm=bold
-    highlight user2 cterm=underline
+    highlight user1 cterm=underline,bold
+    highlight user2 cterm=bold
     highlight user3 cterm=none
     highlight user4 cterm=bold
     g:BuflineSetup({ highlight: true, showbufnr: false, emphasize: '' })
@@ -231,16 +232,17 @@ if exists('g:loaded_scope')
     import autoload 'scope/fuzzy.vim'
     import autoload 'scope/util.vim'
 
-    sp.OptionsSet({borderhighlight: ['Comment']})
+    sp.OptionsSet({
+        borderhighlight: ['Comment'],
+        # maxheight: 20,
+        # maxwidth: 80,
+    })
 
     fuzzy.OptionsSet({
         grep_highlight_ignore_case: false,
         grep_echo_cmd: true,
-        find_echo_cmd: true,
+        # find_echo_cmd: true,
     })
-
-    nnoremap <leader><bs> <scriptcmd>fuzzy.Buffer()<CR>
-    nnoremap <leader>fb <scriptcmd>fuzzy.Buffer(true)<CR>
 
     nnoremap <leader>ff <scriptcmd>fuzzy.File()<CR>
     def FindGit()
@@ -258,7 +260,7 @@ if exists('g:loaded_scope')
 
     command -nargs=1 -complete=dir ScopeFile fuzzy.File(fuzzy.FindCmd(<f-args>))
     # command -nargs=1 -complete=dir ScopeFile fuzzy.File($'fd -tf --follow . {<f-args>}')
-    nnoremap <leader>ff :ScopeFile<space>
+    nnoremap <leader>fF :ScopeFile<space>
     nnoremap <leader>fv <scriptcmd>fuzzy.File(fuzzy.FindCmd($'{$HOME}/.vim'))<CR>
     nnoremap <leader>fV <scriptcmd>fuzzy.File(fuzzy.FindCmd($VIMRUNTIME))<CR>
     nnoremap <leader>fh <scriptcmd>fuzzy.File(fuzzy.FindCmd($'{$HOME}/help'))<CR>
@@ -275,6 +277,9 @@ if exists('g:loaded_scope')
     # for testing
     # nnoremap <leader>g <scriptcmd>fuzzy.Grep('rg --vimgrep --no-heading --smart-case')<CR>
     # nnoremap <leader>g <scriptcmd>fuzzy.Grep('ag --vimgrep')<CR>
+
+    nnoremap <leader><bs> <scriptcmd>fuzzy.Buffer()<CR>
+    nnoremap <leader>fb <scriptcmd>fuzzy.Buffer(true)<CR>
 
     nnoremap <leader>f/ <scriptcmd>fuzzy.BufSearch()<CR>
     nnoremap <leader>fH <scriptcmd>fuzzy.Highlight()<CR>

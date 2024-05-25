@@ -63,9 +63,9 @@ augroup MyVimrc | autocmd!
     #
     # highlighted yank
     # https://github.com/justinmk/config/blob/a93dc73fafbdeb583ce177a9d4ebbbdfaa2d17af/.config/nvim/init.vim#L1087
+    # use getregionpos()
     autocmd TextYankPost * {
         if v:event.operator ==? 'y'
-            # use getregionpos()
             var [lnum_beg, col_beg, off_beg] = getpos("'[")[1 : 3]
             var [lnum_end, col_end, off_end] = getpos("']")[1 : 3]
             col_end += !v:event.inclusive ? 1 : 0

@@ -1,7 +1,7 @@
 vim9script
 
-iab <buffer> --- ------------------------------------------------------------------------------<c-r>=abbr#Eatchar()<cr>
-iab <buffer> === ==============================================================================<c-r>=abbr#Eatchar()<cr>
+iab <buffer> --> ------------------------------------------------------------------------------<c-r>=abbr#Eatchar()<cr>
+iab <buffer> ==> ==============================================================================<c-r>=abbr#Eatchar()<cr>
 
 # Yank the visual selection before using followng abbrevs, to get selection into register 0 or "
 # '"' is the default register (:h v:register), when no register is 'active' or specified.

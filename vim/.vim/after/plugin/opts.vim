@@ -23,7 +23,7 @@ if exists("g:loaded_vimcomplete")
         vsnip: { enable: true, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },
         vimscript: { enable: true, priority: 10 },
         tmux: { enable: true },
-        tag: { enable: true },
+        tag: { enable: false },
         ngram: {
             enable: true,
             priority: 10,

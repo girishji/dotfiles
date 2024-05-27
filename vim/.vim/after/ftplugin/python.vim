@@ -60,10 +60,14 @@ iabbr <buffer>       try_ try:
             \<cr>print(f"Unexpected {err=}, {type(err)=}")
             \<cr>raise<cr>else:
             \<cr>pass<esc>5kcw<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       __main__
+iabbr <buffer>       main__2
             \ if __name__ == "__main__":
             \<cr>import doctest
             \<cr>doctest.testmod()<esc><c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       main__
+            \ if __name__ == "__main__":
+            \<cr>main()<esc><c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       python3#    #!/usr/bin/env python3<esc><c-r>=abbr#Eatchar()<cr>
 iabbr <buffer>       '''_ '''
             \<cr>>>> print(<c-r>=<SID>GetSurroundingFn()<cr>)
             \<cr>'''<esc>ggOfrom sys import stderr<esc>Go<c-u><esc>o<esc>

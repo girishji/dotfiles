@@ -22,7 +22,7 @@ if exists("g:loaded_vimcomplete")
         omnifunc: { enable: false, priority: 10 },
         vsnip: { enable: true, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },
         vimscript: { enable: true, priority: 10 },
-        tmux: { enable: true },
+        tmux: { enable: false },
         tag: { enable: false },
         ngram: {
             enable: true,

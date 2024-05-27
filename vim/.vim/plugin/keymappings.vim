@@ -28,11 +28,7 @@ nnoremap <silent> <C-Up> :resize +2<cr>
 nnoremap <silent> <C-Down> :resize -2<cr>
 nnoremap <silent> <C-Right> :vertical resize -2<cr>
 nnoremap <silent> <C-Left> :vertical resize +2<cr>
-# Buffer navigation
-nnoremap <silent> [b :bprevious<CR>
-nnoremap <silent> ]b :bnext<CR>
-nnoremap <silent> [B :bfirst<CR>
-nnoremap <silent> ]B :blast<CR>
+
 nnoremap <silent> <leader>h :bprevious<CR>
 nnoremap <silent> <leader>l :bnext<CR>
 # Replace [[ ]] mappings that get redefined by ftplugin/vim.vim
@@ -40,6 +36,11 @@ nnoremap <silent> <leader>l :bnext<CR>
 # autocmd FileType * nnoremap <silent><buffer> ]] :bnext<CR>
 # Note:  ]" [" may hop comments (:verbose nmap ][)
 #   See /opt/homebrew/Cellar/vim/9.0.1550/share/vim/vim90/ftplugin/vim.vim
+# Buffer navigation
+nnoremap <silent> [b :bprevious<CR>
+nnoremap <silent> ]b :bnext<CR>
+nnoremap <silent> [B :bfirst<CR>
+nnoremap <silent> ]B :blast<CR>
 # quickfix list
 nnoremap <silent> [c :cprevious<CR>
 nnoremap <silent> ]c :cnext<CR>
@@ -64,19 +65,23 @@ vnoremap <C-_> <Esc>/\%V
 autocmd VimEnter * nnoremap <silent> <expr> <esc> exists('g:loaded_fFtTplus') ? ':nohls<cr><Plug>(fFtTplus-esc)' : ':nohls<cr><esc>'
 
 # Emacs C-s C-w like solution: hightlight in visual mode and then type * or #
-# SID means script local function; cgn to replace text
+# `cgn` to replace text
 # https://vonheikemen.github.io/devlog/tools/how-to-survive-without-multiple-cursors-in-vim/
 xnoremap * :<c-u> call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
 xnoremap # :<c-u> call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
+# SID means script local function
 def VSetSearch(cmdtype: string)
     var temp = getreg('s') # 's' is some register
     norm! gv"sy
     setreg('/', '\V' .. substitute(escape(@s, cmdtype .. '\'), '\n', '\\n', 'g'))
     setreg('s', temp) # restore whatever was in 's'
 enddef
+
 # NOTE: Use gp and gP for default purpose
 # gp	Just like "p", but leave the cursor just after the new text.
 # gP	Just like "P", but leave the cursor just after the new text.
+# [p    To paste with correct indentation
+
 # visually select recent pasted (or typed) text
 nnoremap gs `[v`]
 

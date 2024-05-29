@@ -66,3 +66,9 @@
 	HEAD = 6 normal italic
 [diff]
 	colorMoved = zebra
+[maintenance]
+	repo = /Users/gp/.local/share/zsh-plugins/zsh-snap
+	repo = /Users/gp/.local/share/zsh-plugins/girishji/pure
+	repo = /Users/gp/.local/share/zsh-plugins/marlonrichert/zsh-autocomplete
+	repo = /Users/gp/.local/share/zsh-plugins/zsh-users/zsh-autosuggestions
+	repo = /Users/gp/.local/share/zsh-plugins/zsh-users/zsh-syntax-highlighting

@@ -1,5 +1,8 @@
 #!/bin/zsh
 
+## When autocompleting, type '/' to dig into the directory. '<tab>' is reserved for
+#  choosing options within the same level.
+
 ##
 # template: https://github.com/marlonrichert/zsh-launchpad.git
 #

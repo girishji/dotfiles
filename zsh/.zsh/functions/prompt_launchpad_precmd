@@ -48,7 +48,6 @@ prompt_launchpad_vcs-info() {
 # girish: add (arch) and display shortened path on RHS
 # RPS1="%F{2}%15<..<%~%<< %(is_mac && [[ $(arch) != arm64 ]],$(arch),'')%#%f "  # 10 is bright green; 9 is bright red.
 
-
 # Format the output of vcs_info, which our precmd uses to set $RPS1.
 #     %a: current action (for example, rebase)
 #     %c:   staged changes

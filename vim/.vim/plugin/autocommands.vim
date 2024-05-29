@@ -4,7 +4,8 @@ augroup MyVimrc | autocmd!
     # set unnamed file type to 'txt'
     # autocmd BufEnter * if @% == "" | setfiletype txt | endif
     #
-    autocmd FileType cmake,sh,zsh setl sw=4|setl ts=8|setl sts=4|setl et
+    # autocmd FileType cmake,sh,zsh setl sw=4|setl ts=8|setl sts=4|setl et
+    autocmd FileType cmake,sh,zsh setl sw=4|setl ts=4|setl sts=4
 
     # Save yank'ed text into numbered registers and rotate. By default vim
     # stores yank into "0 (does not rotate) and stores deleted and changed text
@@ -61,7 +62,7 @@ augroup MyVimrc | autocmd!
     autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
     # for competitive programming  (book by Antti Laaksonen); install gcc using homebrew
     # autocmd FileType cpp,c setlocal makeprg=g++\ -std=c++11\ -O2\ -Wall\ %\ -o\ %<
-    #
+
     # highlighted yank
     # https://github.com/justinmk/config/blob/a93dc73fafbdeb583ce177a9d4ebbbdfaa2d17af/.config/nvim/init.vim#L1087
     # autocmd TextYankPost * {

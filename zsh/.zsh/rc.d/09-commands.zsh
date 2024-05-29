@@ -51,7 +51,6 @@ alias -s gz='gzip -l'
 alias -s {log,out}='tail -F'
 alias -s git='git clone'
 
-
 # Use `< file` to quickly view the contents of any text file.
 READNULLCMD=$PAGER  # Set the program to use for this.
 
@@ -133,8 +132,11 @@ alias ag='ag --smart-case'
 alias gr="grep --color=always -RESIins --exclude={'*.zwc','*.swp','*.git*','*.dict'}"
 alias -g G='| grep --color -iEI'
 
-alias pipi='pip install --user '
+# alias pipi='pip install --user '
+alias pipi='pip install '
+
 alias lc='leetcode '
+
 alias vim_='vim -Nu NONE -S <(cat <<EOF
     " vim:ts=4:ft=vim
     vim9script
@@ -162,6 +164,10 @@ alias vd='vi -d'  # diff mode - pass 2 files
 alias viclean='vim --clean'
 
 alias makedebug="make SHELL='sh -x'"
+
+# There is also a venvactivate()
+# Use 'deactivate' to undo
+alias activate='source .venv/bin/activate'
 
 if is_mac; then
     alias ba='bat --style=plain' # without line numbers

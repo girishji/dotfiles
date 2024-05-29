@@ -244,7 +244,7 @@ if exists('g:loaded_scope')
         # find_echo_cmd: true,
     })
 
-    nnoremap <leader>ff <scriptcmd>fuzzy.File()<CR>
+    nnoremap <leader><space> <scriptcmd>fuzzy.File()<CR>
     def FindGit()
         var gitdir = system("git rev-parse --show-toplevel 2>/dev/null")->trim()
         if v:shell_error != 0 || gitdir == getcwd()
@@ -252,7 +252,7 @@ if exists('g:loaded_scope')
         endif
         fuzzy.File(fuzzy.FindCmd(gitdir))
     enddef
-    nnoremap <leader><space> <scriptcmd>FindGit()<cr>
+    nnoremap <leader>ff <scriptcmd>FindGit()<cr>
     # nnoremap <leader>ff <scriptcmd>fuzzy.File(fuzzy.FindCmd($'{system("git rev-parse --show-toplevel 2>/dev/null \|\| true")->trim()}'))<cr>
 
     # note: <scriptcmd> sets the context of execution to the fuzzy.vim script, so 'findcmd' var is not visible, as in:

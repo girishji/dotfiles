@@ -26,7 +26,18 @@ endif
 # nnoremap <buffer> <leader>vh :term ++close pydoc3<space>
 # nnoremap <buffer> <leader>vb :!open https://docs.python.org/3/search.html\?q=
 # nnoremap <buffer> <leader>vf :% !black -q -<cr>
-nnoremap <buffer> <leader>vi :% !tidy-imports --replace-star-imports -r -p --quiet --black<cr>
+# nnoremap <buffer> <leader>vi :% !tidy-imports --replace-star-imports -r -p --quiet --black<cr>
+augroup PythonAutogroup | autocmd!
+    autocmd bufwritepost * {
+        if &ft == 'python' && 'tidy-imports'->executable()
+            exec $':silent !tidy-imports --black --quiet --replace-star-imports --action REPLACE {bufname("%")}'
+            exec $'silent !isort {bufname("%")}'
+            exec 'e'
+        endif
+    }
+augroup END
+
+
 nnoremap <buffer><expr> <leader>vt $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode test {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"
 nnoremap <buffer><expr> <leader>vx $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode exec {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"
 nnoremap <buffer><expr> <leader>vp $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| r !python3 #<cr>"

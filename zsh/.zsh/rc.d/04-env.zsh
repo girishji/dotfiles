@@ -65,6 +65,8 @@ if is_mac; then
 
     # Make 'pip3 install --user xxx' packages available
     export PATH=$PATH:$(python3 -m site --user-base)/bin
+
+    # Enhance PATH
     export PATH="$PATH:$HOME/bin:$HOME/.local/bin";
 
     # Add cursor location in %
@@ -78,6 +80,9 @@ if is_mac; then
         # leetcode (installed through cargo)
         eval "$(leetcode completions)"
     fi
+
+    # if python virtual env is present, activate it
+    [[ -f "$HOME/.venv/bin/activate" ]] && source "$HOME/.venv/bin/activate"
 
     # The next line updates PATH for the Google Cloud SDK.
     gcpath="$HOME/.local/opt/google-cloud-sdk"

@@ -20,6 +20,16 @@
 # status of the last command was n.
 # https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
 
+# setopt PROMPT_SUBST
+
+# virtualenv() {
+#     echo -n ${VIRTUAL_ENV+\(${VIRTUAL_ENV:t}\) }
+#     # If VIRTUAL_ENV is set during evaluation of the prompt, the + causes
+#     # (${VIRTUAL_ENV:t})<space> to be printed. If VIRTUAL_ENV
+#     # is unset, nothing is printed. 't' works like 'basename'.
+# }
+# setopt PROMPT_SUBST
+
 # girish: print current directory in a separate line
 # assign prompt in one line: https://superuser.com/questions/382503/how-can-i-put-a-newline-in-my-zsh-prompt-without-causing-terminal-redraw-issues
 if [[ $OSTYPE == darwin* && $(arch) != arm64 ]]; then
@@ -40,6 +50,7 @@ fi
     # load terminfo modules to make the associative array $terminfo available
     zmodload zsh/terminfo
     local third_of_page=$((LINES/3))
+    # construct parameter to go down/up $halfpage lines via termcap
     # cud1 is cursor down one line, cuu1 is one line up.
     local third_down=""
     for i in {1..$third_of_page}; do
@@ -49,6 +60,7 @@ fi
     for i in {1..$third_of_page}; do
         third_up="$third_up$terminfo[cuu1]"
     done
+    # for %{ %} see https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
     PS1="%{${third_down}${third_up}%}$PS1"
 }
 

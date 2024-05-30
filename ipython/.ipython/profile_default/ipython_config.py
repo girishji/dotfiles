@@ -561,6 +561,7 @@ c = get_config()  #noqa
 ## Autoformatter to reformat Terminal code. Can be `'black'`, `'yapf'` or `None`
 #  Default: None
 # c.TerminalInteractiveShell.autoformatter = None
+c.TerminalInteractiveShell.autoformatter = "black"
 
 ## 
 #  See also: InteractiveShell.autoindent
@@ -1317,9 +1318,13 @@ c.TerminalInteractiveShell.editing_mode = 'vi'
 
 # autoreload functions, methods, etc. see https://waylonwalker.com/autoreload-ipython/
 # use ipython in a split window while developing python functions
+#
+# Reload modules automatically (type 'magic' for help)
 c.InteractiveShellApp.extensions = ['autoreload']
+# Reload all modules (except those excluded by %aimport) every time before executing the Python code typed.
 c.InteractiveShellApp.exec_lines = ['%autoreload 2']
+# Print this line on startup
 c.InteractiveShellApp.exec_lines.append('print("Warning: (giri) disable autoreload in ipython_config.py to improve performance.")')
 
-# Pyflyby
+# Pyflyby (To inject pyflyby into ipython)
 c.InteractiveShellApp.extensions.append("pyflyby")

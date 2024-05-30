@@ -158,6 +158,9 @@ alias tt='tree'
 alias formatjson='python3 -m json.tool'
 alias jsonformat='python3 -m json.tool'
 
+# TIP: use 'py' which is ipython+pyflyby
+# alias ip='ipython --no-confirm-exit --colors=Linux'
+
 alias v='vim'
 alias vd='vi -d'  # diff mode - pass 2 files
 # alias vr='vim -c "normal '\''0"'  # restore last opened buffer
@@ -172,8 +175,6 @@ alias activate='source .venv/bin/activate'
 if is_mac; then
     alias ba='bat --style=plain' # without line numbers
     alias bc='bc -l'
-    # TIP: use 'py' which is ipython+pyflyby
-    # alias ip='ipython --no-confirm-exit --colors=Linux'
     if which gls >/dev/null ; then
         # TIP: brew install coreutils
         # All the gnu commands will be prefixed with 'g'. Can do 'man gls'.

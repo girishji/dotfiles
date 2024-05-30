@@ -4,8 +4,9 @@ augroup MyVimrc | autocmd!
     # set unnamed file type to 'txt'
     # autocmd BufEnter * if @% == "" | setfiletype txt | endif
     #
-    # autocmd FileType cmake,sh,zsh setl sw=4|setl ts=8|setl sts=4|setl et
-    autocmd FileType cmake,sh,zsh setl sw=4|setl ts=4|setl sts=4
+    # To have actual tab character, type <c-v><tab> (when expandtab (et) is true)
+    autocmd FileType cmake,sh,zsh setl sw=4|setl ts=8|setl sts=4|setl et
+    # autocmd FileType cmake,sh,zsh setl sw=4|setl ts=4|setl sts=4
 
     # Save yank'ed text into numbered registers and rotate. By default vim
     # stores yank into "0 (does not rotate) and stores deleted and changed text

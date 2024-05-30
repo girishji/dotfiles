@@ -1,0 +1,6 @@
+ipython:
+> mkdir ~/.ipython/profile_default
+> stow ipython
+
+nvim, pip, etc:
+> mkdir ~/.config

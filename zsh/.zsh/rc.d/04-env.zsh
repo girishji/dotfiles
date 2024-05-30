@@ -82,7 +82,7 @@ if is_mac; then
     fi
 
     # if python virtual env is present, activate it
-    [[ -f "$HOME/.venv/bin/activate" ]] && source "$HOME/.venv/bin/activate"
+    # [[ -f "$HOME/.venv/bin/activate" ]] && source "$HOME/.venv/bin/activate"
 
     # The next line updates PATH for the Google Cloud SDK.
     gcpath="$HOME/.local/opt/google-cloud-sdk"

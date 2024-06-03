@@ -14,8 +14,8 @@ vim9script
 # align text around # symbol; modify it as needed
 cabbr <expr> al  abbr#CmdAbbr('al', 's/\v(.*)#(.*)/\=printf("%-16s # %s", submatch(1), submatch(2))/<c-r>=abbr#Eatchar()<cr>')
 
-cabbr <expr> v9  abbr#CmdAbbr('v9', 'vim9cmd <c-r>=abbr#Eatchar()<cr>')
-cabbr <expr> vim9  abbr#CmdAbbr('vim9', 'vim9cmd <c-r>=abbr#Eatchar()<cr>')
+# 'vim9cmd' same as 'vim9'
+cabbr <expr> v9  abbr#CmdAbbr('v9', 'vim9 <c-r>=abbr#Eatchar()<cr>')
 cabbr <expr> maek  abbr#CmdAbbr('maek', 'make')
 
 # :g search file for pattern and put resulting lines in quickfix list

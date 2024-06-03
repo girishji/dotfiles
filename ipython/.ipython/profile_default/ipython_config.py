@@ -269,6 +269,11 @@ c = get_config()  #noqa
 ## lines of code to run at IPython startup.
 #  See also: InteractiveShellApp.exec_lines
 # c.TerminalIPythonApp.exec_lines = []
+c.TerminalIPythonApp.exec_lines = [
+    'from pprint import pprint as pp',
+    'import numpy as np',
+    'import pandas as pd',
+]
 
 ## A list of dotted module names of IPython extensions to load.
 #  See also: InteractiveShellApp.extensions
@@ -296,6 +301,7 @@ c = get_config()  #noqa
 #  'gtk2', 'gtk3', 'gtk4', 'osx', 'pyglet', 'qt', 'qt5', 'qt6', 'tk', 'wx',
 #  'gtk2', 'qt4').
 #  See also: InteractiveShellApp.gui
+# c.TerminalIPythonApp.gui = None
 # c.TerminalIPythonApp.gui = None
 
 ## Should variables loaded at startup (by startup files, exec_lines, etc.)
@@ -440,6 +446,7 @@ c = get_config()  #noqa
 #  Choices: any of ['Neutral', 'NoColor', 'LightBG', 'Linux'] (case-insensitive)
 #  Default: 'Neutral'
 # c.InteractiveShell.colors = 'Neutral'
+c.InteractiveShell.colors = 'Linux'
 
 #  Default: False
 # c.InteractiveShell.debug = False
@@ -1316,15 +1323,16 @@ c.TerminalInteractiveShell.editing_mode = 'vi'
 #  Default: False
 # c.StoreMagics.autorestore = False
 
-# autoreload functions, methods, etc. see https://waylonwalker.com/autoreload-ipython/
-# use ipython in a split window while developing python functions
-#
-# Reload modules automatically (type 'magic' for help)
-c.InteractiveShellApp.extensions = ['autoreload']
-# Reload all modules (except those excluded by %aimport) every time before executing the Python code typed.
-c.InteractiveShellApp.exec_lines = ['%autoreload 2']
-# Print this line on startup
-c.InteractiveShellApp.exec_lines.append('print("Warning: (giri) disable autoreload in ipython_config.py to improve performance.")')
+# Note: Commenting out only because slows down startup
+# # autoreload functions, methods, etc. see https://waylonwalker.com/autoreload-ipython/
+# # use ipython in a split window while developing python functions
+# #
+# # Reload modules automatically (type 'magic' for help)
+# c.InteractiveShellApp.extensions = ['autoreload']
+# # Reload all modules (except those excluded by %aimport) every time before executing the Python code typed.
+# c.InteractiveShellApp.exec_lines = ['%autoreload 2']
+# # Print this line on startup
+# c.InteractiveShellApp.exec_lines.append('print("Warning: (giri) disable autoreload in ipython_config.py to improve performance.")')
 
 # Pyflyby (To inject pyflyby into ipython)
 c.InteractiveShellApp.extensions.append("pyflyby")

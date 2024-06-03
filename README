@@ -4,3 +4,11 @@ ipython:
 
 nvim, pip, etc:
 > mkdir ~/.config
+
+ipython:
+> pipx install ipython
+> pipx inject ipython pyflyby pandas matplotlib
+Optional:
+pyflyby: (provides 'py' command)
+> pipx install pyflyby
+> pipx inject pyflyby pyflyby

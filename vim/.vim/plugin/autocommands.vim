@@ -22,6 +22,25 @@ augroup MyVimrc | autocmd!
     enddef
     autocmd TextYankPost * SaveLastReg()
 
+    # vim9cmd
+    autocmd CmdlineEnter : {
+        setcmdline('vim9 ')
+        cnoremap        <c-u>    <c-u>vim9<space>
+        cnoremap        <c-b>    <c-b><c-right><right>
+        cnoremap <expr> <c-w>    getcmdpos() > 6 ? "\<c-w>" : ""
+        cnoremap <expr> <c-left> getcmdpos() > 6 ? "\<c-left>" : ""
+        cnoremap <expr> <bs>     getcmdpos() > 6 ? "\<bs>" : ""
+        cnoremap <expr> <left>   getcmdpos() > 6 ? "\<left>" : ""
+    }
+    autocmd CmdlineLeave : {
+        cunmap <c-u>
+        cunmap <c-w>
+        cunmap <c-b>
+        cunmap <c-left>
+        cunmap <bs>
+        cunmap <left>
+    }
+
     # windows to close
     autocmd FileType help,vim-plug,qf {
         nnoremap <buffer> Q q
@@ -65,7 +84,6 @@ augroup MyVimrc | autocmd!
     # autocmd FileType cpp,c setlocal makeprg=g++\ -std=c++11\ -O2\ -Wall\ %\ -o\ %<
 
     # highlighted yank
-    # https://github.com/justinmk/config/blob/a93dc73fafbdeb583ce177a9d4ebbbdfaa2d17af/.config/nvim/init.vim#L1087
     # autocmd TextYankPost * {
     #     if v:event.operator ==? 'y'
     #         var [lnum_beg, col_beg, off_beg] = getpos("'[")[1 : 3]
@@ -84,7 +102,6 @@ augroup MyVimrc | autocmd!
     #     endif
     # }
 
-    # def HighlightedYank(hlgroup: string = 'IncSearch', duration: number = 300, in_visual: bool = true)
     def HighlightedYank(hlgroup = 'IncSearch', duration = 300, in_visual = true)
         if v:event.operator ==? 'y'
             if !in_visual && visualmode() != null_string

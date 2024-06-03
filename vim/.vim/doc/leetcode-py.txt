@@ -236,6 +236,11 @@ copy a dictionary~
 	or
 	y = dict(x)
 
+how do you get keys from a dictionary.
+foodict.keys() returns an object dict_keys([...]) which is a dictionary view.
+Call list() on this, or call list on dictionary directly:
+        keylist = list(foodict)
+
 ------------------------------------------------------------------------------
 Iterator raises StopIteration exception when next(iter) fails.
 
@@ -337,6 +342,7 @@ mylist = mylist.reverse()  <- SILENT ERROR
 Gotcha: reversed(), sorted() do not return a list, but they return iterator object.~
 Doing len() on these things is an ERROR
 
+------------------------------------------------------------------------------
 for ...:
     ...
     break

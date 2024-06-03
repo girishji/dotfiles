@@ -158,8 +158,8 @@ alias tt='tree'
 alias formatjson='python3 -m json.tool'
 alias jsonformat='python3 -m json.tool'
 
-# TIP: use 'py' which is ipython+pyflyby
-# alias ip='ipython --no-confirm-exit --colors=Linux'
+# TIP: could use 'py' which is ipython+pyflyby (if installed through pipx, and ipython injected into it)
+alias ip='ipython'
 
 alias v='vim'
 alias vd='vi -d'  # diff mode - pass 2 files

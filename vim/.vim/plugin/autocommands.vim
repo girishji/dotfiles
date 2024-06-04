@@ -22,25 +22,6 @@ augroup MyVimrc | autocmd!
     enddef
     autocmd TextYankPost * SaveLastReg()
 
-    # vim9cmd
-    autocmd CmdlineEnter : {
-        setcmdline('vim9 ')
-        cnoremap        <c-u>    <c-u>vim9<space>
-        cnoremap        <c-b>    <c-b><c-right><right>
-        cnoremap <expr> <c-w>    getcmdpos() > 6 ? "\<c-w>" : ""
-        cnoremap <expr> <c-left> getcmdpos() > 6 ? "\<c-left>" : ""
-        cnoremap <expr> <bs>     getcmdpos() > 6 ? "\<bs>" : ""
-        cnoremap <expr> <left>   getcmdpos() > 6 ? "\<left>" : ""
-    }
-    autocmd CmdlineLeave : {
-        cunmap <c-u>
-        cunmap <c-w>
-        cunmap <c-b>
-        cunmap <c-left>
-        cunmap <bs>
-        cunmap <left>
-    }
-
     # windows to close
     autocmd FileType help,vim-plug,qf {
         nnoremap <buffer> Q q
@@ -130,6 +111,41 @@ augroup MyVimrc | autocmd!
     # if dur > 0
     #     autocmd TextYankPost * HighlightedYank('IncSearch', dur)
     # endif
+augroup END
+
+# vm9script cmdline
+var vim9cmdline_enable = true
+
+command Vim9cmdlineEnable {
+    vim9cmdline_enable = true
+}
+
+command Vim9cmdlineDisable {
+    vim9cmdline_enable = false
+}
+
+augroup vim9cmdline | autocmd!
+    autocmd CmdlineEnter : {
+        if vim9cmdline_enable
+            setcmdline('vim9 ')
+            cnoremap        <c-u>    <c-u>vim9<space>
+            cnoremap        <c-b>    <c-b><c-right><right>
+            cnoremap <expr> <c-w>    getcmdpos() > 6 ? "\<c-w>" : ""
+            cnoremap <expr> <c-left> getcmdpos() > 6 ? "\<c-left>" : ""
+            cnoremap <expr> <bs>     getcmdpos() > 6 ? "\<bs>" : ""
+            cnoremap <expr> <left>   getcmdpos() > 6 ? "\<left>" : ""
+        endif
+    }
+    autocmd CmdlineLeave : {
+        if vim9cmdline_enable
+            cunmap <c-u>
+            cunmap <c-w>
+            cunmap <c-b>
+            cunmap <c-left>
+            cunmap <bs>
+            cunmap <left>
+        endif
+    }
 augroup END
 
 # testing

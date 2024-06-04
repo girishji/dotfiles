@@ -167,22 +167,6 @@ do
     -- }
 end
 
---   {
---     -- Theme
---     "girishji/declutter.nvim",
---     priority = 1000,
---     config = function()
---       require 'declutter'.setup({ theme = 'minimal' })
---       vim.cmd.colorscheme 'declutter'
---       -- vim.o.termguicolors = true
---     end,
---   },
-
---   {
---     "girishji/bufline.vim",
---     opts = { showbufnr = true, highlight = true }
---   },
-
 -- Set Options
 -- See `:help vim.o`
 do
@@ -264,11 +248,11 @@ do
     map('n', '<leader>b', '<cmd>e #<cr>', { desc = 'Switch to alternate(#) [b]uffer' })
     -- map('n', '<leader>`', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
 
-    -- -- Move to window using the <ctrl> hjkl keys
-    -- map("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
-    -- map("n", "<C-j>", "<C-w>j", { desc = "Go to lower window" })
-    -- map("n", "<C-k>", "<C-w>k", { desc = "Go to upper window" })
-    -- map("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
+    -- Move to window using the <ctrl> hjkl keys
+    map("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
+    map("n", "<C-j>", "<C-w>j", { desc = "Go to lower window" })
+    map("n", "<C-k>", "<C-w>k", { desc = "Go to upper window" })
+    map("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
 
     -- Resize window using <ctrl> arrow keys
     map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase window height" })
@@ -354,27 +338,6 @@ end
 do
     local my_aucmd_group = vim.api.nvim_create_augroup('MyCommands', { clear = true })
 
-    -- Save yank'ed text into numbered registers and rotate. By default vim
-    -- stores yank into "0 (does not rotate) and stores deleted and changed text
-    -- into "1 and rotates (:h "1). If deleted text is less than a line it is also
-    -- stored in "- register (aka small delete register).
-
-    vim.api.nvim_create_autocmd({ "TextYankPost" }, {
-        pattern = '*',
-        callback = function()
-            -- convert vim variable dictionary into a lua dict/table
-            -- see :h lua-guide
-            local vevent = vim.api.nvim_eval('v:event')
-            -- this event is triggered for both yank and delete
-            if vevent['regname'] == "" and vevent['operator'] == 'y' then
-                for i = 8, 1, -1 do
-                    vim.fn.setreg(i + 1, vim.fn.getreg(i))
-                end
-                vim.fn.setreg(1, vevent['regcontents'])
-            end
-        end,
-    })
-
     -- [[ Highlight on yank ]]
     -- See `:help vim.highlight.on_yank()`
     vim.api.nvim_create_autocmd('TextYankPost', {
@@ -385,215 +348,51 @@ do
         pattern = '*',
     })
 
-    -- [[ go to last cursor loc when opening a buffer ]]
-    vim.api.nvim_create_autocmd(
-    "BufReadPost",
-    { command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]] }
-    )
+    -- -- [[ go to last cursor loc when opening a buffer ]]
+    -- vim.api.nvim_create_autocmd(
+    -- "BufReadPost",
+    -- { command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]] }
+    -- )
 
-    -- [[ Check if we need to reload the file when it changed ]]
-    vim.api.nvim_create_autocmd("FocusGained", {
-        command = [[:checktime]],
-        group = my_aucmd_group,
-    })
+    -- -- [[ Check if we need to reload the file when it changed ]]
+    -- vim.api.nvim_create_autocmd("FocusGained", {
+    --     command = [[:checktime]],
+    --     group = my_aucmd_group,
+    -- })
 
-    -- [[ windows to close ]]
-    vim.api.nvim_create_autocmd("FileType", {
-        pattern = {
-            "help",
-            "startuptime",
-            "qf",
-            "lspinfo",
-            "vim",
-            "fugitive",
-            "git",
-            "neotest-summary",
-            "query",
-            "neotest-output",
-            "spectre_panel",
-            "tsplayground",
-        },
-        callback = function(event)
-            vim.bo[event.buf].buflisted = false
-            vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
-        end,
-    })
-    vim.api.nvim_create_autocmd("FileType", { pattern = "man", command = [[nnoremap <buffer><silent> q :quit<CR>]] })
-    vim.api.nvim_create_autocmd("FileType", { pattern = "cheat", command = [[nnoremap <buffer><silent> q :bdelete!<CR>]] })
+    -- -- [[ windows to close ]]
+    -- vim.api.nvim_create_autocmd("FileType", {
+    --     pattern = {
+    --         "help",
+    --         "startuptime",
+    --         "qf",
+    --         "lspinfo",
+    --         "vim",
+    --         "fugitive",
+    --         "git",
+    --         "neotest-summary",
+    --         "query",
+    --         "neotest-output",
+    --         "spectre_panel",
+    --         "tsplayground",
+    --     },
+    --     callback = function(event)
+    --         vim.bo[event.buf].buflisted = false
+    --         vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+    --     end,
+    -- })
+    -- vim.api.nvim_create_autocmd("FileType", { pattern = "man", command = [[nnoremap <buffer><silent> q :quit<CR>]] })
+    -- vim.api.nvim_create_autocmd("FileType", { pattern = "cheat", command = [[nnoremap <buffer><silent> q :bdelete!<CR>]] })
 
-    -- [[ don't auto comment new line ]]
-    vim.api.nvim_create_autocmd("BufEnter", {
-        group = my_aucmd_group,
-        command = [[set formatoptions-=cro]]
-    })
+    -- -- [[ don't auto comment new line ]]
+    -- vim.api.nvim_create_autocmd("BufEnter", {
+    --     group = my_aucmd_group,
+    --     command = [[set formatoptions-=cro]]
+    -- })
 
-    -- [[ create directories when needed, when saving a file ]]
-    vim.api.nvim_create_autocmd("BufWritePre", {
-        group = my_aucmd_group,
-        command = [[call mkdir(expand('<afile>:p:h'), 'p')]],
-    })
-
-    -- [[ vim help files: generate tags when saved ]]
-    -- vim.api.nvim_create_autocmd("BufWritePost", {
-    --   pattern = 'doc/*.txt',
-    --   group = my_aucmd_group,
-    --   command = [[helptags <afile>:p:h]],
+    -- -- [[ create directories when needed, when saving a file ]]
+    -- vim.api.nvim_create_autocmd("BufWritePre", {
+    --     group = my_aucmd_group,
+    --     command = [[call mkdir(expand('<afile>:p:h'), 'p')]],
     -- })
 end
-
--- -- [[ Configure LSP ]]
--- local lsp_on_attach_callback = function(args)
---   local bufnr = args.buf
---   -- lsp keybinds
---   do
---     local nmap = function(keys, func, desc)
---       if desc then
---         desc = 'LSP: ' .. desc
---       end
---       vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
---     end
-
---     -- LSP keymaps
---     nmap('<leader>cr', vim.lsp.buf.rename, '[R]ename identifiers (vars etc)') -- renames correctly within scope
---     nmap('<leader>ca', vim.lsp.buf.code_action, 'Code [a]ction')
---     nmap('<leader>cf', function() vim.lsp.buf.format { async = true } end, '[F]ormat code')
-
---     nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
---     nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
---     nmap('gt', vim.lsp.buf.type_definition, '[G]oto [T]ype Definition')
---     nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
---     nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
---     nmap('gh', vim.lsp.buf.hover, '[H]over Documentation')
---     nmap('K', vim.lsp.buf.hover, '[H]over Documentation')
---     nmap('gk', vim.lsp.buf.signature_help, 'Signature Documentation')
---   end
-
---   -- configure diagnostics
---   if string.find(args.file, 'snippet') ~= nil then
---     -- disable text that appears for error(E), warning (W), hint (H), info (I)
---     vim.diagnostic.config({ virtual_text = false })
---   end
-
---   -- Create a command `:Format` local to the LSP buffer
---   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
---     vim.lsp.buf.format()
---   end, { desc = 'Format current buffer with LSP' })
-
-
--- -- Create autocommand to associate a callback when LSP attaches
--- vim.api.nvim_create_autocmd("LspAttach", {
---   group = vim.api.nvim_create_augroup('UserLspConfig', {}),
---   callback = lsp_on_attach_callback
--- })
-
--- -- Setup LSP language servers
--- local lsp_language_servers_setup = function()
---   local servers = {
---     clangd = {},
---     -- jdtls = {},
---     pyright = {},
---     -- FIXME: lua_ls config is broken. It makes marks disappear
---     --   mark 'a' using 'ma' and edit at end of file, save, and mark 'a' disappears
---     --
---     lua_ls = {
---       Lua = {
---         diagnostics = { -- Get the language server to recognize the `vim` global
---           globals = { "vim", "describe", "it", "before_each", "after_each", "packer_plugins", "MiniTest" },
---         },
---         -- removes the startup query about configuring workspace
---         workspace = { checkThirdParty = false },
---         telemetry = { enable = false },
---       },
---     },
---   }
-
---   -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
---   local cmp_capabilities = vim.lsp.protocol.make_client_capabilities()
---   cmp_capabilities = require('cmp_nvim_lsp').default_capabilities(cmp_capabilities)
-
---   -- Setup floating window border
---   local handlers = {
---     ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' }),
---     ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'single' }),
---   }
-
---   for server, _ in pairs(servers) do
---     require('lspconfig')[server].setup {
---       capabilities = cmp_capabilities,
---       settings = servers[server],
---       handlers = handlers,
---     }
---   end
--- end
--- lsp_language_servers_setup()
-
-
--- -- [[ Configure nvim-cmp ]]
--- local cmp = require 'cmp'
--- -- local luasnip = require 'luasnip'
-
--- local has_words_before = function()
---   unpack = unpack or table.unpack
---   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
---   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
--- end
-
--- cmp.setup {
---   snippet = {
---     expand = function(args)
---       -- luasnip.lsp_expand(args.body)
---     end,
---   },
---   mapping = cmp.mapping.preset.insert {
---     ['<C-d>'] = cmp.mapping.scroll_docs(-4), -- next to [f]
---     ['<C-f>'] = cmp.mapping.scroll_docs(4),  -- [f]orward
---     ['<C-Space>'] = cmp.mapping.complete {},
---     ['<CR>'] = cmp.mapping.confirm {
---       behavior = cmp.ConfirmBehavior.Replace,
---       select = false,
---     },
---     -- Supertab
---     ['<Tab>'] = cmp.mapping(function(fallback)
---       if cmp.visible() then
---         cmp.select_next_item()
---         -- elseif luasnip.jumpable(1) then
---         -- luasnip.jump(1)
---       elseif has_words_before() then
---         cmp.complete()
---       else
---         fallback()
---       end
---     end, { 'i', 's' }),
---     ['<S-Tab>'] = cmp.mapping(function(fallback)
---       if cmp.visible() then
---         cmp.select_prev_item()
---         -- elseif luasnip.jumpable(-1) then
---         --   luasnip.jump(-1)
---       else
---         fallback()
---       end
---     end, { 'i', 's' }),
---   },
---   sources = {
---     { name = "nvim_lsp" },
---     -- { name = "luasnip" },
---     { name = 'vsnip' },
---     { name = "buffer" },
---     { name = "nvim_lsp_signature_help" },
---     { name = "dictionary" },
---     { name = "path" },
---     --{
---     --  name = 'look',
---     --  keyword_length = 2,
---     --  option = {
---     --    convert_case = true,
---     --    loud = true
---     --    --dict = '/usr/share/dict/words'
---     --  }
---     --}
---   },
---   window = {
---     completion = cmp.config.window.bordered({ winhighlight = 'Cursorline:PmenuSel,Search:None' }),
---     documentation = cmp.config.window.bordered({ winhighlight = 'Search:None' }),
---   },
--- }

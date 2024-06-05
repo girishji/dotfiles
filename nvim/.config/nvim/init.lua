@@ -65,8 +65,22 @@ if vim.g.started_by_firenvim then
     -- vim.o.guifont = 'Fira Code:h18'
     vim.o.linespace = 0
     vim.o.laststatus = 0
-    -- Prepend it with 'silent!' to ignore errors when it's not yet installed.
-    vim.cmd('silent! colorscheme zellner')
+    vim.cmd [[
+        " Prepend with 'silent!' to ignore errors when colorscheme is not yet installed.
+        silent! colorscheme zellner
+        " https://github.com/glacambre/firenvim/issues/366
+        nnoremap <D-v> "+p
+        inoremap <D-v> <C-r>+
+    ]]
+
+    -- ATTENTION: Anytime you make change here, run `:call firenvim#install(0)` in nvim
+    vim.g.firenvim_config = {
+        localSettings = {
+            ['.*'] = { takeover = 'never', priority = 0 },
+            ['.*github.*'] = { takeover = 'always', priority = 1 },
+            ['.*leetcode.*'] = { takeover = 'always', priority = 1 },
+        }
+    }
 
     vim.api.nvim_create_autocmd('BufEnter', {
         pattern = '*leetcode.com_*.txt',
@@ -174,23 +188,24 @@ do
     vim.wo.number = true  -- Make line numbers default
     -- vim.wo.relativenumber = true
     -- vim.o.mouse = 'a' -- Enable mouse mode
-    vim.o.clipboard = 'unnamedplus' -- Sync clipboard between OS and Neovim. See `:help 'clipboard'`
-    vim.o.breakindent = true        -- Enable break indent
-    vim.o.undofile = false          -- Save undo history (XXX: better to not go back too deep when typing 'u')
-    vim.o.ignorecase = true         -- Case insensitive searching UNLESS /C or capital in search
+    vim.o.clipboard = 'unnamed'
+    vim.o.breakindent = true
+    vim.o.ignorecase = true
     vim.o.smartcase = true
-    -- vim.o.winbar = "%=%m %F"  --  Winbar
-    -- vim.wo.signcolumn = 'yes' -- Keep signcolumn on by default
-    -- Decrease update time
-    -- vim.o.updatetime = 250
-    -- vim.o.timeout = true
-    -- vim.o.timeoutlen = 300
+    vim.o.linebreak = true
+    vim.o.joinspaces = false
+    vim.o.showmatch = true
+    vim.o.whichwrap = 'b,s,<,>,h,l' -- make arrows and h, l, push cursor to next line
+    vim.o.virtualedit = 'block' -- allows selection of rectangular text in visual block mode
+    vim.o.wildignore = '.gitignore,*.swp,*.zwc,tags'
+    -- vim.o.winbar = "%=%m %F"
+    -- vim.wo.signcolumn = 'yes' -- Keep signcolumn on by default for lsp diagnostics
 
-    vim.o.completeopt = 'menuone,noselect' -- Set completeopt to have a better completion experience
+    -- vim.o.completeopt = 'menuone,noselect,noinsert'
     -- vim.o.shiftwidth = 2
     -- vim.o.expandtab = true
-    vim.o.scrolloff = 4
-    vim.o.sidescrolloff = 4
+    -- vim.o.scrolloff = 4
+    -- vim.o.sidescrolloff = 4
     -- vim.o.shada = "!,%,'100,<50,s10,h" -- '%' to store the buffers (invoke nvim without filename)
 end
 
@@ -206,12 +221,53 @@ vim.cmd [[
         return (c =~ a:pat) ? '' : c
     endfunc
 
+    iabbr  --* <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=Eatchar('\s')<cr>
+    iabbr <silent> --- ----------------------------------------<C-R>=Eatchar('\s')<CR>
     augroup vimrcgrp | autocmd!
         au BufNewFile,BufRead *.c,*.cpp,*.java
-        \   iabbr <silent> if if ()<Left><C-R>=Eatchar('\s')<CR>
-        \ | iabbr <silent> while while ()<Left><C-R>=Eatchar('\s')<CR>
-        au BufNewFile,BufRead *.md,*.txt
-        \   iabbr <silent> --- ----------------------------------------<C-R>=Eatchar('\s')<CR>
+        \   iabbr <silent><buffer> if if ()<Left><C-R>=Eatchar('\s')<CR>
+        \ | iabbr <silent><buffer> while while ()<Left><C-R>=Eatchar('\s')<CR>
+        au BufNewFile,BufRead *.py
+        \   iabbr <buffer> def     def ):<cr><esc>-f)i<c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>       try_ try:
+            \<cr>pass
+            \<cr>except Exception as err:
+            \<cr>print(f"Unexpected {err=}, {type(err)=}")
+            \<cr>raise<cr>else:
+            \<cr>pass<esc>5kcw<c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>       main__2
+            \ if __name__ == "__main__":
+            \<cr>import doctest
+            \<cr>doctest.testmod()<esc><c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>       main__
+            \ if __name__ == "__main__":
+            \<cr>main()<esc><c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>       python3#    #!/usr/bin/env python3<esc><c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>       """            """."""<c-o>3h<c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>       case_ match myval:
+            \<cr>case 10:
+            \<cr>pass
+            \<cr>case _:<esc>3k_fm;i<c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>       match_case_ match myval:
+            \<cr>case 10:
+            \<cr>pass
+            \<cr>case _:<esc>3k_fm;i<c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>       enum_          Color = Enum('Color', ['RED', 'GRN'])<esc>_fC<c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>       pre            print(, file=stderr)<esc>F,i<c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>       pr             print()<c-o>i<c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>       tuple_         Point = namedtuple('Point', 'x y')<esc>_<c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>       tuple_named    Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=Eatchar('\s')<cr>
+        \ | iabbr  <buffer>  defaultdict1   defaultdict(int)<c-r>=Eatchar('\s')<cr>
+        \ | iabbr  <buffer>  defaultdict_   defaultdict(set)<c-r>=Eatchar('\s')<cr>
+        \ | iabbr  <buffer>  defaultdict3   defaultdict(lambda: '[default  value]')<c-r>=Eatchar('\s')<cr>
+        \ | iabbr  <buffer>  dict_default1  defaultdict(int)<c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>   cache_          @functools.cache<c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>   __init__        def __init__(self):<esc>hi<c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>   __add__         def __add__(self, other):<cr><c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>   __sub__         def __sub__(self, other):<cr><c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>   __mul__         def __mul__(self, other):<cr><c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>   __truediv__     def __truediv__(self, other):<cr><c-r>=Eatchar('\s')<cr>
+        \ | iabbr <buffer>   __floordiv__    def __floordiv__(self, other):<cr><c-r>=Eatchar('\s')<cr>
     augroup END
 ]]
 

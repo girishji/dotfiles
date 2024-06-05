@@ -116,18 +116,19 @@ augroup END
 # vm9script cmdline
 var vim9cmdline_enable = true
 
-command Vim9cmdlineEnable {
-    vim9cmdline_enable = true
-}
-
-command Vim9cmdlineDisable {
-    vim9cmdline_enable = false
+command Vim9cmdlineToggle {
+    vim9cmdline_enable = !vim9cmdline_enable
 }
 
 augroup vim9cmdline | autocmd!
     autocmd CmdlineEnter : {
         if vim9cmdline_enable
-            setcmdline('vim9 ')
+            if visualmode() == null_string
+                setcmdline('vim9 ')
+            else
+                setcmdline('vim9 :')
+                visualmode(1)
+            endif
             cnoremap        <c-u>    <c-u>vim9<space>
             cnoremap        <c-b>    <c-b><c-right><right>
             cnoremap <expr> <c-w>    getcmdpos() > 6 ? "\<c-w>" : ""

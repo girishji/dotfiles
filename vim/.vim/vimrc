@@ -148,12 +148,10 @@ Plug '~/git/vimcomplete'
 # Plug 'girishji/vimcomplete'
 Plug '~/git/ngram-complete.vim'
 # Plug 'girishji/ngram-complete.vim'
+Plug '~/git/vimbits'
+# Plug 'girishji/vimbits'
 # Plug 'girishji/pythondoc.vim', {'for': 'python'}
 # Plug '~/git/pythondoc.vim', {'for': 'python'}
-Plug '~/git/easyjump.vim'
-# Plug 'girishji/easyjump.vim'
-# Plug 'girishji/fFtT.vim'
-Plug '~/git/fFtT.vim'
 Plug '~/git/devdocs.vim'
 # Plug 'girishji/devdocs.vim'
 plug#end()

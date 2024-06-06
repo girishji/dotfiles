@@ -79,6 +79,8 @@ if vim.g.started_by_firenvim then
             ['.*'] = { takeover = 'never', priority = 0, cmdline = 'neovim' },
             ['.*github.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
             ['.*leetcode.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
+            ['.*reddit.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
+            ['.*google.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
         }
     }
 

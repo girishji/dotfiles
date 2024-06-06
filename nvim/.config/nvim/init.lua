@@ -58,7 +58,6 @@ end
 -- Firenvim
 -- https://www.reddit.com/r/neovim/comments/1b9nyt5/has_anyone_successfully_embedded_nvim_in_leetcode/
 -- When chrome/firefox starts Neovim, Firenvim sets the variable g:started_by_firenvim
--- Only leetcode has automatic access, for other sites click <command-E>
 if vim.g.started_by_firenvim then
     -- vim.o.guifont = 'FiraCode Nerd Font:h24'
     vim.o.guifont = 'FiraCode Nerd Font:h22'
@@ -74,6 +73,7 @@ if vim.g.started_by_firenvim then
     ]]
 
     -- ATTENTION: Anytime you make change here, run `:call firenvim#install(0)` in nvim
+    -- Even though takeover=never, you can type <command-E> to invoke nvim
     vim.g.firenvim_config = {
         localSettings = {
             ['.*'] = { takeover = 'never', priority = 0 },

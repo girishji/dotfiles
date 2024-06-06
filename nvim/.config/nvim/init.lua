@@ -76,9 +76,9 @@ if vim.g.started_by_firenvim then
     -- Even though takeover=never, you can type <command-E> to invoke nvim
     vim.g.firenvim_config = {
         localSettings = {
-            ['.*'] = { takeover = 'never', priority = 0 },
-            ['.*github.*'] = { takeover = 'always', priority = 1 },
-            ['.*leetcode.*'] = { takeover = 'always', priority = 1 },
+            ['.*'] = { takeover = 'never', priority = 0, cmdline = 'neovim' },
+            ['.*github.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
+            ['.*leetcode.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
         }
     }
 

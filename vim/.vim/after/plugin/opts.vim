@@ -1,6 +1,6 @@
 vim9script
 
-if exists("g:loaded_easyjump")
+if exists("g:loaded_vimbits")
     # g:easyjump_default_keymap = false
     # nmap , <Plug>EasyjumpJump;
     # omap , <Plug>EasyjumpJump;

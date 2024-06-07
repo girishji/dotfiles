@@ -156,4 +156,6 @@ Plug '~/git/devdocs.vim'
 # Plug 'girishji/devdocs.vim'
 plug#end()
 
+g:vimbits_vim9cmdline = true
+
 # vim: ts=8 sts=4 sw=4 et fdm=marker

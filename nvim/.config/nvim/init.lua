@@ -5,12 +5,12 @@ vim.lsp.set_log_level('debug')
 
 --]]
 
--- NOTE: Leader key must be set before plugins
+-- [[ NOTE: Leader key must be set before plugins ]]
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.cmd([[map <BS> <Leader>]])
 
--- Download plug.vim if it doesn't exist yet
+-- [[ Download plug.vim if it doesn't exist yet ]]
 local plugpath = vim.fn.stdpath('data') .. '/site/autoload/plug.vim'
 if not vim.loop.fs_stat(plugpath) then
     vim.fn.system {
@@ -43,16 +43,243 @@ do
     end })
     Plug('girishji/pythondoc.vim')
     --
-    Plug('rafamadriz/friendly-snippets')
+    -- Plug('rafamadriz/friendly-snippets')
     Plug('hrsh7th/nvim-cmp')
-    Plug('hrsh7th/vim-vsnip')
-    Plug('hrsh7th/cmp-vsnip')
+    -- Plug('hrsh7th/vim-vsnip')
+    -- Plug('hrsh7th/cmp-vsnip')
     Plug('hrsh7th/cmp-buffer')
     Plug('hrsh7th/cmp-path')
     Plug('hrsh7th/cmp-cmdline')
     --
     -- Plug('~/my-prototype-plugin')
     vim.call('plug#end')
+end
+
+-- [[ Set Options ]]
+-- See `:help vim.o`
+do
+    vim.o.hlsearch = true -- Set highlight on search
+    vim.wo.number = true  -- Make line numbers default
+    -- vim.wo.relativenumber = true
+    -- vim.o.mouse = 'a' -- Enable mouse mode
+    vim.o.clipboard = 'unnamed'
+    vim.o.breakindent = true
+    vim.o.ignorecase = true
+    vim.o.smartcase = true
+    vim.o.linebreak = true
+    vim.o.joinspaces = false
+    vim.o.showmatch = true
+    vim.o.whichwrap = 'b,s,<,>,h,l' -- make arrows and h, l, push cursor to next line
+    vim.o.virtualedit = 'block' -- allows selection of rectangular text in visual block mode
+    vim.o.wildignore = '.gitignore,*.swp,*.zwc,tags'
+    -- vim.o.winbar = "%=%m %F"
+    -- vim.wo.signcolumn = 'yes' -- Keep signcolumn on by default for lsp diagnostics
+end
+
+-- [[ Abbreviations ]]
+-- To avoid the abbreviation in Insert mode: Type CTRL-V before the character
+-- that would trigger the abbreviation. To avoid the abbreviation in
+-- Command-line mode: Type CTRL-V twice somewhere in the abbreviation to avoid
+-- it to be replaced.
+vim.cmd [[
+    " Consume the space typed after an abbreviation (:h abbreviation)
+    func! Eatchar()
+        let c = nr2char(getchar(0))
+        return (c =~ '\s\|/') ? '' : c  " eat space and '/'
+    endfunc
+
+    iabbr  --* <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=Eatchar()<cr>
+    iabbr <silent> --- ----------------------------------------<C-R>=Eatchar()<CR>
+
+    func! CAbbr()
+        iabbr <silent><buffer> if if ()<Left><C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> while while ()<Left><C-R>=Eatchar()<CR>
+    endfunc
+
+    func! PyAbbr()
+        iabbr <buffer> def     def ):<cr><esc>-f)i<c-r>=Eatchar()<cr>
+        iabbr <buffer>       try_ try:
+            \<cr>pass
+            \<cr>except Exception as err:
+            \<cr>print(f"Unexpected {err=}, {type(err)=}")
+            \<cr>raise<cr>else:
+            \<cr>pass<esc>5k_cw<c-r>=Eatchar()<cr>
+        iabbr <buffer>       main__2
+            \ if __name__ == "__main__":
+            \<cr>import doctest
+            \<cr>doctest.testmod()<esc><c-r>=Eatchar()<cr>
+        iabbr <buffer>       main__
+            \ if __name__ == "__main__":
+            \<cr>main()<esc><c-r>=Eatchar()<cr>
+        iabbr <buffer>       python3#    #!/usr/bin/env python3<esc><c-r>=Eatchar()<cr>
+        iabbr <buffer>       """            """."""<c-o>3h<c-r>=Eatchar()<cr>
+        iabbr <buffer>       case_ match myval:
+            \<cr>case 10:
+            \<cr>pass
+            \<cr>case _:<esc>3k_fm;i<c-r>=Eatchar()<cr>
+        iabbr <buffer>       match_case_ match myval:
+            \<cr>case 10:
+            \<cr>pass
+            \<cr>case _:<esc>3k_fm;i<c-r>=Eatchar()<cr>
+        iabbr <buffer>       enum_          Color = Enum('Color', ['RED', 'GRN'])<esc>_fC<c-r>=Eatchar()<cr>
+        iabbr <buffer>       pre            print(, file=stderr)<esc>F,i<c-r>=Eatchar()<cr>
+        iabbr <buffer>       pr             print()<c-o>i<c-r>=Eatchar()<cr>
+        iabbr <buffer>       tuple_         Point = namedtuple('Point', 'x y')<esc>_<c-r>=Eatchar()<cr>
+        iabbr <buffer>       tuple_named    Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=Eatchar()<cr>
+        iabbr  <buffer>  defaultdict1   defaultdict(int)<c-r>=Eatchar()<cr>
+        iabbr  <buffer>  defaultdict_   defaultdict(set)<c-r>=Eatchar()<cr>
+        iabbr  <buffer>  defaultdict3   defaultdict(lambda: '[default  value]')<c-r>=Eatchar()<cr>
+        iabbr  <buffer>  dict_default1  defaultdict(int)<c-r>=Eatchar()<cr>
+        iabbr <buffer>   cache_          @functools.cache<c-r>=Eatchar()<cr>
+        iabbr <buffer>   __init__        def __init__(self):<esc>hi<c-r>=Eatchar()<cr>
+        iabbr <buffer>   __add__         def __add__(self, other):<cr><c-r>=Eatchar()<cr>
+        iabbr <buffer>   __sub__         def __sub__(self, other):<cr><c-r>=Eatchar()<cr>
+        iabbr <buffer>   __mul__         def __mul__(self, other):<cr><c-r>=Eatchar()<cr>
+        iabbr <buffer>   __truediv__     def __truediv__(self, other):<cr><c-r>=Eatchar()<cr>
+        iabbr <buffer>   __floordiv__    def __floordiv__(self, other):<cr><c-r>=Eatchar()<cr>
+    endfunc
+
+    augroup vimrcgrp | autocmd!
+        au BufNewFile,BufRead *.c,*.cpp,*.java call CAbbr()
+        au BufNewFile,BufRead *.py call PyAbbr()
+    augroup END
+]]
+
+-- [[ Keymaps ]]
+do
+    local function map(mode, lhs, rhs, opts)
+        opts = opts or {}
+        opts.silent = opts.silent ~= false
+        vim.keymap.set(mode, lhs, rhs, opts)
+    end
+
+    map({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+    map({ 'n', 'v' }, '<leader>w', '<cmd>write<cr>', { desc = '[W]rite buffer' })
+    map({ 'n', 'v' }, '<leader>q', '<cmd>qa<cr>', { desc = '[Q]uit all' })
+    map({ 'n', 'v' }, '<leader>Q', '<cmd>q!<cr>', { desc = '[Q]uit without saving' })
+
+    -- Remap for dealing with word wrap
+    map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+    map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+    -- For better buffer navigation
+    -- map('n', '[[', '<cmd>bprevious<cr>', { desc = 'Prev buffer' })
+    -- map('n', ']]', '<cmd>bnext<cr>', { desc = 'Next buffer' })
+    map('n', '<leader>d', '<cmd>bdelete<cr>', { desc = '[D]elete buffer' })
+    map('n', '<leader>b', '<cmd>e #<cr>', { desc = 'Switch to alternate(#) [b]uffer' })
+
+    -- Move to window using the <ctrl> hjkl keys
+    -- map("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
+    -- map("n", "<C-j>", "<C-w>j", { desc = "Go to lower window" })
+    -- map("n", "<C-k>", "<C-w>k", { desc = "Go to upper window" })
+    -- map("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
+
+    -- Resize window using <ctrl> arrow keys
+    map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase window height" })
+    map("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease window height" })
+    map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
+    map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
+
+    -- windows (see C-w keymaps)
+    map("n", "<leader>o", "<C-W>w", { desc = "Other window" })
+    map("n", "<leader>-", "<C-W>s", { desc = "Split window below" })
+    map("n", "<leader>|", "<C-W>v", { desc = "Split window right" })
+    map('n', '<leader>n', "<C-W>o", { desc = 'Make the current window the [o]nly one' })
+
+    -- gs reselect last modified chunk (including pasted)
+    vim.cmd [[ nnoremap <expr> gs '`[' . getregtype()[0] . '`]' ]]
+
+    -- LSP hover windows do not close unless you press h,j,k,l. Close every floating window on <esc>
+    -- Also, clear hlsearch
+    local close_floating_windows = function()
+        for _, win in pairs(vim.api.nvim_list_wins()) do
+            if vim.api.nvim_win_get_config(win).relative == 'win' then
+                vim.api.nvim_win_close(win, false)
+            end
+        end
+        vim.cmd([[noh]])
+    end
+    map("n", "<esc>", function() close_floating_windows() end, { desc = nil })
+
+    -- Redirect output of Ex command (XXX: nothing shows up in Ex until you start typing; using vimscript solves this)
+    -- map({ 'n' }, "<leader>vr", ":put = execute('')<left><left>", { desc = "[R]edirect output of cmd (see also 'redir')" })
+    vim.cmd [[nmap <leader>vr :put = execute('')<left><left>]]
+
+    -- list loaded modules
+    -- map({ 'n' }, "<leader>vL", function() vim.notify(vim.inspect(package.loaded)) end, { desc = "[L]ist loaded modules" })
+
+    -- python keybindings
+    -- vim.api.nvim_create_autocmd("FileType", {
+    --     pattern = "python",
+    --     callback = function(args)
+    --         local map = function(lhs, rhs, desc)
+    --             vim.keymap.set('n', lhs, rhs, { buffer = args.buf, desc = desc })
+    --         end
+    --         map("<leader>ve", "<cmd>update<CR><cmd>exec '!python3' shellescape(@%, 1)<cr>", "Run")
+    --         -- 'refurb' is a tool for refurbishing and modernizing Python codebases
+    --         -- map("<leader>ci",
+    --         --     "<cmd>cexpr system('refurb --quiet ' . shellescape(expand('%'))) | copen<cr>",
+    --         --     "Inspect using refurb")
+    --         -- map("<leader>vp", "<cmd>lua _IPYTHON_TOGGLE()<cr>", "iPython")
+    --     end
+    -- })
+end
+
+-- [[ Toggle Options ]]
+do
+    local toggle_opt = function(option)
+        vim.opt_local[option] = not vim.opt_local[option]:get()
+    end
+    local nmap = vim.keymap.set
+    nmap("n", "<leader>vs", function() toggle_opt("spell") end, { desc = "Toggle Spelling" })
+end
+
+-- [[ Create autocommands ]]
+do
+    local my_aucmd_group = vim.api.nvim_create_augroup('MyCommands', { clear = true })
+
+    -- [[ Highlight on yank ]]
+    -- See `:help vim.highlight.on_yank()`
+    vim.api.nvim_create_autocmd('TextYankPost', {
+        callback = function()
+            vim.highlight.on_yank({ timeout = 400 })
+        end,
+        group = my_aucmd_group,
+        pattern = '*',
+    })
+
+    -- [[ go to last cursor loc when opening a buffer ]]
+    vim.api.nvim_create_autocmd(
+    "BufReadPost",
+    { command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]] }
+    )
+
+    -- [[ Check if we need to reload the file when it changed ]]
+    vim.api.nvim_create_autocmd("FocusGained", {
+        command = [[:checktime]],
+        group = my_aucmd_group,
+    })
+
+    -- [[ windows to close on 'q' ]]
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "help", "qf" },
+        callback = function(event)
+            vim.bo[event.buf].buflisted = false
+            vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+        end,
+    })
+
+    -- -- [[ don't auto comment new line ]]
+    -- vim.api.nvim_create_autocmd("BufEnter", {
+    --     group = my_aucmd_group,
+    --     command = [[set formatoptions-=cro]]
+    -- })
+
+    -- [[ create directories when needed, when saving a file ]]
+    vim.api.nvim_create_autocmd("BufWritePre", {
+        group = my_aucmd_group,
+        command = [[call mkdir(expand('<afile>:p:h'), 'p')]],
+    })
 end
 
 -- Firenvim
@@ -152,7 +379,9 @@ do
         sources = cmp.config.sources({
             { name = 'buffer', max_item_count = 10 },
             { name = 'path' },
-            { name = 'vsnip', max_item_count = 15 },
+            -- { name = 'vsnip', max_item_count = 15 },
+            { name = 'abbrev', max_item_count = 15 },
+            { name = 'dict', max_item_count = 20 },
         }),
     })
 
@@ -175,282 +404,92 @@ do
         matching = { disallow_symbol_nonprefix_matching = false }
     })
 
-    -- -- Set up lspconfig.
-    -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
-    -- -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-    -- require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
-    --   capabilities = capabilities
-    -- }
-end
-
--- Set Options
--- See `:help vim.o`
-do
-    vim.o.hlsearch = true -- Set highlight on search
-    vim.wo.number = true  -- Make line numbers default
-    -- vim.wo.relativenumber = true
-    -- vim.o.mouse = 'a' -- Enable mouse mode
-    vim.o.clipboard = 'unnamed'
-    vim.o.breakindent = true
-    vim.o.ignorecase = true
-    vim.o.smartcase = true
-    vim.o.linebreak = true
-    vim.o.joinspaces = false
-    vim.o.showmatch = true
-    vim.o.whichwrap = 'b,s,<,>,h,l' -- make arrows and h, l, push cursor to next line
-    vim.o.virtualedit = 'block' -- allows selection of rectangular text in visual block mode
-    vim.o.wildignore = '.gitignore,*.swp,*.zwc,tags'
-    -- vim.o.winbar = "%=%m %F"
-    -- vim.wo.signcolumn = 'yes' -- Keep signcolumn on by default for lsp diagnostics
-
-    -- vim.o.completeopt = 'menuone,noselect,noinsert'
-    -- vim.o.shiftwidth = 2
-    -- vim.o.expandtab = true
-    -- vim.o.scrolloff = 4
-    -- vim.o.sidescrolloff = 4
-    -- vim.o.shada = "!,%,'100,<50,s10,h" -- '%' to store the buffers (invoke nvim without filename)
-end
-
--- Abbreviations
--- To avoid the abbreviation in Insert mode: Type CTRL-V before the character
--- that would trigger the abbreviation. To avoid the abbreviation in
--- Command-line mode: Type CTRL-V twice somewhere in the abbreviation to avoid
--- it to be replaced.
-vim.cmd [[
-    " Consume the space typed after an abbreviation (:h abbreviation)
-    func! Eatchar(pat)
-        let c = nr2char(getchar(0))
-        return (c =~ a:pat) ? '' : c
-    endfunc
-
-    iabbr  --* <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=Eatchar('\s')<cr>
-    iabbr <silent> --- ----------------------------------------<C-R>=Eatchar('\s')<CR>
-    augroup vimrcgrp | autocmd!
-        au BufNewFile,BufRead *.c,*.cpp,*.java
-        \   iabbr <silent><buffer> if if ()<Left><C-R>=Eatchar('\s')<CR>
-        \ | iabbr <silent><buffer> while while ()<Left><C-R>=Eatchar('\s')<CR>
-        au BufNewFile,BufRead *.py
-        \   iabbr <buffer> def     def ):<cr><esc>-f)i<c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>       try_ try:
-            \<cr>pass
-            \<cr>except Exception as err:
-            \<cr>print(f"Unexpected {err=}, {type(err)=}")
-            \<cr>raise<cr>else:
-            \<cr>pass<esc>5kcw<c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>       main__2
-            \ if __name__ == "__main__":
-            \<cr>import doctest
-            \<cr>doctest.testmod()<esc><c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>       main__
-            \ if __name__ == "__main__":
-            \<cr>main()<esc><c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>       python3#    #!/usr/bin/env python3<esc><c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>       """            """."""<c-o>3h<c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>       case_ match myval:
-            \<cr>case 10:
-            \<cr>pass
-            \<cr>case _:<esc>3k_fm;i<c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>       match_case_ match myval:
-            \<cr>case 10:
-            \<cr>pass
-            \<cr>case _:<esc>3k_fm;i<c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>       enum_          Color = Enum('Color', ['RED', 'GRN'])<esc>_fC<c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>       pre            print(, file=stderr)<esc>F,i<c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>       pr             print()<c-o>i<c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>       tuple_         Point = namedtuple('Point', 'x y')<esc>_<c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>       tuple_named    Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=Eatchar('\s')<cr>
-        \ | iabbr  <buffer>  defaultdict1   defaultdict(int)<c-r>=Eatchar('\s')<cr>
-        \ | iabbr  <buffer>  defaultdict_   defaultdict(set)<c-r>=Eatchar('\s')<cr>
-        \ | iabbr  <buffer>  defaultdict3   defaultdict(lambda: '[default  value]')<c-r>=Eatchar('\s')<cr>
-        \ | iabbr  <buffer>  dict_default1  defaultdict(int)<c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>   cache_          @functools.cache<c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>   __init__        def __init__(self):<esc>hi<c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>   __add__         def __add__(self, other):<cr><c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>   __sub__         def __sub__(self, other):<cr><c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>   __mul__         def __mul__(self, other):<cr><c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>   __truediv__     def __truediv__(self, other):<cr><c-r>=Eatchar('\s')<cr>
-        \ | iabbr <buffer>   __floordiv__    def __floordiv__(self, other):<cr><c-r>=Eatchar('\s')<cr>
-    augroup END
-]]
-
--- [[ Keymaps ]]
-
-do
-    local function map(mode, lhs, rhs, opts)
-        opts = opts or {}
-        opts.silent = opts.silent ~= false
-        vim.keymap.set(mode, lhs, rhs, opts)
+    local function string_split(str, pat)
+        local split = {}
+        for s in str:gmatch(pat) do
+            table.insert(split, s)
+        end
+        return split
     end
 
-    -- [[ Basic Keymaps ]]
+    -- source abbreviations
+    local abbr_source = function()
+        local source = {}
 
-    map({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+        source.new = function()
+            local self = setmetatable({}, { __index = source })
+            return self
+        end
 
-    -- g* selects foo in foobar while * selects <foo>, <> is word boundary. make * behave like g*
-    -- map('n', '*', 'g*', { silent = true })
-    -- map('n', '#', 'g#', { silent = true })
-
-    -- Write and quit
-    map({ 'n', 'v' }, '<leader>w', '<cmd>write<cr>', { desc = '[W]rite buffer' })
-    map({ 'n', 'v' }, '<leader>q', '<cmd>qa<cr>', { desc = '[Q]uit all' })
-    map({ 'n', 'v' }, '<leader>Q', '<cmd>q!<cr>', { desc = '[Q]uit without saving' })
-
-    -- Remap for dealing with word wrap
-    map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-    map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-
-    -- For better buffer navigation
-    -- map('n', '[[', '<cmd>bprevious<cr>', { desc = 'Prev buffer' })
-    -- map('n', ']]', '<cmd>bnext<cr>', { desc = 'Next buffer' })
-    map('n', '<leader>d', '<cmd>bdelete<cr>', { desc = '[D]elete buffer' })
-    map('n', '<leader>b', '<cmd>e #<cr>', { desc = 'Switch to alternate(#) [b]uffer' })
-    -- map('n', '<leader>`', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
-
-    -- Move to window using the <ctrl> hjkl keys
-    map("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
-    map("n", "<C-j>", "<C-w>j", { desc = "Go to lower window" })
-    map("n", "<C-k>", "<C-w>k", { desc = "Go to upper window" })
-    map("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
-
-    -- Resize window using <ctrl> arrow keys
-    map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase window height" })
-    map("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease window height" })
-    map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
-    map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
-
-    -- better indenting
-    map("v", "<", "<gv")
-    map("v", ">", ">gv")
-
-    -- windows (see C-w keymaps)
-    map("n", "<leader>o", "<C-W>w", { desc = "Other window" })
-    map("n", "<leader>-", "<C-W>s", { desc = "Split window below" })
-    map("n", "<leader>|", "<C-W>v", { desc = "Split window right" })
-
-    -- gs reselect last modified chunk (including pasted)
-    vim.cmd [[ nnoremap <expr> gs '`[' . getregtype()[0] . '`]' ]]
-
-    -- LSP hover windows do not close unless you press h,j,k,l. Close every floating window on <esc>
-    -- Also, clear hlsearch
-    local close_floating_windows = function()
-        for _, win in pairs(vim.api.nvim_list_wins()) do
-            if vim.api.nvim_win_get_config(win).relative == 'win' then
-                vim.api.nvim_win_close(win, false)
+        source._get_abbrevs = function()
+            local lines = vim.fn.execute('ia', 'silent!')
+            if string.find(lines, vim.fn.gettext('No abbreviation found')) then
+                return nil
             end
+            local abbrs = {}
+            for _, line in ipairs(string_split(lines, "[^\r\n]+")) do  -- \r is CR (ascii 13), \n is LF (ascii 10)
+                _, _, abbr, expn = string.find(line, "^i%s+(%S+)%s+(.+)")
+                if abbr ~= nil then
+                    table.insert(abbrs, { label = abbr, dup = 0, kind = cmp.lsp.CompletionItemKind.Snippet })
+                end
+            end
+            return abbrs
         end
-        vim.cmd([[noh]])
-    end
-    map("n", "<esc>", function() close_floating_windows() end, { desc = nil })
 
-    -- Redirect output of Ex command (XXX: nothing shows up in Ex until you start typing; using vimscript solves this)
-    -- map({ 'n' }, "<leader>vr", ":put = execute('')<left><left>", { desc = "[R]edirect output of cmd (see also 'redir')" })
-    vim.cmd [[nmap <leader>vr :put = execute('')<left><left>]]
-
-    -- vim commands
-    -- map({ 'n' }, "<leader>vb", "<cmd>ls<cr>", { desc = "Show (listed) [b]uffers (:ls)" }) -- :buffers same as :ls
-    -- map({ 'n' }, "<leader>vB", "<cmd>ls!<cr>", { desc = "Show all [b]uffers (:ls!)" })    -- :buffers same as :ls
-    -- map({ 'n' }, "<leader>vl", "<cmd>set buflisted<cr>", { desc = "[L]ist current buffer in buffer list" })
-    -- map({ 'n' }, "<leader>vu", "<cmd>set nobuflisted<cr>", { desc = "[U]nlist current buffer" })
-    -- Print full path of file in current buffer
-    -- map({ 'n', 'v' }, "<leader>vp", function() print(vim.fn.expand('%:p')) end,
-    --   { desc = "Show full [p]ath of current buffer" })
-    -- list loaded modules
-    -- map({ 'n' }, "<leader>vL", function() vim.notify(vim.inspect(package.loaded)) end, { desc = "[L]ist loaded modules" })
-end
-
--- -- [[ python keybindings ]]
--- vim.api.nvim_create_autocmd("FileType", {
---   pattern = "python",
---   callback = function(args)
---     local map = function(lhs, rhs, desc)
---       vim.keymap.set('n', lhs, rhs, { buffer = args.buf, desc = desc })
---     end
---     map("<leader>ce", "<cmd>update<CR><cmd>exec '!python3' shellescape(@%, 1)<cr>", "Run")
---     map("<leader>ci",
---       "<cmd>cexpr system('refurb --quiet ' . shellescape(expand('%'))) | copen<cr>",
---       "Inspect using refurb")
---     map("<leader>cp", "<cmd>lua _IPYTHON_TOGGLE()<cr>", "iPython")
---   end
--- })
-
--- toggle options
-do
-    local toggle_opt = function(option)
-        vim.opt_local[option] = not vim.opt_local[option]:get()
-    end
-    local diag_enabled = true
-    local toggle_diagnostics = function()
-        diag_enabled = not diag_enabled
-        if diag_enabled then
-            vim.diagnostic.enable()
-        else
-            vim.diagnostic.disable()
+        source.get_keyword_pattern = function(self, params)
+            return [[\S\+]]
         end
+
+        source.complete = function(self, params, callback)
+            local items = source._get_abbrevs()
+            callback({ items = items, isIncomplete = true })
+        end
+        return source
     end
-    local nmap = vim.keymap.set
-    nmap("n", "<leader>us", function() toggle_opt("spell") end, { desc = "Toggle Spelling" })
-    nmap("n", "<leader>ud", toggle_diagnostics, { desc = "Toggle Diagnostics" })
-end
 
--- [[ Create autocommands ]]
-do
-    local my_aucmd_group = vim.api.nvim_create_augroup('MyCommands', { clear = true })
+    cmp.register_source("abbrev", abbr_source().new())
 
-    -- [[ Highlight on yank ]]
-    -- See `:help vim.highlight.on_yank()`
-    vim.api.nvim_create_autocmd('TextYankPost', {
-        callback = function()
-            vim.highlight.on_yank({ timeout = 400 })
-        end,
-        group = my_aucmd_group,
-        pattern = '*',
+    -- source python dictionary
+    local pydict_source = function()
+        local source = {}
+
+        source.new = function()
+            local self = setmetatable({}, { __index = source })
+            return self
+        end
+
+        pydict_items = nil  -- global var
+        source._get_words = function()
+            if pydict_items ~= nil then
+                return pydict_items
+            end
+            pydict_items = {}
+            local fpath = vim.fn.expand('$HOME/.vim/data/python.dict')
+            local file = io.open(fpath, "r")
+            if file then
+                for line in io.lines(fpath) do
+                    table.insert(pydict_items, { label = line, dup = 0, kind = cmp.lsp.CompletionItemKind.Keyword })
+                end
+                file:close()
+            end
+            return pydict_items
+        end
+
+        source.get_keyword_pattern = function(self, params)
+            return [[\k\+]]
+        end
+
+        source.complete = function(self, params, callback)
+            local items = source._get_words()
+            callback({ items = items, isIncomplete = true })
+        end
+        return source
+    end
+
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = "python",
+        callback = function(args)
+            cmp.register_source("dict", pydict_source().new())
+        end
     })
-
-    -- -- [[ go to last cursor loc when opening a buffer ]]
-    -- vim.api.nvim_create_autocmd(
-    -- "BufReadPost",
-    -- { command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]] }
-    -- )
-
-    -- -- [[ Check if we need to reload the file when it changed ]]
-    -- vim.api.nvim_create_autocmd("FocusGained", {
-    --     command = [[:checktime]],
-    --     group = my_aucmd_group,
-    -- })
-
-    -- -- [[ windows to close ]]
-    -- vim.api.nvim_create_autocmd("FileType", {
-    --     pattern = {
-    --         "help",
-    --         "startuptime",
-    --         "qf",
-    --         "lspinfo",
-    --         "vim",
-    --         "fugitive",
-    --         "git",
-    --         "neotest-summary",
-    --         "query",
-    --         "neotest-output",
-    --         "spectre_panel",
-    --         "tsplayground",
-    --     },
-    --     callback = function(event)
-    --         vim.bo[event.buf].buflisted = false
-    --         vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
-    --     end,
-    -- })
-    -- vim.api.nvim_create_autocmd("FileType", { pattern = "man", command = [[nnoremap <buffer><silent> q :quit<CR>]] })
-    -- vim.api.nvim_create_autocmd("FileType", { pattern = "cheat", command = [[nnoremap <buffer><silent> q :bdelete!<CR>]] })
-
-    -- -- [[ don't auto comment new line ]]
-    -- vim.api.nvim_create_autocmd("BufEnter", {
-    --     group = my_aucmd_group,
-    --     command = [[set formatoptions-=cro]]
-    -- })
-
-    -- -- [[ create directories when needed, when saving a file ]]
-    -- vim.api.nvim_create_autocmd("BufWritePre", {
-    --     group = my_aucmd_group,
-    --     command = [[call mkdir(expand('<afile>:p:h'), 'p')]],
-    -- })
 end

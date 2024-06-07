@@ -97,27 +97,23 @@ vim.cmd [[
     endfunc
 
     func! PyAbbr()
-        iabbr <buffer> def     def ):<cr><esc>-f)i<c-r>=Eatchar()<cr>
-        iabbr <buffer>       try_ try:
+        iabbr <buffer>       def   def ):<cr><esc>-f)i<c-r>=Eatchar()<cr>
+        iabbr <buffer>       try_  try:<cr>
             \<cr>pass
             \<cr>except Exception as err:
             \<cr>print(f"Unexpected {err=}, {type(err)=}")
             \<cr>raise<cr>else:
-            \<cr>pass<esc>5k_cw<c-r>=Eatchar()<cr>
+            \<cr>pass<esc>5k_<c-r>=Eatchar()<cr>
         iabbr <buffer>       main__2
-            \ if __name__ == "__main__":
+            \ if __name__ == "__main__":<cr>
             \<cr>import doctest
             \<cr>doctest.testmod()<esc><c-r>=Eatchar()<cr>
         iabbr <buffer>       main__
-            \ if __name__ == "__main__":
+            \ if __name__ == "__main__":<cr>
             \<cr>main()<esc><c-r>=Eatchar()<cr>
         iabbr <buffer>       python3#    #!/usr/bin/env python3<esc><c-r>=Eatchar()<cr>
         iabbr <buffer>       """            """."""<c-o>3h<c-r>=Eatchar()<cr>
-        iabbr <buffer>       case_ match myval:
-            \<cr>case 10:
-            \<cr>pass
-            \<cr>case _:<esc>3k_fm;i<c-r>=Eatchar()<cr>
-        iabbr <buffer>       match_case_ match myval:
+        iabbr <buffer>       case_ match myval:<cr>
             \<cr>case 10:
             \<cr>pass
             \<cr>case _:<esc>3k_fm;i<c-r>=Eatchar()<cr>
@@ -209,20 +205,21 @@ do
     -- map({ 'n' }, "<leader>vL", function() vim.notify(vim.inspect(package.loaded)) end, { desc = "[L]ist loaded modules" })
 
     -- python keybindings
-    -- vim.api.nvim_create_autocmd("FileType", {
-    --     pattern = "python",
-    --     callback = function(args)
-    --         local map = function(lhs, rhs, desc)
-    --             vim.keymap.set('n', lhs, rhs, { buffer = args.buf, desc = desc })
-    --         end
-    --         map("<leader>ve", "<cmd>update<CR><cmd>exec '!python3' shellescape(@%, 1)<cr>", "Run")
-    --         -- 'refurb' is a tool for refurbishing and modernizing Python codebases
-    --         -- map("<leader>ci",
-    --         --     "<cmd>cexpr system('refurb --quiet ' . shellescape(expand('%'))) | copen<cr>",
-    --         --     "Inspect using refurb")
-    --         -- map("<leader>vp", "<cmd>lua _IPYTHON_TOGGLE()<cr>", "iPython")
-    --     end
-    -- })
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = "python",
+        callback = function(args)
+            local map = function(lhs, rhs, desc)
+                vim.keymap.set('n', lhs, rhs, { buffer = args.buf, desc = desc })
+            end
+            map("<leader>vi", "<cmd>% !tidy-imports --replace-star-imports -r -p --quiet --black<cr>", "Add missing imports and sort")
+            map("<leader>vp", "<cmd>update<cr><cmd>exec '!python3' shellescape(@%, 1)<cr>", "Run")
+            -- 'refurb' is a tool for refurbishing and modernizing Python codebases
+            -- map("<leader>vr",
+            --     "<cmd>cexpr system('refurb --quiet ' . shellescape(expand('%'))) | copen<cr>",
+            --     "Inspect using refurb")
+            -- map("<leader>vp", "<cmd>lua _IPYTHON_TOGGLE()<cr>", "iPython")
+        end
+    })
 end
 
 -- [[ Toggle Options ]]

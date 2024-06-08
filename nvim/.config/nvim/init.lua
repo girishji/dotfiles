@@ -316,6 +316,16 @@ if vim.g.started_by_firenvim then
         }
     }
 
+    vim.api.nvim_create_autocmd('BufReadPost', {
+        pattern = {'*leetcode.com_*.txt', '*colab*.txt'},  -- colab.research.google
+        callback = function()
+            vim.bo.filetype = 'python'
+            vim.cmd 'syntax enable'
+            vim.cmd 'set syntax=python'
+        end,
+    })
+
+    -- https://github.com/glacambre/firenvim/issues/1619
     local max_height = 25
     local id = vim.api.nvim_create_augroup("ExpandLinesOnTextChanged", { clear = true })
     vim.api.nvim_create_autocmd({"TextChanged", "TextChangedI"}, {
@@ -327,15 +337,6 @@ if vim.g.started_by_firenvim then
                 vim.cmd("norm! zb")
             end
         end
-    })
-
-    vim.api.nvim_create_autocmd('BufReadPost', {
-        pattern = {'*leetcode.com_*.txt', '*colab*.txt'},  -- colab.research.google
-        callback = function()
-            vim.bo.filetype = 'python'
-            vim.cmd 'syntax enable'
-            vim.cmd 'set syntax=python'
-        end,
     })
 
     vim.api.nvim_create_autocmd('WinScrolled', {

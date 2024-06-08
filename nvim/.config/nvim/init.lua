@@ -290,11 +290,6 @@ end
 -- Firenvim
 -- https://www.reddit.com/r/neovim/comments/1b9nyt5/has_anyone_successfully_embedded_nvim_in_leetcode/
 -- When chrome/firefox starts Neovim, Firenvim sets the variable g:started_by_firenvim
---
--- NOTE: It does not resize the textarea as more lines are created, unlike
--- native vim-mode like in colab.research.google.com. This is a major
--- annoyance. So keep firevim optional and invoke it through <command-E> as
--- needed.
 if vim.g.started_by_firenvim then
     -- vim.o.guifont = 'FiraCode Nerd Font:h24'
     vim.o.guifont = 'FiraCode Nerd Font:h22'
@@ -310,19 +305,18 @@ if vim.g.started_by_firenvim then
     ]]
 
     -- ATTENTION: Anytime you make change here, run `:call firenvim#install(0)` in nvim
-    -- Even though takeover=never, you can type <command-E> to invoke nvim
+    -- NOTE: Even though takeover=never, you can type <command-E> to invoke nvim
     vim.g.firenvim_config = {
         localSettings = {
             ['.*'] = { takeover = 'never', priority = 0, cmdline = 'neovim' },
-            ['.*github.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
             ['.*leetcode.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
-            -- ['.*reddit.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
+            -- ['.*github.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
             -- ['.*google.*'] = { takeover = 'never', priority = 1, cmdline = 'neovim' },
-            -- ['.*colab.*'] = { takeover = 'never', priority = 2, cmdline = 'neovim' }, -- colab.research.google
+            -- ['.*colab.*'] = { takeover = 'always', priority = 2, cmdline = 'neovim' }, -- colab.research.google
         }
     }
 
-    local max_height = 20
+    local max_height = 25
     local id = vim.api.nvim_create_augroup("ExpandLinesOnTextChanged", { clear = true })
     vim.api.nvim_create_autocmd({"TextChanged", "TextChangedI"}, {
         group = id,
@@ -330,24 +324,28 @@ if vim.g.started_by_firenvim then
             local height = vim.api.nvim_win_text_height(0, {}).all
             if height > vim.o.lines and height < max_height then
                 vim.o.lines = height
-                local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
-                if row % 2 == 0 then
-                    vim.cmd("norm! zb")
-                end
+                vim.cmd("norm! zb")
             end
         end
     })
 
-    vim.api.nvim_create_autocmd('BufEnter', {
-        pattern = '*leetcode.com_*.txt,*colab*.txt',  -- colab.research.google
+    vim.api.nvim_create_autocmd('BufReadPost', {
+        pattern = {'*leetcode.com_*.txt', '*colab*.txt'},  -- colab.research.google
         callback = function()
-            -- local bufname = vim.fn.bufname '%'
-            -- if bufname:match 'leetcode.com_.*%.txt' then
-	    vim.bo.filetype = 'python'
-	    vim.cmd 'syntax enable'
-	    vim.cmd 'set syntax=python'
-            -- end
+            vim.bo.filetype = 'python'
+            vim.cmd 'syntax enable'
+            vim.cmd 'set syntax=python'
         end,
+    })
+
+    vim.api.nvim_create_autocmd('WinScrolled', {
+        pattern = '*',
+        callback = function()
+            local bufname = vim.fn.bufname('%')
+            if string.find(bufname, 'colab') then
+                vim.o.columns = 120
+            end
+        end
     })
 end
 

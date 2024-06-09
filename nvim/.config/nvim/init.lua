@@ -160,7 +160,7 @@ do
     map({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
     map({ 'n', 'v' }, '<leader>w', '<cmd>write<cr>', { desc = '[W]rite buffer' })
     map({ 'n', 'v' }, '<leader>q', '<cmd>qa<cr>', { desc = '[Q]uit all' })
-    map({ 'n', 'v' }, '<leader>Q', '<cmd>q!<cr>', { desc = '[Q]uit without saving' })
+    map({ 'n', 'v' }, '<leader>Q', '<cmd>qa!<cr>', { desc = '[Q]uit without saving' })
 
     -- Remap for dealing with word wrap
     map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -316,7 +316,10 @@ if vim.g.started_by_firenvim then
         }
     }
 
+    local grp = vim.api.nvim_create_augroup("FireNvim", { clear = true })
+
     vim.api.nvim_create_autocmd('BufReadPost', {
+        group = grp,
         pattern = {'*leetcode.com_*.txt', '*colab*.txt'},  -- colab.research.google
         callback = function()
             vim.bo.filetype = 'python'
@@ -326,20 +329,40 @@ if vim.g.started_by_firenvim then
     })
 
     -- https://github.com/glacambre/firenvim/issues/1619
-    local max_height = 25
-    local id = vim.api.nvim_create_augroup("ExpandLinesOnTextChanged", { clear = true })
-    vim.api.nvim_create_autocmd({"TextChanged", "TextChangedI"}, {
-        group = id,
-        callback = function(ev)
-            local height = vim.api.nvim_win_text_height(0, {}).all
-            if height > vim.o.lines and height < max_height then
-                vim.o.lines = height
-                vim.cmd("norm! zb")
+    local stretch_nvim_only_not_textarea = true
+
+    if stretch_nvim_only_not_textarea then
+        local max_height = 25
+        vim.api.nvim_create_autocmd({"TextChanged", "TextChangedI"}, {
+            group = grp,
+            callback = function(ev)
+                local height = vim.api.nvim_win_text_height(0, {}).all
+                if height > vim.o.lines and height < max_height then
+                    vim.o.lines = height
+                    vim.cmd "norm! zb"
+                end
             end
-        end
-    })
+        })
+    else
+        -- NOTE: Window is jumpy; It resizes on every keystroke.
+        vim.api.nvim_create_autocmd({"TextChanged", "TextChangedI"}, {
+            group = grp,
+            callback = function(e)
+                -- throttle write to prevent hiccup during 'paste'
+                if vim.g.timer_started == true then
+                    return
+                end
+                vim.g.timer_started = true
+                vim.fn.timer_start(100, function()
+                    vim.g.timer_started = false
+                    vim.cmd "silent write | norm! zb"
+                end)
+            end
+        })
+    end
 
     vim.api.nvim_create_autocmd('WinScrolled', {
+        group = grp,
         pattern = '*',
         callback = function()
             local bufname = vim.fn.bufname('%')

@@ -58,7 +58,7 @@ def! g:MyActiveStatusline(): string
     # return $'%4*{diagstr}%* {buflinestr} %= %y %4*{elapsed}%*%4*{gitstr}%*%2*{shortpath}%* ≡ %P (%l:%c) %*'
     # echom $'{diagstr} {buflinestr} %= %y {elapsed}{shortpath} ≡ %P (%l:%c) '
     # return $'{diagstr} {buflinestr} %= %y {elapsed}{shortpath} ≡ %P (%l:%c) '
-    return $'{diagstr} {buflinestr} %= %y {elapsed} ≡ %P (%l:%c) '
+    return $'{diagstr} {buflinestr} %= %y {elapsed} ≡ %l,%c%V %P '
 enddef
 
 def! g:MyInactiveStatusline(): string

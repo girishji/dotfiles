@@ -62,7 +62,7 @@ nnoremap <silent> ]F :last<CR>
 vnoremap <C-_> <Esc>/\%V
 
 # Mute search highlighting.
-autocmd VimEnter * nnoremap <silent> <expr> <esc> exists('g:loaded_fFtTplus') ? ':nohls<cr><Plug>(fFtTplus-esc)' : ':nohls<cr><esc>'
+nnoremap <silent> <esc> :nohls<cr><esc>
 
 # Emacs C-s C-w like solution: hightlight in visual mode and then type * or #
 # `cgn` to replace text

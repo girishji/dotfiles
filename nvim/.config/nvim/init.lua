@@ -1,12 +1,20 @@
 --[[
+Folding:
+foldmethod is 'indent' and foldnestmax is 1
+zr: 'r'educe (unfold) all folds
+zm: 'm'ore (fold) file
+za: toggle fold under cursor
+
 Enable debug:
 vim.lsp.set_log_level('debug')
 --]]
 
 -- NOTE: Leader key must be set before plugins
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
-vim.cmd([[map <BS> <Leader>]])
+do
+    vim.g.mapleader = ' '
+    vim.g.maplocalleader = ' '
+    vim.cmd([[map <BS> <Leader>]])
+end
 
 -- Download plug.vim if it doesn't exist yet
 local plugpath = vim.fn.stdpath('data') .. '/site/autoload/plug.vim'
@@ -76,6 +84,9 @@ do
     vim.o.wildignore = '.gitignore,*.swp,*.zwc,tags'
     -- vim.o.winbar = "%=%m %F"
     -- vim.wo.signcolumn = 'yes' -- Keep signcolumn on by default for lsp diagnostics
+    vim.o.laststatus = 0
+    -- vim.cmd [[set ruf=%80(%<%f\ %h%m%r\ %=%-8y\ %-8.(%l,%c%V%)\ %P%)]]
+    vim.cmd [[set ruf=%80(%=%f\ %h%m%r\ %-6y\ %-5.(%l,%c%V%)\ %P%)]]
     vim.api.nvim_create_autocmd("FileType", {
         pattern = "lua",
         callback = function(args)
@@ -104,6 +115,16 @@ vim.cmd [[
     func! CAbbr()
         iabbr <silent><buffer> if if ()<Left><C-R>=Eatchar()<CR>
         iabbr <silent><buffer> while while ()<Left><C-R>=Eatchar()<CR>
+    endfunc
+
+    func! LuaAbbr()
+        iabbr <buffer>       function   function )<cr>end<esc>k-f)i<c-r>=Eatchar()<cr>
+        iabbr <buffer>       if    if  then<cr>end<esc>k-e2li<c-r>=Eatchar()<cr>
+        iabbr <buffer>       for   for _, x in ipairs() do<cr>end<esc>k-f(a<c-r>=Eatchar()<cr>
+        iabbr <buffer>       for_  for  do<cr>end<esc>k-e2li<c-r>=Eatchar()<cr>
+        iabbr <buffer>       while while  do<cr>end<esc>k-e2li<c-r>=Eatchar()<cr>
+        iabbr <buffer>       vimf  vim.fn.<c-r>=Eatchar()<cr>
+        iabbr <buffer>       vimc  vim.cmd [[<c-r>=Eatchar()<cr>
     endfunc
 
     func! PyAbbr()
@@ -195,17 +216,8 @@ do
     -- gs reselect last modified chunk (including pasted)
     vim.cmd [[ nnoremap <expr> gs '`[' . getregtype()[0] . '`]' ]]
 
-    -- LSP hover windows do not close unless you press h,j,k,l. Close every floating window on <esc>
-    -- Also, clear hlsearch
-    local close_floating_windows = function()
-        for _, win in pairs(vim.api.nvim_list_wins()) do
-            if vim.api.nvim_win_get_config(win).relative == 'win' then
-                vim.api.nvim_win_close(win, false)
-            end
-        end
-        vim.cmd([[noh]])
-    end
-    map("n", "<esc>", function() close_floating_windows() end, { desc = nil })
+    -- <esc> to remove search highlighting
+    map('n', '<esc>', ":nohls<cr><esc>")
 
     -- Redirect output of Ex command (XXX: nothing shows up in Ex until you start typing; using vimscript solves this)
     -- map({ 'n' }, "<leader>vr", ":put = execute('')<left><left>", { desc = "[R]edirect output of cmd (see also 'redir')" })
@@ -621,15 +633,126 @@ do
     end
 
     local map = vim.keymap.set
-    map('n', '<Plug>(fFtT-f)', function() highlight_chars('f') end, { noremap = true, silent = true, expr = true})
-    map('n', '<Plug>(fFtT-F)', function() highlight_chars('F') end, { noremap = true, silent = true, expr = true})
-    map('n', '<Plug>(fFtT-t)', function() highlight_chars('t') end, { noremap = true, silent = true, expr = true})
-    map('n', '<Plug>(fFtT-T)', function() highlight_chars('T') end, { noremap = true, silent = true, expr = true})
-    for _, lhs in pairs({'f', 'F', 't', 'T'}) do
-        local rhs = '<Plug>(fFtT-' .. lhs .. ')' .. lhs
-        map({'n', 'x', 'o'}, lhs, rhs, { noremap = true, silent = true })
+    for _, cmd in ipairs({'f', 'F', 't', 'T'}) do
+        local lhs = '<Plug>(fFtT-' .. cmd .. ')'
+        map({'n', 'x', 'o'}, lhs, function() highlight_chars(cmd) end, {noremap = true, silent = true, expr = true})
+        map({'n', 'x', 'o'}, cmd, lhs .. cmd, { noremap = true, silent = true })
     end
-    map({'n', 'x', 'o'}, "<esc>", function() highlight_clear() end, { noremap = true, silent = true })
+end
+
+-- easyjump
+do
+    local alpha = 'asdfgwercvhjkluiopynmbtqxz'
+    local letters = alpha .. vim.fn.toupper(alpha) .. '0123456789'
+    local labels = letters
+    local locations = {}
+    vim.cmd 'highlight! link Conceal Search'
+
+    -- get all line numbers in the visible area of the window ordered by distance from cursor
+    local function window_line_nrs()
+        -- line('w$') does not include a long line (broken into many lines) that is only partly visible
+        local lstart = math.max(1, vim.fn.line('w0'))
+        local lend =  math.min(vim.fn.line('w$') + 1, vim.fn.line('$'))
+        local _, curline, curcol = unpack(vim.fn.getcurpos())
+        local lnums = {curline}
+        for dist = 1, (lend - lstart) do
+            if curline + dist <= lend then
+                table.insert(lnums, curline + dist)
+            end
+            if curline - dist >= lstart then
+                table.insert(lnums, curline - dist)
+            end
+        end
+        return lnums
+    end
+
+    local function gather_locations(ctx)
+        locations = {}
+        local _, curline, curcol = unpack(vim.fn.getcurpos())
+        for _, lnum in ipairs(window_line_nrs()) do
+            if vim.fn.foldclosed(lnum) == -1 then
+                local line = vim.fn.getline(lnum)
+                local col = vim.fn.stridx(line, ctx)
+                while col ~= -1 do
+                    col = col + 1  -- column numbers start from 1
+                    if ctx == ' ' and next(locations) ~= nil and locations[#locations][1] == lnum
+                        and locations[#locations][2] == col - 1 then
+                        locations[#locations][2] = col  -- one target per cluster of adjacent spaces
+                    elseif lnum ~= curline or col ~= curcol then  -- no target on cursor position
+                        table.insert(locations, {lnum, col})
+                    end
+                    col = vim.fn.stridx(line, ctx, col)
+                end
+            end
+        end
+    end
+
+    local function show_locations(group)
+        vim.fn.clearmatches()
+        local ntags = labels:len()
+        for idx = 1, math.min(ntags, #locations - (group - 1) * ntags) do
+            local lnum, col = unpack(locations[idx + (group - 1) * ntags])
+            -- print(labels, idx, lnum, col, labels:sub(idx, idx))
+            vim.fn.matchaddpos('Conceal', {{lnum, col}}, 1001, -1, {conceal = labels:sub(idx, idx)})
+        end
+        vim.cmd 'redraw'
+    end
+
+    local function jump_to(tgt, group)
+        local tagidx = vim.fn.stridx(labels, tgt) + 1
+        local locidx = tagidx + (group - 1) * labels:len()
+        if tagidx > 0 and locidx <= #locations then
+            local loc = locations[locidx]
+            vim.cmd [[ normal! m' ]]
+            vim.fn.cursor(unpack(loc))
+        end
+    end
+
+    local function do_jump()
+        local function do_jump_protected()
+            local ch = vim.fn.getcharstr()
+            gather_locations(ch)
+            if next(locations) == nil then
+                return
+            end
+            local ngroups = #locations / string.len(labels) + 1
+            local group = 1
+            show_locations(group)
+            ch = vim.fn.getcharstr()
+
+            while ngroups > 1 and (ch == ';' or ch == ',' or ch == "<tab>" or ch == "<s-tab>") do
+                if ch == ';' or ch == "<tab>" then
+                    group = (group % ngroups) + 1
+                else
+                    group = group - 1
+                    if group == 0 then
+                        group = ngroups
+                    end
+                end
+                show_locations(group)
+                ch = vim.fn.getcharstr()
+            end
+            jump_to(ch, group)
+        end
+        local saved_cole = vim.o.conceallevel
+        local saved_cocu = vim.o.concealcursor
+        vim.o.conceallevel = 2
+        vim.o.concealcursor = 'nv'
+        pcall(do_jump_protected)
+        vim.fn.clearmatches()
+        vim.o.conceallevel = saved_cole
+        vim.o.concealcursor = saved_cocu
+    end
+
+    local function do_vjump()
+        do_jump()
+        vmd.cmd [[normal! m'gv``]]
+    end
+
+    local map = vim.keymap.set
+    map({'n', 'o'}, '<Plug>EasyjumpJump;', function() vim.cmd('norm <c-u>'); do_jump(); vim.cmd 'norm <cr>' end, {noremap = true, silent = true})
+    map('v', '<Plug>EasyjumpJump;', function() vim.cmd('norm <c-u>'); do_vjump(); vim.cmd 'norm <cr>' end, {noremap = true, silent = true})
+    map({'n', 'o', 'v'}, 's', '<Plug>EasyjumpJump;')
 end
 
 --nvim:ts=4:et:sw=4:

@@ -35,6 +35,12 @@ $ vim -Nu NONE -S plugin/editorconfig.vim
 https://github.com/lacygoill/editorconfig-vim?tab=readme-ov-file
 
 ----------------------------------------
+BufReadPre vs BufWinEnter
+
+BufReadPre - before file is loaded
+BufWinEnter - executed after the modeline is read
+
+----------------------------------------
 Spelling ~
 
 z= 	suggest options

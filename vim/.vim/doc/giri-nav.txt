@@ -57,9 +57,34 @@ Keymap help
 	  j: "Go to the down window",
 
 ------------------------------------------------------------------------
-Folds                                       *giri-folds* *giri-z-keymap*
-zR <- open all folds
-`z` key <- letter z looks like folded paper from the side
+Folds                                       *giri-folds* *folds-giri*
+
+(with `foldnestmax` set to 1, you can use lower-case version of these
+commands. zm is same as zM, etc.)
+zR <- open all folds ('R'educe fold by opening more folds)
+zM <- close all folds ('M'ore folding)
+zA: "Toggle all folds under cursor",
+zO: "Open all folds under cursor",
+zC: "Close all folds under cursor",
+
+The command zc will close a fold (if the cursor is in an open fold), and zo
+will open a fold (if the cursor is in a closed fold). It's easier to just use
+'za' which will toggle the current fold (close it if it was open, or open it if
+it was closed).
+
+The commands zc (close), zo (open), and za (toggle) operate on one level of
+folding, at the cursor. The commands zC, zO and 'zA' are similar, but operate on
+all folding levels (for example, the cursor line may be in an open fold, which
+is inside another open fold; typing zC would close all folds at the cursor).
+
+The command zr reduces folding by opening one more level of folds throughout
+the whole buffer (the cursor position is not relevant). Use 'zR' to open all
+folds.
+
+The command zm gives more folding by closing one more level of folds
+throughout the whole buffer. Use 'zM' to close all folds.
+
+z key <- letter z looks like folded paper from the side
 m/M = more folding (under cursor / all)
 r/R = reduce folding
 c = close

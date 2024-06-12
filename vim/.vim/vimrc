@@ -67,6 +67,7 @@ set breakindent # wrapped line will continue visually indented
 set smarttab
 set spellsuggest=best,10 # set maximum number of suggestions listed top 10 items:
 set foldmethod=indent
+set foldnestmax=1
 set nofoldenable # do not do folding when you open file
 set complete-=i # disable completing keywords from included files (e.g., #include in C)
 set signcolumn=yes # always show column for lsp diagnostics etc
@@ -156,6 +157,7 @@ Plug '~/git/devdocs.vim'
 # Plug 'girishji/devdocs.vim'
 plug#end()
 
-g:vimbits_vim9cmdline = true
+# :vim9 :%s/\v-- [[(.+)]]/foo/ does not work. cannot seem to escape ']]' in vim9script
+# g:vimbits_vim9cmdline = true
 
 # vim: ts=8 sts=4 sw=4 et fdm=marker

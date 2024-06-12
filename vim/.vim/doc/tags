@@ -10,6 +10,7 @@ best-global	vimtips.txt	/*best-global*
 best-searching	vimtips.txt	/*best-searching*
 best-substitution	vimtips.txt	/*best-substitution*
 cscopectags.txt	cscopectags.txt	/*cscopectags.txt*
+folds-giri	giri-nav.txt	/*folds-giri*
 gfolds	giri.txt	/*gfolds*
 ghelp	giri.txt	/*ghelp*
 giri-[-keymap	giri-nav.txt	/*giri-[-keymap*
@@ -18,7 +19,6 @@ giri-g-keymap	giri-nav.txt	/*giri-g-keymap*
 giri-moving-through-program	giri-nav.txt	/*giri-moving-through-program*
 giri-nav.txt	giri-nav.txt	/*giri-nav.txt*
 giri-vim-file-org	giri.txt	/*giri-vim-file-org*
-giri-z-keymap	giri-nav.txt	/*giri-z-keymap*
 giri.txt	giri.txt	/*giri.txt*
 gkeymap-sq-brkt	giri-nav.txt	/*gkeymap-sq-brkt*
 gkeymap-window-mgmt	giri-nav.txt	/*gkeymap-window-mgmt*

@@ -1,16 +1,14 @@
 --[[
-
 Enable debug:
 vim.lsp.set_log_level('debug')
-
 --]]
 
--- [[ NOTE: Leader key must be set before plugins ]]
+-- NOTE: Leader key must be set before plugins
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.cmd([[map <BS> <Leader>]])
 
--- [[ Download plug.vim if it doesn't exist yet ]]
+-- Download plug.vim if it doesn't exist yet
 local plugpath = vim.fn.stdpath('data') .. '/site/autoload/plug.vim'
 if not vim.loop.fs_stat(plugpath) then
     vim.fn.system {
@@ -37,25 +35,26 @@ do
     local vim = vim
     local Plug = vim.fn['plug#']
 
-    vim.call('plug#begin')
+    vim.call 'plug#begin'
     Plug('glacambre/firenvim', { ['do'] = function()
         vim.fn['firenvim#install'](0)
     end })
-    Plug('girishji/pythondoc.vim')
+    Plug 'girishji/pythondoc.vim'
     --
     -- Plug('rafamadriz/friendly-snippets')
-    Plug('hrsh7th/nvim-cmp')
+    Plug 'hrsh7th/nvim-cmp'
     -- Plug('hrsh7th/vim-vsnip')
     -- Plug('hrsh7th/cmp-vsnip')
-    Plug('hrsh7th/cmp-buffer')
-    Plug('hrsh7th/cmp-path')
-    Plug('hrsh7th/cmp-cmdline')
+    Plug 'hrsh7th/cmp-buffer'
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/cmp-cmdline'
     --
     -- Plug('~/my-prototype-plugin')
-    vim.call('plug#end')
+    vim.call 'plug#end'
 end
 
--- [[ Set Options ]]
+
+-- Set Options
 -- See `:help vim.o`
 do
     vim.o.hlsearch = true -- Set highlight on search
@@ -63,6 +62,9 @@ do
     -- vim.wo.relativenumber = true
     -- vim.o.mouse = 'a' -- Enable mouse mode
     vim.o.clipboard = 'unnamed'
+    vim.o.foldmethod = 'indent'
+    vim.o.foldnestmax = 1
+    vim.o.foldenable = false  -- do not do folding when you open file
     vim.o.breakindent = true
     vim.o.ignorecase = true
     vim.o.smartcase = true
@@ -84,7 +86,7 @@ do
     })
 end
 
--- [[ Abbreviations ]]
+-- Abbreviations
 -- To avoid the abbreviation in Insert mode: Type CTRL-V before the character
 -- that would trigger the abbreviation. To avoid the abbreviation in
 -- Command-line mode: Type CTRL-V twice somewhere in the abbreviation to avoid
@@ -149,7 +151,7 @@ vim.cmd [[
     augroup END
 ]]
 
--- [[ Keymaps ]]
+-- Keymaps
 do
     local function map(mode, lhs, rhs, opts)
         opts = opts or {}
@@ -230,7 +232,7 @@ do
     })
 end
 
--- [[ Toggle Options ]]
+-- Toggle Options
 do
     local toggle_opt = function(option)
         vim.opt_local[option] = not vim.opt_local[option]:get()
@@ -239,11 +241,11 @@ do
     nmap("n", "<leader>vs", function() toggle_opt("spell") end, { desc = "Toggle Spelling" })
 end
 
--- [[ Create autocommands ]]
+-- Create autocommands
 do
     local my_aucmd_group = vim.api.nvim_create_augroup('MyCommands', { clear = true })
 
-    -- [[ Highlight on yank ]]
+    -- Highlight on yank
     -- See `:help vim.highlight.on_yank()`
     vim.api.nvim_create_autocmd('TextYankPost', {
         callback = function()
@@ -253,19 +255,19 @@ do
         pattern = '*',
     })
 
-    -- [[ go to last cursor loc when opening a buffer ]]
+    -- go to last cursor loc when opening a buffer
     vim.api.nvim_create_autocmd(
     "BufReadPost",
     { command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]] }
     )
 
-    -- [[ Check if we need to reload the file when it changed ]]
+    -- Check if we need to reload the file when it changed
     vim.api.nvim_create_autocmd("FocusGained", {
         command = [[:checktime]],
         group = my_aucmd_group,
     })
 
-    -- [[ windows to close on 'q' ]]
+    -- windows to close on 'q'
     vim.api.nvim_create_autocmd("FileType", {
         pattern = { "help", "qf" },
         callback = function(event)
@@ -274,13 +276,13 @@ do
         end,
     })
 
-    -- -- [[ don't auto comment new line ]]
+    -- -- don't auto comment new line
     -- vim.api.nvim_create_autocmd("BufEnter", {
     --     group = my_aucmd_group,
     --     command = [[set formatoptions-=cro]]
     -- })
 
-    -- [[ create directories when needed, when saving a file ]]
+    -- create directories when needed, when saving a file
     vim.api.nvim_create_autocmd("BufWritePre", {
         group = my_aucmd_group,
         command = [[call mkdir(expand('<afile>:p:h'), 'p')]],
@@ -371,6 +373,8 @@ if vim.g.started_by_firenvim then
             end
         end
     })
+else
+    -- vim.cmd 'silent! colorscheme patana'
 end
 
 -- nvim-cmp
@@ -378,7 +382,6 @@ do
     local cmp = require'cmp'
 
     local has_words_before = function()
-        unpack = unpack or table.unpack
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
         return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
     end
@@ -541,6 +544,92 @@ do
             cmp.register_source("dict", pydict_source().new())
         end
     })
+end
+
+-- fFtT
+local fFtT_id = 0
+
+do
+    local function highlight_clear()
+        if fFtT_id > 0 then
+            vim.fn.matchdelete(fFtT_id)
+            vim.cmd 'redraw'
+            fFtT_id = 0
+        end
+        return ''
+    end
+
+    vim.api.nvim_create_autocmd({ 'SafeState', 'CursorMoved', 'ModeChanged', 'TextChanged', 'WinEnter', 'WinLeave', 'CmdWinLeave' }, {
+        group = vim.api.nvim_create_augroup('fFtTHighlight', { clear = true }),
+        pattern = '*',
+        callback = function(args)
+            highlight_clear()
+        end
+    })
+
+    -- Gather locations of characters to be dimmed.
+    local function highlight_chars(s)
+        local _, lnum, col, _ = unpack(vim.fn.getpos('.'))
+        local line = vim.fn.getline('.')
+        if line == '' then
+            return ''
+        end
+        -- Extended ASCII characters can pose a challenge if we simply iterate over
+        -- bytes. It is preferable to let Vim split the line by characters for more
+        -- accurate handling.
+        local found = {}
+        for _, ch in ipairs(vim.fn.split(line, '\\zs')) do
+            if not found[ch] then
+                found[ch] = true
+            end
+        end
+        local start = col - 2
+        local reverse = true
+        if s == 'f' or s == 't' then
+            start = col
+            reverse = false
+        end
+        local locations = {}
+        local freq = {}
+        local maxloc = math.max(100, vim.o.lines * vim.o.columns)
+        for ch, _ in pairs(found) do
+            local loc = reverse and vim.fn.strridx(line, ch, start) or vim.fn.stridx(line, ch, start)
+            while loc ~= -1 do
+                if freq[ch] then
+                    freq[ch] = freq[ch] + 1
+                else
+                    freq[ch] = 1
+                end
+                if freq[ch] ~= vim.v.count1 then
+                    if freq[ch] > maxloc then
+                        -- For long lines, do not search beyond what is visible
+                        break
+                    end
+                    table.insert(locations, {lnum, loc + 1})
+                end
+                loc = reverse and vim.fn.strridx(line, ch, loc - 1) or vim.fn.stridx(line, ch, loc + 1)
+            end
+        end
+        if next(locations) ~= nil then
+            if fFtT_id > 0 then
+                matchdelete(fFtT_id)
+            end
+            fFtT_id = vim.fn.matchaddpos('Comment', locations, 1001)
+            vim.cmd 'redraw'
+        end
+        return ''
+    end
+
+    local map = vim.keymap.set
+    map('n', '<Plug>(fFtT-f)', function() highlight_chars('f') end, { noremap = true, silent = true, expr = true})
+    map('n', '<Plug>(fFtT-F)', function() highlight_chars('F') end, { noremap = true, silent = true, expr = true})
+    map('n', '<Plug>(fFtT-t)', function() highlight_chars('t') end, { noremap = true, silent = true, expr = true})
+    map('n', '<Plug>(fFtT-T)', function() highlight_chars('T') end, { noremap = true, silent = true, expr = true})
+    for _, lhs in pairs({'f', 'F', 't', 'T'}) do
+        local rhs = '<Plug>(fFtT-' .. lhs .. ')' .. lhs
+        map({'n', 'x', 'o'}, lhs, rhs, { noremap = true, silent = true })
+    end
+    map({'n', 'x', 'o'}, "<esc>", function() highlight_clear() end, { noremap = true, silent = true })
 end
 
 --nvim:ts=4:et:sw=4:

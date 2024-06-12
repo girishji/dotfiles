@@ -184,6 +184,12 @@ do
     map({ 'n', 'v' }, '<leader>w', '<cmd>write<cr>', { desc = '[W]rite buffer' })
     map({ 'n', 'v' }, '<leader>q', '<cmd>qa<cr>', { desc = '[Q]uit all' })
     map({ 'n', 'v' }, '<leader>Q', '<cmd>qa!<cr>', { desc = '[Q]uit without saving' })
+    local function defer_after(key)
+        vim.fn.feedkeys(key, 'nt')
+        vim.defer_fn(function() vim.fn.feedkeys(' ', 'nt') end, 10)
+    end
+    map({ 'n', 'v' }, '<leader><space>', function () defer_after(':e') end)
+    map({ 'n', 'v' }, '<leader><bs>', function () defer_after(':b') end)
 
     -- Remap for dealing with word wrap
     map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -255,7 +261,7 @@ end
 
 -- Create autocommands
 do
-    local my_aucmd_group = vim.api.nvim_create_augroup('MyCommands', { clear = true })
+    local group = vim.api.nvim_create_augroup('MiscAutoCommands', { clear = true })
 
     -- Highlight on yank
     -- See `:help vim.highlight.on_yank()`
@@ -263,7 +269,7 @@ do
         callback = function()
             vim.highlight.on_yank({ timeout = 400 })
         end,
-        group = my_aucmd_group,
+        group = group,
         pattern = '*',
     })
 
@@ -276,7 +282,7 @@ do
     -- Check if we need to reload the file when it changed
     vim.api.nvim_create_autocmd("FocusGained", {
         command = [[:checktime]],
-        group = my_aucmd_group,
+        group = group,
     })
 
     -- windows to close on 'q'
@@ -290,13 +296,13 @@ do
 
     -- -- don't auto comment new line
     -- vim.api.nvim_create_autocmd("BufEnter", {
-    --     group = my_aucmd_group,
+    --     group = group,
     --     command = [[set formatoptions-=cro]]
     -- })
 
     -- create directories when needed, when saving a file
     vim.api.nvim_create_autocmd("BufWritePre", {
-        group = my_aucmd_group,
+        group = group,
         command = [[call mkdir(expand('<afile>:p:h'), 'p')]],
     })
 end
@@ -650,9 +656,10 @@ do
 
     -- get all line numbers in the visible area of the window ordered by distance from cursor
     local function window_line_nrs()
-        -- line('w$') does not include a long line (broken into many lines) that is only partly visible
         local lstart = math.max(1, vim.fn.line('w0'))
-        local lend =  math.min(vim.fn.line('w$') + 1, vim.fn.line('$'))
+        -- line('w$') does not include a long line (broken into many lines) that is only partly visible
+        -- local lend =  math.min(vim.fn.line('w$') + 1, vim.fn.line('$'))
+        local lend = math.min(vim.fn.line('w$'), vim.fn.line('$'))
         local _, curline, curcol = unpack(vim.fn.getcurpos())
         local lnums = {curline}
         for dist = 1, (lend - lstart) do
@@ -715,14 +722,17 @@ do
             if next(locations) == nil then
                 return
             end
-            local ngroups = #locations / string.len(labels) + 1
+            local ngroups = math.floor(#locations / labels:len()) + 1
             local group = 1
             show_locations(group)
             ch = vim.fn.getcharstr()
 
-            while ngroups > 1 and (ch == ';' or ch == ',' or ch == "<tab>" or ch == "<s-tab>") do
-                if ch == ';' or ch == "<tab>" then
-                    group = (group % ngroups) + 1
+            while ngroups > 1 and (ch == ';' or ch == ',') do
+                if ch == ';' then
+                    group = group + 1
+                    if group > ngroups then
+                        group = 1
+                    end
                 else
                     group = group - 1
                     if group == 0 then

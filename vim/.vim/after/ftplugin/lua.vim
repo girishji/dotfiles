@@ -4,7 +4,7 @@ iab <buffer><expr> if      abbr#NotCtx('if') ? 'if' : 'if  then<c-o>oend<esc>k_e
 iab <buffer><expr> while   abbr#NotCtx('while') ? 'while' : 'while  do<c-o>oend<esc>k_ela<c-r>=abbr#Eatchar()<cr>'
 iab <buffer><expr> for     abbr#NotCtx('for' ) ? 'for' : 'for a, b in pairs() do<c-o>oend<esc>k_ella<c-r>=abbr#Eatchar()<cr>'
 iab <buffer> forr          for i = a, #a do<c-o>oend<esc>k_ella<c-r>=abbr#Eatchar()<cr>
-iab <buffer> function      function ()<c-o>oend<esc>k_2wa<c-r>=abbr#Eatchar()<cr>
+iab <buffer> function      function )<c-r>=abbr#Eatchar()<cr>
 
 # popup menu
 

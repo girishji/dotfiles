@@ -926,6 +926,7 @@ c.TerminalInteractiveShell.editing_mode = 'vi'
 #          at both end but not the back ticks), to avoid creating an history file.
 #  Default: traitlets.Undefined
 # c.HistoryAccessor.hist_file = traitlets.Undefined
+# c.HistoryAccessor.hist_file = '/tmp/ipython_hist.sqlite'
 
 #------------------------------------------------------------------------------
 # HistoryManager(HistoryAccessor) configuration

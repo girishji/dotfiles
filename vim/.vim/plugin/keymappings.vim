@@ -95,6 +95,7 @@ nnoremap <leader>h <cmd>hide<cr>| # hide window
 # nnoremap <leader>u <cmd>unhide<cr><c-w>w| # unhide = one window for each loaded buffer (splits horizontally, not useful)
 tnoremap <c-w>h <c-w>:hide<cr>| # hide window (when terminal window is active)
 nnoremap <leader>t <cmd>!tree <bar> more<cr>
+# nnoremap <leader>t <cmd>term<cr>
 # nnoremap <leader>w <cmd>w<cr>
 nnoremap <leader>w <cmd>update<cr>
 nnoremap <leader>q <cmd>qa<cr>

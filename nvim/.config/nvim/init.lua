@@ -65,6 +65,7 @@ end
 -- Set Options
 -- See `:help vim.o`
 do
+    vim.o.shortmess = 'I'
     vim.o.hlsearch = true -- Set highlight on search
     vim.wo.number = true  -- Make line numbers default
     -- vim.wo.relativenumber = true
@@ -184,12 +185,12 @@ do
     map({ 'n', 'v' }, '<leader>w', '<cmd>write<cr>', { desc = '[W]rite buffer' })
     map({ 'n', 'v' }, '<leader>q', '<cmd>qa<cr>', { desc = '[Q]uit all' })
     map({ 'n', 'v' }, '<leader>Q', '<cmd>qa!<cr>', { desc = '[Q]uit without saving' })
-    local function defer_after(key)
+    local function defer_after(key, key2)
         vim.fn.feedkeys(key, 'nt')
-        vim.defer_fn(function() vim.fn.feedkeys(' ', 'nt') end, 10)
+        vim.defer_fn(function() vim.fn.feedkeys(key2, 'nt') end, 10)
     end
-    map({ 'n', 'v' }, '<leader><space>', function () defer_after(':e') end)
-    map({ 'n', 'v' }, '<leader><bs>', function () defer_after(':b') end)
+    map({ 'n', 'v' }, '<leader><space>', function () defer_after(':e *', '*') end)
+    map({ 'n', 'v' }, '<leader><bs>', function () defer_after(':b', ' ') end)
 
     -- Remap for dealing with word wrap
     map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })

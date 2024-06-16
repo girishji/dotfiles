@@ -41,7 +41,6 @@ autocmd! vimHints
 # Turn on for Noname/scratch files and non-help files
 # 'listchars' is not local to buffer, only local to window
 autocmd BufEnter,FileType * if &ft == null_string || '<amatch>' != 'help' | setlocal listchars=tab:→·,trail:~ | endif
-autocmd BufEnter,FileType *.txt if &ft == 'help' | setlocal listchars= | endif
 # set listchars=tab:→\ ,trail:~
 set list
 
@@ -76,6 +75,7 @@ set whichwrap+=<,>,h,l # make arrows and h, l, push cursor to next line
 # set pumheight=7 # max number of items in popup menu (pmenu)
 set virtualedit=block # allows selection of rectangular text in visual block mode
 set wildignore+=.gitignore,*.swp,*.zwc,tags
+set path=.,,
 
 syntax on # turn on syntax highlighting
 
@@ -157,7 +157,6 @@ Plug '~/git/devdocs.vim'
 # Plug 'girishji/devdocs.vim'
 plug#end()
 
-# :vim9 :%s/\v-- [[(.+)]]/foo/ does not work. cannot seem to escape ']]' in vim9script
 # g:vimbits_vim9cmdline = true
 
 # vim: ts=8 sts=4 sw=4 et fdm=marker

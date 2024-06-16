@@ -1,14 +1,14 @@
-/Content.IE?/	vimtips.txt	/*\/Content.IE?\/*
+/Content.IE?/	giri-vimtips.txt	/*\/Content.IE?\/*
 /build/	giri.txt	/*\/build\/*
 29.3	giri-nav.txt	/*29.3*
 29.4	giri-nav.txt	/*29.4*
 29.5	giri-nav.txt	/*29.5*
-Absolutely-essential	vimtips.txt	/*Absolutely-essential*
-Best-Global-combined-with-substitute	vimtips.txt	/*Best-Global-combined-with-substitute*
+Absolutely-essential	giri-vimtips.txt	/*Absolutely-essential*
+Best-Global-combined-with-substitute	giri-vimtips.txt	/*Best-Global-combined-with-substitute*
 asterisks	giri.txt	/*asterisks*
-best-global	vimtips.txt	/*best-global*
-best-searching	vimtips.txt	/*best-searching*
-best-substitution	vimtips.txt	/*best-substitution*
+best-global	giri-vimtips.txt	/*best-global*
+best-searching	giri-vimtips.txt	/*best-searching*
+best-substitution	giri-vimtips.txt	/*best-substitution*
 cscopectags.txt	cscopectags.txt	/*cscopectags.txt*
 folds-giri	giri-nav.txt	/*folds-giri*
 gfolds	giri.txt	/*gfolds*
@@ -19,6 +19,7 @@ giri-g-keymap	giri-nav.txt	/*giri-g-keymap*
 giri-moving-through-program	giri-nav.txt	/*giri-moving-through-program*
 giri-nav.txt	giri-nav.txt	/*giri-nav.txt*
 giri-vim-file-org	giri.txt	/*giri-vim-file-org*
+giri-vimtips.txt	giri-vimtips.txt	/*giri-vimtips.txt*
 giri.txt	giri.txt	/*giri.txt*
 gkeymap-sq-brkt	giri-nav.txt	/*gkeymap-sq-brkt*
 gkeymap-window-mgmt	giri-nav.txt	/*gkeymap-window-mgmt*
@@ -30,4 +31,3 @@ gvimvariables	giri.txt	/*gvimvariables*
 leetcode-cpp.txt	leetcode-cpp.txt	/*leetcode-cpp.txt*
 leetcode-py.txt	leetcode-py.txt	/*leetcode-py.txt*
 vim-wiki	giri.txt	/*vim-wiki*
-vimtips.txt	vimtips.txt	/*vimtips.txt*

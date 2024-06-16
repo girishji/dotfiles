@@ -1,9 +1,140 @@
 *leetcode-cpp.txt*
 
 ------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
+7.6 in EPI C++: convert a single char to a std::string
 
+to convert a single char to a std::string do std::string(1, ch), where 1 is
+size of string in constructor.
+
+can also do: ch + some_str
+
+------------------------------------------------------------------------------
+If you end up with a problem which involves never ending nested for loops, use recursion.
+for ..
+  for ...
+    for ...
+
+------------------------------------------------------------------------------
+Anytime you repeat even small snippets of code, like a if() statement
+containing complicated checks, think of lambda function.
+
+------------------------------------------------------------------------------
+There are 2 type of linked list problems:
+1) you have to implement linked list yourself
+  - use a dummy head to keep track of empty list
+2) using library
+  - list() class is a doubly linked list, forward_list is singly linked.
+  - [push|emplace|pop]_[front|back], reverse, sort, splice(L1.end(), L2) to transfer elements
+  - for forward_list: insert_after(L1.end(), x), emplace_after(), splice_after()
+  - *max_element(mylist.begin(), mylist.end()) gives max element in the list
+
+template<typename T>
+struct ListNode {
+  T data;
+  // use shared_ptr since 2 nodes can point to same element in a circular list
+  shared_ptr<ListNode<T>> next;
+  // in destructor check reference count of next == 1 (next.use_count() == 1) before resetting (next= next->reset()) 
+}
+
+bool operator==(const ListNode<T>& that) const {
+▏ ▏ const ListNode<T>* a = this;
+▏ ▏ const ListNode<T>* b = &that;
+▏ ▏ while (a && b) {
+▏ ▏ ▏ if (a->data != b->data) {
+▏ ▏ ▏ ▏ return false;
+▏ ▏ ▏ }
+▏ ▏ ▏ a = a->next.get();
+▏ ▏ ▏ b = b->next.get();
+▏ ▏ }
+▏ ▏ return a == nullptr && b == nullptr;
+}
+
+use make_shared:
+head = std::make_shared<ListNode<T>>(*it, head);
+
+------------------------------------------------------------------------------
+use a std::set to keep track of visited nodes:
+<< operator needs std::ostream
+template <typename T>
+  std::ostream& operator<<(std::ostream& out, shared_ptr<ListNode<T>> node) {
+  ▏ std::set<shared_ptr<ListNode<T>>> visited;
+  ...
+}
+
+------------------------------------------------------------------------------
+can use nullptr and get() (see below for get()):
+
+bool operator==(const ListNode<T>& that) const {
+▏ const ListNode<T>* a = this;
+▏ const ListNode<T>* b = &that;
+▏ while (a && b) {
+▏ ▏ if (a->data != b->data) {
+▏ ▏ ▏ return false;
+▏ ▏ }
+▏ ▏ a = a->next.get();
+▏ ▏ b = b->next.get();
+▏ }
+▏ return a == nullptr && b == nullptr;
+}
+
+------------------------------------------------------------------------------
+Avoid using variable names with underscore. They are a pain to type if you also
+have another variable with same beginning.
+
+------------------------------------------------------------------------------
+std::stack()
+
+push, emplace, top, pop, empty
+
+when called on empty stack top() and pop() throw exceptions
+
+Implement a stack with max() operation:
+Keep a variable for every entry in stack that contains max value if that
+entry gets popped off.
+
+------------------------------------------------------------------------------
+To check if parenthesis of various types are correctly written in a code (matched).
+or
+remove extreneous .. and . from long pathnames (shrink pathname to minimum)
+
+use a stack.
+
+------------------------------------------------------------------------------
+Queue (not 'que'), deque:
+
+std::queue operates from only one end. Has push and emplace (no enque)(push
+happens at back, like push_back), pop (no deque) happens at front, front(),
+back(). When called on empty que pop, front, back throw exceptions. 
+
+std::deque : operates from both ends.
+Has push/emplace/pop_back/front, font() and back()
+
+------------------------------------------------------------------------------
+Implement your own binary tree:
+
+template <typename T>
+struct BinaryTreeNode {
+  T data;
+  unique_ptr<BinaryTreeNode<T>> left, right;
+  
+  explicit BinaryTreeNode(const T& data) : data(data) {}
+  BinaryTreeNode(T data, unique_ptr<BinaryTreeNode<T>> left,
+                 unique_ptr<BinaryTreeNode<T>> right)
+      : data(data), left(std::move(left)), right(std::move(right)) {}
+};
+
+------------------------------------------------------------------------------
+REVERSE ALL WORDS IN A SENTENCE
+
+"  Alice loves John" should yield "John loves Alice  "
+
+I did the hard way. It is intricate to iterate on words and place them in
+reverse order, even into a different string. This is because of leading and
+trailing spaces.
+
+Better would be to reverse the whole string letter by letter (use
+std::reverse), and then simply reverse the letters inside each world
+separately.
+
+------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

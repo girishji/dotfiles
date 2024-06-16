@@ -1,4 +1,5 @@
-*vimtips.txt*   For Vim version 8.0.
+*giri-vimtips.txt*   For Vim version 8.0.
+David Rayner (zzapper) 15 Years of Vi + 7 years of Vim and still learning
 ------------------------------------------------------------------------------
 " new items marked [N] , corrected items marked [C]
 " *best-searching*
@@ -21,7 +22,7 @@
 /^\n\{3}                    : find 3 empty lines
 /^str.*\nstr                : find 2 successive lines starting with str
 /\(^str.*\n\)\{2}           : find 2 successive lines starting with str
-" using rexexp memory in a search find fred.*joe.*joe.*fred 
+" using regexp memory in a search find fred.*joe.*joe.*fred 
 /\(fred\).*\(joe\).*\2.*\1
 " Repeating the Regexp (rather than what the Regexp finds)
 /^\([^,]*,\)\{8}

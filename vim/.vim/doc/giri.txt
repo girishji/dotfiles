@@ -359,11 +359,12 @@ https://vi.stackexchange.com/questions/24925/usage-of-timeoutlen-and-ttimeoutlen
 
 ----------------------------------------
 terminal mode
-- 2 modes terminal-job mode (keys go to running job) and terminal-normal mode
+- 2 modes: terminal-job mode (keys go to running job) and terminal-normal mode
 - to change from former to latter do <c-w>N 
 - to change otherwise do 'i' or 'a' (insert commands)
-- <c-w>: will get into command mode from terminal-job mode
-- <c-w><c-w> will switch to next window in terminal-job mode
+- <c-w>: -> will get into command mode from terminal-job mode
+- <c-w><c-w> -> will switch to next window in terminal-job mode
+- <c-w>h -> (mapped) hide window
 
 ----------------------------------------
 Run interpreter

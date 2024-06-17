@@ -1333,7 +1333,7 @@ c.TerminalInteractiveShell.editing_mode = 'vi'
 # # Reload all modules (except those excluded by %aimport) every time before executing the Python code typed.
 # c.InteractiveShellApp.exec_lines = ['%autoreload 2']
 # # Print this line on startup
-# c.InteractiveShellApp.exec_lines.append('print("Warning: (giri) disable autoreload in ipython_config.py to improve performance.")')
+c.InteractiveShellApp.exec_lines.append('print("Warning: (giri) disable autoreload in ipython_config.py to improve performance.")')
 
 # Pyflyby (To inject pyflyby into ipython)
 c.InteractiveShellApp.extensions.append("pyflyby")

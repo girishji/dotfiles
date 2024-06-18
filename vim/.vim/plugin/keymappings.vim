@@ -64,18 +64,20 @@ vnoremap <C-_> <Esc>/\%V
 # Mute search highlighting.
 nnoremap <silent> <esc> :nohls<cr><esc>
 
-# Emacs C-s C-w like solution: hightlight in visual mode and then type * or #
-# `cgn` to replace text
-# https://vonheikemen.github.io/devlog/tools/how-to-survive-without-multiple-cursors-in-vim/
-xnoremap * :<c-u> call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
-xnoremap # :<c-u> call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
-# SID means script local function
-def VSetSearch(cmdtype: string)
-    var temp = getreg('s') # 's' is some register
-    norm! gv"sy
-    setreg('/', '\V' .. substitute(escape(@s, cmdtype .. '\'), '\n', '\\n', 'g'))
-    setreg('s', temp) # restore whatever was in 's'
-enddef
+# Visual search (:h vimtips.txt)
+vmap <silent> //    y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
+# # Emacs C-s C-w like solution: hightlight in visual mode and then type * or #
+# # `cgn` to replace text
+# # https://vonheikemen.github.io/devlog/tools/how-to-survive-without-multiple-cursors-in-vim/
+# xnoremap * :<c-u> call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
+# xnoremap # :<c-u> call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
+# # SID means script local function
+# def VSetSearch(cmdtype: string)
+#     var temp = getreg('s') # 's' is some register
+#     norm! gv"sy
+#     setreg('/', '\V' .. substitute(escape(@s, cmdtype .. '\'), '\n', '\\n', 'g'))
+#     setreg('s', temp) # restore whatever was in 's'
+# enddef
 
 # NOTE: Use gp and gP for default purpose
 # gp	Just like "p", but leave the cursor just after the new text.

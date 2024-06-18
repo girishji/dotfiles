@@ -1,4 +1,4 @@
-*giri-vimtips.txt*   For Vim version 8.0.
+*vimtips.txt*   For Vim version 8.0.
 David Rayner (zzapper) 15 Years of Vi + 7 years of Vim and still learning
 ------------------------------------------------------------------------------
 " new items marked [N] , corrected items marked [C]

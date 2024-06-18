@@ -446,7 +446,6 @@ c.TerminalIPythonApp.exec_lines = [
 #  Choices: any of ['Neutral', 'NoColor', 'LightBG', 'Linux'] (case-insensitive)
 #  Default: 'Neutral'
 # c.InteractiveShell.colors = 'Neutral'
-c.InteractiveShell.colors = 'Linux'
 
 #  Default: False
 # c.InteractiveShell.debug = False
@@ -556,6 +555,7 @@ c.InteractiveShell.colors = 'Linux'
 #  quote is entered/deleted. Brackets: (), [], {} Quotes: '', ""
 #  Default: False
 # c.TerminalInteractiveShell.auto_match = False
+c.TerminalInteractiveShell.auto_match = True
 
 ## 
 #  See also: InteractiveShell.autoawait
@@ -564,6 +564,7 @@ c.InteractiveShell.colors = 'Linux'
 ## 
 #  See also: InteractiveShell.autocall
 # c.TerminalInteractiveShell.autocall = 0
+c.TerminalInteractiveShell.autocall = 2
 
 ## Autoformatter to reformat Terminal code. Can be `'black'`, `'yapf'` or `None`
 #  Default: None
@@ -604,6 +605,7 @@ c.TerminalInteractiveShell.autoformatter = "black"
 ## Set the color scheme (NoColor, Neutral, Linux, or LightBG).
 #  See also: InteractiveShell.colors
 # c.TerminalInteractiveShell.colors = 'Neutral'
+c.TerminalInteractiveShell.colors = 'Linux'
 
 ## Set to confirm when you try to exit IPython with an EOF (Control-D in Unix,
 #  Control-Z/Enter in Windows). By typing 'exit' or 'quit', you can force a
@@ -1333,7 +1335,7 @@ c.TerminalInteractiveShell.editing_mode = 'vi'
 # # Reload all modules (except those excluded by %aimport) every time before executing the Python code typed.
 # c.InteractiveShellApp.exec_lines = ['%autoreload 2']
 # # Print this line on startup
-c.InteractiveShellApp.exec_lines.append('print("Warning: (giri) disable autoreload in ipython_config.py to improve performance.")')
+# c.InteractiveShellApp.exec_lines.append('print("Warning: (giri) disable autoreload in ipython_config.py to improve performance.")')
 
 # Pyflyby (To inject pyflyby into ipython)
 c.InteractiveShellApp.extensions.append("pyflyby")

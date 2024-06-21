@@ -51,7 +51,6 @@ set number # line numbering
 # set relativenumber
 set hls # highlight search
 set lbr # line break
-set laststatus=2 # always show statusline
 set hidden # buffer becomes hidden (not unloaded) when it is abandoned (ex. help buffer)
 set nojoinspaces # suppress inserting two spaces between sentences
 set shortmess+=I # disable startup message
@@ -76,13 +75,16 @@ set whichwrap+=<,>,h,l # make arrows and h, l, push cursor to next line
 set virtualedit=block # allows selection of rectangular text in visual block mode
 set wildignore+=.gitignore,*.swp,*.zwc,tags
 set path=.,,
-
-syntax on # turn on syntax highlighting
+set laststatus=2 # always show statusline
+# set laststatus=0
+# set rulerformat=%80(%=%f\ %h%m%r\ %-6y\ %-5.(%l,%c%V%)\ %P%)
 
 # job_start does not pass --exclude={foo, bar} correctly to shell. single quotes
 # also don't work, need double quotes. but all of these work for :grep
 # set grepprg=grep\ --color=never\ -RESIHin\ --exclude={'*.zwc','*.swp','*.git*'}\ --exclude-dir=plugged
 set grepprg=grep\ --color=never\ -RESIHin\ --exclude="*.git*"\ --exclude="*.swp"\ --exclude="*.zwc"\ --exclude-dir=plugged
+
+syntax on # turn on syntax highlighting
 
 # if executable("ug")
 #     set grepprg=ug\ -HnjR\ --no-heading
@@ -152,7 +154,7 @@ Plug '~/git/ngram-complete.vim'
 Plug '~/git/vimbits'
 # Plug 'girishji/vimbits'
 # Plug 'girishji/pythondoc.vim', {'for': 'python'}
-# Plug '~/git/pythondoc.vim', {'for': 'python'}
+Plug '~/git/pythondoc.vim', {'for': 'python'}
 Plug '~/git/devdocs.vim'
 # Plug 'girishji/devdocs.vim'
 plug#end()

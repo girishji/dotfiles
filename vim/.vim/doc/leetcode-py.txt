@@ -267,7 +267,7 @@ ValueError and TypeError are 2 exceptions you can use in your code.~
 ------------------------------------------------------------------------------
 It is safe to do [None] * 3 to get a list of length 3. Items are _independent_.~
 
-List initialization No No:~
+List initialization No-No:~
 You should not do [[]] * 3 because the inside [] is the same for all 3 items
 since only the reference to [] is copied 3 times. (Instead use list
 comprehension).
@@ -463,13 +463,20 @@ Can add methods:~
 	    def __lt__(self, other):
 	        return True
 
-leetcode does not support, do:
-class Item:
-    def __init__(self, key=0, val=0, next=None, prev=None):
-        self.key = key
-        self.value = val
-        self.next = next
-        self.prev = prev
+Alternately,
+
+    class bcolors:
+        HEADER = '\033[95m'
+        OKBLUE = '\033[94m'
+        OKCYAN = '\033[96m'
+        OKGREEN = '\033[92m'
+        WARNING = '\033[93m'
+        FAIL = '\033[91m'
+        ENDC = '\033[0m'
+        BOLD = '\033[1m'
+        UNDERLINE = '\033[4m'
+    
+    print(f"{bcolors.WARNING}Warning: No active frommets remain. Continue?{bcolors.ENDC}")
 
 ------------------------------------------------------------------------------
 Inheritance: super() is very different than in Java.~

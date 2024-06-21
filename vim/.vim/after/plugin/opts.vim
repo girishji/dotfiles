@@ -199,10 +199,10 @@ if exists("g:loaded_bufline")
     # - `User2`: Alternate buffer
     # - `User3`: Other buffers
     # - `User4`: Emphasis characters if specified (see Options)
-    highlight user1 cterm=underline,bold
-    highlight user2 cterm=bold
-    highlight user3 cterm=none
-    highlight user4 cterm=bold
+    highlight user1 ctermfg=252 cterm=underline,bold
+    highlight user2 ctermfg=252 cterm=bold,italic
+    highlight user3 ctermfg=252 cterm=none
+    highlight user4 ctermfg=252 cterm=bold
     g:BuflineSetup({ highlight: true, showbufnr: false, emphasize: '' })
 endif
 

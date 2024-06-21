@@ -8,7 +8,7 @@ endif
 
 setlocal foldignore=
 
-b:undo_ftplugin ..= ' | setl foldignore< formatprg<'
+b:undo_ftplugin ..= ' | setl foldignore< formatprg< | silent! autocmd! PythonAutoImport'
 
 # Convince python that 'def' is a macro like C's #define
 setlocal define=^\\s*def
@@ -26,18 +26,20 @@ endif
 # nnoremap <buffer> <leader>vh :term ++close pydoc3<space>
 # nnoremap <buffer> <leader>vb :!open https://docs.python.org/3/search.html\?q=
 # nnoremap <buffer> <leader>vf :% !black -q -<cr>
+
+# You can use :w !cmd to write the current buffer to the stdin of an external
+# command. A related command is :%!cmd which does the same thing and then
+# replaces the current buffer with the output of the command. (:h :range!)
 nnoremap <buffer> <leader>vi ::% !tidy-imports --replace-star-imports -r -p --quiet --black<cr>
 
-# following does not work always
-# augroup PythonAutogroup | autocmd!
-#     autocmd bufwritepost * {
+# Works, but intrusive
+# augroup PythonAutoImport | autocmd!
+#     autocmd bufwritepre * {
 #         if &ft == 'python' && 'tidy-imports'->executable()
-#             exec $'silent !tidy-imports --black --quiet --replace-star-imports --action REPLACE {bufname("%")}'
-#             exec 'e'
+#             :% !tidy-imports --replace-star-imports -r -p --quiet --black
 #         endif
 #     }
 # augroup END
-
 
 nnoremap <buffer><expr> <leader>vt $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode test {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"
 nnoremap <buffer><expr> <leader>vx $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode exec {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"

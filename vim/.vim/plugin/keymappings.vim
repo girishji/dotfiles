@@ -61,9 +61,6 @@ nnoremap <silent> ]F :last<CR>
 # (C-_ produces the same hex code as C-/)
 vnoremap <C-_> <Esc>/\%V
 
-# Mute search highlighting.
-nnoremap <silent> <esc> :nohls<cr><esc>
-
 # Visual search (:h vimtips.txt)
 vmap <silent> //    y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 # # Emacs C-s C-w like solution: hightlight in visual mode and then type * or #
@@ -112,7 +109,7 @@ nnoremap <leader>m <cmd>marks<cr>
 
 # align
 vnoremap <leader>A :!column -t<cr>| # align columns
-vnoremap <leader>a :'<,'>s/\v(.*)\.(.*)/\=printf("%-16s %s", submatch(1), submatch(2))
+vnoremap <leader>a :s/\v(.*)=(.*)/\=printf("%-16s %s", submatch(1), submatch(2))
 
 # Toggle group
 nnoremap <leader>vs :set spell!<CR><Bar>:echo "Spell Check: " .. strpart("OffOn", 3 * &spell, 3)<CR>

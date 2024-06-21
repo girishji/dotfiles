@@ -269,10 +269,12 @@ c = get_config()  #noqa
 ## lines of code to run at IPython startup.
 #  See also: InteractiveShellApp.exec_lines
 # c.TerminalIPythonApp.exec_lines = []
+# giri: https://stackoverflow.com/questions/20961287/what-is-pylab
 c.TerminalIPythonApp.exec_lines = [
     'from pprint import pprint as pp',
-    'import numpy as np',
-    'import pandas as pd',
+    # 'import numpy as np',
+    # 'import pandas as pd',
+    # 'import matplotlib.pyplot as plt'
 ]
 
 ## A list of dotted module names of IPython extensions to load.
@@ -301,7 +303,6 @@ c.TerminalIPythonApp.exec_lines = [
 #  'gtk2', 'gtk3', 'gtk4', 'osx', 'pyglet', 'qt', 'qt5', 'qt6', 'tk', 'wx',
 #  'gtk2', 'qt4').
 #  See also: InteractiveShellApp.gui
-# c.TerminalIPythonApp.gui = None
 # c.TerminalIPythonApp.gui = None
 
 ## Should variables loaded at startup (by startup files, exec_lines, etc.)
@@ -564,7 +565,8 @@ c.TerminalInteractiveShell.auto_match = True
 ## 
 #  See also: InteractiveShell.autocall
 # c.TerminalInteractiveShell.autocall = 0
-c.TerminalInteractiveShell.autocall = 2
+# giri: matplotlib plot() does not work if you enable this
+# c.TerminalInteractiveShell.autocall = 2
 
 ## Autoformatter to reformat Terminal code. Can be `'black'`, `'yapf'` or `None`
 #  Default: None

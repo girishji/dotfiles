@@ -1,14 +1,8 @@
-/Content.IE?/	vimtips.txt	/*\/Content.IE?\/*
 /build/	giri.txt	/*\/build\/*
 29.3	giri-nav.txt	/*29.3*
 29.4	giri-nav.txt	/*29.4*
 29.5	giri-nav.txt	/*29.5*
-Absolutely-essential	vimtips.txt	/*Absolutely-essential*
-Best-Global-combined-with-substitute	vimtips.txt	/*Best-Global-combined-with-substitute*
 asterisks	giri.txt	/*asterisks*
-best-global	vimtips.txt	/*best-global*
-best-searching	vimtips.txt	/*best-searching*
-best-substitution	vimtips.txt	/*best-substitution*
 cscopectags.txt	cscopectags.txt	/*cscopectags.txt*
 folds-giri	giri-nav.txt	/*folds-giri*
 gfolds	giri.txt	/*gfolds*
@@ -30,4 +24,3 @@ gvimvariables	giri.txt	/*gvimvariables*
 leetcode-cpp.txt	leetcode-cpp.txt	/*leetcode-cpp.txt*
 leetcode-py.txt	leetcode-py.txt	/*leetcode-py.txt*
 vim-wiki	giri.txt	/*vim-wiki*
-vimtips.txt	vimtips.txt	/*vimtips.txt*

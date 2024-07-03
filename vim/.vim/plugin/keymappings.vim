@@ -128,6 +128,7 @@ nnoremap <leader>vz <cmd>FoldingToggle<cr>
 # Following not needed: use 1<c-g> for absolute path, or <c-g> for relative path
 # nnoremap <leader>vp <cmd>echo expand('%')<cr>
 nnoremap <leader>vi <cmd>ShowImage<cr>
+nnoremap <leader>vf <cmd>35Lex<cr>
 
 import '../autoload/text.vim'
 

@@ -101,16 +101,15 @@ syntax on # turn on syntax highlighting
 # Plugins
 #--------------------
 
-# Disable netrw plugin. It defines :Hexplore which shares letter with :Help.
-g:loaded_netrwPlugin = 1
-g:loaded_netrw = 1
-
 # This loads the "matchit" plugin; It makes the % command more powerful, but
 # bracket matching gets much slower. Vim's default bracket matching does not
 # avoid commented brackets through. and this plugin avoids that.
 if has('syntax') && has('eval')
     packadd! matchit
 endif
+
+# Suppress netrw banner
+g:netrw_banner = 0
 
 if v:version >= 901
     packadd comment

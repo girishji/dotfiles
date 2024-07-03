@@ -5,10 +5,9 @@ augroup augrp_misc | autocmd!
     # autocmd BufEnter * if @% == "" | setfiletype txt | endif
 
     # windows to close
-    autocmd FileType help,vim-plug,qf {
-        nnoremap <buffer> Q q
-        nnoremap <buffer><silent> q :close<CR>
-    }
+    autocmd FileType help,vim-plug,qf nnoremap <buffer><silent> q :close<CR>
+    # netrw: 'q' is already mapped to compound key (ex. 'qf' gets file info).
+    autocmd FileType netrw nnoremap <buffer><silent> qq :close<CR>
     # create directories when needed, when saving a file
     autocmd BufWritePre * mkdir(expand('<afile>:p:h'), 'p')
     # Format using 'gq'. :h fo-table
@@ -71,9 +70,14 @@ augroup END
 
 # alternative to 'packadd nohlsearch'
 augroup augrp_nohlsearch | autocmd!
-    noremap <plug>(nohlsearch) <cmd>nohlsearch<cr>
-    noremap! <expr> <plug>(nohlsearch) execute('nohlsearch')[-1]
-    nnoremap <silent> <esc> <plug>(nohlsearch)<esc>
-    # CursorHold waits `updatetime` (default is 4s) before it fires
-    autocmd CursorHold * timer_start(4000, (_) => feedkeys("\<plug>(nohlsearch)", 'm'))
+    nnoremap <silent> <esc> :nohls<cr><esc>
+    #
+    # NOTE: CursorHold waits `updatetime` (default is 4s) before it fires. If you
+    #   increase this timeout, swap file will not be written soon enough. 4s is
+    #   too early to turn-off hightlighting
+    # noremap <plug>(nohlsearch) <cmd>nohlsearch<cr>
+    # noremap! <expr> <plug>(nohlsearch) execute('nohlsearch')[-1]
+    # nnoremap <silent> <esc> <plug>(nohlsearch)<esc>
+    # set updatetime=8000
+    # autocmd CursorHold * feedkeys("\<plug>(nohlsearch)", 'm')
 augroup END

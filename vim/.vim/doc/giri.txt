@@ -1008,4 +1008,22 @@ wouldn’t work if you did.
 Also: only arguments in double quotes can contain white space.
 
 ------------------------------------------------------------------------------
+netrw 							*giri-netrw*
+
+-:go up dir  D:delete  R:rename  s:sort-by  x:special
+
+Help: ':help netrw'
+
+I - Toggle the banner (in order to see the path). (:h netrw-I)
+
+i - "The "i" map cycles between the thin, long, wide, and tree listing
+formats...", "The tree listing format has a top directory followed by files
+and directories preceded by one or more "|"s, which indicate the directory
+depth. One may open and close directories by pressing the key while atop the
+directoryname. | (h: netrw-i)
+
+qf - will show information about the file or directory (and also the path).
+(:h netrw-qf)
+
+------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

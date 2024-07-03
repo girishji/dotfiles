@@ -19,7 +19,7 @@ if exists("g:loaded_vimcomplete")
         dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'text'], properties: dictproperties },
         abbrev: { enable: true },
         lsp: { enable: true, maxCount: 10, priority: 8 },
-        omnifunc: { enable: false, priority: 10, filetypes: ['tex'] },
+        omnifunc: { enable: false, priority: 10, filetypes: ['tex', 'python'] },
         vsnip: { enable: true, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },
         vimscript: { enable: true, priority: 10 },
         tmux: { enable: false },

@@ -12,6 +12,7 @@ giri-folds	giri-nav.txt	/*giri-folds*
 giri-g-keymap	giri-nav.txt	/*giri-g-keymap*
 giri-moving-through-program	giri-nav.txt	/*giri-moving-through-program*
 giri-nav.txt	giri-nav.txt	/*giri-nav.txt*
+giri-netrw	giri.txt	/*giri-netrw*
 giri-vim-file-org	giri.txt	/*giri-vim-file-org*
 giri.txt	giri.txt	/*giri.txt*
 gkeymap-sq-brkt	giri-nav.txt	/*gkeymap-sq-brkt*

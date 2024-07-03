@@ -1536,6 +1536,20 @@ To always round to zero (even -ve numbers), do:
 int(6 / -7) => convert to float and force it to int.
 
 ------------------------------------------------------------------------------
+Returning multiple values from function: ~
+
+def test():
+    return 'abc', 100
+
+In Python, comma-separated values are treated as tuples, even without
+parentheses, unless the syntax requires them. Therefore, the function in the
+example above returns a tuple. Note that it is actually the comma which makes
+a tuple, not the parentheses.
+
+Unpacking happens automatically:
+
+a, b = test()
+
 ------------------------------------------------------------------------------
 
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

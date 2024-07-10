@@ -51,7 +51,7 @@ class DataProcessor:
         df = pd.DataFrame(prices, index=dates, columns=['open', 'high', 'low', 'close', 'volume'])
         return df.tail(period) if period else df
 
-def get_daily_data(symbol: str, period: Optional[int] = None, api_key: str = 'Y37YPCEUCE6OZ8XM') -> pd.DataFrame:
+def data_daily(symbol: str, period: Optional[int] = None, api_key: str = 'Y37YPCEUCE6OZ8XM') -> pd.DataFrame:
     api = AlphaVantageAPI(api_key)
     fetcher = DataFetcher(api)
     processor = DataProcessor()
@@ -59,8 +59,15 @@ def get_daily_data(symbol: str, period: Optional[int] = None, api_key: str = 'Y3
     data = fetcher.fetch_data(symbol)
     return processor.create_dataframe(data, period)
 
-def plot_data(symbol: str, period: Optional[int] = None, api_key: str = 'Y37YPCEUCE6OZ8XM'):
-    df = get_daily_data(symbol, period, api_key)
+def plot_candles(symbol: str, period: Optional[int] = None, api_key: str = 'Y37YPCEUCE6OZ8XM'):
+    df = data_daily(symbol, period, api_key)
+    candles = [Candle(o, h, l, c)
+               for o, h, l, c in zip(df.open.tolist(), df.high.tolist(), df.low.tolist(), df.close.tolist())]
+    g = CandleStickGraph(candles, 25)
+    print(g.draw())
+
+def plot_daily_close(symbol: str, period: Optional[int] = None, api_key: str = 'Y37YPCEUCE6OZ8XM'):
+    df = data_daily(symbol, period, api_key)
     df['close'].plot()
     plt.title(f"Closing Prices for {symbol}")
     plt.xlabel("Date")

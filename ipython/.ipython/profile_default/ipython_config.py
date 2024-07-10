@@ -607,7 +607,7 @@ c.TerminalInteractiveShell.autoformatter = "black"
 ## Set the color scheme (NoColor, Neutral, Linux, or LightBG).
 #  See also: InteractiveShell.colors
 # c.TerminalInteractiveShell.colors = 'Neutral'
-c.TerminalInteractiveShell.colors = 'Linux'
+# c.TerminalInteractiveShell.colors = 'Linux'
 
 ## Set to confirm when you try to exit IPython with an EOF (Control-D in Unix,
 #  Control-Z/Enter in Windows). By typing 'exit' or 'quit', you can force a
@@ -673,9 +673,10 @@ c.TerminalInteractiveShell.editing_mode = 'vi'
 # c.TerminalInteractiveShell.highlight_matching_brackets = True
 
 ## The name or class of a Pygments style to use for syntax
-#          highlighting. To see available styles, run `pygmentize -L styles`.
+#          highlighting. To see available styles, run `!pygmentize -L styles`.
 #  Default: traitlets.Undefined
 # c.TerminalInteractiveShell.highlighting_style = traitlets.Undefined
+c.TerminalInteractiveShell.highlighting_style = 'bw'
 
 ## Override highlighting format for specific tokens
 #  Default: {}

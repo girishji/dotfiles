@@ -1010,11 +1010,14 @@ Also: only arguments in double quotes can contain white space.
 ------------------------------------------------------------------------------
 netrw 							*giri-netrw*
 
--:go up dir  D:delete  R:rename  s:sort-by  x:special
+-:go up dir  D:delete  R:rename  s:sort-by  x:special  %:create
 
 Help: ':help netrw'
 
 I - Toggle the banner (in order to see the path). (:h netrw-I)
+
+% - Create a new file (make sure you type out relative path from the `pwd`,
+    even if you descended the tree inside netrw)
 
 i - "The "i" map cycles between the thin, long, wide, and tree listing
 formats...", "The tree listing format has a top directory followed by files

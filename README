@@ -1,6 +1,7 @@
 ipython:
 > mkdir ~/.ipython/profile_default
 > stow ipython
+> # make sure symlink exist for 'startup' dir.
 
 nvim, pip, etc:
 > mkdir ~/.config

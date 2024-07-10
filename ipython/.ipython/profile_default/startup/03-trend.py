@@ -111,9 +111,5 @@ def trend(symbol, period=None, reversal=10, breach=5):
     pd.set_option('display.max_columns', None)
     pd.set_option('display.width', 1000)
     print(df.iloc[:, 14:])
-    # columns_color = [GRAY + 'SecondaryRally' + ENDC, GRAY + 'NaturalRally' + GREEN_UL + ENDC,
-    #                  GREEN + 'UpwardTrend' + RED_UL + ENDC, RED + 'DownwardTrend' + GREEN_UL + ENDC,
-    #                  GRAY + 'NaturalReaction' + RED_UL + ENDC, GRAY + 'SecondaryReaction' + ENDC]
-    # print(df.iloc[:, 14:][columns_color].dropna(thresh=1))  # don't drop if at least one non-NA
     # return df
 

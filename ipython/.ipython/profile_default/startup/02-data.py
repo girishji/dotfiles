@@ -1,14 +1,14 @@
 # Daily quotes
 
-from pathlib import Path
+from functools import partial
 import json
-import time
-import requests
+from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from typing import Optional, Dict, Any
-from functools import lru_cache
+from pathlib import Path
+import requests
+import time
+from typing import Any, Dict, Optional
 
 class AlphaVantageAPI:
     BASE_URL = 'https://www.alphavantage.co/query'
@@ -59,16 +59,27 @@ def data_daily(symbol: str, period: Optional[int] = None, api_key: str = 'Y37YPC
     data = fetcher.fetch_data(symbol)
     return processor.create_dataframe(data, period)
 
-def plot_candles(symbol: str, period: Optional[int] = None, api_key: str = 'Y37YPCEUCE6OZ8XM'):
+def plot_daily_candles(symbol: str, period: Optional[int] = 140, api_key: str = 'Y37YPCEUCE6OZ8XM'):
     df = data_daily(symbol, period, api_key)
     candles = [Candle(o, h, l, c)
                for o, h, l, c in zip(df.open.tolist(), df.high.tolist(), df.low.tolist(), df.close.tolist())]
     g = CandleStickGraph(candles, 25)
     print(g.draw())
 
-def plot_daily_close(symbol: str, period: Optional[int] = None, api_key: str = 'Y37YPCEUCE6OZ8XM'):
+def plot_daily(symbol: str, period: Optional[int] = 200, price_type: str = 'close', api_key: str = 'Y37YPCEUCE6OZ8XM'):
+    '''plot daily close'''
     df = data_daily(symbol, period, api_key)
-    df['close'].plot()
+    fig = plotille.Figure()
+    fig.set_x_limits(min_=0, max_=period)
+    fig.width = 128
+    fig.height = 27
+    fig.x_ticks_fkt = lambda min_, _: df.index[round(min_)].strftime('%b %d')
+    fig.plot(range(period), df[price_type])
+    print(fig.show())
+
+def plot_daily_png(symbol: str, period: Optional[int] = None, price_type: str = 'close', api_key: str = 'Y37YPCEUCE6OZ8XM'):
+    df = data_daily(symbol, period, api_key)
+    df[price_type].plot()
     plt.title(f"Closing Prices for {symbol}")
     plt.xlabel("Date")
     plt.ylabel("Price")
@@ -79,4 +90,4 @@ def plot_daily_close(symbol: str, period: Optional[int] = None, api_key: str = '
 #     symbol = "AAPL"
 #     df = get_daily_data(symbol, period=30)
 #     print(df.head())
-#     plot_data(symbol, period=30)
+#     plot_close(symbol, period=30)

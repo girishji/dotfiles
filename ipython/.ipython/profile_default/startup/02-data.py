@@ -9,6 +9,7 @@ from pathlib import Path
 import requests
 import time
 from typing import Any, Dict, Optional
+import plotille
 
 class AlphaVantageAPI:
     BASE_URL = 'https://www.alphavantage.co/query'

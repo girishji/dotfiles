@@ -65,7 +65,7 @@ end
 -- Set Options
 -- See `:help vim.o`
 do
-    vim.o.shortmess = 'I'
+    vim.o.shortmess = vim.o.shortmess .. 'I'
     vim.o.hlsearch = true -- Set highlight on search
     vim.wo.number = true  -- Make line numbers default
     -- vim.wo.relativenumber = true
@@ -315,25 +315,28 @@ if vim.g.started_by_firenvim then
     -- vim.o.guifont = 'FiraCode Nerd Font:h24'
     vim.o.guifont = 'FiraCode Nerd Font:h22'
     -- vim.o.guifont = 'Fira Code:h18'
-    vim.o.linespace = 0
-    vim.o.laststatus = 0
     vim.cmd [[
         " Prepend with 'silent!' to ignore errors when colorscheme is not yet installed.
         silent! colorscheme zellner
         " https://github.com/glacambre/firenvim/issues/366
         nnoremap <D-v> "+p
         inoremap <D-v> <C-r>+
+        set linespace=0 laststatus=0
+        " Set 'shortmess' and 'cmdheight' such that full name of buffer is printed
+        set shortmess-=t shortmess-=F cmdheight=3
     ]]
 
     -- ATTENTION: Anytime you make change here, run `:call firenvim#install(0)` in nvim
+
+    -- ATTENTION: Following is set in Chrome browser itself (only leetcode and colab.google allowed)
     -- NOTE: Even though takeover=never, you can type <command-E> to invoke nvim
     vim.g.firenvim_config = {
         localSettings = {
             ['.*'] = { takeover = 'never', priority = 0, cmdline = 'neovim' },
             ['.*leetcode.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
-            -- ['.*github.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
-            -- ['.*google.*'] = { takeover = 'never', priority = 1, cmdline = 'neovim' },
-            -- ['.*colab.*'] = { takeover = 'always', priority = 2, cmdline = 'neovim' }, -- colab.research.google
+    --         -- ['.*github.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
+    --         -- ['.*google.*'] = { takeover = 'never', priority = 1, cmdline = 'neovim' },
+    --         -- ['.*colab.*'] = { takeover = 'always', priority = 2, cmdline = 'neovim' }, -- colab.research.google
         }
     }
 

@@ -74,7 +74,7 @@ def plot_daily(symbol: str, period: Optional[int] = 200, price_type: str = 'clos
     fig.set_x_limits(min_=0, max_=period)
     fig.width = 128
     fig.height = 27
-    fig.x_ticks_fkt = lambda min_, _: df.index[round(min_)].strftime('%b %d')
+    fig.x_ticks_fkt = lambda min_, _: df.index[round(min_)].strftime('%b%d,%y')
     fig.plot(range(period), df[price_type])
     print(fig.show())
 

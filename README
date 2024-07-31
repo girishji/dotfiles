@@ -5,6 +5,9 @@ ipython:
 
 nvim, pip, etc:
 > mkdir ~/.config
+> cd ~/dotfiles
+> stow nvim
+> ln -s ~/dotfiles/vim/.vim/doc ~/.config/nvim/doc
 
 ipython:
 > pipx install ipython

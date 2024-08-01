@@ -266,9 +266,9 @@ if exists('g:loaded_scope')
     nnoremap <leader>fh <scriptcmd>fuzzy.File(fuzzy.FindCmd($'{$HOME}/help'))<CR>
     nnoremap <leader>fz <scriptcmd>fuzzy.File(fuzzy.FindCmd($'{$HOME}/.zsh'))<CR>
 
-    command -nargs=1 -complete=dir ScopeGrep fuzzy.Grep(null_string, true, null_string, <f-args>)
-    # command -nargs=1 -complete=dir ScopeGrep fuzzy.Grep('rg --vimgrep', true, null_string, <f-args>)
-    nnoremap <leader>fg :ScopeGrep<space>
+    command -nargs=1 -complete=dir ScopeGrepDir fuzzy.Grep(null_string, true, null_string, <f-args>)
+    # command -nargs=1 -complete=dir ScopeGrepDir fuzzy.Grep('rg --vimgrep', true, null_string, <f-args>)
+    nnoremap <leader>fg :ScopeGrepDir<space>
     nnoremap <leader>g <scriptcmd>fuzzy.Grep()<CR>
     # case sensitive grep
     nnoremap <leader>fG <scriptcmd>fuzzy.Grep(fuzzy.GrepCmd('-RESIHns'))<CR>

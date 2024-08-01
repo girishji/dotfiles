@@ -4,6 +4,7 @@ foldmethod is 'indent' and foldnestmax is 1
 zr: 'r'educe (unfold) all folds
 zm: 'm'ore (fold) file
 za: toggle fold under cursor
+]z and [z work as well
 
 Enable debug:
 vim.lsp.set_log_level('debug')
@@ -230,6 +231,17 @@ do
     -- map({ 'n' }, "<leader>vr", ":put = execute('')<left><left>", { desc = "[R]edirect output of cmd (see also 'redir')" })
     vim.cmd [[nmap <leader>vr :put = execute('')<left><left>]]
 
+    -- Enter terminal mode when terminal is open, and keybindigs
+    vim.cmd [[
+        autocmd TermOpen * startinsert
+        tnoremap <C-w><C-w> <C-\><C-N><C-w><C-w>
+        tnoremap <C-w>o <C-\><C-N><C-w>oi
+        tnoremap <C-w>h <C-\><C-N><C-w>h
+        tnoremap <C-w>j <C-\><C-N><C-w>j
+        tnoremap <C-w>k <C-\><C-N><C-w>k
+        tnoremap <C-w>l <C-\><C-N><C-w>l
+    ]]
+
     -- list loaded modules
     -- map({ 'n' }, "<leader>vL", function() vim.notify(vim.inspect(package.loaded)) end, { desc = "[L]ist loaded modules" })
 
@@ -241,12 +253,27 @@ do
                 vim.keymap.set('n', lhs, rhs, { buffer = args.buf, desc = desc })
             end
             map("<leader>vi", "<cmd>% !tidy-imports --replace-star-imports -r -p --quiet --black<cr>", "Add missing imports and sort")
-            map("<leader>vp", "<cmd>update<cr><cmd>exec '!python3' shellescape(@%, 1)<cr>", "Run")
+            map("<leader>vP", "<cmd>update<cr><cmd>exec '!python3' shellescape(@%, 1)<cr>", "Run")
             -- 'refurb' is a tool for refurbishing and modernizing Python codebases
             -- map("<leader>vr",
             --     "<cmd>cexpr system('refurb --quiet ' . shellescape(expand('%'))) | copen<cr>",
             --     "Inspect using refurb")
-            -- map("<leader>vp", "<cmd>lua _IPYTHON_TOGGLE()<cr>", "iPython")
+            --
+            -- Reuse terminal running ipython or start a new one
+            vim.api.nvim_create_user_command('Ipython',
+                function(opts)
+                    for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+                        if vim.api.nvim_buf_get_option(bufnr, 'buflisted') then
+                            local bufname = vim.api.nvim_buf_get_name(bufnr)
+                            if string.sub(bufname, 1, 7) == 'term://' and vim.fn.bufwinnr(bufnr) == -1 then
+                                vim.cmd('sbuffer ' .. bufnr)
+                                return
+                            end
+                        end
+                    end
+                    vim.cmd [[split | exec 'normal \<c-w>\<c-w> | term ipython3 --no-confirm-exit --TerminalInteractiveShell.banner2='i / <C-\><C-n>: Enter/Leave terminal mode, <C-w>{<C-w>,h,j,k,l} Switch window, <C-w>o Only window']]
+                end, {})
+            map("<leader>vp", "<cmd>Ipython<cr>", "iPython")
         end
     })
 end
@@ -321,6 +348,7 @@ if vim.g.started_by_firenvim then
         " https://github.com/glacambre/firenvim/issues/366
         nnoremap <D-v> "+p
         inoremap <D-v> <C-r>+
+        cnoremap <D-v> <C-r>+
         set linespace=0 laststatus=0
         " Set 'shortmess' and 'cmdheight' such that full name of buffer is printed
         set shortmess-=t shortmess-=F cmdheight=3
@@ -334,9 +362,9 @@ if vim.g.started_by_firenvim then
         localSettings = {
             ['.*'] = { takeover = 'never', priority = 0, cmdline = 'neovim' },
             ['.*leetcode.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
-    --         -- ['.*github.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
-    --         -- ['.*google.*'] = { takeover = 'never', priority = 1, cmdline = 'neovim' },
-    --         -- ['.*colab.*'] = { takeover = 'always', priority = 2, cmdline = 'neovim' }, -- colab.research.google
+            -- ['.*github.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
+            -- ['.*google.*'] = { takeover = 'never', priority = 1, cmdline = 'neovim' },
+            -- ['.*colab.*'] = { takeover = 'always', priority = 2, cmdline = 'neovim' }, -- colab.research.google
         }
     }
 

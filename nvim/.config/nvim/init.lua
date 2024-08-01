@@ -256,8 +256,7 @@ do
             map("<leader>vP", "<cmd>update<cr><cmd>exec '!python3' shellescape(@%, 1)<cr>", "Run")
             -- 'refurb' is a tool for refurbishing and modernizing Python codebases
             -- map("<leader>vr",
-            --     "<cmd>cexpr system('refurb --quiet ' . shellescape(expand('%'))) | copen<cr>",
-            --     "Inspect using refurb")
+            --     "<cmd>cexpr system('refurb --quiet ' . shellescape(expand('%'))) | copen<cr>", "Inspect using refurb")
             --
             -- Reuse terminal running ipython or start a new one
             vim.api.nvim_create_user_command('Ipython',
@@ -271,7 +270,7 @@ do
                             end
                         end
                     end
-                    vim.cmd [[split | exec 'normal \<c-w>\<c-w> | term ipython3 --no-confirm-exit --TerminalInteractiveShell.banner2='i / <C-\><C-n>: Enter/Leave terminal mode, <C-w>{<C-w>,h,j,k,l} Switch window, <C-w>o Only window']]
+                    vim.cmd [[split | term ipython3 --no-confirm-exit --colors=linux --TerminalInteractiveShell.banner2='i / <C-\><C-n>: Enter/Leave terminal mode, <C-w>{<C-w>,h,j,k,l} Switch window, <C-w>o Only window']]
                 end, {})
             map("<leader>vp", "<cmd>Ipython<cr>", "iPython")
         end

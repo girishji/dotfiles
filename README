@@ -5,7 +5,10 @@ nvim, pip, etc:
 > ln -s ~/dotfiles/vim/.vim/doc ~/.config/nvim/doc
 
 ipython stow:
+create 'profile_default' dir. ipython creates more dirs inside this dir.
 > mkdir ~/.ipython/profile_default
+> mkdir ~/.ipython/profile_trading
+> mkdir ~/.ipython/profile_leetcode
 > stow ipython
 > # make sure symlink exist for 'startup' dir.
 

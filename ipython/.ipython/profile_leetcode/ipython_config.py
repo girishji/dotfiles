@@ -591,10 +591,11 @@ c.TerminalInteractiveShell.autoformatter = "black"
 ## The part of the banner to be printed before the profile
 #  See also: InteractiveShell.banner1
 # c.TerminalInteractiveShell.banner1 = "Python 3.11.4 (main, Jun 20 2023, 17:23:00) [Clang 14.0.3 (clang-1403.0.22.14.1)]\nType 'copyright', 'credits' or 'license' for more information\nIPython 8.14.0 -- An enhanced Interactive Python. Type '?' for help.\n"
+c.TerminalInteractiveShell.banner1 = ''
 
 ## The part of the banner to be printed after the profile
 #  See also: InteractiveShell.banner2
-c.TerminalInteractiveShell.banner2 = 'pp() to (pretty)print dict, F2 opens Vim.\n\n'
+c.TerminalInteractiveShell.banner2 = 'pp() : to prettyprint (dict, etc.)\ni / <C-\\><C-n> : Enter / Leave terminal mode (nvim)\n<C-w>{<C-w>,h,j,k,l} : Switch window, <C-w>o : Only window\n\n'
 
 ##
 #  See also: InteractiveShell.cache_size
@@ -607,7 +608,7 @@ c.TerminalInteractiveShell.banner2 = 'pp() to (pretty)print dict, F2 opens Vim.\
 ## Set the color scheme (NoColor, Neutral, Linux, or LightBG).
 #  See also: InteractiveShell.colors
 # c.TerminalInteractiveShell.colors = 'Neutral'
-# c.TerminalInteractiveShell.colors = 'Linux'
+c.TerminalInteractiveShell.colors = 'LightBG'
 
 ## Set to confirm when you try to exit IPython with an EOF (Control-D in Unix,
 #  Control-Z/Enter in Windows). By typing 'exit' or 'quit', you can force a

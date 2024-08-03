@@ -594,13 +594,13 @@ c.TerminalInteractiveShell.autoformatter = "black"
 
 ## The part of the banner to be printed after the profile
 #  See also: InteractiveShell.banner2
-c.TerminalInteractiveShell.banner2 = 'pp() to (pretty)print dict, F2 opens Vim.\n\n'
+# c.TerminalInteractiveShell.banner2 = ''
 
-##
+## 
 #  See also: InteractiveShell.cache_size
 # c.TerminalInteractiveShell.cache_size = 1000
 
-##
+## 
 #  See also: InteractiveShell.color_info
 # c.TerminalInteractiveShell.color_info = True
 
@@ -747,8 +747,6 @@ c.TerminalInteractiveShell.highlighting_style = 'bw'
 
 #  See also: InteractiveShell.separate_in
 # c.TerminalInteractiveShell.separate_in = '\n'
-# No empty line after command execution
-c.TerminalInteractiveShell.separate_in = ''
 
 #  See also: InteractiveShell.separate_out
 # c.TerminalInteractiveShell.separate_out = ''

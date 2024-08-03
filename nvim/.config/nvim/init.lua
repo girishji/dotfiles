@@ -270,7 +270,7 @@ do
                             end
                         end
                     end
-                    vim.cmd [[split | term ipython3 --no-confirm-exit --colors=linux --TerminalInteractiveShell.banner2='i / <C-\><C-n>: Enter/Leave terminal mode, <C-w>{<C-w>,h,j,k,l} Switch window, <C-w>o Only window']]
+                    vim.cmd [[split | term ipython3 --profile=leetcode]]
                 end, {})
             map("<leader>vp", "<cmd>Ipython<cr>", "iPython")
         end

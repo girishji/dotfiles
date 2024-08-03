@@ -1,15 +1,15 @@
-ipython:
-> mkdir ~/.ipython/profile_default
-> stow ipython
-> # make sure symlink exist for 'startup' dir.
-
 nvim, pip, etc:
 > mkdir ~/.config
 > cd ~/dotfiles
 > stow nvim
 > ln -s ~/dotfiles/vim/.vim/doc ~/.config/nvim/doc
 
-ipython:
+ipython stow:
+> mkdir ~/.ipython/profile_default
+> stow ipython
+> # make sure symlink exist for 'startup' dir.
+
+ipython install:
 > pipx install ipython
 > pipx inject ipython pyflyby pandas matplotlib
 Optional:

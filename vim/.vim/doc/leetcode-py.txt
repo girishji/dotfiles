@@ -293,7 +293,7 @@ for x, y in zip(a, a[1:]):
 ex:
 return '' if any(i == j for i, j in pairwise(res)) else ''.join(res)
 
-itertools.groupby() gotchas:~
+itertools.groupby() GOTCHA:
 - to simply get a hashmap of counts of each element use collections.Counter()
 - You must sort the list first before passing to groupby()
 - The iterator returns a tuple, first is the element, second is a list of all
@@ -576,10 +576,13 @@ Scope of variables~
 
 - Scope is nothing but a dictionary.
 - Every function has its own local dictionary (for scoping)
-- Module has its own dictionary
+- Module (file) has its own dictionary
 - Classes and methods have theirs
 - There is a outermost dictionary for builtin names
-- A function can use its own local dictionary and the outermost dictionary
+- A function can use its own local dictionary. Intermediate enclosing
+  dictionaries (def/class/module) variables can be read, but if you try to
+  write to them python creates a local variable of the same name inside the
+  function. To 'bind' local to outer variables use 'nonlocal' or 'global'.
 
 At any time during execution, there are 3 or 4 nested scopes whose namespaces
 are directly accessible:
@@ -595,7 +598,7 @@ are directly accessible:
 	    def bar():
 	        innerarg = 2 # OK, innerarg is created in bar() scope.
 	        print(innerarg)
-	        arg += 'notxx' # NOT Ok (1)
+	        arg += 'notxx' # NOT Ok (see (1) below)
 	        print(arg)
 	    bar()
 	(1) arg = arg + 'notxx' => it creates 'arg' in bar() namespace. Since
@@ -614,11 +617,11 @@ are directly accessible:
 where builtin names live).
 - when you use 'nonlocal' it is same as having a local variable that has
 reference to another variable of the same name in outer scope. They are NOT
-SAME variable. If you reassign to inner x (say x = x[2:]), it is not reflected
+SAME variable. IF YOU REASSIGN TO INNER x (say x = x[2:]), IT IS NOT REFLECTED
 in outer scope. Slicing mutates objects. Variable x gets assigned to a new
 array x[2:].
-- integers, float, etc. are pass-by-value, and so a 'nonlocal' inner variable
-and outer variable refer to the same thing (you can change values).
+- integers, float, etc. are pass-by-value, and so a 'nonlocal' INNER VARIABLE
+AND OUTER VARIABLE REFER TO THE SAME THING (you can change values).
 
 Print address of a variable~
 Use id(). Can combine with hex().
@@ -1564,5 +1567,16 @@ Unpacking happens automatically:
 a, b = test()
 
 ------------------------------------------------------------------------------
+
+Can swap (or assign) sub arrays just like array elements:
+	arr[1:3], arr[4,8] = arr[1:4], arr[4:7]
+
+Assign arrays:
+	arry1 = arry2  # WRONG, it makes array1 and arry2 point to same memory
+	arry1[:] = arry2[:]  # CORRECT
+
+------------------------------------------------------------------------------
+
+
 
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

@@ -1576,7 +1576,19 @@ Assign arrays:
 	arry1[:] = arry2[:]  # CORRECT
 
 ------------------------------------------------------------------------------
+Compare Dictionaries:
+    '==' works. dict1 == dict2 is true/false and works as you'd expect.
 
+------------------------------------------------------------------------------
+Number to string / integer to string
+
+str(845)
+
+string to number / string to integer
+
+int('123')
+
+------------------------------------------------------------------------------
 
 
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

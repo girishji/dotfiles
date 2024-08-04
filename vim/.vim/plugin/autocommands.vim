@@ -4,6 +4,8 @@ augroup augrp_misc | autocmd!
     # set unnamed file type to 'txt'
     # autocmd BufEnter * if @% == "" | setfiletype txt | endif
 
+    # Macro key mapped to Q for help file
+    autocmd FileType help nnoremap <buffer> Q q
     # windows to close
     autocmd FileType help,vim-plug,qf nnoremap <buffer><silent> q :close<CR>
     # netrw: 'q' is already mapped to compound key (ex. 'qf' gets file info).

@@ -595,7 +595,7 @@ c.TerminalInteractiveShell.banner1 = ''
 
 ## The part of the banner to be printed after the profile
 #  See also: InteractiveShell.banner2
-c.TerminalInteractiveShell.banner2 = 'pp() : to prettyprint (dict, etc.)\ni / <C-\\><C-n> : Enter / Leave terminal mode (nvim)\n<C-w>{<C-w>,h,j,k,l} : Switch window, <C-w>o : Only window\n\n'
+c.TerminalInteractiveShell.banner2 = 'pp() : to prettyprint (dict, etc.)\ni / <C-\\><C-n> : Enter/Leave terminal mode (nvim); Use for "paste"\n<C-w>{<C-w>,h,j,k,l} : Switch window, <C-w>o : Only window\n\n'
 
 ##
 #  See also: InteractiveShell.cache_size

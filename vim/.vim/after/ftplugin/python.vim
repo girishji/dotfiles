@@ -99,12 +99,17 @@ iabbr <buffer>       enum_          Color = Enum('Color', ['RED', 'GRN'])<esc>_f
 iabbr <buffer>       pre            print(, file=stderr)<esc>F,i<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer>       pr             print()<c-o>i<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer>       tuple_         Point = namedtuple('Point', 'x y')<esc>_<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       tuple_named    Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       tuple__        Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       namedtuple_    Point = namedtuple('Point', 'x y')<esc>_<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       namedtuple__   Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=abbr#Eatchar()<cr>
+#
 # collections
-iabbr  <buffer>  defaultdict1   defaultdict(int)<c-r>=abbr#Eatchar()<cr>
-iabbr  <buffer>  defaultdict_   defaultdict(set)<c-r>=abbr#Eatchar()<cr>
-iabbr  <buffer>  defaultdict3   defaultdict(lambda: '[default  value]')<c-r>=abbr#Eatchar()<cr>
-iabbr  <buffer>  dict_default1  defaultdict(int)<c-r>=abbr#Eatchar()<cr>
+iabbr  <buffer>  defaultdict_     defaultdict(int)<c-r>=abbr#Eatchar()<cr>
+iabbr  <buffer>  defaultdict__    defaultdict(set)<c-r>=abbr#Eatchar()<cr>
+iabbr  <buffer>  defaultdict___   defaultdict(lambda: '[default  value]')<c-r>=abbr#Eatchar()<cr>
+iabbr  <buffer>  dict_default_    defaultdict(int)<c-r>=abbr#Eatchar()<cr>
+iabbr  <buffer>  dict_default__   defaultdict(set)<c-r>=abbr#Eatchar()<cr>
+iabbr  <buffer>  dict_default___  defaultdict(lambda: '[default  value]')<c-r>=abbr#Eatchar()<cr>
 #
 iabbr <buffer>   cache_          @functools.cache<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer>   __init__        def __init__(self):<esc>hi<c-r>=abbr#Eatchar()<cr>

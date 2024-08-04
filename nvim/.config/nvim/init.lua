@@ -153,24 +153,30 @@ vim.cmd [[
         iabbr <buffer>       enum_          Color = Enum('Color', ['RED', 'GRN'])<esc>_fC<c-r>=Eatchar()<cr>
         iabbr <buffer>       pre            print(, file=stderr)<esc>F,i<c-r>=Eatchar()<cr>
         iabbr <buffer>       pr             print()<c-o>i<c-r>=Eatchar()<cr>
+        iabbr <buffer>       namedtuple_    Point = namedtuple('Point', 'x y')<esc>_<c-r>=Eatchar()<cr>
+        iabbr <buffer>       namedtuple__   Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=Eatchar()<cr>
         iabbr <buffer>       tuple_         Point = namedtuple('Point', 'x y')<esc>_<c-r>=Eatchar()<cr>
-        iabbr <buffer>       tuple_named    Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=Eatchar()<cr>
-        iabbr  <buffer>  defaultdict1   defaultdict(int)<c-r>=Eatchar()<cr>
-        iabbr  <buffer>  defaultdict_   defaultdict(set)<c-r>=Eatchar()<cr>
-        iabbr  <buffer>  defaultdict3   defaultdict(lambda: '[default  value]')<c-r>=Eatchar()<cr>
-        iabbr  <buffer>  dict_default1  defaultdict(int)<c-r>=Eatchar()<cr>
-        iabbr <buffer>   cache_          @functools.cache<c-r>=Eatchar()<cr>
-        iabbr <buffer>   __init__        def __init__(self):<esc>hi<c-r>=Eatchar()<cr>
-        iabbr <buffer>   __add__         def __add__(self, other):<cr><c-r>=Eatchar()<cr>
-        iabbr <buffer>   __sub__         def __sub__(self, other):<cr><c-r>=Eatchar()<cr>
-        iabbr <buffer>   __mul__         def __mul__(self, other):<cr><c-r>=Eatchar()<cr>
-        iabbr <buffer>   __truediv__     def __truediv__(self, other):<cr><c-r>=Eatchar()<cr>
-        iabbr <buffer>   __floordiv__    def __floordiv__(self, other):<cr><c-r>=Eatchar()<cr>
+        iabbr <buffer>       tuple__        Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=Eatchar()<cr>
+        iabbr  <buffer>  defaultdict_       defaultdict(int)<c-r>=Eatchar()<cr>
+        iabbr  <buffer>  dict_default_      defaultdict(int)<c-r>=Eatchar()<cr>
+        iabbr  <buffer>  defaultdict__      defaultdict(set)<c-r>=Eatchar()<cr>
+        iabbr  <buffer>  dict_default__     defaultdict(set)<c-r>=Eatchar()<cr>
+        iabbr  <buffer>  defaultdict___     defaultdict(lambda: '[default  value]')<c-r>=Eatchar()<cr>
+        iabbr  <buffer>  dict_default___    defaultdict(set)<c-r>=Eatchar()<cr>
+        iabbr <buffer>   cache_             @functools.cache<c-r>=Eatchar()<cr>
+        iabbr <buffer>   __init__           def __init__(self):<esc>hi<c-r>=Eatchar()<cr>
+        iabbr <buffer>   __add__            def __add__(self, other):<cr><c-r>=Eatchar()<cr>
+        iabbr <buffer>   __sub__            def __sub__(self, other):<cr><c-r>=Eatchar()<cr>
+        iabbr <buffer>   __mul__            def __mul__(self, other):<cr><c-r>=Eatchar()<cr>
+        iabbr <buffer>   __truediv__        def __truediv__(self, other):<cr><c-r>=Eatchar()<cr>
+        iabbr <buffer>   __floordiv__       def __floordiv__(self, other):<cr><c-r>=Eatchar()<cr>
     endfunc
 
     augroup vimrcgrp | autocmd!
         au BufNewFile,BufRead *.c,*.cpp,*.java call CAbbr()
         au BufNewFile,BufRead *.py call PyAbbr()
+        " XXX: nvim bug where if ft=python but file is foo.txt it will not load python abbr (for leetcode/firenvim)
+        au BufNewFile,BufRead *.txt call PyAbbr()
     augroup END
 ]]
 
@@ -480,9 +486,9 @@ do
         sources = cmp.config.sources({
             { name = 'buffer', max_item_count = 10 },
             { name = 'path' },
-            -- { name = 'vsnip', max_item_count = 15 },
             { name = 'abbrev', max_item_count = 15 },
             { name = 'dict', max_item_count = 20 },
+            -- { name = 'vsnip', max_item_count = 15 },
         }),
     })
 

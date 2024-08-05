@@ -86,8 +86,8 @@ do
     vim.o.wildignore = '.gitignore,*.swp,*.zwc,tags'
     -- vim.o.winbar = "%=%m %F"
     -- vim.wo.signcolumn = 'yes' -- Keep signcolumn on by default for lsp diagnostics
-    vim.o.laststatus = 0
-    -- vim.cmd [[set ruf=%80(%<%f\ %h%m%r\ %=%-8y\ %-8.(%l,%c%V%)\ %P%)]]
+    vim.o.laststatus = 0  -- turn off statusline
+    -- vim.cmd [[set rulerformat=%80(%<%f\ %h%m%r\ %=%-8y\ %-8.(%l,%c%V%)\ %P%)]]
     vim.cmd [[set ruf=%80(%=%f\ %h%m%r\ %-6y\ %-5.(%l,%c%V%)\ %P%)]]
     vim.api.nvim_create_autocmd("FileType", {
         pattern = "lua",
@@ -180,6 +180,7 @@ vim.cmd [[
     augroup END
 ]]
 
+
 -- Keymaps
 do
     local function map(mode, lhs, rhs, opts)
@@ -189,7 +190,7 @@ do
     end
 
     map({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-    map({ 'n', 'v' }, '<leader>w', '<cmd>write<cr>', { desc = '[W]rite buffer' })
+    map({ 'n', 'v' }, '<leader>w', '<cmd>silent update<cr>', { desc = '[W]rite buffer' })
     map({ 'n', 'v' }, '<leader>q', '<cmd>qa<cr>', { desc = '[Q]uit all' })
     map({ 'n', 'v' }, '<leader>Q', '<cmd>qa!<cr>', { desc = '[Q]uit without saving' })
     local function defer_after(key, key2)
@@ -283,14 +284,16 @@ do
     })
 end
 
+
 -- Toggle Options
 do
     local toggle_opt = function(option)
         vim.opt_local[option] = not vim.opt_local[option]:get()
     end
-    local nmap = vim.keymap.set
-    nmap("n", "<leader>vs", function() toggle_opt("spell") end, { desc = "Toggle Spelling" })
+    local map = vim.keymap.set
+    map("n", "<leader>vs", function() toggle_opt("spell") end, { desc = "Toggle Spelling" })
 end
+
 
 -- Create autocommands
 do
@@ -340,12 +343,14 @@ do
     })
 end
 
+
 -- Firenvim
--- https://www.reddit.com/r/neovim/comments/1b9nyt5/has_anyone_successfully_embedded_nvim_in_leetcode/
--- When chrome/firefox starts Neovim, Firenvim sets the variable g:started_by_firenvim
+    -- https://www.reddit.com/r/neovim/comments/1b9nyt5/has_anyone_successfully_embedded_nvim_in_leetcode/
+    -- When chrome/firefox starts Neovim, Firenvim sets the variable g:started_by_firenvim
 if vim.g.started_by_firenvim then
     -- vim.o.guifont = 'FiraCode Nerd Font:h24'
     vim.o.guifont = 'FiraCode Nerd Font:h22'
+    -- vim.o.guifont = 'FiraCode Nerd Font:h20'
     -- vim.o.guifont = 'Fira Code:h18'
     vim.cmd [[
         " Prepend with 'silent!' to ignore errors when colorscheme is not yet installed.
@@ -355,8 +360,11 @@ if vim.g.started_by_firenvim then
         inoremap <D-v> <C-r>+
         cnoremap <D-v> <C-r>+
         set linespace=0 laststatus=0
+        " for leetcode/nvim cmdheight should be >=2, otherwise it pauses for 'press enter...' message
+        set cmdheight=2
+        " NOTE: save 3 lines at the bottom by not printing full name of buffer
         " Set 'shortmess' and 'cmdheight' such that full name of buffer is printed
-        set shortmess-=t shortmess-=F cmdheight=3
+        " set shortmess-=t shortmess-=F cmdheight=3
     ]]
 
     -- ATTENTION: Anytime you make change here, run `:call firenvim#install(0)` in nvim
@@ -431,6 +439,30 @@ if vim.g.started_by_firenvim then
 else
     -- vim.cmd 'silent! colorscheme patana'
 end
+
+-- text utilities
+    -- Toggle current word
+do
+    local text_toggle = function()
+        local toggles = {
+            ['true'] = 'false', ['false'] = 'true', True = 'False', False = 'True', TRUE = 'FALSE', FALSE = 'TRUE',
+            yes = 'no', no = 'yes', Yes = 'No', No = 'Yes', YES = 'NO', NO = 'YES',
+            on = 'off', off = 'on', On = 'Off', Off = 'On', ON = 'OFF', OFF = 'ON',
+            open = 'close', close = 'open', Open = 'Close', Close = 'Open',
+            dark = 'light', light = 'dark',
+            width = 'height', height = 'width',
+            first = 'last', last = 'first',
+            left = 'right', right = 'left',
+            top = 'bottom', bottom = 'top',
+        }
+        local word = vim.fn.expand("<cword>")
+        if toggles[word] ~= nil then
+            vim.cmd('normal! \"_ciw' .. toggles[word])
+        end
+    end
+    vim.keymap.set('n', '<Leader>vt', function() text_toggle() end, {noremap = true, silent = true})
+end
+
 
 -- nvim-cmp
 do

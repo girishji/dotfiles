@@ -378,8 +378,10 @@ if vim.g.started_by_firenvim then
     -- vim.o.guifont = 'FiraCode Nerd Font:h20'
     -- vim.o.guifont = 'Fira Code:h18'
     vim.cmd [[
+        set background=light
         " Prepend with 'silent!' to ignore errors when colorscheme is not yet installed.
-        " silent! colorscheme zellner
+        " light colorschemes: zellner, lunaperche, vim, shine, delek
+        silent! colorscheme lunaperche
         " https://github.com/glacambre/firenvim/issues/366
         nnoremap <D-v> "+p
         inoremap <D-v> <C-r>+

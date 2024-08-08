@@ -223,7 +223,11 @@ Instead of appending to list, initialize length:
 To create integer infinity (large value) use float('inf'):~
 float('inf') and float('-inf')
 or
-# Use maximal system integer to represent infinity
+use 'inf' and '-inf' from numpy (automatically imported)
+> -inf < inf
+> True
+or
+Use maximal system integer to represent infinity
 INF = sys.maxsize
 
 ------------------------------------------------------------------------------
@@ -361,7 +365,10 @@ from itertools import islice
 numbers = iter(range(10))
 for i in numbers:
     if i == 2:
-        next(islice(numbers, 3, 3), None)  # consume 3
+	# skip (3, 4, 5)
+        next(islice(numbers, 3, 3), None)
+	# skip only '3'
+	# next(numbers)
 
 next(iterator)
 next(iterator, default)
@@ -1587,6 +1594,16 @@ str(845)
 string to number / string to integer
 
 int('123')
+
+------------------------------------------------------------------------------
+Logical True False promoted to integer
+
+res = 0
+res += 1 < 2
+(now res is 1)
+but,
+res = 1 < 2
+(now res is 'True')
 
 ------------------------------------------------------------------------------
 

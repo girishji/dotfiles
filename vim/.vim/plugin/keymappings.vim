@@ -61,8 +61,9 @@ nnoremap <silent> ]F :last<CR>
 # (C-_ produces the same hex code as C-/)
 vnoremap <C-_> <Esc>/\%V
 
-# Visual search (:h vimtips.txt)
+# Search for visually highlightged text (:h vimtips.txt)
 vmap <silent> //    y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
+
 # # Emacs C-s C-w like solution: hightlight in visual mode and then type * or #
 # # `cgn` to replace text
 # # https://vonheikemen.github.io/devlog/tools/how-to-survive-without-multiple-cursors-in-vim/
@@ -113,7 +114,7 @@ vnoremap <leader>a :s/\v(.*)=(.*)/\=printf("%-16s %s", submatch(1), submatch(2))
 
 # Toggle group
 nnoremap <leader>vs :set spell!<CR><Bar>:echo "Spell Check: " .. strpart("OffOn", 3 * &spell, 3)<CR>
-# nnoremap <silent> <leader>vt <cmd>call text#Toggle()<CR>
+nnoremap <silent> <leader>vt <cmd>call text#Toggle()<CR>
 # nnoremap <expr> <leader>vc empty(filter(getwininfo(), 'v:val.quickfix')) ? ':copen<CR>' : ':cclose<CR>'
 # nnoremap <expr> <leader>vl empty(filter(getwininfo(), 'v:val.loclist')) ? ':lopen<CR>' : ':lclose<CR>'
 
@@ -147,3 +148,28 @@ for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', 
     execute 'onoremap <silent> i' .. char .. ' :normal vi' .. char .. '<CR>'
     execute 'onoremap <silent> a' .. char .. ' :normal va' .. char .. '<CR>'
 endfor
+
+
+# (:h emacs-keys) For Emacs-style editing on the command-line:
+# start of line
+:cnoremap <C-A>		<Home>
+# back one character
+:cnoremap <C-B>		<Left>
+# delete character under cursor
+:cnoremap <C-D>		<Del>
+# end of line
+:cnoremap <C-E>		<End>
+# forward one character
+:cnoremap <C-F>		<Right>
+# recall newer command-line
+:cnoremap <C-N>		<Down>
+# recall previous (older) command-line
+:cnoremap <C-P>		<Up>
+# back one word
+:cnoremap <Esc><C-B>	<S-Left>
+#   use Alt-B
+:cnoremap â		<S-Left>
+# forward one word
+:cnoremap <Esc><C-F>	<S-Right>
+#   use Alt-F
+:cnoremap æ		<S-Right>

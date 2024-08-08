@@ -41,7 +41,6 @@ do
         group = vim.api.nvim_create_augroup('PlugInstallGrp', { clear = true })
     })
 
-    local vim = vim
     local Plug = vim.fn['plug#']
 
     vim.call 'plug#begin'
@@ -282,6 +281,32 @@ do
             map("<leader>vp", "<cmd>Ipython<cr>", "iPython")
         end
     })
+
+    -- (:h emacs-keys) For Emacs-style editing on the command-line:
+    vim.cmd [[
+        " start of line
+        :cnoremap <C-A>		<Home>
+        " back one character
+        :cnoremap <C-B>		<Left>
+        " delete character under cursor
+        :cnoremap <C-D>		<Del>
+        " end of line
+        :cnoremap <C-E>		<End>
+        " forward one character
+        :cnoremap <C-F>		<Right>
+        " recall newer command-line
+        :cnoremap <C-N>		<Down>
+        " recall previous (older) command-line
+        :cnoremap <C-P>		<Up>
+        " back one word
+        :cnoremap <Esc><C-B>	<S-Left>
+        "   use Alt-B
+        :cnoremap â	<S-Left>
+        " forward one word
+        :cnoremap <Esc><C-F>	<S-Right>
+        "   use Alt-F
+        :cnoremap æ	<S-Right>
+    ]]
 end
 
 
@@ -354,7 +379,7 @@ if vim.g.started_by_firenvim then
     -- vim.o.guifont = 'Fira Code:h18'
     vim.cmd [[
         " Prepend with 'silent!' to ignore errors when colorscheme is not yet installed.
-        silent! colorscheme zellner
+        " silent! colorscheme zellner
         " https://github.com/glacambre/firenvim/issues/366
         nnoremap <D-v> "+p
         inoremap <D-v> <C-r>+
@@ -366,6 +391,17 @@ if vim.g.started_by_firenvim then
         " Set 'shortmess' and 'cmdheight' such that full name of buffer is printed
         " set shortmess-=t shortmess-=F cmdheight=3
     ]]
+
+    -- pythondoc
+    do
+        if vim.fn.exists('g:loaded_pythondoc') then
+            vim.api.nvim_create_autocmd({ "VimEnter" }, {
+                callback = function(args)
+                    vim.fn['PythondocExpandHH']()
+                end
+            })
+        end
+    end
 
     -- ATTENTION: Anytime you make change here, run `:call firenvim#install(0)` in nvim
 

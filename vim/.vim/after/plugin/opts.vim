@@ -75,11 +75,9 @@ if exists("g:loaded_lsp")
         # outlineWinSize: 30,
         showSignature: true,
         echoSignature: false,
-        useBufferCompletion: false,
-        completionTextEdit: false,
-        # snippetSupport: false, # snippets from lsp server
         # vsnipSupport: false,
         ignoreMissingServer: true,
+        # autoComplete: false,  # when false, it sets omnifunc (use <c-x><c-o>)
     })
     if executable('clangd')
         g:LspAddServer([{
@@ -236,6 +234,7 @@ if exists('g:loaded_scope')
         borderhighlight: ['Comment'],
         # maxheight: 20,
         # maxwidth: 80,
+        emacsKeys: true,
     })
 
     fuzzy.OptionsSet({

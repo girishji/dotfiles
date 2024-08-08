@@ -2,6 +2,25 @@
 ----------------------------------------
 See |tips.txt|
 
+Example: Renaming files
+
+Say I have a directory with the following files in them (directory picked at
+random :-):
+
+buffer.c
+charset.c
+digraph.c
+...
+
+and I want to rename *.c *.bla.  I'd do it like this: >
+	$ vim
+	:r !ls *.c
+	:%s/\(.*\).c/mv & \1.bla
+	:w !sh
+	:q!
+('&' above is the whole matched string)
+
+
 ----------------------------------------
 File organization                    *giri-vim-file-org*
 
@@ -220,8 +239,8 @@ line mode. Ex. `:h ad<c-d>`
 Search superpower: 1) hop around while searching using <c-g> and <c-t> (t is
 on top of g). 2) <c-r><c-w> to suck in a word, <c-l> for next char, and
 <c-r><c-l> for whole line
-OR (this method does not take advantage of incsearch)
-1) <c-f>A<tab> 2) inside this edit mode <tab> works just like
+Search in Ex command prompt:
+1) (when in Ex command prompt) <c-f>A<tab> 2) inside this edit mode <tab> works just like
 insert mode
 Seach mode navigation: |ex-edit-index| and |cmdline-completion|
 

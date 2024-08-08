@@ -74,7 +74,7 @@ alias F="for x (**/*(.));do ;done"  # use *** to follow symlink
 #  - when using glob chars like *, ?, use single quotes to escape shell interpretation
 #  - cannot alias 'fi' since it is a reserved keyword, 'fg' is foreground cmd
 alias ff="find . \( -name '*.zwc' -o -name '*.swp' -o -path '*/.git*' -o -path '*/plugged*' \) -prune -o -type f -print -follow"
-alias fff="find . -name '*.c' -print -follow -exec grep --color -EHni xxx {} \;"
+alias ffg="find . -name '*.c' -print -follow -exec grep --color -EHni xxx {} \;"
 
 # git
 alias ga='git add .; gitcommit '

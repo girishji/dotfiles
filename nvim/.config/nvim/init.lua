@@ -128,7 +128,7 @@ vim.cmd [[
         iabbr <buffer>       vimc  vim.cmd [[<c-r>=Eatchar()<cr>
     endfunc
 
-    func! GetSurroundingFn()
+    func! s:GetSurroundingFn()
         let fpat = '\vdef\s+\zs\k+'
         let lnum = search(fpat, 'nb')
         if lnum > 0
@@ -160,7 +160,7 @@ vim.cmd [[
             \<cr>main()<esc><c-r>=Eatchar()<cr>
         iabbr <buffer>       python3#    #!/usr/bin/env python3<esc><c-r>=Eatchar()<cr>
         iabbr <buffer>       '''_ '''
-            \<cr>>>> print(<c-r>=GetSurroundingFn()<cr>)
+            \<cr>>>> print(<c-r>=<SID>GetSurroundingFn()<cr>)
             \<cr>'''<esc>ggOfrom sys import stderr<esc>Go<c-u><esc>o<esc>
             \:normal imain__2<space><esc>
             \?>>> print<cr>:nohl<cr>g_hi<c-r>=Eatchar()<cr>

@@ -35,9 +35,9 @@ nnoremap <buffer> <leader>vi ::% !tidy-imports --replace-star-imports -r -p --qu
 #     }
 # augroup END
 
-nnoremap <buffer><expr> <leader>vt $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode test {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"
-nnoremap <buffer><expr> <leader>vx $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode exec {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"
-nnoremap <buffer> <leader>vp :new \| exec 'nn <buffer> q :bd!\<cr\>' \| r !python3 #<cr>
+# nnoremap <buffer><expr> <leader>vt $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode test {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"
+# nnoremap <buffer><expr> <leader>vx $":new \| exec 'nn <buffer> q :bd!\<cr\>' \| 0read !leetcode exec {bufname()->fnamemodify(':t')->matchstr('^\d\+')}<cr>"
+nnoremap <buffer> <leader>vp :new \| exec 'nn <buffer> q :bd!' \| r !python3 #<cr>
 nnoremap <buffer> <leader>p :Ipython<cr>
 g:pyindent_open_paren = 'shiftwidth()' # https://github.com/vim/vim/blob/v8.2.0/runtime/indent/python.vim
 

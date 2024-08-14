@@ -128,6 +128,21 @@ vim.cmd [[
         iabbr <buffer>       vimc  vim.cmd [[<c-r>=Eatchar()<cr>
     endfunc
 
+    func! GetSurroundingFn()
+        let fpat = '\vdef\s+\zs\k+'
+        let lnum = search(fpat, 'nb')
+        if lnum > 0
+            let fname = getline(lnum)->matchstr(fpat) . '()'
+            let cpat = '\vclass\s+\zs\k+'
+            let lnum = search(cpat, 'nb')
+            if lnum > 0
+                return getline(lnum)->matchstr(cpat) . '().' . fname
+            endif
+            return fname
+        endif
+        return ''
+    endfunc
+
     func! PyAbbr()
         iabbr <buffer>       def   def ):<cr><esc>-f)i<c-r>=Eatchar()<cr>
         iabbr <buffer>       try_  try:<cr>
@@ -137,13 +152,18 @@ vim.cmd [[
             \<cr>raise<cr>else:
             \<cr>pass<esc>5k_<c-r>=Eatchar()<cr>
         iabbr <buffer>       main__2
-            \ if __name__ == "__main__":<cr>
+            \ if __name__ == "__main__":
             \<cr>import doctest
             \<cr>doctest.testmod()<esc><c-r>=Eatchar()<cr>
         iabbr <buffer>       main__
             \ if __name__ == "__main__":<cr>
             \<cr>main()<esc><c-r>=Eatchar()<cr>
         iabbr <buffer>       python3#    #!/usr/bin/env python3<esc><c-r>=Eatchar()<cr>
+        iabbr <buffer>       '''_ '''
+            \<cr>>>> print(<c-r>=GetSurroundingFn()<cr>)
+            \<cr>'''<esc>ggOfrom sys import stderr<esc>Go<c-u><esc>o<esc>
+            \:normal imain__2<space><esc>
+            \?>>> print<cr>:nohl<cr>g_hi<c-r>=Eatchar()<cr>
         iabbr <buffer>       """            """."""<c-o>3h<c-r>=Eatchar()<cr>
         iabbr <buffer>       case_ match myval:<cr>
             \<cr>case 10:
@@ -196,8 +216,9 @@ do
         vim.fn.feedkeys(key, 'nt')
         vim.defer_fn(function() vim.fn.feedkeys(key2, 'nt') end, 10)
     end
-    map({ 'n', 'v' }, '<leader><space>', function () defer_after(':e *', '*') end)
     map({ 'n', 'v' }, '<leader><bs>', function () defer_after(':b', ' ') end)
+    map({ 'n', 'v' }, '<leader><space>', function () defer_after(':e *', '*') end)
+    -- map({ 'n', 'v' }, '<leader><space>', function () defer_after(':find', ' ') end)
 
     -- Remap for dealing with word wrap
     map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })

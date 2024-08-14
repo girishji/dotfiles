@@ -78,7 +78,7 @@ iabbr <buffer>       python3#    #!/usr/bin/env python3<esc><c-r>=abbr#Eatchar()
 iabbr <buffer>       '''_ '''
             \<cr>>>> print(<c-r>=<SID>GetSurroundingFn()<cr>)
             \<cr>'''<esc>ggOfrom sys import stderr<esc>Go<c-u><esc>o<esc>
-            \:normal i__main__<cr>
+            \:normal imain__2<cr>
             \?>>> print<cr>:nohl<cr>g_hi<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer>       """            """."""<c-o>3h<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer>       case_ match myval:

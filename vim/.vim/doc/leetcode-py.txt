@@ -245,6 +245,23 @@ foodict.keys() returns an object dict_keys([...]) which is a dictionary view.
 Call list() on this, or call list on dictionary directly:
         keylist = list(foodict)
 
+set default value for a key, or return a value corresponding to key. Very
+useful for initializing key to a default value.
+	dictx = dictx.setdefault(key, [default])
+
+   setdefault(key[, default])           *dict.setdefault()..stdtypes.pyx*
+      If _key_ is in the dictionary, return its value.  If not, insert
+      _key_ with a value of _default_ and return _default_.  _default_
+      defaults to "None".
+
+pop() can be used in a dict. It pops a key from dict or returns a default value.
+
+   pop(key[, default])                         *dict.pop()..stdtypes.pyx*
+
+      If _key_ is in the dictionary, remove it and return its value,
+      else return _default_.  If _default_ is not given and _key_ is
+      not in the dictionary, a "KeyError" is raised.
+
 ------------------------------------------------------------------------------
 Iterator raises StopIteration exception when next(iter) fails.
 
@@ -1606,6 +1623,21 @@ res = 1 < 2
 (now res is 'True')
 
 ------------------------------------------------------------------------------
+Cycle in a directed graph:
 
+Use 'topological sort', and use Kahn's Algo (https://en.wikipedia.org/wiki/Topological_sorting)
 
+Topological sort or topological ordering of a directed graph is a linear
+ordering of its vertices such that for every directed edge (u,v) from vertex u
+to vertex v, u comes before v in the ordering. For instance, the vertices of
+the graph may represent tasks to be performed, and the edges may represent
+constraints that one task must be performed before another; in this
+application, a topological ordering is just a valid sequence for the tasks.
+The canonical application of topological sorting is in scheduling a sequence
+of jobs or tasks based on their dependencies.
+
+If no topological ordering can be found, then there must be a cycle.
+p.210: schedule courses such that prerequisite is taken before a course
+
+------------------------------------------------------------------------------ 
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

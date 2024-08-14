@@ -17,12 +17,10 @@ cursor_mode() {
             [[ ${KEYMAP} == viins ]] ||
             [[ ${KEYMAP} = '' ]] ||
             [[ $1 = 'beam' ]]; then
-            # echo -ne $cursor_beam
             echo -ne $cursor_beam
         fi
     }
     zle-line-init() {
-        # echo -ne $cursor_beam
         echo -ne $cursor_beam
     }
     zle -N zle-keymap-select

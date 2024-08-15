@@ -240,7 +240,7 @@ if exists('g:loaded_scope')
     fuzzy.OptionsSet({
         grep_highlight_ignore_case: false,
         grep_echo_cmd: true,
-        # find_echo_cmd: true,
+        find_echo_cmd: true,
     })
 
     nnoremap <leader><space> <scriptcmd>fuzzy.File()<CR>

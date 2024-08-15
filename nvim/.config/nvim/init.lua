@@ -694,7 +694,6 @@ end
 
 -- fFtT
 local fFtT_id = 0
-
 do
     local function highlight_clear()
         if fFtT_id > 0 then
@@ -760,7 +759,7 @@ do
             if fFtT_id > 0 then
                 matchdelete(fFtT_id)
             end
-            fFtT_id = vim.fn.matchaddpos('Comment', locations, 1001)
+            fFtT_id = vim.fn.matchaddpos('NonText', locations, 1001)
             vim.cmd 'redraw'
         end
         return ''

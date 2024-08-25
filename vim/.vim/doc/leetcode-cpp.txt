@@ -1,6 +1,120 @@
 *leetcode-cpp.txt*
 
 ------------------------------------------------------------------------------
+User kmjp's solutions:
+
+Contest 291
+
+typedef signed long long ll;
+
+#undef _P
+#define _P(...) (void)printf(__VA_ARGS__)
+#define FOR(x,to) for(x=0;x<(to);x++)
+#define FORR(x,arr) for(auto& x:arr)
+#define ITR(x,c) for(__typeof(c.begin()) x=c.begin();x!=c.end();x++)
+#define ALL(a) (a.begin()),(a.end())
+#define ZERO(a) memset(a,0,sizeof(a))
+#define MINUS(a) memset(a,0xff,sizeof(a))
+//-------------------------------------------------------
+
+
+class Solution {
+public:
+    string removeDigit(string number, char digit) {
+        string Z="";
+        int i;
+        FOR(i,number.size()) {
+            if(number[i]==digit) {
+                string S=number.substr(0,i)+number.substr(i+1);
+                if(Z=="") {
+                    Z=S;
+                }
+                else {  // separate line so that whole block can be deleted
+                    Z=max(Z,S);  // giri: Z and S are strings with numbers, int-value comparison is valid
+                }
+            }
+        }
+        return Z;
+    }
+};
+
+class Solution {
+public:
+    int minimumCardPickup(vector<int>& cards) {
+        map<int,int> P;
+        int i;
+        int mi=1<<20;  // a 'inf' value
+        FOR(i,cards.size()) {
+            if(P.count(cards[i])) mi=min(mi,i-P[cards[i]]+1);  // count() returns 0 or 1
+            P[cards[i]]=i;
+        }
+
+        if(mi==1<<20) mi=-1;
+        return mi;
+    }
+};
+
+class Solution {
+public:
+    int countDistinct(vector<int>& nums, int k, int p) {
+        vector<vector<int>> R[202];  // max length of 'nums' argument is 200, use of 2-d array to speed up
+        int i,j;  // he declares these because 'FOR' needs this
+        FOR(i,nums.size()) {
+            int ng=0;
+            vector<int> V;
+            for(j=i;j<nums.size();j++) {
+                if(nums[j]%p==0) ng++;  // no need to use {} block, no spaces
+                if(ng>k) break;
+                V.push_back(nums[j]);
+                R[V.size()].push_back(V);
+            }
+        }
+
+        int ret=0;
+        FOR(i,202) if(R[i].size()) {  // not empty
+            ret++;
+            sort(ALL(R[i]));  // sort from beg to end
+            for(j=1;j<R[i].size();j++) if(R[i][j]!=R[i][j-1]) ret++;
+        }
+        return ret;
+
+    }
+};
+
+
+int C[26];
+class Solution {
+public:
+    long long appealSum(string s) {
+		int C[26]={}; // 0 initialized array
+		ll ret=0;
+		int i,j;
+		FOR(i,s.size()) {
+			C[s[i]-'a']=i+1;
+			FOR(j,26) ret+=C[j];
+		}
+		
+        return ret;
+    }
+};
+
+from penguinhacker (last solution): (no macros)
+
+class Solution {
+public:
+    long long appealSum(string s) {
+        vector<int> last(26, -1);
+        long long ans=0;
+        for (int i=0; i<s.size(); ++i) {
+            last[s[i]-'a']=i;
+            for (int j=0; j<26; ++j)
+                if (last[j]!=-1)
+                    ans+=last[j]+1;
+        }
+        return ans;
+    }
+};
+------------------------------------------------------------------------------
 7.6 in EPI C++: convert a single char to a std::string
 
 to convert a single char to a std::string do std::string(1, ch), where 1 is

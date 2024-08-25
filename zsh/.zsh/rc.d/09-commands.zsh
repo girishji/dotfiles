@@ -181,7 +181,9 @@ if is_mac; then
         # All the gnu commands will be prefixed with 'g'. Can do 'man gls'.
         # Note: https://apple.stackexchange.com/questions/432386/use-ls-colors-not-lscolors-on-mac-os
         # export LS_COLORS='di=1:ln=3:ex=4'
-        export LS_COLORS='di=1:ln=3:ex=3'
+        if [[ ${bg_color} != "0;15" ]]; then # dark background
+            export LS_COLORS='di=1:ln=3:ex=3'
+        fi
         alias ls='gls --color=always -F' # auto/always/never
     else
         alias ls='ls -FG' # aliases the command /usr/bin/ls
@@ -193,6 +195,7 @@ if is_mac; then
     alias ibooks='cd /Users/gp/Library/Mobile Documents/iCloud~com~apple~iBooks/Documents'
     alias obsidian='cd /Users/gp/Library/Mobile Documents/iCloud~md~obsidian/Documents'
     alias op='open'
+    alias cr='clang-repl --Xcc=-include"$HOME/.clang-repl-incl.h"'
     # alias gssh='gcloud compute ssh --zone "us-central1-a" "n2dstd" --project "sandbox-403316" --ssh-flag="-ServerAliveInterval=30"'
     # alias gscp='gcloud compute scp --recurse n2dstd:~/foo ~/bar'
     # alias gstop='gcloud compute instances stop n2dstd'

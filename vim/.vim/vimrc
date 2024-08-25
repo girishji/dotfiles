@@ -45,7 +45,9 @@ autocmd BufEnter,FileType * if &ft == null_string || '<amatch>' != 'help' | setl
 set list
 
 # set fillchars=vert:│,fold:۰,diff:·
-set fillchars=vert:│,fold:۰,diff:·,stl:─,stlnc:═
+if &background == 'dark'
+    set fillchars=vert:│,fold:۰,diff:·,stl:─,stlnc:═
+endif
 set clipboard=unnamed # Always use the system clipboard
 set number # line numbering
 # set relativenumber
@@ -145,6 +147,7 @@ else
     Plug 'rafamadriz/friendly-snippets'
     Plug 'hrsh7th/vim-vsnip'
     Plug 'hrsh7th/vim-vsnip-integ'
+    Plug 'vim-python/python-syntax'
     # colorschemes
     # Plug 'cocopon/iceberg.vim'
     # Plug 'dracula/vim'
@@ -168,6 +171,8 @@ else
     # Plug 'girishji/devdocs.vim'
     plug#end()
 endif
+
+g:python_highlight_all = 1
 
 # g:vimbits_vim9cmdline = true
 

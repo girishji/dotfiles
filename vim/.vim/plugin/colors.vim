@@ -110,10 +110,10 @@ if &background == 'dark'
 
     # autocmd BufEnter * g:DeclutterBrightenBoldFont()
 else
-    silent! colorscheme declutter
+    # silent! colorscheme declutter
     # autocmd BufEnter * g:DeclutterUseTerminalFGBG()
 
     # silent! colorscheme quiet
-    # silent! colorscheme lunaperche
+    colorscheme lunaperche
 endif
 

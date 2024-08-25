@@ -433,7 +433,7 @@ if vim.g.started_by_firenvim then
     vim.g.firenvim_config = {
         localSettings = {
             ['.*'] = { takeover = 'never', priority = 0, cmdline = 'neovim' },
-            ['.*leetcode.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
+            -- ['.*leetcode.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
             -- ['.*github.*'] = { takeover = 'always', priority = 1, cmdline = 'neovim' },
             -- ['.*google.*'] = { takeover = 'never', priority = 1, cmdline = 'neovim' },
             -- ['.*colab.*'] = { takeover = 'always', priority = 2, cmdline = 'neovim' }, -- colab.research.google

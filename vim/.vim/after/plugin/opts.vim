@@ -14,7 +14,7 @@ if exists("g:loaded_vimcomplete")
         text: { sortedDict: true },
     }
     g:VimCompleteOptionsSet({
-        completor: { shuffleEqualPriority: true, alwaysOn: true, kindDisplayType: 'symbol' },
+        completor: { shuffleEqualPriority: true, alwaysOn: true, debug: false },
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
         dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'text'], properties: dictproperties },
         abbrev: { enable: true },
@@ -193,15 +193,19 @@ if exists("g:loaded_commentary")
 endif
 
 if exists("g:loaded_bufline")
-    # - `User1`: Active buffer
-    # - `User2`: Alternate buffer
-    # - `User3`: Other buffers
-    # - `User4`: Emphasis characters if specified (see Options)
-    highlight user1 ctermfg=252 cterm=underline,bold
-    highlight user2 ctermfg=252 cterm=bold,italic
-    highlight user3 ctermfg=252 cterm=none
-    highlight user4 ctermfg=252 cterm=bold
-    g:BuflineSetup({ highlight: true, showbufnr: false, emphasize: '' })
+    if &background == 'dark'
+        # - `User1`: Active buffer
+        # - `User2`: Alternate buffer
+        # - `User3`: Other buffers
+        # - `User4`: Emphasis characters if specified (see Options)
+        highlight user1 ctermfg=252 cterm=underline,bold
+        highlight user2 ctermfg=252 cterm=bold,italic
+        highlight user3 ctermfg=252 cterm=none
+        highlight user4 ctermfg=252 cterm=bold
+        g:BuflineSetup({ highlight: true, showbufnr: false, emphasize: '' })
+    else
+        # keep defaults
+    endif
 endif
 
 # another way
@@ -216,9 +220,9 @@ endif
 # endif
 
 if exists('g:loaded_devdocs')
-    nnoremap <leader>H <cmd>DevdocsFind<CR>
-    nnoremap <leader>I <cmd>DevdocsInstall<CR>
-    nnoremap <leader>U <cmd>DevdocsUninstall<CR>
+    nnoremap <leader>vd <cmd>DevdocsFind<CR>
+    # nnoremap <leader>I <cmd>DevdocsInstall<CR>
+    # nnoremap <leader>U <cmd>DevdocsUninstall<CR>
     # hi link DevdocCode CursorLine
     # g:DevdocsPopupOptionsSet({borderhighlight: ['Comment']})
     import autoload 'devdocs/popup.vim' as dp

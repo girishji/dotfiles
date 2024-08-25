@@ -26,6 +26,38 @@ def FoldingToggle()
 enddef
 command FoldingToggle FoldingToggle()
 
+# Open files in ~/help folder
+command -nargs=1 -complete=custom,<SID>Completor HelpFile OpenHelpFile(<f-args>)
+
+def Completor(prefix: string, line: string, cursorpos: number): string
+    var dir = '~/help'->expand()
+    return dir->readdir((v) => !$'{dir}/{v}'->isdirectory() && v !~ '^\.')->join("\n")
+enddef
+
+def OpenHelpFile(prefix: string)
+    var fname = $'~/help/{prefix}'
+    if fname->filereadable()
+        :exec $'edit {fname}'
+    else  # if only item is showing in the popup menu, open it.
+        var paths = fname->getcompletion('file')
+        if paths->len() == 1
+            :exec $'edit {paths[0]}'
+        endif
+    endif
+enddef
+
+def CanExpandHF(): bool
+    if getcmdtype() == ':'
+        var context = getcmdline()->strpart(0, getcmdpos() - 1)
+        if context == 'hf'
+            return true
+        endif
+    endif
+    return false
+enddef
+
+cabbr <expr> hf <SID>CanExpandHF() ? 'HelpFile' : 'hf'
+
 # Open image in MacOs
 def ShowImage()
     if expand('<cfile>') != null_string

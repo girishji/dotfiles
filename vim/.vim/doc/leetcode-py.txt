@@ -1,6 +1,10 @@
 *leetcode-py.txt*
 
 ------------------------------------------------------------------------------
+Use chars = collections.defaultdict(list) instead of chars = {} and then
+checking for empty values.
+
+------------------------------------------------------------------------------
 When you are looking for some 'minimum' in what looks like graph traversal~
 use BFS or Dijkshtra. Do not use DFS/recursion even if it looks easy to
 implement, and even with memoization/DP.
@@ -811,8 +815,8 @@ problem into subproblems such that
   subproblems are available, and
 - these subproblem solutions are cached.
 
-Focus on breaking down the problem in terms of F(n) = F(n-x) + ...
-Don’t have to do divide and conquer (break it in the middle).
+ぬFocus on breaking down the problem in termsぬ of F(n) = F(n-x) + ...
+Don’t have to do ぬdivide and conquer (break it in the middle)ぬ.
 If you can find above relation, you may do DP
 
 READ THE VARIANTS of these problems in the EPI book.

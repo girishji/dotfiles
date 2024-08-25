@@ -123,9 +123,9 @@ nnoremap <leader>vr :new \| exec "nn <buffer> q :bd!\<cr\>" \| r ! | # redirect 
 nnoremap <leader>vR :enew \| exec "nn <buffer> q :bd!\<cr\>" \| put = execute('map')<left><left>| # redirect vim cmd, use <leader>fi to filter
 # nnoremap <leader>vl <cmd>set buflisted!<cr>
 nnoremap <leader>vm <cmd>messages<cr>
-nnoremap <leader>vd <cmd>GitDiffThisFile<cr>
+# nnoremap <leader>vd <cmd>GitDiffThisFile<cr>
 nnoremap <leader>ve <cmd>e $MYVIMRC<cr>
-nnoremap <leader>vz <cmd>FoldingToggle<cr>
+# nnoremap <leader>vz <cmd>FoldingToggle<cr>
 # Following not needed: use 1<c-g> for absolute path, or <c-g> for relative path
 # nnoremap <leader>vp <cmd>echo expand('%')<cr>
 nnoremap <leader>vi <cmd>ShowImage<cr>

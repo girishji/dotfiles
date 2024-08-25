@@ -1,4 +1,4 @@
 iab <buffer> --> ------------------------------------------------------------------------------<c-r>=abbr#Eatchar()<cr>
 iab <buffer> ==> ==============================================================================<c-r>=abbr#Eatchar()<cr>
 
-hi link markdownCodeBlock preproc
+hi link markdownCodeBlock Comment

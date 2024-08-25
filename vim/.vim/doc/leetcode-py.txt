@@ -16,7 +16,7 @@ level. No need to use sentinel dummy entry into the que to mark the level.
 ------------------------------------------------------------------------------
 Basics~
 - to check if list is empty:~
-	 if 'list == []' DOES NOT WORK. Do 'if not list' or 'if len(list) == 0'
+  if 'list == []' DOES NOT WORK. Do 'if not list' or 'if len(list) == 0'
 
 - single element tuple~
   OK: x = (3,)
@@ -27,7 +27,7 @@ Basics~
 - can concatenate tuples:~
   (cannot concatenate mix of tuples and lists)
   atree = tree[:i] + (num,) + tree[i:] # tree is a tuple
-	
+
 ------------------------------------------------------------------------------
 Perf speedup for string contactinations~
 use an array and then join().
@@ -1644,4 +1644,4 @@ If no topological ordering can be found, then there must be a cycle.
 p.210: schedule courses such that prerequisite is taken before a course
 
 ------------------------------------------------------------------------------ 
-vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:
+vim:tw=78:ts=4:ft=help:norl:set modifiable noreadonly:

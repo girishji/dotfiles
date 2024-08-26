@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
+#include <string_view>
 #include <list>
 
 using namespace std;
+using namespace std::literals::string_literals;  // can convert 'const char[]' to string: "foo"s
 using namespace std::literals::string_view_literals;  // can use string_view: "foo"sv
 
 typedef signed long long ll;
@@ -15,3 +17,18 @@ typedef signed long long ll;
 #define ALL(a) (a.begin()),(a.end())
 #define ZERO(a) memset(a,0,sizeof(a))
 #define MINUS(a) memset(a,0xff,sizeof(a))
+
+/* A simple range check adapter for vector (from A Tour of C++). Otherwise,
+ * out-of-bounds when using [] will place garbage value without giving error.
+ */
+template<typename T>
+class Vec : public std::vector<T> { 
+    public:
+        using vector<T>::vector; // use the constructors from vector (under the name Vec) 
+
+        T& operator[](int i) // range check
+        { return vector<T>::at(i); }
+
+        const T& operator[](int i) const 
+        { return vector<T>::at(i); } // range check const objects
+};

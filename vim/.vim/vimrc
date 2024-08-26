@@ -41,7 +41,6 @@ autocmd! vimHints
 # Turn on for Noname/scratch files and non-help files
 # 'listchars' is not local to buffer, only local to window
 autocmd FileType * if &ft =~ '\v(help|markdown)' | setlocal listchars=tab:\ \ ,trail:\  | else | setlocal listchars=tab:→·,trail:~ | endif
-endif
 autocmd BufEnter * if &ft == null_string | setlocal listchars=tab:\ \ ,trail:\  | endif
 # autocmd BufEnter,FileType * :echom &ft expand('<amatch>') expand('<afile>') 'here'
 set list

@@ -87,6 +87,9 @@ set laststatus=2 # always show statusline
 # set grepprg=grep\ --color=never\ -RESIHin\ --exclude={'*.zwc','*.swp','*.git*'}\ --exclude-dir=plugged
 set grepprg=grep\ --color=never\ -RESIHin\ --exclude="*.git*"\ --exclude="*.swp"\ --exclude="*.zwc"\ --exclude-dir=plugged
 
+# enable folding at headers in markdown
+g:markdown_folding = 1
+
 syntax on # turn on syntax highlighting
 
 # if executable("ug")

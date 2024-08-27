@@ -59,8 +59,9 @@ Keymap help
 ------------------------------------------------------------------------
 Folds                                       *giri-folds* *folds-giri*
 
-(with `foldnestmax` set to 1, you can use lower-case version of these
-commands. zm is same as zM, etc.)
+With `foldnestmax` set to 1, you can use lower-case version of the
+following commands. zm is same as zM, etc.
+
 zR <- open all folds ('R'educe fold by opening more folds)
 zM <- close all folds ('M'ore folding)
 zA: "Toggle all folds under cursor",

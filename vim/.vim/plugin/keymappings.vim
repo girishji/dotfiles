@@ -29,8 +29,9 @@ nnoremap <silent> <C-Down> :resize -2<cr>
 nnoremap <silent> <C-Right> :vertical resize -2<cr>
 nnoremap <silent> <C-Left> :vertical resize +2<cr>
 
-nnoremap <silent> <leader>h :bprevious<CR>
-nnoremap <silent> <leader>l :bnext<CR>
+# nnoremap <silent> <leader>h :bprevious<CR>
+# nnoremap <silent> <leader>l :bnext<CR>
+
 # Replace [[ ]] mappings that get redefined by ftplugin/vim.vim
 # autocmd FileType * nnoremap <silent><buffer> [[ :bprevious<CR>
 # autocmd FileType * nnoremap <silent><buffer> ]] :bnext<CR>
@@ -137,6 +138,9 @@ import '../autoload/text.vim'
 vnoremap <silent> <leader>' <scriptcmd>text.Surround('''')<cr>
 vnoremap <silent> <leader>" <scriptcmd>text.Surround('"')<cr>
 vnoremap <silent> <leader>` <scriptcmd>text.Surround('`')<cr>
+nnoremap <silent> <leader>' <scriptcmd>text.Surround('''')<cr>
+nnoremap <silent> <leader>" <scriptcmd>text.Surround('"')<cr>
+nnoremap <silent> <leader>` <scriptcmd>text.Surround('`')<cr>
 
 # simple text objects
 # -------------------

@@ -1,15 +1,8 @@
 vim9script
 
-setl path-=/usr/include
+iabbr <buffer> for_each_   for_each(v.begin(),v.end(),[](int& x){x=;});<esc>-fi;<c-r>=abbr#Eatchar()<cr>
 
-# cppman to view cppreference.com documentation
-# command -complete=custom,ListCppKeywords -nargs=1 Cppman :term ++close cppman <args>
-# def ListCppKeywords(ArgLead: string, CmdLine: string, CursorPos: number): string
-#     return system($'cppman -f {ArgLead}')
-# enddef
-
-# nnoremap <buffer> <leader>H :Cppman<space>
-# cabbr <expr> hh  abbr#ExpandCmd('hh') ? 'Cppman <c-r>=abbr#Eatchar()<cr>' : 'hh'
+# setl path-=/usr/include
 
 if exists(":LspDocumentSymbol") == 2
     nnoremap <buffer> <leader>/ <cmd>LspDocumentSymbol<CR>
@@ -20,6 +13,15 @@ if exists("g:loaded_vimcomplete")
         lsp: { enable: true, maxCount: 50, priority: 11 },
     })
 endif
+
+# cppman to view cppreference.com documentation
+# command -complete=custom,ListCppKeywords -nargs=1 Cppman :term ++close cppman <args>
+# def ListCppKeywords(ArgLead: string, CmdLine: string, CursorPos: number): string
+#     return system($'cppman -f {ArgLead}')
+# enddef
+
+# nnoremap <buffer> <leader>H :Cppman<space>
+# cabbr <expr> hh  abbr#ExpandCmd('hh') ? 'Cppman <c-r>=abbr#Eatchar()<cr>' : 'hh'
 
 # fuzzy search cppman
 # runtime! after/ftplugin/man.vim

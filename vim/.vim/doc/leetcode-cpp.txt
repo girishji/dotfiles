@@ -213,15 +213,6 @@ remove extreneous .. and . from long pathnames (shrink pathname to minimum)
 
 use a stack.
 
-------------------------------------------------------------------------------
-Queue (not 'que'), deque:
-
-std::queue operates from only one end. Has push and emplace (no enque)(push
-happens at back, like push_back), pop (no deque) happens at front, front(),
-back(). When called on empty que pop, front, back throw exceptions. 
-
-std::deque : operates from both ends.
-Has push/emplace/pop_back/front, font() and back()
 
 ------------------------------------------------------------------------------
 Implement your own binary tree:

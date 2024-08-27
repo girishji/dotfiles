@@ -36,7 +36,7 @@ enddef
 
 def OpenHelpFile(prefix: string)
     var fname = $'~/help/{prefix}'
-    if fname->filereadable()
+    if fname->expand()->filereadable()
         :exec $'edit {fname}'
     else  # if only item is showing in the popup menu, open it.
         var paths = fname->getcompletion('file')

@@ -28,8 +28,9 @@ cabbr <expr> maek  abbr#CmdAbbr('maek', 'make')
 # cabbr <expr> gr  abbr#CmdAbbr('gr') ? 'silent grep!' : 'gr'
 # cabbr <expr> vg  abbr#CmdAbbr('vg') ? 'vim //j' : 'vg'
 
-iabbr vimhelpftpostfix vim:tw=78:ts=4:ft=help:norl:ma:noro:ai:lcs=tab\:\ \ ,trail\:~:<c-r>=abbr#Eatchar()<cr>
-iabbr txtftpostfix vim:ft=txt:<c-r>=abbr#Eatchar()<cr>
+iabbr vimhelp_modeline vim:tw=78:ts=4:ft=help:norl:ma:noro:ai:lcs=tab\:\ \ ,trail\:~:<c-r>=abbr#Eatchar()<cr>
+iabbr txt_modeline vim:ft=txt:<c-r>=abbr#Eatchar()<cr>
+iabbr markdown_modeline vim:tw=80:ts=4:ft=markdown:ai:<c-r>=abbr#Eatchar()<cr>
 
 # dashes to match previous line length (there are also key maps in keymappings.vim)
 iabbr  --* <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=abbr#Eatchar()<cr>

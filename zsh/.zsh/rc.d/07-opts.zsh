@@ -26,3 +26,6 @@ setopt NUMERIC_GLOB_SORT
 
 # girish
 setopt vi
+
+# see :h zshtips.md
+setopt EXTENDED_GLOB

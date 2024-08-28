@@ -97,7 +97,7 @@ Command-line key mapping ~
 `<C-r>` {register} | Insert the contents of a numbered or named register. Between typing CTRL-R and the second character '"' will be displayed to indicate that you are expected to enter the name of a register.
 
 ----------------------------------------
-:dig! to show digraphs ~
+:dig! to show digraphs (utf-8) ~
 
 <c-k> and 2 letter code will input the symbol
 34 is ¾, 12 is ½, 14 is ¼, for example

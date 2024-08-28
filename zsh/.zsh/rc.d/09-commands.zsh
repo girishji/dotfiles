@@ -73,8 +73,39 @@ alias F="for x (**/*(.));do ;done"  # use *** to follow symlink
 #  - -name refers to last componenet of path
 #  - when using glob chars like *, ?, use single quotes to escape shell interpretation
 #  - cannot alias 'fi' since it is a reserved keyword, 'fg' is foreground cmd
-alias ff="find . \( -name '*.zwc' -o -name '*.swp' -o -path '*/.git*' -o -path '*/plugged*' \) -prune -o -type f -print -follow"
-alias ffg="find . -name '*.c' -print -follow -exec grep --color -EHni xxx {} \;"
+# alias ff="find . \( -name '*.zwc' -o -name '*.swp' -o -path '*/.git*' -o -path '*/plugged*' \) -prune -o -type f -follow -name '*'"
+# alias ffg="find . -name '*.c' -print -follow -exec grep --color -EHni xxx {} \;"
+#
+# alternative:
+# A very useful feature (of zsh) is the fancy globbing. The characters are a
+# bit hard to remember but extremely convenient (as in, it's often faster to
+# look them up than to write the equivalent find command).
+#
+# from :h zshtips.md
+# ls **/*       # list everything in the tree
+# ls **/*foo*   # list files <*foo*> wherever in the heirarchy
+# foo*~*.bak = all matches for foo* except those matching *.bak (think as 'foo*' and '~*.bak')
+# ls -lt  **/*.(php|css|js)(.om[1,20]) # list 20 newest web files anywhere in directory hierarchy (very useful) *N*
+# ls -lt **/*.{js,php,css}~(libs|temp|tmp|test)/* # exclude directories from grep, EXTENDED_GLOB required
+# ls **/*~*/.git/*  # ignore all git subdirectories
+# ls -lt **/*~*vssver.scc  # excluding vssver.scc (see next)
+# ls -lt **/^vssver.scc    #  excluding vssver.scc (simpler)
+# ls -lt **/^(vssver.scc|*.ini) # excluding vssver and any *.ini
+# extra:
+# ls *(.)              # list just regular files
+# ls -d *(/)           # list just directories
+# ls ^*.(css|php)(.)   # list all but css & php
+# vi **/main.php       # where ever it is in hierarchy
+# foo*~*.bak = all matches for foo* except those matching *.bak
+# also:
+# foo*(.) = only regular files matching foo*
+# foo*(/) = only directories matching foo*
+# dir/**/foo* = foo* in the directory dir and all its subdirectories, recursively
+#
+# Add your pattern as in 'ls **/*<pat>...'. excludes files *.zwc, *.swp and dir plugged.
+alias ff='ls **/*~(*.zwc|*.swp|plugged/*)'
+alias lss='ls **/*~(*.zwc|*.swp|plugged/*)'
+
 
 # git
 alias ga='git add .; gitcommit '
@@ -129,7 +160,38 @@ alias ag='ag --smart-case'
 #       -l prints files with matches only; -S (macos only) follow symlinks
 #       -I ignores binary files (prevents a info message getting printed)
 #
-alias gr="grep --color=always -RESIins --exclude={'*.zwc','*.swp','*.git*','*.dict'}"
+# from :h zshtips.md
+# grep -i "$1" **/*.{js,php,css}~(libs|temp|tmp|test)/* # exclude directories from grep *N* EXTENDED_GLOB required
+
+# alias gr="grep --color=always -RESIins --exclude={'*.zwc','*.swp','*.git*','*.dict'}"
+#
+# alternative:
+#
+# See comments under 'find' above, and also :h zshtips.md
+# grep -i "$1" */*.php~libs/*~temp/*~test/* # exclude directories lib,temp,test from grep 'setopt EXTENDED_GLOB' required
+# grep -i "$1" **/*.{js,php,css}~(libs|temp|tmp|test)/* # exclude directories from grep, EXTENDED_GLOB required
+# grep excluding certain directories
+# grep -i somestr **/*.(js|php|css) | grep -Ev 'libs/|temp/|test/'
+# grep -i somestr **/*.(js|php|css)~libs/*~temp/*~test/*
+# grep -i somestr **/*.(js|php|css)~(libs|temp|test)/*
+# grep, dont use egrep, grep -E is better
+# single quotes stop the shell, " quotes allow shell interaction
+# grep 'host' **/(*.cfm~(ctpigeonbot|env).cfm)
+# grep -i 'host' **/(*.cfm~(ctpigeonbot|env).cfm)~*((#s)|/)junk*/*(.)
+# egrep -i "^ *mail\(" **/*.php
+# grep "^ *mail\(" **/*.php~*junk*/*  #find all calls to mail, ignoring junk directories
+# # grep '.' dot matches one character
+# grep b.g file    # match bag big bog but not boog
+# # grep * matches 0 , 1 or many of previous character
+# grep "b*g" file # matches g or bg or bbbbg
+# # grep '.*' matches a string
+# grep "b.*g" file # matches bg bag bhhg bqqqqqg etc
+# # grep break character is \
+# grep 'hello\.gif' file
+# grep "cat\|dog" file matches lines containing the word "cat" or the word "dog"
+# grep "I am a \(cat\|dog\)" matches lines containing the string "I am a cat" or the string "I am a dog"
+# grep "Fred\(eric\)\? Smith" file   # grep fred or frederic
+alias gr='grep -EIins "f" **/*'
 alias -g G='| grep --color -iEI'
 
 # alias pipi='pip install --user '

@@ -648,7 +648,7 @@ do
     cmp.register_source("abbrev", abbr_source().new())
 
     -- source python dictionary
-    local pydict_source = function()
+    local dict_source = function(dirpath)
         local source = {}
 
         source.new = function()
@@ -662,7 +662,7 @@ do
                 return pydict_items
             end
             pydict_items = {}
-            local fpath = vim.fn.expand('$HOME/.vim/data/python.dict')
+            local fpath = vim.fn.expand(dirpath)
             local file = io.open(fpath, "r")
             if file then
                 for line in io.lines(fpath) do
@@ -687,7 +687,13 @@ do
     vim.api.nvim_create_autocmd("FileType", {
         pattern = "python",
         callback = function(args)
-            cmp.register_source("dict", pydict_source().new())
+            cmp.register_source("dict", dict_source('$HOME/.vim/data/python.dict').new())
+        end
+    })
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = "cpp",
+        callback = function(args)
+            cmp.register_source("dict", dict_source('$HOME/.vim/data/cpp.dict').new())
         end
     })
 end

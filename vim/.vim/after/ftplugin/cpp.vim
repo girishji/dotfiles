@@ -2,6 +2,8 @@ vim9script
 
 iabbr <buffer> for_each_   for_each(v.begin(),v.end(),[](int& x){x=;});<esc>-fi;<c-r>=abbr#Eatchar()<cr>
 
+setl dictionary=$HOME/.vim/data/cpp.dict
+
 # setl path-=/usr/include
 
 if exists(":LspDocumentSymbol") == 2

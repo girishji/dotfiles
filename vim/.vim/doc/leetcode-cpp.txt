@@ -242,4 +242,31 @@ std::reverse), and then simply reverse the letters inside each world
 separately.
 
 ------------------------------------------------------------------------------
+Instead of:
+
+  bool negative = (num1.front() < 0 && num2.front() > 0) ||
+                  (num1.front() > 0 && num2.front() < 0);
+do:
+  const int sign = num1.front() < 0 ^ num2.front() < 0 ? -1 : 1;
+
+------------------------------------------------------------------------------ 
+For long 64bit shifting use:
+
+x=(1L << i);
+do not use 1 << i, it only shifts 32 bits.
+
+0u says unsigned
+
+------------------------------------------------------------------------------
+ fastest way to reverse bits is to build a precomputed array
+ precompute_reverse such that for every16-bitnumber i, precompute_reverse[i]
+ holds the bit-reversed i
+
+------------------------------------------------------------------------------
+to convert a digit 5 to char, do '0' + 5
+to do reverse use ch - '0' or use std::isdigit()
+
+for multiple digits use std::atoi(std::c_str()) or C atoi(str::c_str())
+
+------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

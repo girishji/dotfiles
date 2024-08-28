@@ -11,6 +11,7 @@ if exists("g:loaded_vimcomplete")
     g:vimcomplete_tab_enable = 1
     var dictproperties = {
         python: { sortedDict: false },
+        cpp: { sortedDict: false },
         text: { sortedDict: true },
     }
     g:VimCompleteOptionsSet({

@@ -56,6 +56,8 @@ do
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/cmp-path'
     Plug 'hrsh7th/cmp-cmdline'
+    Plug 'hrsh7th/cmp-nvim-lsp'
+    Plug 'neovim/nvim-lspconfig'
     --
     -- Plug('~/my-prototype-plugin')
     vim.call 'plug#end'
@@ -579,9 +581,16 @@ do
             { name = 'path' },
             { name = 'abbrev', max_item_count = 15 },
             { name = 'dict', max_item_count = 20 },
+            { name = 'nvim_lsp' },
             -- { name = 'vsnip', max_item_count = 15 },
         }),
     })
+
+    -- configure clangd
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+    require('lspconfig').clangd.setup {
+        capabilities = capabilities,
+    }
 
     -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
     cmp.setup.cmdline({ '/', '?' }, {

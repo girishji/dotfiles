@@ -11,7 +11,6 @@ if exists("g:loaded_vimcomplete")
     g:vimcomplete_tab_enable = 1
     var dictproperties = {
         python: { sortedDict: false },
-        cpp: { sortedDict: false },
         text: { sortedDict: true },
     }
     g:VimCompleteOptionsSet({
@@ -221,7 +220,7 @@ endif
 # endif
 
 if exists('g:loaded_devdocs')
-    nnoremap <leader>vd <cmd>DevdocsFind<CR>
+    nnoremap <leader>vv <cmd>DevdocsFind<CR>
     # nnoremap <leader>I <cmd>DevdocsInstall<CR>
     # nnoremap <leader>U <cmd>DevdocsUninstall<CR>
     # hi link DevdocCode CursorLine

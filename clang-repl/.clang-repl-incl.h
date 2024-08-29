@@ -1,22 +1,25 @@
 #include <iostream>
 #include <string>
-// #include <string_view>
+#include <string_view>
 // #include <list>
 #include <vector>
 #include <utility>  // for 'pair' and 'tuple'
-// #include <map>
-// #include <set>
-// #include <deque>
-// #include <unordered_map>
-// #include <unordered_set>
+#include <fstream>
+#include <map>
+#include <set>
+#include <deque>
+#include <unordered_map>
+#include <unordered_set>
 // #include <stack>
 #include <algorithm>
 #include <iterator>
-// #include <ranges>
+#include <ranges>
 
 using namespace std;
 using namespace std::literals::string_literals;  // can convert 'const char[]' to string: "foo"s
-// using namespace std::literals::string_view_literals;  // can use string_view: "foo"sv
+using namespace std::literals::string_view_literals;  // can use string_view: "foo"sv
+
+// namespace rv = std::ranges::views;  // shortcut
 
 // constexpr float min = numeric_limits<float>::min(); // smallest positive float
 

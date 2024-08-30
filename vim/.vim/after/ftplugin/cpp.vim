@@ -1,10 +1,22 @@
 vim9script
 
-iabbr <buffer> for_each_   for_each(v.begin(),v.end(),[](int& x){x=;});<esc>-fi;<c-r>=abbr#Eatchar()<cr>
-
-# setl dictionary=$HOME/.vim/data/cpp.dict
+setl dictionary=/User/gp/.vim/data/cpp.dict
 
 # setl path-=/usr/include
+setl makeprg=clang++\ -include"$HOME/.clang-repl-incl.h"\ -std=c++23\ -stdlib=libc++\ -fexperimental-library\ -o\ /tmp/a.out\ %\ &&\ /tmp/a.out
+
+def Eatchar()
+    abbr#Eatchar()
+enddef
+iabbr <silent><buffer> fori_ for(int i=0; i<; i++) {<esc>7hi<C-R>=Eatchar()<CR>
+iabbr <silent><buffer> forj_ for(int j=0; j<; j++) {<esc>7hi<C-R>=Eatchar()<CR>
+iabbr <silent><buffer> fork_ for(int k=0; k<; k++) {<esc>7hi<C-R>=Eatchar()<CR>
+iabbr <silent><buffer> forr_ for(auto& ) {<Left><left><left><C-R>=Eatchar()<CR>
+iabbr <silent><buffer> for_iter_ for(__typeof(c.begin()) x=c.begin(); x!=c.end(); x++) {<C-R>=Eatchar()<CR>
+iabbr <silent><buffer> for_each_ ranges::for_each(, [](int& n) {});<Left><C-R>=Eatchar()<CR>
+iabbr <silent><buffer> for_each_print_ ranges::for_each(, [](const int& n) {cout << n;});cout<<endl;<esc>F(;a<C-R>=Eatchar()<CR>
+iabbr <silent><buffer> print_range_ ranges::copy(x, ostream_iterator<int>(cout, " "));cout<<endl;<esc>Fxcw<C-R>=Eatchar()<CR>
+iabbr <silent><buffer> all_ a.begin(), a.end()<C-R>=Eatchar()<CR>
 
 if exists(":LspDocumentSymbol") == 2
     nnoremap <buffer> <leader>/ <cmd>LspDocumentSymbol<CR>

@@ -258,7 +258,7 @@ if is_mac; then
     alias obsidian='cd /Users/gp/Library/Mobile Documents/iCloud~md~obsidian/Documents'
     alias op='open'
     # -fexperimental-library is needed for std::ranges
-    alias cr='clang-repl --Xcc=-include"$HOME/.clang-repl-incl.h" --Xcc=-std=c++20 --Xcc=-stdlib=libc++ --Xcc=-fexperimental-library'
+    alias cr='clang-repl --Xcc=-include"$HOME/.clang-repl-incl.h" --Xcc=-std=c++23 --Xcc=-stdlib=libc++ --Xcc=-fexperimental-library'
     # alias gssh='gcloud compute ssh --zone "us-central1-a" "n2dstd" --project "sandbox-403316" --ssh-flag="-ServerAliveInterval=30"'
     # alias gscp='gcloud compute scp --recurse n2dstd:~/foo ~/bar'
     # alias gstop='gcloud compute instances stop n2dstd'

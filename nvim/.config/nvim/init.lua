@@ -56,8 +56,8 @@ do
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/cmp-path'
     Plug 'hrsh7th/cmp-cmdline'
-    Plug 'hrsh7th/cmp-nvim-lsp'
-    Plug 'neovim/nvim-lspconfig'
+    -- Plug 'hrsh7th/cmp-nvim-lsp'
+    -- Plug 'neovim/nvim-lspconfig'
     --
     -- Plug('~/my-prototype-plugin')
     vim.call 'plug#end'
@@ -86,16 +86,21 @@ do
     vim.o.virtualedit = 'block' -- allows selection of rectangular text in visual block mode
     vim.o.wildignore = '.gitignore,*.swp,*.zwc,tags'
     -- vim.o.winbar = "%=%m %F"
-    -- vim.wo.signcolumn = 'yes' -- Keep signcolumn on by default for lsp diagnostics
     vim.o.laststatus = 0  -- turn off statusline
     -- vim.cmd [[set rulerformat=%80(%<%f\ %h%m%r\ %=%-8y\ %-8.(%l,%c%V%)\ %P%)]]
     vim.cmd [[set ruf=%80(%=%f\ %h%m%r\ %-6y\ %-5.(%l,%c%V%)\ %P%)]]
     vim.api.nvim_create_autocmd("FileType", {
-        pattern = "lua",
+        pattern = {"lua", "cpp"},
         callback = function(args)
             vim.o.tabstop = 4
             vim.o.shiftwidth = 4
             vim.o.expandtab = true
+        end
+    })
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = "cpp",
+        callback = function(args)
+            vim.cmd [[setlocal commentstring=//\ %s]]
         end
     })
 end
@@ -115,9 +120,18 @@ vim.cmd [[
     iabbr  --* <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=Eatchar()<cr>
     iabbr <silent> --- ----------------------------------------<C-R>=Eatchar()<CR>
 
-    func! CAbbr()
-        iabbr <silent><buffer> if if ()<Left><C-R>=Eatchar()<CR>
-        iabbr <silent><buffer> while while ()<Left><C-R>=Eatchar()<CR>
+    func! CppAbbr()
+        iabbr <silent><buffer> fori_ for(int i=0; i<; i++) {<esc>7hi<C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> forj_ for(int j=0; j<; j++) {<esc>7hi<C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> fork_ for(int k=0; k<; k++) {<esc>7hi<C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> forr_ for(auto& x : ) {<Left><left><left><C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> for_iter_ for(auto it=c.begin(); it!=c.end(); it++) {<C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> for_each_ ranges::for_each(, [](int& n) {});<Left><C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> for_each_print_ ranges::for_each(, [](const int& n) {cout << n;});cout<<endl;<esc>F(;a<C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> print_range_ ranges::copy(x, ostream_iterator<int>(cout, " "));cout<<endl;<esc>Fxcw<C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> all_ a.begin(), a.end()<C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> max_element_ ranges::max_element(<C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> distance_ ranges::distance(<C-R>=Eatchar()<CR>
     endfunc
 
     func! LuaAbbr()
@@ -194,10 +208,11 @@ vim.cmd [[
     endfunc
 
     augroup vimrcgrp | autocmd!
-        au BufNewFile,BufRead *.c,*.cpp,*.java call CAbbr()
+        au BufNewFile,BufRead *.cpp call CppAbbr()
         au BufNewFile,BufRead *.py call PyAbbr()
         " XXX: nvim bug where if ft=python but file is foo.txt it will not load python abbr (for leetcode/firenvim)
-        au BufNewFile,BufRead *.txt call PyAbbr()
+        " au BufNewFile,BufRead *.txt call PyAbbr()
+        au BufNewFile,BufRead *.txt call CppAbbr()
     augroup END
 ]]
 
@@ -444,13 +459,34 @@ if vim.g.started_by_firenvim then
 
     local grp = vim.api.nvim_create_augroup("FireNvim", { clear = true })
 
+    local function insert_header()
+        local line = vim.fn.getline(1);
+        local hdr = '//--------------------'
+        if line ~= hdr then
+            local txt = {
+                hdr,
+                'typedef signed long long ll;',
+                'typedef vector<int> vi;',
+                'typedef vector<vector<int>> vii;',
+                'typedef pair<int,int> pi;',
+                hdr,
+            }
+            vim.fn.append(0, txt)
+        end
+    end
+
     vim.api.nvim_create_autocmd('BufReadPost', {
         group = grp,
         pattern = {'*leetcode.com_*.txt', '*colab*.txt'},  -- colab.research.google
         callback = function()
-            vim.bo.filetype = 'python'
             vim.cmd 'syntax enable'
-            vim.cmd 'set syntax=python'
+            -- vim.bo.filetype = 'python'
+            -- vim.cmd 'set syntax=python'
+            -- vim.bo.filetype = 'cpp'
+            vim.cmd 'set ft=cpp'
+            vim.cmd 'set syntax=cpp'
+            -- vim.cmd 'set signcolumn=no'
+            insert_header()
         end,
     })
 
@@ -579,18 +615,19 @@ do
         sources = cmp.config.sources({
             { name = 'buffer', max_item_count = 10 },
             { name = 'path' },
+            -- { name = 'abbrev', max_item_count = 15, trigger_characters = {'('} },
             { name = 'abbrev', max_item_count = 15 },
             { name = 'dict', max_item_count = 20 },
-            { name = 'nvim_lsp' },
+            -- { name = 'nvim_lsp' },  -- does not work with leetcode
             -- { name = 'vsnip', max_item_count = 15 },
         }),
     })
 
     -- configure clangd
-    local capabilities = require('cmp_nvim_lsp').default_capabilities()
-    require('lspconfig').clangd.setup {
-        capabilities = capabilities,
-    }
+    -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
+    -- require('lspconfig').clangd.setup {
+    --     capabilities = capabilities,
+    -- }
 
     -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
     cmp.setup.cmdline({ '/', '?' }, {
@@ -644,7 +681,7 @@ do
         end
 
         source.get_keyword_pattern = function(self, params)
-            return [[\S\+]]
+            return [[\k\+]]  -- \k is better than \S; triggers after '(' in foo(abbrev
         end
 
         source.complete = function(self, params, callback)
@@ -656,7 +693,7 @@ do
 
     cmp.register_source("abbrev", abbr_source().new())
 
-    -- source python dictionary
+    -- source dictionary
     local dict_source = function(dirpath)
         local source = {}
 
@@ -665,21 +702,21 @@ do
             return self
         end
 
-        pydict_items = nil  -- global var
+        dict_items = nil  -- global var
         source._get_words = function()
-            if pydict_items ~= nil then
-                return pydict_items
+            if dict_items ~= nil then
+                return dict_items
             end
-            pydict_items = {}
+            dict_items = {}
             local fpath = vim.fn.expand(dirpath)
             local file = io.open(fpath, "r")
             if file then
                 for line in io.lines(fpath) do
-                    table.insert(pydict_items, { label = line, dup = 0, kind = cmp.lsp.CompletionItemKind.Keyword })
+                    table.insert(dict_items, { label = line, dup = 0, kind = cmp.lsp.CompletionItemKind.Keyword })
                 end
                 file:close()
             end
-            return pydict_items
+            return dict_items
         end
 
         source.get_keyword_pattern = function(self, params)

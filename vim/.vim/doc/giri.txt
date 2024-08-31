@@ -146,6 +146,22 @@ directory.
 https://github.com/vim/vim/issues/10114
 
 ----------------------------------------
+Q: How to remove lines NOT matching a pattern (exclude pattern)?
+
+g!/pattern/s/.*// or :v/pattern/s/.*//
+
+:v is a shortcut for :g!. The etymology comes from the -v option to the
+standard grep command.
+
+:[range]g[lobal]!/{pattern}/[cmd]
+			Execute the Ex command [cmd] (default ":p") on the
+			lines within [range] where {pattern} does NOT match.
+
+							*:v* *:vglobal*
+:[range]v[global]/{pattern}/[cmd]
+			Same as :g!.
+
+----------------------------------------
 Quick navigation tags 
 
 `v` after an operator (`c`, `d`, etc.) will not start visual mode, but selects

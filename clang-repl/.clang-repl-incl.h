@@ -29,10 +29,10 @@ typedef vector<int> vi;
 typedef vector<vector<int>> vii;
 typedef pair<int,int> pi;
 
-// #define F first
-// #define S second
+#define F first
+#define S second
 #define PB push_back
-#define MP make_pair
+// #define MP make_pair
 #define FOR(i,a,b) for (int i = (a); i <= (b); i++)
 #define FORREV(i,a,b) for (int i = (a); i <= (b); i--)
 // #define FOR(x,to) for(x=0;x<(to);x++)

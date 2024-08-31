@@ -2,6 +2,8 @@
 29.3	giri-nav.txt	/*29.3*
 29.4	giri-nav.txt	/*29.4*
 29.5	giri-nav.txt	/*29.5*
+:v	giri.txt	/*:v*
+:vglobal	giri.txt	/*:vglobal*
 asterisks	giri.txt	/*asterisks*
 cscopectags.txt	cscopectags.txt	/*cscopectags.txt*
 dict.pop()..stdtypes.pyx	leetcode-py.txt	/*dict.pop()..stdtypes.pyx*

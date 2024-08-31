@@ -469,6 +469,8 @@ if vim.g.started_by_firenvim then
                 'typedef vector<int> vi;',
                 'typedef vector<vector<int>> vii;',
                 'typedef pair<int,int> pi;',
+                '#define F first',
+                '#define S second',
                 hdr,
             }
             vim.fn.append(0, txt)
@@ -487,6 +489,7 @@ if vim.g.started_by_firenvim then
             vim.cmd 'set syntax=cpp'
             -- vim.cmd 'set signcolumn=no'
             insert_header()
+            vim.fn.histadd('cmd', [[s/\vi(\W)/x\1/g]]) -- 'i' -> 'x' in 'for(int i=0;i< ...)'
         end,
     })
 

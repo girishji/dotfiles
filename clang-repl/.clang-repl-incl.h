@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <string_view>
-// #include <list>
+#include <list>
 #include <vector>
 #include <utility>  // for 'pair' and 'tuple'
 #include <fstream>
@@ -32,15 +32,15 @@ typedef pair<int,int> pi;
 #define F first
 #define S second
 #define PB push_back
-// #define MP make_pair
 #define FOR(i,a,b) for (int i = (a); i <= (b); i++)
-#define FORREV(i,a,b) for (int i = (a); i <= (b); i--)
-// #define FOR(x,to) for(x=0;x<(to);x++)
+#define FOR_(i,a,b) for (int i = (a); i <= (b); i--)
 #define FORR(x,arr) for(auto& x:arr)
 #define ITR(x,c) for(__typeof(c.begin()) x=c.begin();x!=c.end();x++)
 #define ALL(a) (a.begin()),(a.end())
-// #define ZERO(a) memset(a,0,sizeof(a))
-// #define MINUS(a) memset(a,0xff,sizeof(a))
+#define ZERO(a) memset(a,0,sizeof(a))
+#define MINUS(a) memset(a,0xff,sizeof(a))
+// #undef _P
+// #define _P(...) (void)printf(__VA_ARGS__)
 
 // find type of a variable
 // ex:
@@ -57,9 +57,6 @@ constexpr std::string_view type_name()
     return string_view(p.data() + 34, p.size() - 34 - 1);
 }
 
-
-// #undef _P
-// #define _P(...) (void)printf(__VA_ARGS__)
 
 /* A simple range check adapter for vector (from A Tour of C++). Otherwise,
  * out-of-bounds when using [] will place garbage value without giving error.

@@ -60,6 +60,7 @@ do
     -- Plug 'neovim/nvim-lspconfig'
     --
     -- Plug('~/my-prototype-plugin')
+    Plug 'miikanissi/modus-themes.nvim'
     vim.call 'plug#end'
 end
 
@@ -103,6 +104,9 @@ do
             vim.cmd [[setlocal commentstring=//\ %s]]
         end
     })
+    -- Prepend with 'silent!' to ignore errors when colorscheme is not yet installed.
+    -- light colorschemes: zellner, lunaperche, vim, shine, delek
+    vim.cmd [[silent! colorscheme modus]]
 end
 
 -- Abbreviations
@@ -121,12 +125,12 @@ vim.cmd [[
     iabbr <silent> --- ----------------------------------------<C-R>=Eatchar()<CR>
 
     func! CppAbbr()
-        iabbr <silent><buffer> fori_ for(int i=0; i<; i++) {<esc>7hi<C-R>=Eatchar()<CR>
-        iabbr <silent><buffer> forj_ for(int j=0; j<; j++) {<esc>7hi<C-R>=Eatchar()<CR>
-        iabbr <silent><buffer> fork_ for(int k=0; k<; k++) {<esc>7hi<C-R>=Eatchar()<CR>
-        iabbr <silent><buffer> forr_ for(auto& x : ) {<Left><left><left><C-R>=Eatchar()<CR>
-        iabbr <silent><buffer> for_iter_ for(auto it=c.begin(); it!=c.end(); it++) {<C-R>=Eatchar()<CR>
-        iabbr <silent><buffer> for_each_ ranges::for_each(, [](int& n) {});<Left><C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> fori_ for(int i=0; i<; i++) {<c-o>o}<esc>kf;;i<C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> forj_ for(int j=0; j<; j++) {<c-o>o}<esc>kf;;i<C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> fork_ for(int k=0; k<; k++) {<c-o>o}<esc>kf;;i<C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> forr_ for(auto& x : ) {<c-o>o}<esc>kf:la<C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> for_iter_ for(auto it=.begin(); it!=.end(); it++) {<c-o>o}<esc>kf.i<C-R>=Eatchar()<CR>
+        iabbr <silent><buffer> for_each_ ranges::for_each(, [](int& n) {});<esc>16hi<C-R>=Eatchar()<CR>
         iabbr <silent><buffer> for_each_print_ ranges::for_each(, [](const int& n) {cout << n;});cout<<endl;<esc>F(;a<C-R>=Eatchar()<CR>
         iabbr <silent><buffer> print_range_ ranges::copy(x, ostream_iterator<int>(cout, " "));cout<<endl;<esc>Fxcw<C-R>=Eatchar()<CR>
         iabbr <silent><buffer> all_ a.begin(), a.end()<C-R>=Eatchar()<CR>
@@ -289,6 +293,19 @@ do
     -- list loaded modules
     -- map({ 'n' }, "<leader>vL", function() vim.notify(vim.inspect(package.loaded)) end, { desc = "[L]ist loaded modules" })
 
+    -- Reuse terminal buffer or start a new one
+    local function reuse_or_start_terminal()
+        for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+            if vim.api.nvim_buf_get_option(bufnr, 'buflisted') then
+                local bufname = vim.api.nvim_buf_get_name(bufnr)
+                if string.sub(bufname, 1, 7) == 'term://' and vim.fn.bufwinnr(bufnr) == -1 then
+                    vim.cmd('sbuffer ' .. bufnr)
+                    return
+                end
+            end
+        end
+    end
+
     -- python keybindings
     vim.api.nvim_create_autocmd("FileType", {
         pattern = "python",
@@ -298,25 +315,29 @@ do
             end
             map("<leader>vi", "<cmd>% !tidy-imports --replace-star-imports -r -p --quiet --black<cr>", "Add missing imports and sort")
             map("<leader>vP", "<cmd>update<cr><cmd>exec '!python3' shellescape(@%, 1)<cr>", "Run")
-            -- 'refurb' is a tool for refurbishing and modernizing Python codebases
-            -- map("<leader>vr",
-            --     "<cmd>cexpr system('refurb --quiet ' . shellescape(expand('%'))) | copen<cr>", "Inspect using refurb")
-            --
             -- Reuse terminal running ipython or start a new one
             vim.api.nvim_create_user_command('Ipython',
                 function(opts)
-                    for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-                        if vim.api.nvim_buf_get_option(bufnr, 'buflisted') then
-                            local bufname = vim.api.nvim_buf_get_name(bufnr)
-                            if string.sub(bufname, 1, 7) == 'term://' and vim.fn.bufwinnr(bufnr) == -1 then
-                                vim.cmd('sbuffer ' .. bufnr)
-                                return
-                            end
-                        end
-                    end
+                    reuse_or_start_terminal()
                     vim.cmd [[split | term ipython3 --profile=leetcode]]
                 end, {})
             map("<leader>vp", "<cmd>Ipython<cr>", "iPython")
+        end
+    })
+
+    -- cpp keybindings
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = "cpp",
+        callback = function(args)
+            local map = function(lhs, rhs, desc)
+                vim.keymap.set('n', lhs, rhs, { buffer = args.buf, desc = desc })
+            end
+            vim.api.nvim_create_user_command('ClangRepl',
+                function(opts)
+                    reuse_or_start_terminal()
+                    vim.cmd [[split | term clang-repl --Xcc=-include"$HOME/.clang-repl-incl.h" --Xcc=-std=c++23 ]]
+                end, {})
+            map("<leader>vc", "<cmd>ClangRepl<cr>", "clang-repl")
         end
     })
 
@@ -412,14 +433,11 @@ end
     -- When chrome/firefox starts Neovim, Firenvim sets the variable g:started_by_firenvim
 if vim.g.started_by_firenvim then
     -- vim.o.guifont = 'FiraCode Nerd Font:h24'
-    vim.o.guifont = 'FiraCode Nerd Font:h22'
+    -- vim.o.guifont = 'FiraCode Nerd Font:h22'
     -- vim.o.guifont = 'FiraCode Nerd Font:h20'
-    -- vim.o.guifont = 'Fira Code:h18'
+    vim.o.guifont = 'Fira Code:h22'
     vim.cmd [[
         set background=light
-        " Prepend with 'silent!' to ignore errors when colorscheme is not yet installed.
-        " light colorschemes: zellner, lunaperche, vim, shine, delek
-        silent! colorscheme lunaperche
         " https://github.com/glacambre/firenvim/issues/366
         nnoremap <D-v> "+p
         inoremap <D-v> <C-r>+
@@ -469,8 +487,15 @@ if vim.g.started_by_firenvim then
                 'typedef vector<int> vi;',
                 'typedef vector<vector<int>> vii;',
                 'typedef pair<int,int> pi;',
+                'typedef vector<string> vs;',
                 '#define F first',
                 '#define S second',
+                '#define PB push_back',
+                -- '#define FOR(i,a,b) for (int i = (a); i <= (b); i++)',
+                -- '#define FOR_(i,a,b) for (int i = (a); i <= (b); i--)',
+                -- '#define FORR(x,arr) for(auto& x:arr)',
+                -- '#define ITR(x,c) for(__typeof(c.begin()) x=c.begin();x!=c.end();x++)',
+                '#define _PR(x,T) ranges::for_each((x), [](const T& n) {cout << n;});cout<<endl;',
                 hdr,
             }
             vim.fn.append(0, txt)

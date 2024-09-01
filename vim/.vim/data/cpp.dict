@@ -11,6 +11,7 @@ set<
 map<int, int>
 map<
 unordered_map<
+string::npos
 -- from cppreference.com
 -- keywords
 alignas
@@ -57,10 +58,10 @@ export
 extern
 false
 float
-for
+for(
 friend
 goto
-if
+if(
 inline
 int
 long
@@ -107,7 +108,7 @@ virtual
 void
 volatile
 wchar_t
-while
+while(
 xor
 xor_eq
 final
@@ -121,28 +122,28 @@ unique_ptr
 shared_ptr
 weak_ptr
 -- vector
-front(
-back(
-data(
-begin(
-cbegin(
-end(
-cend(
-rbegin(
-crbegin(
-rend(
-crend(
-empty(
-size(
-max_size(
+front()
+back()
+data()
+begin()
+cbegin()
+end()
+cend()
+rbegin()
+crbegin()
+rend()
+crend()
+empty()
+size()
+max_size()
 reserve(
 capacity(
-shrink_to_fit(
-clear(
+shrink_to_fit()
+clear()
 insert(
 insert_range(
 emplace(
-erase(
+erase()
 push_back(
 emplace_back(
 append_range(
@@ -174,6 +175,24 @@ lower_bound(
 upper_bound(
 key_comp(
 value_comp(
+-- string
+assign(
+assign_range(
+c_str(
+length(
+append(
+replace_with_range(
+resize_and_overwrite(
+find(
+rfind(
+find_first_of(
+find_first_not_of(
+find_last_of(
+find_last_not_of(
+compare(
+starts_with(
+ends_with(
+substr(
 -- constrained algorithms (ranges algorithms)
 ranges::all_of(
 ranges::any_of(

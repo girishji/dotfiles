@@ -48,6 +48,7 @@ do
         vim.fn['firenvim#install'](0)
     end })
     Plug 'girishji/pythondoc.vim'
+    Plug '~/git/devdocs.vim'
     --
     -- Plug('rafamadriz/friendly-snippets')
     Plug 'hrsh7th/nvim-cmp'
@@ -104,9 +105,6 @@ do
             vim.cmd [[setlocal commentstring=//\ %s]]
         end
     })
-    -- Prepend with 'silent!' to ignore errors when colorscheme is not yet installed.
-    -- light colorschemes: zellner, lunaperche, vim, shine, delek
-    vim.cmd [[silent! colorscheme modus]]
 end
 
 -- Abbreviations
@@ -451,11 +449,22 @@ if vim.g.started_by_firenvim then
     ]]
 
     -- pythondoc
+    -- do
+    --     if vim.fn.exists('g:loaded_pythondoc') then
+    --         vim.api.nvim_create_autocmd({ "VimEnter" }, {
+    --             callback = function(args)
+    --                 vim.fn['PythondocExpandHH']()
+    --             end
+    --         })
+    --     end
+    -- end
+
+    -- devdocs
     do
-        if vim.fn.exists('g:loaded_pythondoc') then
+        if vim.fn.exists('g:loaded_devdocs') then
             vim.api.nvim_create_autocmd({ "VimEnter" }, {
                 callback = function(args)
-                    vim.fn['PythondocExpandHH']()
+                    vim.fn['DevdocsExpandDD']()
                 end
             })
         end
@@ -561,6 +570,10 @@ if vim.g.started_by_firenvim then
             end
         end
     })
+
+    -- Prepend with 'silent!' to ignore errors when colorscheme is not yet installed.
+    -- light colorschemes: zellner, lunaperche, vim, shine, delek
+    vim.cmd [[silent! colorscheme modus]]
 else
     -- vim.cmd 'silent! colorscheme patana'
 end
@@ -649,6 +662,13 @@ do
             -- { name = 'nvim_lsp' },  -- does not work with leetcode
             -- { name = 'vsnip', max_item_count = 15 },
         }),
+        formatting = {
+            format = function(entry, vim_item)
+                vim_item.kind = vim_item.kind:sub(1, 1)
+                vim_item.menu = ''
+                return vim_item
+            end
+        },
     })
 
     -- configure clangd

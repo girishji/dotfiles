@@ -57,7 +57,7 @@ READNULLCMD=$PAGER  # Set the program to use for this.
 # girish
 
 # note: global aliases work even in the middle of command line. non-global ones work
-# only at the beginning of a command.
+# only at the beginning of line.
 alias -g H='| head'
 alias -g L='| less -R'
 alias -g AWK=$'| awk \'{print  cnt++,$3,$4}\'' # Ansi C quoting

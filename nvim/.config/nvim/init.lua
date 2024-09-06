@@ -522,13 +522,13 @@ if vim.g.started_by_firenvim then
             vim.cmd 'set ft=cpp'
             vim.cmd 'set syntax=cpp'
             -- vim.cmd 'set signcolumn=no'
-            insert_header()
+            -- insert_header()
             vim.fn.histadd('cmd', [[s/\vi(\W)/x\1/g]]) -- 'i' -> 'x' in 'for(int i=0;i< ...)'
         end,
     })
 
     -- https://github.com/glacambre/firenvim/issues/1619
-    local stretch_nvim_only_not_textarea = true
+    local stretch_nvim_only_not_textarea = false
 
     if stretch_nvim_only_not_textarea then
         local max_height = 25
@@ -552,9 +552,10 @@ if vim.g.started_by_firenvim then
                     return
                 end
                 vim.g.timer_started = true
-                vim.fn.timer_start(100, function()
+                vim.fn.timer_start(200, function()
                     vim.g.timer_started = false
-                    vim.cmd "silent write | norm! zb"
+                    -- vim.cmd "silent write | norm! zb"
+                    vim.cmd "silent update"
                 end)
             end
         })

@@ -1064,4 +1064,25 @@ qf - will show information about the file or directory (and also the path).
 (:h netrw-qf)
 
 ------------------------------------------------------------------------------
+arglist vs buflist                       *giri-arglist* *giri-buflist*
+
+The argument list is a subset of the buffer list. That can be useful if you
+want to run an Ex command across a set of files, but not all of them.
+
+Suppose that you want to execute a macro in a set of files. Which of these
+would you use?
+
+:bufdo normal @a
+:argdo normal @a
+
+They both execute the macro from register a in a set of files. The :bufdo
+example runs the macro in every file in the buffer list, while the :argdo
+example runs it in each file that's listed in the argument list.
+
+Vim's built-in support for removing buffers from the buffer list is lousy, so
+use arglist when necessary. 
+
+https://www.reddit.com/r/vim/comments/u3nv6/buffer_list_vs_arguments_list/
+
+------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

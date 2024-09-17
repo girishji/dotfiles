@@ -23,11 +23,8 @@ export def EOL(): bool
 enddef
 
 export def CmdAbbr(abbr: string, expn: string): string
-    if getcmdtype() == ':'
-        var context = getcmdline()->strpart(0, getcmdpos() - 1)
-        if context == abbr
-            return expn
-        endif
+    if getcmdtype() == ':' && getcmdline()->strpart(0, getcmdpos() - 1) == abbr
+        return expn
     endif
     return abbr
 enddef

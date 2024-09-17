@@ -32,8 +32,8 @@ typedef pair<int,int> pi;
 #define F first
 #define S second
 #define PB push_back
-#define FOR(i,a,b) for (int i = (a); i <= (b); i++)
-#define FOR_(i,a,b) for (int i = (a); i <= (b); i--)
+#define FOR(i,a,b) for (int i = (a); i < (b); i++)
+#define FOR_(i,a,b) for (int i = (a); i >= (b); i--)
 #define FORR(x,arr) for(auto& x:arr)
 #define ITR(x,c) for(__typeof(c.begin()) x=c.begin();x!=c.end();x++)
 #define ALL(a) (a.begin()),(a.end())
@@ -47,7 +47,6 @@ typedef pair<int,int> pi;
 //   vector<string> v{"hello", " "};
 //   TYPEOF(v);
 // https://stackoverflow.com/questions/81870/is-it-possible-to-print-a-variables-type-in-standard-c
-//
 #define TYPEOF(v) (cout << type_name<decltype(v)>() << endl)
 template <class T>
 constexpr std::string_view type_name()

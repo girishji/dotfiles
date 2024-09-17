@@ -82,10 +82,15 @@ set laststatus=2 # always show statusline
 # set laststatus=0
 # set rulerformat=%80(%=%f\ %h%m%r\ %-6y\ %-5.(%l,%c%V%)\ %P%)
 
-# job_start does not pass --exclude={foo, bar} correctly to shell. single quotes
+# XXX: job_start does not pass --exclude={foo, bar} correctly to shell (because
+# job_start does not spawn a shell, it executes command directly). single quotes
 # also don't work, need double quotes. but all of these work for :grep
-# set grepprg=grep\ --color=never\ -RESIHin\ --exclude={'*.zwc','*.swp','*.git*'}\ --exclude-dir=plugged
-set grepprg=grep\ --color=never\ -RESIHin\ --exclude="*.git*"\ --exclude="*.swp"\ --exclude="*.zwc"\ --exclude-dir=plugged
+# set grepprg=grep\ --color=never\ -RESIHin\ --exclude="*.git*"\ --exclude="*.swp"\ --exclude="*.zwc"\ --exclude-dir=plugged
+# dot directories like .git are automatically excluded
+# '$*' is a placeholder to replace typed pattern
+set grepprg=grep\ --color=never\ -RESIHin\ $*
+# make grep behave like vimgrep
+# set grepprg=internal
 
 # enable folding at headers in markdown
 g:markdown_folding = 1

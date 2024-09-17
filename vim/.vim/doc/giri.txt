@@ -442,8 +442,8 @@ https://vim.fandom.com/wiki/Find_in_files_within_Vim
   instead of just one per line, and the 'j' option specifies that Vim will not
   jump to the first match automatically.
 
-- "quickfix list" can be opened with :cw[indow] or :copen. The commands :lnext and
-  :lprevious can be used to cycle between found results. If you would like to
+- "quickfix list" can be opened with :cw[indow] or :copen. The commands :cn (:lnext) and
+  :cp (:lprevious) can be used to cycle between found results. If you would like to
   view the results of a previous search, the :colder (or :lolder) and :cnewer
   (or :lnewer) commands will allow you to do this without typing the search
   again.
@@ -709,9 +709,6 @@ can add a range as argument (only numbers).
 :cprevious or :cp - Move to the previous entry of the current quickfix list.
 :cfirst or :cfir - Move to the first entry of the current quickfix list.
 :clast or :clas - Move to the last entry of the current quickfix list.
-
-----------------------------------------
-Quickfix
 
 One can fill the quickfix list at startup with -q:
 $ vim -q errorlist.txt
@@ -1083,6 +1080,18 @@ Vim's built-in support for removing buffers from the buffer list is lousy, so
 use arglist when necessary. 
 
 https://www.reddit.com/r/vim/comments/u3nv6/buffer_list_vs_arguments_list/
+
+------------------------------------------------------------------------------
+Use OS as IDE
+
+No gq command to reformat? Pipe a range through fmt(1) like :'<,'>!fmt 60.
+
+Need to include the total of column 3 at the bottom of a range of data?
+:'<,'>!awk '{t+=$3}END{print t}1'
+Notice that you can send only visually selected text to awk.
+
+To align columns use unix 'column' command.
+
 
 ------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

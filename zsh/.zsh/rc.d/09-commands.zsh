@@ -84,7 +84,7 @@ alias F="for x (**/*(.));do ;done"  # use *** to follow symlink
 # from :h zshtips.md
 # ls **/*       # list everything in the tree
 # ls **/*foo*   # list files <*foo*> wherever in the heirarchy
-# foo*~*.bak = all matches for foo* except those matching *.bak (think as 'foo*' and '~*.bak')
+# foo*~*.bak = all matches for foo* except those matching *.bak (think as 'foo*' AND '~*.bak')
 # ls -lt  **/*.(php|css|js)(.om[1,20]) # list 20 newest web files anywhere in directory hierarchy (very useful) *N*
 # ls -lt **/*.{js,php,css}~(libs|temp|tmp|test)/* # exclude directories from grep, EXTENDED_GLOB required
 # ls **/*~*/.git/*  # ignore all git subdirectories
@@ -121,7 +121,11 @@ alias uggg='ug -%% -j -w -R -Q' # google search with regex, see https://ugrep.co
 alias ag='ag --smart-case'
 
 # grep
-# note: ERE (extended regex) vs BRE (basic): ERE escapes +. ? etc. like vim's 'magic'
+# note: ERE (extended regex) vs BRE (basic): ERE escapes +, ., ?, |, etc. like vim's 'magic'
+# egrep/ERE is like '\v' magic in Vim.
+#   grep    '\(hello\|goodbye) cruel world+'
+#   egrep   '(hello|goodbye) cruel world\+'
+#
 #       --color is --color=auto. It does not use color codes when pipe is used.
 #       To see colors use grep --color=always foo | less -R
 #       https://stackoverflow.com/questions/6565471/how-can-i-exclude-directories-from-grep-r

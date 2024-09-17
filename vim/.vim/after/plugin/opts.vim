@@ -239,7 +239,7 @@ if exists('g:loaded_scope')
         borderhighlight: ['Comment'],
         # maxheight: 20,
         # maxwidth: 80,
-        emacsKeys: true,
+        # emacsKeys: true,
     })
 
     fuzzy.OptionsSet({

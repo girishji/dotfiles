@@ -18,6 +18,16 @@ cabbr <expr> al  abbr#CmdAbbr('al', 's/\v(.*)#(.*)/\=printf("%-16s # %s", submat
 cabbr <expr> v9  abbr#CmdAbbr('v9', 'vim9 <c-r>=abbr#Eatchar()<cr>')
 cabbr <expr> maek  abbr#CmdAbbr('maek', 'make')
 
+# vimgrep opens quickfix immediately, while 'grep' needs an additional <CR>
+# 'vim' same as 'vimgrep' (can use Vim style regex)
+cabbr <expr> v  abbr#CmdAbbr('v', $'vim /\v/gj **<left><left><left><left><left><left><c-r>=abbr#Eatchar()<cr>')
+cabbr <expr> vim  abbr#CmdAbbr('vim', $'vim /\v/gj **<left><left><left><left><left><left><c-r>=abbr#Eatchar()<cr>')
+cabbr <expr> vw  abbr#CmdAbbr('vw', $'vim /\v{expand("<cword>")}/gj **<left><left><left><left><left><left><c-r>=abbr#Eatchar()<cr>')
+cabbr <expr> vimw  abbr#CmdAbbr('vimw', $'vim /\v{expand("<cword>")}/gj **<left><left><left><left><left><left><c-r>=abbr#Eatchar()<cr>')
+# grep: 1) to exclude dirs use ':gr "foo" **/*~*/bar/*' (dot dirs are automatically excluded)
+#   2) -E (in grepprg) is extended grep, which is like '\v' in Vim. Escapes +, |, ., and ?. ex. grep -E "mp4|avi"
+cabbr <expr> gr  abbr#CmdAbbr('gr', 'gr ""<left><c-r>=abbr#Eatchar()<cr>')
+
 # :g search file for pattern and put resulting lines in quickfix list
 # <leader>tc or :cw to open the quickfix window
 #   alternative to g:// is :il /pattern (searches current file and #include'd files)

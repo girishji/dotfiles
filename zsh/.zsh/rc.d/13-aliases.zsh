@@ -275,7 +275,8 @@ alias uuuuuuuuu='cd ../../../../../../../../..'
 
 # Make <space> expand alias (other option is to use completion mechanism (Tab))
 my_expand_alias() {
-    # pattern matching: https://zsh.sourceforge.io/Guide/zshguide05.html
+    # for (#m) see backreferences in https://zsh.sourceforge.io/Guide/zshguide05.html
+    # for '%%' see 'conditional substitutions' in https://zsh.sourceforge.io/Guide/zshguide05.html
     # https://github.com/willghatch/zsh-snippets/blob/master/snippets.plugin.zsh
     # https://scriptingosx.com/2019/11/associative-arrays-in-zsh/
     local MATCH

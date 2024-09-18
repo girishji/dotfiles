@@ -288,3 +288,12 @@ my_expand_alias() {
 zle -N my_expand_alias
 # 'main' defaults of viins or emacs (https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html)
 bindkey -M main ' ' my_expand_alias
+
+# To avoid alias expansion press <control-space> or <alt-space>
+# https://github.com/MenkeTechnologies/zsh-expand/blob/master/zsh-expand.plugin.zsh
+my_do_not_expand_alias() {
+    LBUFFER+=" "
+}
+zle -N my_do_not_expand_alias
+bindkey -M main "^@" my_do_not_expand_alias
+bindkey -M main "^[ " my_do_not_expand_alias

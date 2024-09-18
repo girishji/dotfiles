@@ -291,6 +291,7 @@ bindkey -M main ' ' my_expand_alias
 
 # To avoid alias expansion press <control-space> or <alt-space>
 # https://github.com/MenkeTechnologies/zsh-expand/blob/master/zsh-expand.plugin.zsh
+# above link also has code to blacklist aliases from expansion.
 my_do_not_expand_alias() {
     LBUFFER+=" "
 }

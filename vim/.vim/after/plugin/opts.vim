@@ -51,7 +51,7 @@ if exists("g:loaded_autosuggest")
             pum: true,
             hidestatusline: false,
             fuzzy: false,
-            exclude: ['^buffer ', '^e$'],
+            exclude: ['^b$', '^e$', '^v$'],
             # exclude: ['^buffer ', '^Find', '^Buffer'],
             onspace: ['buffer', 'e'],
             editcmdworkaround: true,

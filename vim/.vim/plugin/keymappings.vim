@@ -174,3 +174,61 @@ endfor
 :cnoremap <Esc><C-F>	<S-Right>
 #   use Alt-F
 :cnoremap æ		<S-Right>
+
+##
+## Following keybindings are useful when not using scope.vim
+##
+
+# Open the first file in the popup menu when <cr> is entered
+augroup FindStuff | autocmd!
+    def SelectFirstChoice()
+        var context = getcmdline()->matchstr('\v\S+\ze ')
+        if context =~ '\v(fin|find|e|ed|edit)'
+            var prefix = getcmdline()->matchstr('\v\S+\s+\zs.+')
+            if !prefix->empty()
+                var choices = getcompletion(prefix, 'file_in_path')
+                if !choices->empty()
+                    setcmdline($'{context} {choices[0]}')
+                endif
+            endif
+        endif
+    enddef
+    autocmd CmdlineLeave : SelectFirstChoice()
+augroup END
+
+nnoremap <leader><space> :fin **/
+# ':e' automatically closes popup and selects if only one option is present; not ideal
+# nnoremap <leader><space> :e **/
+
+# find file in the parent git root directory
+nnoremap <leader>ff :fin <c-r>=system("git rev-parse --show-toplevel 2>/dev/null \|\| true")->trim()<cr>/**/
+
+nnoremap <leader>fv :fin $HOME/.vim/**/
+nnoremap <leader>fV :fin $VIMRUNTIME/**/
+# nnoremap <leader>fh :fin $HOME/help/**/
+# zsh files start with a number (01-foo.zsh), so the extra '*' at the end
+nnoremap <leader>fz :fin $HOME/.zsh/**/*
+
+nnoremap <leader>vg :vim /\v/gj **<left><left><left><left><left><left>
+# <cword>
+nnoremap <leader>vG :vim /\<<c-r>=expand("<cword>")<cr>\>/gj **
+# case sensitive grep
+# nnoremap <leader>fG :vim /\v\C/gj **<left><left><left><left><left><left>
+#
+# grep equivalents (-E is like \v magic in Vim; no need to escape |, (, ), ., ?, etc. Ex. egrep "import|more"
+#   to make it case sensitive, remove '-i'
+#   to search specific directory, and for C files, do <dir>/**/*.c
+#   you can exclude directories or files using '~' (see zsh config file)
+#   ':cw[indow]' opens (toggles) quickfix list only when it is non-empty
+nnoremap <leader>g :cgetexpr system('grep -EInsi "" **/*')\|cw<left><left><left><left><left><left><left><left><left><left><left>
+nnoremap <leader>G :cgetexpr system('grep -EInsi <c-r>=expand("<cword>")<cr> **/*')\|cw <left><left><left><left><left><left><left><left><left><left><left>
+
+nnoremap <leader><bs> :b **/
+
+# highlight groups ([-1] forces empty string as return value of setqflist())
+nnoremap <leader>fh :<c-r>=setqflist([], ' ', #{title: 'highlight', items: execute("hi")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
+# others
+nnoremap <leader>fk :<c-r>=setqflist([], ' ', #{title: 'keymap', items: execute("map")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
+nnoremap <leader>fm :<c-r>=setqflist([], ' ', #{title: 'marks', items: execute("marks")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
+nnoremap <leader>fr :<c-r>=setqflist([], ' ', #{title: 'registers', items: execute("registers")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
+nnoremap <leader>fq <cmd>chistory<cr>

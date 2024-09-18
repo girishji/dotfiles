@@ -442,12 +442,6 @@ https://vim.fandom.com/wiki/Find_in_files_within_Vim
   instead of just one per line, and the 'j' option specifies that Vim will not
   jump to the first match automatically.
 
-- "quickfix list" can be opened with :cw[indow] or :copen. The commands :cn (:lnext) and
-  :cp (:lprevious) can be used to cycle between found results. If you would like to
-  view the results of a previous search, the :colder (or :lolder) and :cnewer
-  (or :lnewer) commands will allow you to do this without typing the search
-  again.
-
 - Recursive search
   You can use ** in the file pattern to search recursively.
   :vimgrep /dostuff()/j ../**/*.c
@@ -679,49 +673,25 @@ gcgg –> comment current line and all the lines including first line in file
 gcG –> comment current line and all the lines including last line in file
 
 ----------------------------------------
-QuickFix 
+QuickFix                         *giri-quickfix*
+
+:chistory - shows all quickfix lists
+:colder and :cnewer to navigate through your quickfix lists (up to 10).
+:copen and :cclose to open and close quickfix list that is active (:cw[indow] toggles, after :copen has opened the list)
+
+:cc [nr] - display error number [nr]
+[c and ]c mapped to :cnext and :cprevious, [C and ]C to :cfirst and :clast
 
 :cex[pr] [] - Empty the current quickfix list.
-
-:cex[pr] <expr> - Create a quickfix list using the result of
-evaluating the Vimscript expression <expr>.
-See :cgetexpr (same as :cex but does not jump to first item)
-
-:cex system("<cmd>") - Populate your quickfix list with any shell command
-<cmd>. You can try it with ls for example.
-
-:caddexpr <expr> or :cadde <expr> - Appends the result of evaluating the
-Vimscript expression <expr> to the current quickfix list.
-
-:cdo <cmd> - Execute a command <cmd> on each valid entry of the current
-quickfix list.
-Use <leader>g (:grep) to search project for something and then do 'cdo'
-
-:cfdo[!] {cmd}		Execute {cmd} in each file in the quickfix list.
-
-:copen or :cope - Open a window (with a special buffer) to show the current
-quickfix list. (:cw[indow] opens only if qf is non-empty)
-
-:cl or :clist - Display all valid entries of the current quickfix list. You
-can add a range as argument (only numbers).
-:cc <number> - Move to the <number>th entry of the current quickfix list.
-:cnext or :cn - Move to the next entry of the current quickfix list.
-:cprevious or :cp - Move to the previous entry of the current quickfix list.
-:cfirst or :cfir - Move to the first entry of the current quickfix list.
-:clast or :clas - Move to the last entry of the current quickfix list.
-
-One can fill the quickfix list at startup with -q:
-$ vim -q errorlist.txt
-
-This becomes interesting when combined with process substitution:
-$ vim -q <(ag foo)
-$ vim -q <(eslint --format compact *.js)
+:cfdo[!] {cmd} - Execute {cmd} in each file in the quickfix list.
+:cdo <cmd> - Execute a command <cmd> on each valid entry of the current quickfix list.
 
 ----------------------------------------
-# to search visually selected region: 
-visually select them and '*'
+# 'gn'
 
 'gn' is the search-highlighted text. Can use 'cgn' etc.
+
+# note: to search visually selected region: visually select and '*'
 
 ----------------------------------------
 Kernal coding guidelines:

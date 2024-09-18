@@ -13,16 +13,19 @@
 
 # zsh-autocomplete plugin initializes the completion system (no need for 'compinit' here)
 
-# zsh by default does not include aliases in autocompletion. Prepend
-# _expand_alias. It needs to appear before _complete.
+# zsh by default does not include aliases in autocompletion. Call
+# _expand_alias function through completion mechanism. It needs to appear
+# before _complete. This will cause TAB to expand alias.
 # defaults: https://github.com/marlonrichert/zsh-autocomplete/blob/main/Functions/Init/.autocomplete__config
 # see https://thevaluable.dev/zsh-completion-guide-examples/
 # 'completer': this is the zstyle you want to configure
 # _foo, _bar are actual completors. The order matter: the completion system will
 # try each of these completer one after the other. The completion stop when
 # some matches are found or when the completer stop it by itself.
+# builtin zstyle ':completion:*' completer \
+#     _expand _expand_alias _complete _correct _approximate _complete:-fuzzy _prefix _ignored
 builtin zstyle ':completion:*' completer \
-    _expand _expand_alias _complete _correct _approximate _complete:-fuzzy _prefix _ignored
+    _expand _complete _correct _approximate _complete:-fuzzy _prefix _ignored
 
 # git directories show up as ~[dir]. This is because of dynamic naming of dirs.
 # During file name expansion, a ~[string] is provided to the

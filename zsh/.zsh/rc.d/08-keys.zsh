@@ -18,7 +18,7 @@ unsetopt FLOW_CONTROL
 #   automatically on the next command line.
 # - On the continuation prompt: Move all entered lines to the main prompt, so
 #   you can edit the previous lines.
-bindkey '^[q' push-line-or-edit
+# bindkey '^[q' push-line-or-edit
 
 # Alt-H: Get help on your current command.
 () {

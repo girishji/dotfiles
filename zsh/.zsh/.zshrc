@@ -1,9 +1,12 @@
 #!/bin/zsh
 #
-# This file, .zshrc, is sourced by zsh for each interactive shell session.
+# https://github.com/marlonrichert/zsh-launchpad
 #
-# Note: For historical reasons, there are other dotfiles, besides .zshenv and
-# .zshrc, that zsh reads, but there is really no need to use those.
+# Remove *.zwc file after removing corresponding *.zsh file in this repository.
+# Otherwise, zwc file will get sourced.
+#
+# .zshrc file is sourced by zsh for each interactive shell session.
+#
 
 # girish: checks
 is_mac()     { [[ $OSTYPE == darwin*   ]] }
@@ -20,6 +23,12 @@ is_cloud_shell() {
 # languages would call this a lambda or scope function. It gets called right
 # away with the arguments provided and is then discarded.
 # Here, it enables us to use scoped variables in our dotfiles.
+#
+# $@ expands to all the arguments that were passed to the current context (in
+# this case, to `zsh` itself).
+# "Double quotes" ensures that empty arguments '' are preserved.
+# It's a good practice to pass "$@" by default. You'd be surprised at all the
+# bugs you avoid this way.
 () {
   # `local` sets the variable's scope to this function and its descendendants.
   local gitdir=~/.local/share/zsh-plugins  # where to keep repos and plugins
@@ -37,9 +46,3 @@ is_cloud_shell() {
     . $file   # `.` is like `source`, but doesn't search your $path.
   done
 } "$@"
-
-# $@ expands to all the arguments that were passed to the current context (in
-# this case, to `zsh` itself).
-# "Double quotes" ensures that empty arguments '' are preserved.
-# It's a good practice to pass "$@" by default. You'd be surprised at all the
-# bugs you avoid this way.

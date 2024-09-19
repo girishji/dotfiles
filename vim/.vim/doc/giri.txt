@@ -241,6 +241,8 @@ Use `<c-v>` to highlight a column and `<`, `>` to shift text. Mapped to abbrev
  
 	:s/\v(.*)(#)(.*)$/\=printf("%-22s %s%s", submatch(1), submatch(2), submatch(3))
 	:%s/\v(.*)\.(.*)/\=printf("%-16s %s", submatch(1), submatch(2))/
+You can also align using ':%!column -t' if columns are space separated.
+Note: :<range>!<shell cmd> filters the range of lines through shell command
 
 newline: vim inserts null character (^@) in string as a placeholder for
 newline. It gets interpreted by `put` command to mean newline. When you type

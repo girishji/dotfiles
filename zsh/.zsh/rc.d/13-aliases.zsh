@@ -273,6 +273,13 @@ alias uuuuuuu='cd ../../../../../../..'
 alias uuuuuuuu='cd ../../../../../../../..'
 alias uuuuuuuuu='cd ../../../../../../../../..'
 
+# Do not expand following aliases (create an array of them)
+# NOTE: there are 3 types of variables: local to script/function (use 'local'
+# keyword), those visible in terminal (do not use 'local') but not available to
+# other tools, and environment variables (use 'export' keyword, and these
+# variables are available in terminal as well as accessible from other tools)
+MY_ALIAS_EXPAND_BLACKLIST=(t ls)
+
 # Make <space> expand alias (other option is to use completion mechanism (Tab))
 my_expand_alias() {
     # for (#m) see backreferences in https://zsh.sourceforge.io/Guide/zshguide05.html
@@ -281,9 +288,14 @@ my_expand_alias() {
     # https://scriptingosx.com/2019/11/associative-arrays-in-zsh/
     local MATCH
     : ${LBUFFER%%(#m)[.\-+:|_a-zA-Z0-9]#}
-    zle _expand_alias
-    zle self-insert
-    zle backward-char -n ${cursor_offset["$MATCH"]:-0}
+    local blacklist_pattern="^(${(j:|:)MY_ALIAS_EXPAND_BLACKLIST})$"
+    if ! [[ $MATCH =~ $blacklist_pattern ]]; then
+        zle _expand_alias
+        zle self-insert
+        zle backward-char -n ${cursor_offset["$MATCH"]:-0}
+    else
+        LBUFFER+=" "
+    fi
 }
 zle -N my_expand_alias
 # 'main' defaults of viins or emacs (https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html)
@@ -291,7 +303,6 @@ bindkey -M main ' ' my_expand_alias
 
 # To avoid alias expansion press <control-space> or <alt-space>
 # https://github.com/MenkeTechnologies/zsh-expand/blob/master/zsh-expand.plugin.zsh
-# above link also has code to blacklist aliases from expansion.
 my_do_not_expand_alias() {
     LBUFFER+=" "
 }

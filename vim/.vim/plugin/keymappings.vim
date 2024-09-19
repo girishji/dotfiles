@@ -183,10 +183,18 @@ endfor
 augroup FindStuff | autocmd!
     def SelectFirstChoice()
         var context = getcmdline()->matchstr('\v\S+\ze ')
-        if context =~ '\v(fin|find|e|ed|edit)'
+        if context =~ '\v^(fin|find|e|ed|edit)!{0,1}$'
             var prefix = getcmdline()->matchstr('\v\S+\s+\zs.+')
             if !prefix->empty()
                 var choices = getcompletion(prefix, 'file_in_path')
+                if !choices->empty()
+                    setcmdline($'{context} {choices[0]}')
+                endif
+            endif
+        elseif context =~ '\v^(b|bu|buf|buffer)!{0,1}$'
+            var prefix = getcmdline()->matchstr('\v\S+\s+\zs.+')
+            if !prefix->empty()
+                var choices = getcompletion(prefix, 'buffer')
                 if !choices->empty()
                     setcmdline($'{context} {choices[0]}')
                 endif

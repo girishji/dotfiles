@@ -23,8 +23,13 @@ export def EOL(): bool
 enddef
 
 export def CmdAbbr(abbr: string, expn: string): string
-    if getcmdtype() == ':' && getcmdline()->strpart(0, getcmdpos() - 1) == abbr
-        return expn
+    if getcmdtype() == ':'
+        var ctx = getcmdline()->strpart(0, getcmdpos() - 1)
+        # :h :range and :h :range-pattern (can be very complicated)
+        # \?, \=, \{0,1} do the same thing
+        if ctx =~ '^\(''<,''>\|''\a,''\a\|%\|\d\+\|\d\+,\d\+\)\=' .. abbr
+            return expn
+        endif
     endif
     return abbr
 enddef

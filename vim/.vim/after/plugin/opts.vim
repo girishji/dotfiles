@@ -43,7 +43,8 @@ if exists("g:loaded_autosuggest")
         search: {
             pum: true,
             fuzzy: false,
-            hidestatusline: false,
+            hidestatusline: true,
+            removestatusline: false,
             alwayson: true,
         },
         cmd: {

@@ -146,6 +146,15 @@ directory.
 https://github.com/vim/vim/issues/10114
 
 ----------------------------------------
+pattern matching                    *giri-pattern*
+
+For pattern matching, read |usr_27.txt|
+
+See *27.8*	Matching a line break
+
+There is also |pattern.txt|
+
+----------------------------------------
 Q: How to remove lines NOT matching a pattern (exclude pattern)?
 
 g!/pattern/s/.*// or :v/pattern/s/.*//
@@ -328,7 +337,7 @@ callback is called with windid and result only. Here it is accepting [output]
 https://github.com/vim/vim/issues/6171
 
 ----------------------------------------
-## substitute 
+## substitute                   *giri-substitute*
 
 :[range]s[ubstitute]/{pattern}/{string}/[flags]
 
@@ -395,7 +404,7 @@ timeout vs ttimeout
 https://vi.stackexchange.com/questions/24925/usage-of-timeoutlen-and-ttimeoutlen
 
 ----------------------------------------
-terminal mode
+terminal mode                                        *giri-term* 
 - 2 modes: terminal-job mode (keys go to running job) and terminal-normal mode
 - to change from former to latter do <c-w>N 
 - to change otherwise do 'i' or 'a' (insert commands)
@@ -1033,7 +1042,60 @@ qf - will show information about the file or directory (and also the path).
 (:h netrw-qf)
 
 ------------------------------------------------------------------------------
-arglist vs buflist                       *giri-arglist* *giri-buflist*
+Tabs                                            *giri-tabs*
+
+:tabnew
+:[count]tabnew [++opt] [+cmd] {file}
+:[count]tabe[dit] [++opt] [+cmd] {file}
+:[count]tab {cmd}			
+		Execute {cmd} and when it opens a new window open a new tab.
+:tabc[lose][!]	Close current tab page.
+:tabo[nly][!]	Close all other tab pages.
+
+:tabn[ext]				*:tabn* *:tabnext* *gt*
+<C-PageDown>				*CTRL-<PageDown>* *<C-PageDown>*
+gt					*i_CTRL-<PageDown>* *i_<C-PageDown>*
+		Go to the next tab page.  Wraps around from the last to the
+		first one.
+
+:tabp[revious] {count}
+:tabN[ext] {count}
+{count}<C-PageUp>
+{count}gT	Go {count} tab pages back.  Wraps around from the first one
+		to the last one.  Note that the use of {count} is different
+		from |:tabnext|, where it is used as the tab page number.
+
+<C-Tab>					*g<Tab>* *CTRL-W_g<Tab>* *<C-Tab>*
+g<Tab>
+CTRL-W g<Tab>	Go to the last accessed tab page.
+
+:tabs		List the tab pages and the windows they contain.
+
+------------------------------------------------------------------------------
+arglist                                            *giri-arglist* *giri-buflist*
+
+'arglist' is from Vi, while 'buflist' is Vim. Every file in arglist is in
+buflist, but not vice versa. When you start Vim with list of files as
+arguments, they go into arglist.
+
+There is one global argument list, which is used for all windows by default.
+It is possible to create a new argument list local to a window, see
+|:arglocal|.
+
+Examples:
+
+Remove last line of all *.vim files, if they have modeline: >
+    :args **/*.vim
+    :argdo $g/vim/d
+
+Insert a modeline at the end: >
+    :argdo s@\n@\="\n# vim: tabstop=8 shiftwidth=4 softtabstop=4 expandtab"
+
+This replaces an end-of-line with a new line containing the value of $HOME. >
+	:s@\n@\="\r" .. expand("$HOME") .. "\r"@
+
+arglist vs buflist
+==================
 
 The argument list is a subset of the buffer list. That can be useful if you
 want to run an Ex command across a set of files, but not all of them.
@@ -1048,7 +1110,7 @@ They both execute the macro from register a in a set of files. The :bufdo
 example runs the macro in every file in the buffer list, while the :argdo
 example runs it in each file that's listed in the argument list.
 
-Vim's built-in support for removing buffers from the buffer list is lousy, so
+NOTE: Vim's built-in support for removing buffers from the buffer list is lousy, so
 use arglist when necessary. 
 
 https://www.reddit.com/r/vim/comments/u3nv6/buffer_list_vs_arguments_list/
@@ -1063,7 +1125,6 @@ Need to include the total of column 3 at the bottom of a range of data?
 Notice that you can send only visually selected text to awk.
 
 To align columns use unix 'column' command.
-
 
 ------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

@@ -154,6 +154,34 @@ if exists('g:loaded_scope')
                 hi def link FilterMenuLineNr Comment
             })
     enddef
+else
+
+    def Definitions(): list<any>
+        var items = []
+        for nr in range(1, line('$'))
+            var name = getline(nr)->matchstr('\(^\|\s\)\(def\|class\)\s\+\zs\k\+\ze(')
+            if name != null_string
+                items->add({text: name, lnum: nr})
+            endif
+        endfor
+        return items
+    enddef
+
+    command -buffer -nargs=* -complete=customlist,Completor PyGoTo DoCommand(<f-args>)
+    nnoremap <buffer> <space>/ :PyGoTo<space>
+
+    def DoCommand(arg: string = null_string)
+        var items = (arg == null_string) ? Definitions() : Definitions()->matchfuzzy(arg, {matchseq: 1, key: 'text'})
+        if !items->empty()
+            exe $":{items[0].lnum}"
+            normal! zz
+        endif
+    enddef
+
+    def Completor(arg: string, cmdline: string, cursorpos: number): list<any>
+        var items = (arg == null_string) ? Definitions() : Definitions()->matchfuzzy(arg, {matchseq: 1, key: 'text'})
+        return items->mapnew((_, v) => v.text)
+    enddef
 endif
 
 if exists(":LspDocumentSymbol") == 2

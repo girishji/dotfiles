@@ -49,7 +49,7 @@ augroup augrp_misc | autocmd!
     #
     # Remove trailing whitespaces
     autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
-    #
+
     # for competitive programming  (book by Antti Laaksonen); install gcc using homebrew
     # autocmd FileType cpp,c setlocal makeprg=g++\ -std=c++11\ -O2\ -Wall\ %\ -o\ %<
 augroup END
@@ -68,18 +68,4 @@ augroup augrp_save_yanked_in_reg | autocmd!
         endif
     enddef
     autocmd TextYankPost * SaveLastReg()
-augroup END
-
-# alternative to 'packadd nohlsearch'
-augroup augrp_nohlsearch | autocmd!
-    nnoremap <silent> <esc> :nohls<cr><esc>
-    #
-    # NOTE: CursorHold waits `updatetime` (default is 4s) before it fires. If you
-    #   increase this timeout, swap file will not be written soon enough. 4s is
-    #   too early to turn-off hightlighting
-    # noremap <plug>(nohlsearch) <cmd>nohlsearch<cr>
-    # noremap! <expr> <plug>(nohlsearch) execute('nohlsearch')[-1]
-    # nnoremap <silent> <esc> <plug>(nohlsearch)<esc>
-    # set updatetime=8000
-    # autocmd CursorHold * feedkeys("\<plug>(nohlsearch)", 'm')
 augroup END

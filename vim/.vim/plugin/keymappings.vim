@@ -29,6 +29,9 @@ nnoremap <silent> <C-Down> :resize -2<cr>
 nnoremap <silent> <C-Right> :vertical resize -2<cr>
 nnoremap <silent> <C-Left> :vertical resize +2<cr>
 
+# alternative to 'packadd nohlsearch'
+nnoremap <silent> <esc> :nohls<cr><esc>
+
 # nnoremap <silent> <leader>h :bprevious<CR>
 # nnoremap <silent> <leader>l :bnext<CR>
 
@@ -45,8 +48,10 @@ nnoremap <silent> ]B :blast<CR>
 # quickfix list
 nnoremap <silent> [c :cprevious<CR>
 nnoremap <silent> ]c :cnext<CR>
-nnoremap <silent> [C :cfirst<CR>
-nnoremap <silent> ]C :clast<CR>
+# nnoremap <silent> [C :cfirst<CR>
+# nnoremap <silent> ]C :clast<CR>
+nnoremap <silent> [C :colder<CR>
+nnoremap <silent> ]C :cnewer<CR>
 # location list (buffer local quickfix list)
 nnoremap <silent> [l :lprevious<CR>
 nnoremap <silent> ]l :lnext<CR>
@@ -67,7 +72,7 @@ vnoremap <C-_> <Esc>/\%V
 # https://vonheikemen.github.io/devlog/tools/how-to-survive-without-multiple-cursors-in-vim/
 xnoremap * :<c-u> call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
 xnoremap # :<c-u> call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
-# SID means script local function
+# SID means script local function; 'call' is optional in vim9script.
 def VSetSearch(cmdtype: string)
     var temp = getreg('s') # 's' is some register
     norm! gv"sy
@@ -81,6 +86,7 @@ enddef
 # [p    To paste with correct indentation
 
 # visually select recent pasted (or typed) text
+#   remember `] takes you to end of pasted buffer, or use 'gp' to paste
 nnoremap gs `[v`]
 
 # Type %% on Vim’s command-line prompt, it expands to the path of the active buffer
@@ -92,8 +98,11 @@ nnoremap <leader>d <cmd>bw<cr>| # :bwipeout to purge, :bdelete still leaves buff
 nnoremap <leader>h <cmd>hide<cr>| # hide window
 # nnoremap <leader>u <cmd>unhide<cr><c-w>w| # unhide = one window for each loaded buffer (splits horizontally, not useful)
 tnoremap <c-w>h <c-w>:hide<cr>| # hide window (when terminal window is active)
-nnoremap <leader>t <cmd>!tree <bar> more<cr>
+# nnoremap <leader>t <cmd>!tree <bar> more<cr>
 # nnoremap <leader>t <cmd>term<cr>
+nnoremap <leader>t <cmd>tabnew<cr>
+nnoremap <leader>T <cmd>tabclose<cr>
+nnoremap <silent> <leader>vt <cmd>tab term<CR>
 # nnoremap <leader>w <cmd>w<cr>
 nnoremap <leader>w <cmd>update<cr>
 nnoremap <leader>q <cmd>qa<cr>
@@ -112,7 +121,7 @@ vnoremap <leader>a :s/\v(.*)=(.*)/\=printf("%-16s %s", submatch(1), submatch(2))
 
 # Toggle group
 nnoremap <leader>vs :set spell!<CR><Bar>:echo "Spell Check: " .. strpart("OffOn", 3 * &spell, 3)<CR>
-nnoremap <silent> <leader>vt <cmd>call text#Toggle()<CR>
+# nnoremap <silent> <leader>vt <cmd>call text#Toggle()<CR>
 # nnoremap <expr> <leader>vc empty(filter(getwininfo(), 'v:val.quickfix')) ? ':copen<CR>' : ':cclose<CR>'
 # nnoremap <expr> <leader>vl empty(filter(getwininfo(), 'v:val.loclist')) ? ':lopen<CR>' : ':lclose<CR>'
 
@@ -127,6 +136,7 @@ nnoremap <leader>ve <cmd>e $MYVIMRC<cr>
 # Following not needed: use 1<c-g> for absolute path, or <c-g> for relative path
 # nnoremap <leader>vp <cmd>echo expand('%')<cr>
 nnoremap <leader>vi <cmd>ShowImage<cr>
+# open netrw file browser
 nnoremap <leader>vf <cmd>35Lex<cr>
 
 import '../autoload/text.vim'
@@ -166,13 +176,9 @@ endfor
 :cnoremap <C-N>		<Down>
 # recall previous (older) command-line
 :cnoremap <C-P>		<Up>
-# back one word
-:cnoremap <Esc><C-B>	<S-Left>
-#   use Alt-B
+# back one word, use Alt-B
 :cnoremap â		<S-Left>
-# forward one word
-:cnoremap <Esc><C-F>	<S-Right>
-#   use Alt-F
+# forward one word, use Alt-F
 :cnoremap æ		<S-Right>
 
 ##
@@ -180,9 +186,9 @@ endfor
 ##
 
 # Open the first file in the popup menu when <cr> is entered
-augroup FindStuff | autocmd!
+augroup SelectFirstChoice | autocmd!
     def SelectFirstChoice()
-        var context = getcmdline()->matchstr('\v\S+\ze ')
+        var context = getcmdline()->matchstr('\v\S+\ze\s')
         if context =~ '\v^(fin|find|e|ed|edit)!{0,1}$'
             var prefix = getcmdline()->matchstr('\v\S+\s+\zs.+')
             if !prefix->empty()
@@ -217,19 +223,26 @@ nnoremap <leader>fV :fin $VIMRUNTIME/**/
 # zsh files start with a number (01-foo.zsh), so the extra '*' at the end
 nnoremap <leader>fz :fin $HOME/.zsh/**/*
 
-nnoremap <leader>vg :vim /\v/gj **<left><left><left><left><left><left>
+# note: <home>, <c-left>, <left> etc. move the cursor
+nnoremap <leader>fG :vim /\v/gj **<c-left><left><left><left><left>
 # <cword>
-nnoremap <leader>vG :vim /\<<c-r>=expand("<cword>")<cr>\>/gj **
+# nnoremap <leader>vG :vim /\<<c-r>=expand("<cword>")<cr>\>/gj **
 # case sensitive grep
-# nnoremap <leader>fG :vim /\v\C/gj **<left><left><left><left><left><left>
+# nnoremap <leader>fG :vim /\v\C/gj **<c-left><left><left><left>
 #
+# send output of g// to quickfix
+#  - following solution does not open qf automatically
+#    g/<pattern>/caddexpr expand("%") . ":" . line(".") . ":" . getline(".")
+#  - instead of above, use vimgrep
+nnoremap <leader>fg :vim /\v/gj %<left><left><left><left><left>
+
 # grep equivalents (-E is like \v magic in Vim; no need to escape |, (, ), ., ?, etc. Ex. egrep "import|more"
 #   to make it case sensitive, remove '-i'
 #   to search specific directory, and for C files, do <dir>/**/*.c
 #   you can exclude directories or files using '~' (see zsh config file)
 #   ':cw[indow]' opens (toggles) quickfix list only when it is non-empty
-nnoremap <leader>g :cgetexpr system('grep -EInsi "" **/*')\|cw<left><left><left><left><left><left><left><left><left><left><left>
-nnoremap <leader>G :cgetexpr system('grep -EInsi <c-r>=expand("<cword>")<cr> **/*')\|cw <left><left><left><left><left><left><left><left><left><left><left>
+nnoremap <leader>g :cgetexpr system('grep -EInsi "" **/*')\|cw<c-left><left><left>
+nnoremap <leader>G :cgetexpr system('grep -EInsi <c-r>=expand("<cword>")<cr> **/*')\|cw<c-left><left>
 
 nnoremap <leader><bs> :b **/
 

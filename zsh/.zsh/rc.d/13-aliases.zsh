@@ -18,10 +18,12 @@ alias %= \$=
 
 # zmv lets you batch rename (or copy or link) files by using pattern matching.
 # https://zsh.sourceforge.io/Doc/Release/User-Contributions.html#index-zmv
+# Type 'zmv' to see uage.
 autoload -Uz zmv
-alias zmv='zmv -Mv'
-alias zcp='zmv -Cv'
-alias zln='zmv -Lv'
+alias zmv='zmv -v'   # Move files
+alias zcp='zmv -Cv'  # Copy files
+alias zln='zmv -Lv'  # Link files
+alias zmmv='noglob zmv -Wv'  # Type 'zsh' for explanation
 # Note that, unlike with Bash, you do not need to inform Zsh's completion system
 # of your aliases. It will figure them out automatically.
 
@@ -54,7 +56,8 @@ cursor_offset["F"]=6
 #  - -name refers to last componenet of path
 #  - when using glob chars like *, ?, use single quotes to escape shell interpretation
 #  - cannot alias 'fi' since it is a reserved keyword, 'fg' is foreground cmd
-# alias ff="find . \( -name '*.zwc' -o -name '*.swp' -o -path '*/.git*' -o -path '*/plugged*' \) -prune -o -type f -follow -name '*'"
+alias fF='find -E . ! \( -regex ".*\.(zwc|swp|git|zsh_.*)" -prune \) -type f -follow -name "*"'
+cursor_offset["fF"]=3
 # alias ffg="find . -name '*.c' -print -follow -exec grep --color -EHni xxx {} \;"
 #
 # alternative:
@@ -85,7 +88,7 @@ cursor_offset["F"]=6
 #
 # Add your pattern as in 'ls **/*<pat>...'. excludes files *.zwc, *.swp and dir plugged.
 alias ff='ls **/*~(*.zwc|*.swp|build/*)'
-cursor_offset["ff"]=23
+cursor_offset["ff"]=24
 
 # git
 alias ga='git add .; gitcommit'
@@ -278,7 +281,7 @@ alias uuuuuuuuu='cd ../../../../../../../../..'
 # keyword), those visible in terminal (do not use 'local') but not available to
 # other tools, and environment variables (use 'export' keyword, and these
 # variables are available in terminal as well as accessible from other tools)
-MY_ALIAS_EXPAND_BLACKLIST=(t ls)
+MY_ALIAS_EXPAND_BLACKLIST=(t ls rm)
 
 # Make <space> expand alias (other option is to use completion mechanism (Tab))
 my_expand_alias() {

@@ -5,6 +5,7 @@ if exists("g:loaded_vimbits")
     # nmap , <Plug>EasyjumpJump;
     # omap , <Plug>EasyjumpJump;
     # vmap , <Plug>EasyjumpJump;
+    # highlight link FfTtSubtle NonText
 endif
 
 if exists("g:loaded_vimcomplete")
@@ -38,19 +39,110 @@ if exists("g:loaded_vimcomplete")
     })
 endif
 
-if exists("g:loaded_autosuggest")
-    g:AutoSuggestSetup({
+if exists("g:loaded_vimsuggest")
+    g:VimSuggestSetOptions({
         search: {
-            pum: true,
+            enable: true,
+            pum: false,
             fuzzy: false,
-            hidestatusline: true,
-            removestatusline: false,
             alwayson: true,
         },
         cmd: {
             enable: true,
             pum: true,
-            hidestatusline: false,
+            fuzzy: false,
+            # exclude: ['^b$', '^e$', '^v$'],
+            # exclude: ['^buffer ', '^Find', '^Buffer'],
+            onspace: ['Scope', 'PyGoTo', 'VimGoTo'],
+            popupattrs: {
+                borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+                borderhighlight: ['Normal'],
+                highlight: 'Normal',
+                border: [1, 1, 1, 1],
+            },
+        }
+    })
+    highlight link VimSuggestMatch Constant
+
+    # import autoload 'vimsuggest/plugins/plugins.vim'
+    # nnoremap <leader><space> :VSfind<space>
+    nnoremap <leader><bs> :VSbuffer<space>
+
+    # :find ** -> lists directories     also
+    # None of the following can descend into directories correctly
+    #
+    # with zsh -c, slow
+    # nnoremap <leader><space> :VSCmd e find 2>/dev/null **/*(.N)<left><left><left><left><left>
+    # nnoremap <leader><space> :VSCmd e find 2>/dev/null **/*~.git/*(.N)<c-left><right><right><right>
+    # nnoremap <leader><space> :VSCmd e find **/*(.N)<left><left><left><left><left>
+    #
+    # dev null needs 'sh -c'
+    # 10x faster than "**" solution
+    # nnoremap <leader><space> :VSCmd e find . -type f -name "*" 2>/dev/null<c-left><left><left>
+    #
+    # import autoload 'vimsuggest/extras/vscmd.vim'
+    # vscmd.shellprefix = 'sh -c'
+    # vscmd.shellprefix = 'zsh -o extendedglob -c'
+    #
+    # no /dev/null needed if you don't print error
+    # nnoremap <leader><space> :VSCmd e find . -path "*/.git" -prune -o -type f -name "*"<left><left>
+
+    # nnoremap <leader><space> :VSCmd e find -E . \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name "*"<left><left>
+
+    # import autoload 'vimsuggest/extras/vsfind.vim'
+    # var cmdstr = 'find -E . \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name'
+    # def FindCompletor(context: string, line: string, cursorpos: number): list<any>
+    #     return vsfind.Completor(context, line, cursorpos, cmdstr)
+    # enddef
+    # def FindAction(arg: string)
+    #     vsfind.Action('e', cmdstr, arg)
+    # enddef
+    # command! -nargs=+ -complete=customlist,FindCompletor Find FindAction(<f-args>)
+    # nnoremap <leader><space> :Find *<left>
+
+    # command! -nargs=+ -complete=customlist,FindCompletor Find vsfind.DoCommand(<f-args>)
+    # nnoremap <leader><space> :Find e "*"<left><left>
+    # command! -nargs=1 -complete=customlist,FindCompletor Find FindAction(<f-args>)
+    # command! -nargs=1 -complete=customlist,FindCompletor Find function(cmd.Action, ['e', cmdstr])(<f-args>)
+    # command! -nargs=1 -complete=customlist,FindCompletor Find function(vsfind.Action, ['e', cmdstr])(<f-args>)
+    # command! -nargs=1 -complete=customlist,FindCompletor Find funcref(vscmd.Action, ['e', cmdstr])(<f-args>)
+    # command! -nargs=1 -complete=customlist,FindCompletor Find {v -> vscmd.Action('e', cmdstr, v)}(<f-args>)
+
+    var grepcmd = 'grep -REIHSins --exclude="{.gitignore,.swp,.zwc,tags,./.git/*}"'
+    # grep --color=never -REIHSins --exclude="{.{gitignore,swp,zwc},{tags,./.git/*}}"
+
+    #  grep --color=never -REIHSins --exclude=".gitignore" --exclude="*.swp" --exclude="*.zwc" --exclude="tags" --exclude="./.git/*" a
+    # def GrepCompletor(context: string, line: string, cursorpos: number): list<any>
+    #     return vsfind.Completor(context, line, cursorpos, grepcmd, 'zsh -c')
+    # enddef
+    # def GrepAction(arg: string)
+    #     vsfind.Action('e', grepcmd, arg)
+    # enddef
+    # command! -nargs=+ -complete=customlist,FindCompletor Find FindAction(<f-args>)
+    # nnoremap <leader>fg :Grep<space>
+
+# export def Completor(context: string, line: string, cursorpos: number, cmdstr: string = null_string, shellprefix: string = null_string, max_items: number = 1000, async: bool = true): list<any>
+
+    #
+    # command -nargs=1 Find VSCmd e find -E . \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name
+    # nnoremap <leader><space> :Find "*"<left><left>
+    #
+    # 'ls' with ** is slow
+    # ls lists directories when file glob fails. (N) removes (.) when (.) fails.
+    # nnoremap <leader><space> :VSCmd e ls -1 **/*(.N)<left><left><left><left><left>
+endif
+
+if exists("g:loaded_autosuggest")
+    g:AutoSuggestSetup({
+        search: {
+            enable: true,
+            pum: false,
+            fuzzy: false,
+            alwayson: true,
+        },
+        cmd: {
+            enable: true,
+            pum: true,
             fuzzy: false,
             exclude: ['^b$', '^e$', '^v$'],
             # exclude: ['^buffer ', '^Find', '^Buffer'],

@@ -97,9 +97,6 @@ augroup colorschemes | autocmd!
     autocmd ColorScheme dracula Dracula()
 augroup END
 
-:highlight TrailingWhitespace ctermbg=196
-:match TrailingWhitespace /\s\+\%#\@<!$/
-
 # Preview here: https://vimcolorschemes.com/vim/colorschemes (ubunto mono font)
 if &background == 'dark'
     # for vhs tapes:
@@ -117,3 +114,6 @@ else
     colorscheme lunaperche
 endif
 
+# Following should occur after setting colorscheme.
+highlight! TrailingWhitespace ctermbg=196
+match TrailingWhitespace /\s\+\%#\@<!$/

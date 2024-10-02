@@ -6,7 +6,7 @@
 # For more info on each plugin, visit its repo at github.com/<plugin>
 # -a sets the variable's type to array.
 local -a plugins=(
-    marlonrichert/zsh-autocomplete      # Real-time type-ahead completion
+    # marlonrichert/zsh-autocomplete      # Real-time type-ahead completion
     # marlonrichert/zsh-edit              # Better keyboard shortcuts
     # marlonrichert/zsh-hist              # Edit history from the command line.
     # marlonrichert/zcolors               # Colors for completions and Git

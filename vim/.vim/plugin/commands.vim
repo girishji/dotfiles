@@ -80,7 +80,7 @@ def GitDiffThisFile()
 enddef
 command GitDiffThisFile GitDiffThisFile()
 
-def StripTrailingWhitespace()
+def TrailingWhitespaceStrip()
     if !&binary && &filetype != 'diff'
         :normal mz
         :normal Hmy
@@ -89,7 +89,7 @@ def StripTrailingWhitespace()
         :normal `z
     endif
 enddef
-command StripTrailingWhitespace StripTrailingWhitespace()
+command TrailingWhitespaceStrip TrailingWhitespaceStrip()
 
 import autoload "text.vim"
 command! -range FixSpaces text.FixSpaces(<line1>, <line2>)

@@ -1,3 +1,8 @@
+zsh:
+> mkdir ~/.zsh
+> cd ~/dotfiles
+> stow zsh
+
 nvim, pip, etc:
 > mkdir ~/.config
 > cd ~/dotfiles

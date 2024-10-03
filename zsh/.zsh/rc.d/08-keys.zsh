@@ -21,43 +21,43 @@ unsetopt FLOW_CONTROL
 # bindkey '^[q' push-line-or-edit
 
 # Alt-H: Get help on your current command.
-() {
-  unalias $1 2> /dev/null   # Remove the default.
+# () {
+#   unalias $1 2> /dev/null   # Remove the default.
 
-  # Load the more advanced version.
-  # -R resolves the function immediately, so we can access the source dir.
-  autoload -RUz $1
+#   # Load the more advanced version.
+#   # -R resolves the function immediately, so we can access the source dir.
+#   autoload -RUz $1
 
-  # Load $functions_source, an associative array (a.k.a. dictionary, hash table
-  # or map) that maps each function to its source file.
-  zmodload -F zsh/parameter p:functions_source
+#   # Load $functions_source, an associative array (a.k.a. dictionary, hash table
+#   # or map) that maps each function to its source file.
+#   zmodload -F zsh/parameter p:functions_source
 
-  # Lazy-load all the run-help-* helper functions from the same dir.
-  autoload -Uz $functions_source[$1]-*~*.zwc  # Exclude .zwc files.
-} run-help
+#   # Lazy-load all the run-help-* helper functions from the same dir.
+#   autoload -Uz $functions_source[$1]-*~*.zwc  # Exclude .zwc files.
+# } run-help
 
 # Alt-V: Show the next key combo's terminal code and state what it does.
-bindkey '^[v' describe-key-briefly
+# bindkey '^[v' describe-key-briefly
 
 # Alt-W: Type a widget name and press Enter to see the keys bound to it.
 # Type part of a widget name and press Enter for autocompletion.
-bindkey '^[w' where-is
+# bindkey '^[w' where-is
 
 # Alt-Shift-S: Prefix the current or previous command line with `sudo`.
-() {
-  bindkey '^[S' $1  # Bind Alt-Shift-S to the widget below.
-  zle -N $1         # Create a widget that calls the function below.
-  $1() {            # Create the function.
-    # If the command line is empty or just whitespace, then first load the
-    # previous line.
-    [[ $BUFFER == [[:space:]]# ]] &&
-        zle .up-history
+# () {
+#   bindkey '^[S' $1  # Bind Alt-Shift-S to the widget below.
+#   zle -N $1         # Create a widget that calls the function below.
+#   $1() {            # Create the function.
+#     # If the command line is empty or just whitespace, then first load the
+#     # previous line.
+#     [[ $BUFFER == [[:space:]]# ]] &&
+#         zle .up-history
 
-    # $LBUFFER is the part of the command line that's left of the cursor. This
-    # way, we preserve the cursor's position.
-    LBUFFER="sudo $LBUFFER"
-  }
-} .sudo
+#     # $LBUFFER is the part of the command line that's left of the cursor. This
+#     # way, we preserve the cursor's position.
+#     LBUFFER="sudo $LBUFFER"
+#   }
+# } .sudo
 
 # To see the key combo you want to use just do:
 # https://superuser.com/questions/169920/binding-fn-delete-in-zsh-on-mac-os-x/169930#169930
@@ -69,6 +69,13 @@ autoload edit-command-line
 zle -N edit-command-line
 bindkey -M viins '^e' edit-command-line
 bindkey -M vicmd '^e' edit-command-line
+
+# In Macos Terminal app, <BS> does not delete non-inserted character.
+# https://vi.stackexchange.com/questions/31671/set-o-vi-in-zsh-backspace-doesnt-delete-non-inserted-characters
+# Following is applicable if you ticked "BS sends ^H" option in Termina.app preferences:
+# bindkey "^H" backward-delete-char
+# If you didn't choose the above option (default). <BS> sends <Delete> (aka "^?") character.
+bindkey | grep \"\^\?\" > /dev/null || bindkey "^?" backward-delete-char
 
 # Add Text Objects
 # https://thevaluable.dev/zsh-line-editor-configuration-mouseless/
@@ -88,7 +95,9 @@ for km in viopp visual; do
   done
 done
 # We loop through the two keymaps viopp (Vi OPERATOR-PENDING mode) and visual (Vi VISUAL mode).
-# We loop through a whole bunch of signs we want to consider as quotes (or brackets), and we add to each of them the prefix i or a (for inside and around, respectively).
+# We loop through a whole bunch of signs we want to consider as quotes (or
+# brackets), and we add to each of them the prefix i or a (for inside and
+# around, respectively).
 # We use the bindkey command to bind these new text-objects to both keymaps.
 
 # https://github.com/marlonrichert/zsh-autocomplete?tab=readme-ov-file#configuration
@@ -138,4 +147,3 @@ bindkey '^S' history-incremental-search-forward
 # autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
 # add-zsh-hook chpwd chpwd_recent_dirs
 # zstyle ':chpwd:*' recent-dirs-max 200
-

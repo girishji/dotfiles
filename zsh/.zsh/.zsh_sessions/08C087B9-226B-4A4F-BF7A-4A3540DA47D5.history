@@ -1,0 +1,47 @@
+cd .vim
+viclean README
+ls
+less README
+ls
+stow zsh
+cd
+ls
+ll
+ls -al
+ln -s dotfiles/zsh/.zsh .
+ls .zsh
+rmdir .zsh
+cd .zsh
+ ls -al
+u
+u
+cd
+cd foo
+ls
+ls -al
+cd
+rm -rf .zsh
+ls -al
+ls -al foo
+ln -s dotfiles/zsh/.zsh .
+rm foo
+c git
+cd git
+ls
+c dotdir
+cd dotdir
+cd
+cd dotdir
+ls
+cd dotfiles
+ls
+cd zsh
+cd
+cd -
+cd ..
+ls
+vi README
+c vimc
+ls .zsh
+cd
+mv .zsh/foo .

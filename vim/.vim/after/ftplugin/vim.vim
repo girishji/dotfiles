@@ -73,7 +73,7 @@ else
                 endif
             endfor
         endfor
-        return items
+        return items->copy()->filter((_, v) => v !~ '^\s*#')
     enddef
 
     command -buffer -nargs=* -complete=customlist,Completor VimGoTo DoCommand(<f-args>)

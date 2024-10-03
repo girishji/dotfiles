@@ -6,10 +6,6 @@
 # Always set these first, so history is preserved, no matter what happens.
 #
 
-# Enable additional glob operators. (Globbing = pattern matching)
-# https://zsh.sourceforge.io/Doc/Release/Expansion.html#Filename-Generation
-setopt EXTENDED_GLOB
-
 # Tell zsh where to store history.
 # # $VENDOR and $OSTYPE let us check what kind of machine we're on.
 # local icloud=~/Library/Mobile\ Documents/com\~apple\~CloudDocs

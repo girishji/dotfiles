@@ -19,7 +19,7 @@ setopt HASH_EXECUTABLES_ONLY
 
 # Enable ** and *** as shortcuts for **/* and ***/*, respectively.
 # https://zsh.sourceforge.io/Doc/Release/Expansion.html#Recursive-Globbing
-setopt GLOB_STAR_SHORT
+# setopt GLOB_STAR_SHORT
 
 # Sort numbers numerically, not lexicographically.
 setopt NUMERIC_GLOB_SORT
@@ -27,5 +27,8 @@ setopt NUMERIC_GLOB_SORT
 # girish
 setopt vi
 
-# see :h zshtips.md
+# Enable additional glob operators. (Globbing = pattern matching)
+# https://zsh.sourceforge.io/Doc/Release/Expansion.html#Filename-Generation
+# see :h zshtips.md (make '~' in **/*~foo' work)
 setopt EXTENDED_GLOB
+

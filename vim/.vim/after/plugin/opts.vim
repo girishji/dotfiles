@@ -64,9 +64,19 @@ if exists("g:loaded_vimsuggest")
     })
     highlight link VimSuggestMatch Constant
 
-    # import autoload 'vimsuggest/plugins/plugins.vim'
-    # nnoremap <leader><space> :VSfind<space>
-    nnoremap <leader><bs> :VSbuffer<space>
+    import autoload 'vimsuggest/addons/find.vim'
+    command! -nargs=* -complete=customlist,DoFindComplete Find find.DoCommand(<f-args>)
+    find.OnSpace('Find')
+    def DoFindComplete(A: string, L: string, C: number): list<any>
+        return find.DoComplete(A, L, C,
+            'find -E . \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f')
+    enddef
+    nnoremap <leader><space> :Find<space>
+
+    # nnoremap <leader>ff :VSCmd e find . \! \( -path "*/.*" -prune \) -type f -name "*"<left><left>
+    nnoremap <leader>ff :VSCmd e find . -type f -name "*"<left><left>
+
+    nnoremap <leader><bs> :VSBuffer<space>
 
     # :find ** -> lists directories     also
     # None of the following can descend into directories correctly
@@ -103,12 +113,8 @@ if exists("g:loaded_vimsuggest")
     # command! -nargs=+ -complete=customlist,FindCompletor Find vsfind.DoCommand(<f-args>)
     # nnoremap <leader><space> :Find e "*"<left><left>
     # command! -nargs=1 -complete=customlist,FindCompletor Find FindAction(<f-args>)
-    # command! -nargs=1 -complete=customlist,FindCompletor Find function(cmd.Action, ['e', cmdstr])(<f-args>)
-    # command! -nargs=1 -complete=customlist,FindCompletor Find function(vsfind.Action, ['e', cmdstr])(<f-args>)
-    # command! -nargs=1 -complete=customlist,FindCompletor Find funcref(vscmd.Action, ['e', cmdstr])(<f-args>)
-    # command! -nargs=1 -complete=customlist,FindCompletor Find {v -> vscmd.Action('e', cmdstr, v)}(<f-args>)
 
-    var grepcmd = 'grep -REIHSins --exclude="{.gitignore,.swp,.zwc,tags,./.git/*}"'
+    # var grepcmd = 'grep -REIHSins --exclude="{.gitignore,.swp,.zwc,tags,./.git/*}"'
     # grep --color=never -REIHSins --exclude="{.{gitignore,swp,zwc},{tags,./.git/*}}"
 
     #  grep --color=never -REIHSins --exclude=".gitignore" --exclude="*.swp" --exclude="*.zwc" --exclude="tags" --exclude="./.git/*" a
@@ -120,9 +126,6 @@ if exists("g:loaded_vimsuggest")
     # enddef
     # command! -nargs=+ -complete=customlist,FindCompletor Find FindAction(<f-args>)
     # nnoremap <leader>fg :Grep<space>
-
-# export def Completor(context: string, line: string, cursorpos: number, cmdstr: string = null_string, shellprefix: string = null_string, max_items: number = 1000, async: bool = true): list<any>
-
     #
     # command -nargs=1 Find VSCmd e find -E . \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name
     # nnoremap <leader><space> :Find "*"<left><left>

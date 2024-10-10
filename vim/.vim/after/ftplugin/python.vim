@@ -154,8 +154,20 @@ if exists('g:loaded_scope')
                 hi def link FilterMenuLineNr Comment
             })
     enddef
+elseif exists('g:loaded_vimsuggest')
+    # import autoload 'vimsuggest/addons/addons.vim'
+    # command! -nargs=* -complete=customlist,Complete VSArtifacts addons.DoArtifactsAction(<f-args>)
+    # nnoremap <buffer> <leader>/ :VSArtifacts<space>
+    # def Complete(A: string, L: string, C: number): list<any>
+    #     var patterns = [
+    #         '\(^\|\s\)\(def\|class\) \k\+(',
+    #         'if __name__ == "__main__":'
+    #     ]
+    #     return addons.ArtifactsComplete(A, L, C, patterns)
+    # enddef
+    # :defcompile # Otherwise compile errors within Complete() show up only upon pressing <tab>
+    nnoremap <buffer> <leader>/ :VSGlobal \v(^\|\s)(def\|class).*
 else
-
     def Definitions(): list<any>
         var items = []
         for nr in range(1, line('$'))

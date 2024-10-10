@@ -239,12 +239,199 @@ zc -> close fold under cursor (zC for recursive levels)
 :set var&  -> set vim variable to default value
 :echo &var  -> echo vim variable
 
+==================================================
+# Tips                                         *giri-tips* 
+
+## surround text (multiple words) with quotes etc.
+
+for "" 2 words:
+c2w""<Esc>P
+
+one two three four -> (one two) (three four)
+c2w(<Ctrl-R>-)<Esc>w.
+- (small delete register) register stores less than one line (:h registers)
+" (unnamed register) register stores longer text
+You can use either of them.
+
+## comment out range of lines:
+
+Before executing the specified Normal mode command on each line, Vim moves the
+cursor to the beginning of the line. So we don’t have to worry about where the
+cursor is positioned when we execute the command. 
+
+This single command could be used to comment out an entire C file: ➾ :%norm i//
+
+You can use with visual mode selection also.
+
+**
+The :normal command allows us to combine the expressive nature of Vim’s Normal
+ mode commands with the range of Ex commands. It’s a powerful combination! Use
+ norm with . and @q (Macros). (ex. as in `:%norm .`)
+**
+
+## To put ; at the end of each line
+visually select rectangle using C-v and jagged selection using $
+C-v(many j's)$, A; (append), <esc> (to see changes)
+or
+visually select using 'v'
+:`<,`>norm A;
+or
+A; (for first line)
+(visually select next lines)
+:`<,`>norm .
+
+Use norm with . and @q (Macro)
+
+## Operate command over multiple files
+:argdo %s/foo/bar/gec        : operate on all files in :args
+:bufdo %s/foo/bar/gec
+:windo %s/foo/bar/gec
+:argdo exe '%!sort'|w!       : include an external command
+:bufdo exe "normal @q" | w   : perform a recording on open files
+:silent bufdo !zip proj.zip %:p   : zip all current files
+
+g/re/p
+g = global, re = regexp, p = print
+It came from vi
+
+## User filt[er] command
+:filt[er] Diag hi
+to show/filter all highlight groups related to Diag. It prints values.
+
+## Sort lines alphabetically:
+visally select and do :sort
+
+## use C-o to execute normal commands in insert mode
+  C-o 80a <char> Esc
+(bad alternative:) without leaving insert mode:
+  C-o :norm 80i<char> Return
+
+## Equivalent of rsir (replace string in region):
+- visually select region
+- 1) without \%V atom -> :`<,`>s/foo/bar (this will work but it will highlight foo after it is done)
+- 2) best: use \%V to confine match within visual region ->  :`<,`>s/\%Vfoo/bar
+  (you don't need `< and `> when using \%V, but they were inserted
+  automatically by vim. :s/\%Vfoo/bar/ is sufficient)
+
+Note: The substitute command (:s) applies to whole lines, however the \%V atom
+will restrict a pattern so that it matches only inside the visual selection.
+
+## Repeat last Ex command: @:
+@ is repeat qualifier in general
+
+## pulling text objects onto command-line
+<C-R><C-W> : pull word under the cursor into a command line or search
+<C-R><C-A> : pull WORD under the cursor into a command line or search
+<C-R>-                  : pull small register (also insert mode)
+<C-R>[0-9a-z]           : pull named registers (also insert mode)
+<C-R>%                  : pull file name (also #) (also insert mode)
+<C-R>=somevar           : pull contents of a variable (eg :let sray="ray[0-9]")
+
+## Search without typing (Use it like C-sC-w or emacs)
+Start search '/'
+Place cursor somewhere on word, C-rC-w, type space to touch next word C-rC-w,
+and so on
+(since you have set incrementalsearch option it jumps to next search)
+
+## How to rename a varibale?
+1. Rename first occurance
+  - select word to rename with *
+  - 'cw' to rename that word
+2. Rename all other occurances usings :s (substitute) ex command
+  - (without moving the cursor) :%s//<C-r><C-w>/g
+  - pattern to rename is automatically selected inside //, and C-rC-w puts the
+    new word into the substitute command
+
+## Interactive search and replace:
+:%s/content/copy/gc  (:h :s_g, :h :s_c, :h :s_flags)
+
+## C-a and C-x will change numbers nearest to cursor (add /subtract)
+## g then <C-a>: (after rectangular visual selection) incremnts number as a
+sequence (1,2,3,... etc.)
+
+## increment (C-a, a=add) / decrease (C-x) number
+1. You can prefix a number for addittion and subtraction
+2. C-a and C-x will seek next digit and add (1 by default) or subtract
+3. To increment letters do:
+  :set nrformats+=alpha
+
+## to print numbers 1 to n (use macro)
+1
+esc
+qq
+yyp
+C-A
+q
+10@q (replay macro)
+
+## Create numbered list:
+1
+qq
+yyp
+C-a
+j
+q
+10@q
+
+or
+
+(book p 178)
+Use variable, expression register and macro
+:let i=1
+:echo i
+qa (macro)
+I<C-r>=i<CR>
+esc
+:let i+=1
+q
+
+<C-r>=i will insert the value stored in variable i (in insert mode), by evaluating content register `=` 
+
+## Incrementing numbers already in lines: Use g C-a
+
+Put your cursor on number. C-v (blockwise visual mode), j to select more lines with numbers, g C-a
+
 ----------------------------------------
-Tips 									*gtips*
+" *advanced incrementing* (really useful)
+" put following in _vimrc
+let g:I=0
+function! INC(increment)
+let g:I =g:I + a:increment
+return g:I
+endfunction
+" eg create list starting from 223 incrementing by 5 between markers a,b
+:let I=223
+:'a,'bs/^/\=INC(5)/
+" create a map for INC
+cab viminc :let I=223 \| 'a,'bs/$/\=INC(5)/
 
-Vim REPL: Start 'ex' or 'vim -e'.
+## Expression register '='
 
-Align columns according to '#' character, and align 2 columns. `\=` evaluates expression.
+It can evaluate a piece of Vim script code and return the result. It is
+addressed by the = symbol. From Insert mode we can access it by typing <C-r>=
+
+## Insert a value of arithmatic expression in Insert Mode
+
+<C-r>=6*35<CR>  from insert mode
+
+<C-r>= will open a prompt
+
+## rectangular selection and replace:
+1. Use C-v (visual block mode) to yank text; Use $ for ragged block
+   You cannot just yank. Use C-v mode to yank.
+2. Put cursor where you want to paste and press P
+  (book page 48)
+
+## In visual mode i and a does not work, use I and A
+
+Because i and a are treated as "inside" and "around" of text object
+
+----------------------------------------
+More Tips
+
+## Vim REPL: Start 'ex' or 'vim -e'.
+
+## Align columns according to '#' character, and align 2 columns. `\=` evaluates expression.
 Use `<c-v>` to highlight a column and `<`, `>` to shift text. Mapped to abbrev
 `align`.
  
@@ -1085,8 +1272,23 @@ It is possible to create a new argument list local to a window, see
 Examples:
 
 Remove last line of all *.vim files, if they have modeline: >
-    :args **/*.vim
+    :ar[gs] **/*.vim  -> create new arglist, overwriting old one
     :argdo $g/vim/d
+Others: >
+    :ar[gs]  -> print arglist
+    :%argd -> to delete contents of arglist
+    :argd[elete] *.obj
+    :1,5argd -> delete items 1 to 5
+    :n[ext]
+    :prev[ious] or :N[next] -> :N is easier
+    :rew[ind] [++opt] [+cmd]
+			Start editing the first file in the argument list.
+
+From |{arglist}|
+On Unix and a few other systems you can also use backticks, for example: >
+	:args `find . -name \\*.c -print`
+The backslashes before the star are required to prevent "*.c" to be expanded
+by the shell before executing the find program.
 
 Insert a modeline at the end: >
     :argdo s@\n@\="\n# vim: tabstop=8 shiftwidth=4 softtabstop=4 expandtab"
@@ -1125,6 +1327,10 @@ Need to include the total of column 3 at the bottom of a range of data?
 Notice that you can send only visually selected text to awk.
 
 To align columns use unix 'column' command.
-
+------------------------------------------------------------------------------
+What is func?
+"func" is a type, a function with any number of arguments and any return type.
+The function can be defined later.
+https://github.com/lacygoill/wiki/blob/main/vim/vim9.md#the-difference-between-using-or-omitting-function-when-saving-a-funcref-in-a-variable
 ------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

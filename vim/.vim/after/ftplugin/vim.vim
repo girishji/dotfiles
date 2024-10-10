@@ -54,8 +54,21 @@ if exists('g:loaded_scope')
             })
     enddef
     nnoremap <buffer> <space>/ <scriptcmd>Things()<CR>
+elseif exists('g:loaded_vimsuggest')
+    # import autoload 'vimsuggest/addons/addons.vim'
+    # command! -nargs=* -complete=customlist,Complete VSArtifacts addons.DoArtifactsAction(<f-args>)
+    # nnoremap <buffer> <leader>/ :VSArtifacts<space>
+    # def Complete(A: string, L: string, C: number): list<any>
+    #     var patterns = [
+    #         '\(^\|\s\)def\s\+\zs\k\+\ze(',
+    #         '\(^\|\s\)fu\%[nction]!\?\s\+\([sgl]:\)\?\zs\k\+\ze(',
+    #         '^\s*com\%[mand]!\?\s\+\zs\S\+\ze'
+    #     ]
+    #     return addons.ArtifactsComplete(A, L, C, patterns)
+    # enddef
+    # :defcompile # Otherwise compile errors within Complete() show up only upon pressing <tab>
+    nnoremap <buffer> <leader>/ :VSGlobal \v^\s*(def\|com%[mand])!?.*
 else
-
     def Definitions(): list<any>
         var items = []
         var patterns = [
@@ -75,10 +88,8 @@ else
         endfor
         return items->copy()->filter((_, v) => v !~ '^\s*#')
     enddef
-
     command -buffer -nargs=* -complete=customlist,Completor VimGoTo DoCommand(<f-args>)
     nnoremap <buffer> <leader>/ :VimGoTo<space>
-
     def DoCommand(arg: string = null_string)
         var items = (arg == null_string) ? Definitions() : Definitions()->matchfuzzy(arg, {matchseq: 1, key: 'text'})
         if !items->empty()
@@ -86,7 +97,6 @@ else
             normal! zz
         endif
     enddef
-
     def Completor(arg: string, cmdline: string, cursorpos: number): list<any>
         var items = (arg == null_string) ? Definitions() : Definitions()->matchfuzzy(arg, {matchseq: 1, key: 'text'})
         return items->mapnew((_, v) => v.text)

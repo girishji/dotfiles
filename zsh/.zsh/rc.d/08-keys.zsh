@@ -102,7 +102,7 @@ done
 
 # https://github.com/marlonrichert/zsh-autocomplete?tab=readme-ov-file#configuration
 # Make Tab and ShiftTab cycle completions on the command line
-bindkey '\t' menu-complete "$terminfo[kcbt]" reverse-menu-complete
+# bindkey '\t' menu-complete "$terminfo[kcbt]" reverse-menu-complete
 
 # First insert the common substring
 #

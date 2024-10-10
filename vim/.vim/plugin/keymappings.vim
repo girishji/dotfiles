@@ -139,6 +139,20 @@ nnoremap <leader>vi <cmd>ShowImage<cr>
 # open netrw file browser
 nnoremap <leader>vf <cmd>35Lex<cr>
 
+# ----------------------------------------
+# Make <C-PageUp/Down> work in tab with terminal
+def SwitchTab(dir: string)
+    if &buftype == 'terminal'
+        :exec "normal! \<C-\>\<C-n>"
+        :exec (dir == 'up' ? "tabNext" : "tabnext")
+    else
+        :exec (dir == 'up' ? "tabNext" : "tabnext")
+    endif
+enddef
+tnoremap <silent> <C-PageUp> <scriptcmd>SwitchTab('up')<cr>
+tnoremap <silent> <C-PageDown> <scriptcmd>SwitchTab('down')<cr>
+
+# ----------------------------------------
 import '../autoload/text.vim'
 
 # surround ', ", and `
@@ -162,53 +176,62 @@ endfor
 
 
 # (:h emacs-keys) For Emacs-style editing on the command-line:
+# Default keys are in :h cmdline-editing
 # start of line
-:cnoremap <C-A>		<Home>
+:cnoremap <C-A> <Home>
 # back one character
-:cnoremap <C-B>		<Left>
+:cnoremap <C-B> <Left>
 # delete character under cursor
-:cnoremap <C-D>		<Del>
+:cnoremap <C-D> <Del>
 # end of line
-:cnoremap <C-E>		<End>
+:cnoremap <C-E> <End>
 # forward one character
-:cnoremap <C-F>		<Right>
+:cnoremap <C-F> <Right>
 # recall newer command-line
-:cnoremap <C-N>		<Down>
+:cnoremap <C-N> <Down>
 # recall previous (older) command-line
-:cnoremap <C-P>		<Up>
-# back one word, use Alt-B
-:cnoremap â		<S-Left>
-# forward one word, use Alt-F
-:cnoremap æ		<S-Right>
+:cnoremap <C-P> <Up>
+# esc-b is backward-one-word
+:cnoremap <Esc>b <S-Left>
+# esc-f is forward-one-word
+:cnoremap <Esc>f <S-Right>
+# # back one word, Alt-B -> not used to using this
+# :cnoremap â		<S-Left>
+# :cnoremap ∫		<S-Left>
+# :cnoremap ļ		<S-Left>
+# # forward one word, Alt-F -> not used to using this
+# :cnoremap æ		<S-Right>
+# :cnoremap ƒ		<S-Right>
+# :cnoremap ń		<S-Right>
 
 ##
 ## Following keybindings are useful when not using scope.vim
 ##
 
-# Open the first file in the popup menu when <cr> is entered
-augroup SelectFirstChoice | autocmd!
-    def SelectFirstChoice()
-        var context = getcmdline()->matchstr('\v\S+\ze\s')
-        if context =~ '\v^(fin|find|e|ed|edit)!{0,1}$'
-            var prefix = getcmdline()->matchstr('\v\S+\s+\zs.+')
-            if !prefix->empty()
-                var choices = getcompletion(prefix, 'file_in_path')
-                if !choices->empty()
-                    setcmdline($'{context} {choices[0]}')
-                endif
-            endif
-        elseif context =~ '\v^(b|bu|buf|buffer)!{0,1}$'
-            var prefix = getcmdline()->matchstr('\v\S+\s+\zs.+')
-            if !prefix->empty()
-                var choices = getcompletion(prefix, 'buffer')
-                if !choices->empty()
-                    setcmdline($'{context} {choices[0]}')
-                endif
-            endif
-        endif
-    enddef
-    autocmd CmdlineLeave : SelectFirstChoice()
-augroup END
+# # Open the first file in the popup menu when <cr> is entered
+# augroup SelectFirstChoice | autocmd!
+#     def SelectFirstChoice()
+#         var context = getcmdline()->matchstr('\v\S+\ze\s')
+#         if context =~ '\v^(fin|find|e|ed|edit)!{0,1}$'
+#             var prefix = getcmdline()->matchstr('\v\S+\s+\zs.+')
+#             if !prefix->empty()
+#                 var choices = getcompletion(prefix, 'file_in_path')
+#                 if !choices->empty()
+#                     setcmdline($'{context} {choices[0]}')
+#                 endif
+#             endif
+#         elseif context =~ '\v^(b|bu|buf|buffer)!{0,1}$'
+#             var prefix = getcmdline()->matchstr('\v\S+\s+\zs.+')
+#             if !prefix->empty()
+#                 var choices = getcompletion(prefix, 'buffer')
+#                 if !choices->empty()
+#                     setcmdline($'{context} {choices[0]}')
+#                 endif
+#             endif
+#         endif
+#     enddef
+#     autocmd CmdlineLeave : SelectFirstChoice()
+# augroup END
 
 nnoremap <leader><space> :fin **/
 # ':e' automatically closes popup and selects if only one option is present; not ideal
@@ -219,9 +242,8 @@ nnoremap <leader>ff :fin <c-r>=system("git rev-parse --show-toplevel 2>/dev/null
 
 nnoremap <leader>fv :fin $HOME/.vim/**/
 nnoremap <leader>fV :fin $VIMRUNTIME/**/
-# nnoremap <leader>fh :fin $HOME/help/**/
 # zsh files start with a number (01-foo.zsh), so the extra '*' at the end
-nnoremap <leader>fz :fin $HOME/.zsh/**/*
+nnoremap <leader>fz :fin $HOME/.zsh/**/**<left>
 
 # note: <home>, <c-left>, <left> etc. move the cursor
 nnoremap <leader>fG :vim /\v/gj **<c-left><left><left><left><left>

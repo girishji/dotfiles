@@ -97,22 +97,31 @@ augroup colorschemes | autocmd!
     autocmd ColorScheme dracula Dracula()
 augroup END
 
+# NOTE: 'background' is not set correctly until window is opened (after VimEnter). So,
+# set the background explicitly so that colorscheme (like 'blue') can choose
+# appropriate colors.
+set background=dark
+colorscheme darkblue
+
 # Preview here: https://vimcolorschemes.com/vim/colorschemes (ubunto mono font)
-if &background == 'dark'
-    # for vhs tapes:
-    # silent! colorscheme dracula
+#     # for vhs tapes:
+#     # silent! colorscheme dracula
 
-    silent! colorscheme declutter
-    autocmd BufEnter * g:DeclutterUseTerminalFGBG()
+#     # silent! colorscheme declutter
+#     # autocmd BufEnter * g:DeclutterUseTerminalFGBG()
+#     # autocmd BufEnter * g:DeclutterBrightenBoldFont()
 
-    # autocmd BufEnter * g:DeclutterBrightenBoldFont()
-else
-    # silent! colorscheme declutter
-    # autocmd BufEnter * g:DeclutterUseTerminalFGBG()
+#     colorscheme blue
+#     # silent! colorscheme declutter
+#     # autocmd BufEnter * g:DeclutterUseTerminalFGBG()
+#     # silent! colorscheme quiet
+#     # colorscheme lunaperche
+#     echom 'here'
 
-    # silent! colorscheme quiet
-    colorscheme lunaperche
-endif
+# var curhr = strftime("%H")->str2nr()
+# if curhr > 18 || curhr < 8
+#     colorscheme blue
+# endif
 
 # Following should occur after setting colorscheme.
 highlight! TrailingWhitespace ctermbg=196

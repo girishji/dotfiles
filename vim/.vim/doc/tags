@@ -32,12 +32,12 @@ giri-quickfix	giri.txt	/*giri-quickfix*
 giri-substitute	giri.txt	/*giri-substitute*
 giri-tabs	giri.txt	/*giri-tabs*
 giri-term	giri.txt	/*giri-term*
+giri-tips	giri.txt	/*giri-tips*
 giri-vim-file-org	giri.txt	/*giri-vim-file-org*
 giri.txt	giri.txt	/*giri.txt*
 gkeymap-sq-brkt	giri-nav.txt	/*gkeymap-sq-brkt*
 gkeymap-window-mgmt	giri-nav.txt	/*gkeymap-window-mgmt*
 gt	giri.txt	/*gt*
-gtips	giri.txt	/*gtips*
 gtoc	giri.txt	/*gtoc*
 gvim9script	giri.txt	/*gvim9script*
 gvimscript	giri.txt	/*gvimscript*

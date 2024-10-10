@@ -43,7 +43,7 @@ if exists("g:loaded_vimsuggest")
     g:VimSuggestSetOptions({
         search: {
             enable: true,
-            pum: false,
+            pum: true,
             fuzzy: false,
             alwayson: true,
         },
@@ -51,8 +51,7 @@ if exists("g:loaded_vimsuggest")
             enable: true,
             pum: true,
             fuzzy: false,
-            # exclude: ['^b$', '^e$', '^v$'],
-            # exclude: ['^buffer ', '^Find', '^Buffer'],
+            # exclude: ['^\s*\d*\s*b\%[uffer]!\?\s\+'],
             onspace: ['Scope', 'PyGoTo', 'VimGoTo'],
             popupattrs: {
                 borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
@@ -64,19 +63,53 @@ if exists("g:loaded_vimsuggest")
     })
     highlight link VimSuggestMatch Constant
 
-    import autoload 'vimsuggest/addons/find.vim'
-    command! -nargs=* -complete=customlist,DoFindComplete Find find.DoCommand(<f-args>)
-    find.OnSpace('Find')
-    def DoFindComplete(A: string, L: string, C: number): list<any>
-        return find.DoComplete(A, L, C,
-            'find -E . \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f')
-    enddef
-    nnoremap <leader><space> :Find<space>
+    augroup vimsuggest-qf-show
+        autocmd!
+        autocmd QuickFixCmdPost clist cwindow
+    augroup END
 
+    # find
+    nnoremap <leader><space> :VSFind<space>
+    # nnoremap <leader>fv :VSFind ~/.vim/.../
+    # nnoremap <leader>fz :VSFind ~/.zsh/.../
+    # nnoremap <leader>fV :VSFind $VIMRUNTIME/.../
+    nnoremap <leader>fv :VSFind ~/.vim<space>
+    nnoremap <leader>fz :VSFind ~/.zsh/<space>
+    nnoremap <leader>fV :VSFind $VIMRUNTIME<space>
+
+    nnoremap <leader>/ :VSGlobal<space>
+
+    # live find
+    # nnoremap <leader>fF :VSExec find -EL . \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name "*"<left><left>
+    g:vimsuggest_findprg = 'find -EL $* \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name $*'
+    nnoremap <leader>ff :VSFindL "*"<left><left>
+
+    # XXX: Following will not show menu, since ':VSLiveFind |*' (| is cursor) is interpreted as ':VSLiveFind<space>'
+    # nnoremap <leader>fF :VSLiveFind *<left>
+    # def Feed(): string
+    #     timer_start(1, (_) => feedkeys("\<left>", 'n'))
+    #     return ''
+    # enddef
+    # nnoremap <leader>fF :VSLiveFind *<c-r>=<SID>Feed()<cr>
+    # XXX: If you use 'find ~/.zsh', it shows nothing since -path matches whole path and dot dirs (including .zsh) are excluded.
     # nnoremap <leader>ff :VSCmd e find . \! \( -path "*/.*" -prune \) -type f -name "*"<left><left>
-    nnoremap <leader>ff :VSCmd e find . -type f -name "*"<left><left>
+
+    # Live grep (see notes in .zsh dir)
+    # nnoremap <leader>g :VSExec ggrep -REIHins "" . --exclude-dir={.git,"node_*"} --exclude=".*"<c-left><c-left><c-left><left><left>
+    # NOTE: '**' automatically excludes hidden dirs and files, but it is much slower.
+    # nnoremap <leader>g :VSExec grep -IHSins "" **/*<c-left><left><left>
+    # XXX '~' does not work with Vim
+    # nnoremap <leader>g :VSExec grep -IHins "" . **/*\~node_modules/*<c-left><left><left><left><left>
+
+    g:vimsuggest_grepprg = 'ggrep -REIHins $* --exclude-dir=.git --exclude=".*"'
+    nnoremap <leader>g :VSGrep ""<left>
+    nnoremap <leader>G :VSGrep "<c-r>=expand('<cword>')<cr>"<left>
 
     nnoremap <leader><bs> :VSBuffer<space>
+
+    nnoremap <leader>fk :VSKeymap<space>
+    nnoremap <leader>fr :VSRegister<space>
+    nnoremap <leader>fm :VSMark<space>
 
     # :find ** -> lists directories     also
     # None of the following can descend into directories correctly
@@ -295,14 +328,15 @@ if exists("g:loaded_bufline")
         # - `User2`: Alternate buffer
         # - `User3`: Other buffers
         # - `User4`: Emphasis characters if specified (see Options)
-        highlight user1 ctermfg=252 cterm=underline,bold
-        highlight user2 ctermfg=252 cterm=bold,italic
-        highlight user3 ctermfg=252 cterm=none
-        highlight user4 ctermfg=252 cterm=bold
-        g:BuflineSetup({ highlight: true, showbufnr: false, emphasize: '' })
+        # highlight user1 ctermfg=252 cterm=underline,bold
+        # highlight user2 ctermfg=252 cterm=bold,italic
+        # highlight user3 ctermfg=252 cterm=none
+        # highlight user4 ctermfg=252 cterm=bold
+        # g:BuflineSetup({ highlight: true, showbufnr: false, emphasize: '' })
     else
         # keep defaults
     endif
+    g:BuflineSetup({ highlight: false, showbufnr: false, emphasize: '%[#' })
 endif
 
 # another way

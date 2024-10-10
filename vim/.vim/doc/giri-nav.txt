@@ -1,9 +1,9 @@
 *giri-nav.txt*
 ------------------------------------------------------------------------
 Basics:
+- Use <C-O> and <Tab>/<C-I> for jumplist and `g;` and `g,` for changelist
 - When you do not know the code base and grokking around, use: 'ug -Q' (TUI
   ugrep), 'grep' inside vim, or 'file'.
-- To drill down further, use cscope and tags.
 - Use symbol-based navigation (:h E387 include-search). To search inside files
   for symbols (ignoring comments) use ':il /pat'. Use `<num>[<tab>` to jump to
   the <num> occurance of the symbol shown by ':il'. `[<tab>` jumps to first

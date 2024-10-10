@@ -104,48 +104,64 @@ alias gd='git diff'
 # alias ag='ag --smart-case'
 
 # grep
-# note: ERE (extended regex) vs BRE (basic): ERE escapes +, ., ?, |, etc. like vim's 'magic'
+#
+# Note: ERE (extended regex) vs BRE (basic): ERE escapes +, ., ?, |, etc. like vim's 'magic'
 # egrep/ERE is like '\v' magic in Vim.
 #   grep    '\(hello\|goodbye) cruel world+'
 #   egrep   '(hello|goodbye) cruel world\+'
 #
+# Note: Do not put "" around {} when using with --exclude. {} will bypass the
+# shell, and passed to grep command. There should be at least 2 entries inside
+# {}. Escape '*' and '.' using backslash, or enclose them in quotes.
+# Also, pattern should be inside "" or ''. Otherwise special characters needs
+# to be escaped.
+#    Ex: ggrep -REIHSins --exclude-dir={.git,zsh_\*} --exclude={\.\*,tags} "" .
+#        ggrep -REIHSins --exclude-dir={.git,"zsh_*"} --exclude={".*",tags} "" .
+#
+#  Difference b/w --exclude and --exclude-dir:
+#   --exclude is used to ignore files that match a certain pattern. It operates only on files, not directories. For instance:
+#            grep --exclude="*.log" "pattern" -r .
+#      This command excludes all .log files from the search, but it does not
+#      prevent grep from searching inside directories (including hidden
+#      directories) that might contain those files.
+#    --exclude-dir specifically excludes directories. --exclude-dir is
+#    specifically designed to prevent grep from descending into directories
+#    whose names match the given pattern. For example:
+#            grep --exclude-dir="node_modules" "pattern" -r .
+#    This command will skip the entire node_modules directory and all of its
+#    contents during the recursive search. This is particularly useful if you
+#    have directories with numerous files or heavy content that you want to skip
+#    entirely.
+#
+#    Why use --exclude-dir when --exclude could suffice?
+#    Efficiency:
+#    --exclude-dir is more efficient when you want to skip entire directories
+#    rather than just filtering individual files. grep will not even try to
+#    enter those directories, saving time and resources.
+#    Granularity:
+#    --exclude allows for fine-grained control over individual files, whereas
+#    --exclude-dir skips directories as a whole. If your goal is to skip entire
+#    directories, --exclude-dir is the more straightforward and performant
+#    option.
+#    Example:
+#    If you want to exclude all .log files and also prevent grep from searching in the node_modules directory, you would use:
+#            grep --exclude="*.log" --exclude-dir="node_modules" "pattern" -r .
+#    In this case, both options work together: --exclude ensures individual .log
+#    files are not searched, while --exclude-dir skips the entire node_modules
+#    directory.
+#
+#  DO NOT USE BSD MACOS grep. IT EXCLUDES DIRECTORIES WHEN YOU SPECIFY
+#  --exclude. USE GNU 'ggrep'.
+#
 #       --color is --color=auto. It does not use color codes when pipe is used.
 #       To see colors use grep --color=always foo | less -R
 #       https://stackoverflow.com/questions/6565471/how-can-i-exclude-directories-from-grep-r
-#       --exclude pattern -> Patterns are matched to the full path specified, not only to the filename component.
-#       --include pattern -> can be specified after --exclude
-#       --exclude-dir pattern -> If -R is specified, it excludes directories
-#         matching the given filename pattern from the search.  Note that --exclude-dir
-#         and --include-dir patterns are processed in the order given.
-#         --exclude-dir is dir-name(s) and not pathname(s). directory names cannot contain '/'
-#         Following doesn't work:
-#         (NO) grep -r --exclude-dir={/var/cache,/var/lib}
-#       --include-dir pattern -> just like --include
+#       --include pattern
+#       --include-dir pattern
 #       -F, --fixed-strings -> Interpret pattern as a set of fixed strings.
-#       Note: above pattern is globs pattern, not pattern as in regex. So it
-#       does not understand |. You can, however, get the same effect by
-#       specifying --exclude-dir multiple times, one for each directory that
-#       you want to exclude, or you can golf it shorter.
-#       --exclude-dir={git,log,assets}
-#       --exclude-dir={\*git,asset\*}
 #
-#       {} is brace expansion for command line flags.
-#       % foocmd -u{rspamd,postfix}
-#         Expands to: foocmd -urspamd -upostfix
-#       % foocmd --unit={rspamd,postfix}
-#         Expands to: foocmd --unit=rspamd --unit=postfix
-#       If you want space instead of '=', use a backslash or quote:
-#       % print -z foocmd --unit' '{rspamd,postfix}
-#       % foocmd --unit rspamd --unit postfix
-#       % print -z foocmd --unit\ {rspamd,postfix}
-#       % foocmd --unit rspamd --unit postfix
-#       note: does not work/expand if there is only one item inside {}. if you
-#       put {item,} it expands to 'item' and '' (test with 'print -z' like above).
-#
-#       -i ignore case, -n include line number, -R recursive, -w word regex
-#       as if surrounded by ‘[[:<:]]’ and ‘[[:>:]]’, see 'man re-format';
-#       -l prints files with matches only; -S (macos only) follow symlinks
-#       -I ignores binary files (prevents a info message getting printed)
+# 'sh -c' (POSIX) does not include {} expansion.
+# cannot use --exclude-dir={foo,bar} using /bin/sh
 #
 # from :h zshtips.md
 # grep -i "$1" **/*.{js,php,css}~(libs|temp|tmp|test)/* # exclude directories from grep *N* EXTENDED_GLOB required
@@ -178,9 +194,9 @@ alias gd='git diff'
 # grep "cat\|dog" file matches lines containing the word "cat" or the word "dog"
 # grep "I am a \(cat\|dog\)" matches lines containing the string "I am a cat" or the string "I am a dog"
 # grep "Fred\(eric\)\? Smith" file   # grep fred or frederic
-alias gr='grep -EIins "" **/*'  # no need for '-R' since '**' takes care of recursion
-cursor_offset["gr"]=7
-alias -g G='| grep --color -iEI'
+alias gr='ggrep -EIins "" ***/*'  # no need for '-R' since '***' takes care of recursion (and symlink following)
+cursor_offset["gr"]=8
+alias -g G='| ggrep --color -iEI'
 
 # alias pipi='pip install --user '
 alias pipi='pip install'
@@ -207,6 +223,7 @@ alias t='python3 ~/git/t/t.py --task-dir ~/.local/share/todo --list tasks'
 alias tt='tree'
 alias formatjson='python3 -m json.tool'
 alias jsonformat='python3 -m json.tool'
+alias vimdiff='vimdiff -o'
 
 # TIP: could use 'py' which is ipython+pyflyby (if installed through pipx, and ipython injected into it)
 alias ip='ipython'
@@ -276,6 +293,10 @@ alias uuuuuuu='cd ../../../../../../..'
 alias uuuuuuuu='cd ../../../../../../../..'
 alias uuuuuuuuu='cd ../../../../../../../../..'
 
+# XXX: Aliases should not be expanded when autocomplete has completed a word. 'zle
+# _expand_alias' has a bug(?) where it another item from autocomplete menu is
+# used for replacement.
+
 # Do not expand following aliases (create an array of them)
 # NOTE: there are 3 types of variables: local to script/function (use 'local'
 # keyword), those visible in terminal (do not use 'local') but not available to
@@ -300,9 +321,16 @@ my_expand_alias() {
         LBUFFER+=" "
     fi
 }
+
+# Set up the widget
 zle -N my_expand_alias
+
+# Bind the widget to run after completion
 # 'main' defaults of viins or emacs (https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html)
 bindkey -M main ' ' my_expand_alias
+
+# Store the history number before completion
+HISTNO_BEFORE_COMPLETION=$HISTNO
 
 # To avoid alias expansion press <control-space> or <alt-space>
 # https://github.com/MenkeTechnologies/zsh-expand/blob/master/zsh-expand.plugin.zsh

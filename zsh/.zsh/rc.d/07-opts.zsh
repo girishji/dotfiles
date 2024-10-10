@@ -19,7 +19,10 @@ setopt HASH_EXECUTABLES_ONLY
 
 # Enable ** and *** as shortcuts for **/* and ***/*, respectively.
 # https://zsh.sourceforge.io/Doc/Release/Expansion.html#Recursive-Globbing
-# setopt GLOB_STAR_SHORT
+# If no / immediately follows a ** or *** they are treated as if both a / plus
+# a further * are present. Hence:
+# 'ls -ld -- **.c' is equivalent to 'ls -ld -- **/*.c'
+setopt GLOB_STAR_SHORT
 
 # Sort numbers numerically, not lexicographically.
 setopt NUMERIC_GLOB_SORT

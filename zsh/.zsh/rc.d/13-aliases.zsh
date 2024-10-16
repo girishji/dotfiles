@@ -204,9 +204,10 @@ alias pipi='pip install'
 alias lc='leetcode'
 
 alias vim_='vim -Nu NONE -S <(cat <<EOF
-    " vim:ts=4:ft=vim
     vim9script
     :set shortmess=I
+
+    # vim: ft=vim sw=4 sts=4 et
 EOF
 )'
 
@@ -314,12 +315,15 @@ my_expand_alias() {
     : ${LBUFFER%%(#m)[.\-+:|_a-zA-Z0-9]#}
     local blacklist_pattern="^(${(j:|:)MY_ALIAS_EXPAND_BLACKLIST})$"
     if ! [[ $MATCH =~ $blacklist_pattern ]]; then
-        zle _expand_alias
-        zle self-insert
-        zle backward-char -n ${cursor_offset["$MATCH"]:-0}
-    else
-        LBUFFER+=" "
+        local word_before_cursor=${LBUFFER##* }
+        if [[ -n "$word_before_cursor" ]] && alias "$word_before_cursor" &>/dev/null; then
+            zle _expand_alias
+            zle self-insert
+            zle backward-char -n ${cursor_offset["$MATCH"]:-0}
+            return
+        fi
     fi
+    LBUFFER+=" "
 }
 
 # Set up the widget
@@ -327,6 +331,7 @@ zle -N my_expand_alias
 
 # Bind the widget to run after completion
 # 'main' defaults of viins or emacs (https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html)
+# bindkey -M main ' ' my_expand_alias
 bindkey -M main ' ' my_expand_alias
 
 # Store the history number before completion

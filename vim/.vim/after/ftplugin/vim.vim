@@ -67,7 +67,7 @@ elseif exists('g:loaded_vimsuggest')
     #     return addons.ArtifactsComplete(A, L, C, patterns)
     # enddef
     # :defcompile # Otherwise compile errors within Complete() show up only upon pressing <tab>
-    nnoremap <buffer> <leader>/ :VSGlobal \v^\s*(def\|com%[mand])!?.*
+    nnoremap <buffer> <leader>/ :VSGlobal \v\c(^<bar>\s)(def<bar>:?com%[mand]<bar>:?hi%[ghlight])!?\s.{-}
 else
     def Definitions(): list<any>
         var items = []

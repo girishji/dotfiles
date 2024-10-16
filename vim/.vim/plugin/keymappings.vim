@@ -152,27 +152,27 @@ enddef
 tnoremap <silent> <C-PageUp> <scriptcmd>SwitchTab('up')<cr>
 tnoremap <silent> <C-PageDown> <scriptcmd>SwitchTab('down')<cr>
 
-# ----------------------------------------
-import '../autoload/text.vim'
+# # ----------------------------------------
+# import '../autoload/text.vim'
 
-# surround ', ", and `
-vnoremap <silent> <leader>' <scriptcmd>text.Surround('''')<cr>
-vnoremap <silent> <leader>" <scriptcmd>text.Surround('"')<cr>
-vnoremap <silent> <leader>` <scriptcmd>text.Surround('`')<cr>
-nnoremap <silent> <leader>' <scriptcmd>text.Surround('''')<cr>
-nnoremap <silent> <leader>" <scriptcmd>text.Surround('"')<cr>
-nnoremap <silent> <leader>` <scriptcmd>text.Surround('`')<cr>
+# # surround ', ", and `
+# vnoremap <silent> <leader>' <scriptcmd>text.Surround('''')<cr>
+# vnoremap <silent> <leader>" <scriptcmd>text.Surround('"')<cr>
+# vnoremap <silent> <leader>` <scriptcmd>text.Surround('`')<cr>
+# nnoremap <silent> <leader>' <scriptcmd>text.Surround('''')<cr>
+# nnoremap <silent> <leader>" <scriptcmd>text.Surround('"')<cr>
+# nnoremap <silent> <leader>` <scriptcmd>text.Surround('`')<cr>
 
-# simple text objects
-# -------------------
-# i_ i. i: i, i; i| i/ i\ i* i+ i- i# i<tab>
-# a_ a. a: a, a; a| a/ a\ a* a+ a- a# a<tab>
-for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', '#', '<tab>' ]
-    execute 'xnoremap <silent> i' .. char .. ' <esc><scriptcmd>text.Obj("' .. char .. '", 1)<CR>'
-    execute 'xnoremap <silent> a' .. char .. ' <esc><scriptcmd>text.Obj("' .. char .. '", 0)<CR>'
-    execute 'onoremap <silent> i' .. char .. ' :normal vi' .. char .. '<CR>'
-    execute 'onoremap <silent> a' .. char .. ' :normal va' .. char .. '<CR>'
-endfor
+# # simple text objects
+# # -------------------
+# # i_ i. i: i, i; i| i/ i\ i* i+ i- i# i<tab>
+# # a_ a. a: a, a; a| a/ a\ a* a+ a- a# a<tab>
+# for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', '#', '<tab>' ]
+#     execute 'xnoremap <silent> i' .. char .. ' <esc><scriptcmd>text.Obj("' .. char .. '", 1)<CR>'
+#     execute 'xnoremap <silent> a' .. char .. ' <esc><scriptcmd>text.Obj("' .. char .. '", 0)<CR>'
+#     execute 'onoremap <silent> i' .. char .. ' :normal vi' .. char .. '<CR>'
+#     execute 'onoremap <silent> a' .. char .. ' :normal va' .. char .. '<CR>'
+# endfor
 
 
 # (:h emacs-keys) For Emacs-style editing on the command-line:
@@ -191,10 +191,11 @@ endfor
 :cnoremap <C-N> <Down>
 # recall previous (older) command-line
 :cnoremap <C-P> <Up>
-# esc-b is backward-one-word
-:cnoremap <Esc>b <S-Left>
-# esc-f is forward-one-word
-:cnoremap <Esc>f <S-Right>
+# XXX: <esc> key combination causes delay in dismissing ':' command
+# # esc-b is backward-one-word
+# :cnoremap <Esc>b <S-Left>
+# # esc-f is forward-one-word
+# :cnoremap <Esc>f <S-Right>
 # # back one word, Alt-B -> not used to using this
 # :cnoremap â		<S-Left>
 # :cnoremap ∫		<S-Left>
@@ -203,6 +204,8 @@ endfor
 # :cnoremap æ		<S-Right>
 # :cnoremap ƒ		<S-Right>
 # :cnoremap ń		<S-Right>
+:cnoremap <C-h> <S-Left>
+:cnoremap <C-l> <S-Right>
 
 ##
 ## Following keybindings are useful when not using scope.vim

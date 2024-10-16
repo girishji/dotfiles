@@ -31,7 +31,7 @@ autocmd VimEnter,VimResume * silent execute '!echo -ne "\e[2 q"' | redraw!
 # Format usin 'gq'. :h fo-table
 set formatoptions=qjl
 
-# Some sane defaults
+# Defaults
 source $VIMRUNTIME/defaults.vim
 # disable message from 'defaults.vim' when entering cmdwin
 autocmd! vimHints

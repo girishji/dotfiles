@@ -20,15 +20,15 @@ iabbr <silent><buffer> all_ a.begin(), a.end()<C-R>=Eatchar()<CR>
 iabbr <silent><buffer> max_element_ ranges::max_element(<C-R>=Eatchar()<CR>
 iabbr <silent><buffer> distance_ ranges::distance(<C-R>=Eatchar()<CR>
 
-if exists(":LspDocumentSymbol") == 2
-    nnoremap <buffer> <leader>/ <cmd>LspDocumentSymbol<CR>
-endif
+# if exists(":LspDocumentSymbol") == 2
+#     nnoremap <buffer> <leader>/ <cmd>LspDocumentSymbol<CR>
+# endif
 
-if exists("g:loaded_vimcomplete")
-    g:VimCompleteOptionsSet({
-        lsp: { enable: true, maxCount: 50, priority: 11 },
-    })
-endif
+# if exists("g:loaded_vimcomplete")
+#     g:VimCompleteOptionsSet({
+#         lsp: { enable: true, maxCount: 50, priority: 11 },
+#     })
+# endif
 
 # cppman to view cppreference.com documentation
 # command -complete=custom,ListCppKeywords -nargs=1 Cppman :term ++close cppman <args>

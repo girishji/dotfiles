@@ -91,8 +91,8 @@ def TrailingWhitespaceStrip()
 enddef
 command TrailingWhitespaceStrip TrailingWhitespaceStrip()
 
-import autoload "text.vim"
-command! -range FixSpaces text.FixSpaces(<line1>, <line2>)
+# import autoload "text.vim"
+# command! -range FixSpaces text.FixSpaces(<line1>, <line2>)
 
 # Wipe all unlisted buffers
 def UnlistedBuffersWipe()

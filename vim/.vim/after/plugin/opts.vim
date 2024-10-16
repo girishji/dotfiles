@@ -40,27 +40,29 @@ if exists("g:loaded_vimcomplete")
 endif
 
 if exists("g:loaded_vimsuggest")
-    g:VimSuggestSetOptions({
-        search: {
-            enable: true,
-            pum: true,
-            fuzzy: false,
-            alwayson: true,
+    var VimSuggest = {}
+    VimSuggest.search = {
+        enable: true,
+        pum: false,
+        # ctrl_np: true,
+        # fuzzy: false,
+        # alwayson: true,
+    }
+    VimSuggest.cmd = {
+        # enable: true,
+        # pum: true,
+        # fuzzy: false,
+        # exclude: ['^\s*\d*\s*b\%[uffer]!\?\s\+'],
+        onspace: ['Scope', 'PyGoTo', 'VimGoTo'],
+        popupattrs: {
+            borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+            borderhighlight: ['Normal'],
+            highlight: 'Normal',
+            border: [1, 1, 1, 1],
         },
-        cmd: {
-            enable: true,
-            pum: true,
-            fuzzy: false,
-            # exclude: ['^\s*\d*\s*b\%[uffer]!\?\s\+'],
-            onspace: ['Scope', 'PyGoTo', 'VimGoTo'],
-            popupattrs: {
-                borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
-                borderhighlight: ['Normal'],
-                highlight: 'Normal',
-                border: [1, 1, 1, 1],
-            },
-        }
-    })
+    }
+    g:VimSuggestSetOptions(VimSuggest)
+
     highlight link VimSuggestMatch Constant
 
     augroup vimsuggest-qf-show
@@ -69,6 +71,7 @@ if exists("g:loaded_vimsuggest")
     augroup END
 
     # find
+    # g:vimsuggest_fzfindprg = 'fd --type f'
     nnoremap <leader><space> :VSFind<space>
     # nnoremap <leader>fv :VSFind ~/.vim/.../
     # nnoremap <leader>fz :VSFind ~/.zsh/.../
@@ -78,22 +81,15 @@ if exists("g:loaded_vimsuggest")
     nnoremap <leader>fV :VSFind $VIMRUNTIME<space>
 
     nnoremap <leader>/ :VSGlobal<space>
+    nnoremap <leader>; :VSInclSearch<space>
 
     # live find
     # nnoremap <leader>fF :VSExec find -EL . \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name "*"<left><left>
     g:vimsuggest_findprg = 'find -EL $* \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name $*'
     nnoremap <leader>ff :VSFindL "*"<left><left>
 
-    # XXX: Following will not show menu, since ':VSLiveFind |*' (| is cursor) is interpreted as ':VSLiveFind<space>'
-    # nnoremap <leader>fF :VSLiveFind *<left>
-    # def Feed(): string
-    #     timer_start(1, (_) => feedkeys("\<left>", 'n'))
-    #     return ''
-    # enddef
-    # nnoremap <leader>fF :VSLiveFind *<c-r>=<SID>Feed()<cr>
     # XXX: If you use 'find ~/.zsh', it shows nothing since -path matches whole path and dot dirs (including .zsh) are excluded.
     # nnoremap <leader>ff :VSCmd e find . \! \( -path "*/.*" -prune \) -type f -name "*"<left><left>
-
     # Live grep (see notes in .zsh dir)
     # nnoremap <leader>g :VSExec ggrep -REIHins "" . --exclude-dir={.git,"node_*"} --exclude=".*"<c-left><c-left><c-left><left><left>
     # NOTE: '**' automatically excludes hidden dirs and files, but it is much slower.
@@ -101,6 +97,7 @@ if exists("g:loaded_vimsuggest")
     # XXX '~' does not work with Vim
     # nnoremap <leader>g :VSExec grep -IHins "" . **/*\~node_modules/*<c-left><left><left><left><left>
 
+    # Live grep
     g:vimsuggest_grepprg = 'ggrep -REIHins $* --exclude-dir=.git --exclude=".*"'
     nnoremap <leader>g :VSGrep ""<left>
     nnoremap <leader>G :VSGrep "<c-r>=expand('<cword>')<cr>"<left>
@@ -336,7 +333,7 @@ if exists("g:loaded_bufline")
     else
         # keep defaults
     endif
-    g:BuflineSetup({ highlight: false, showbufnr: false, emphasize: '%[#' })
+    g:BuflineSetup({ highlight: false, showbufnr: false, emphasize: '<%#' })
 endif
 
 # another way

@@ -101,7 +101,10 @@ augroup END
 # set the background explicitly so that colorscheme (like 'blue') can choose
 # appropriate colors.
 set background=dark
+# colorscheme blue
 colorscheme darkblue
+# set background=light
+# colorscheme lunaperche
 
 # Preview here: https://vimcolorschemes.com/vim/colorschemes (ubunto mono font)
 #     # for vhs tapes:

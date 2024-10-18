@@ -71,11 +71,11 @@ if exists("g:loaded_vimsuggest")
     augroup END
 
     # find
-    # g:vimsuggest_fzfindprg = 'fd --type f'
+    # g:vimsuggest_fzfindprg = 'fd --type f .'
+    # g:vimsuggest_shell = true
+    set shell=/bin/zsh
+    set shellcmdflag=-c
     nnoremap <leader><space> :VSFind<space>
-    # nnoremap <leader>fv :VSFind ~/.vim/.../
-    # nnoremap <leader>fz :VSFind ~/.zsh/.../
-    # nnoremap <leader>fV :VSFind $VIMRUNTIME/.../
     nnoremap <leader>fv :VSFind ~/.vim<space>
     nnoremap <leader>fz :VSFind ~/.zsh/<space>
     nnoremap <leader>fV :VSFind $VIMRUNTIME<space>
@@ -84,9 +84,12 @@ if exists("g:loaded_vimsuggest")
     nnoremap <leader>; :VSInclSearch<space>
 
     # live find
-    # nnoremap <leader>fF :VSExec find -EL . \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name "*"<left><left>
+    # g:vimsuggest_shell = true
+    # g:vimsuggest_findprg = 'fd --type f'
     g:vimsuggest_findprg = 'find -EL $* \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name $*'
     nnoremap <leader>ff :VSFindL "*"<left><left>
+
+    # nnoremap <leader>fF :VSExec find -EL . \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name "*"<left><left>
 
     # XXX: If you use 'find ~/.zsh', it shows nothing since -path matches whole path and dot dirs (including .zsh) are excluded.
     # nnoremap <leader>ff :VSCmd e find . \! \( -path "*/.*" -prune \) -type f -name "*"<left><left>

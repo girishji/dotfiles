@@ -45,9 +45,6 @@ autocmd BufEnter * if &ft == null_string | setlocal listchars=tab:\ \ ,trail:\  
 # autocmd BufEnter,FileType * :echom &ft expand('<amatch>') expand('<afile>') 'here'
 set list
 
-# In 'find' command, '~' and '^' does not work in glob patterns, like in zsh, even with extendedglob.
-# set shell=/bin/zsh\ -o\ extendedglob
-
 # set fillchars=vert:│,fold:۰,diff:·
 if &background == 'dark'
     set fillchars=vert:│,fold:۰,diff:·,stl:─,stlnc:═

@@ -323,7 +323,8 @@ my_expand_alias() {
             return
         fi
     fi
-    LBUFFER+=" "
+    # LBUFFER+=" "  # alternative: self-insert widget inserts typed char into cmdline
+    zle self-insert
 }
 
 # Set up the widget

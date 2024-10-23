@@ -100,11 +100,18 @@ augroup END
 # NOTE: 'background' is not set correctly until window is opened (after VimEnter). So,
 # set the background explicitly so that colorscheme (like 'blue') can choose
 # appropriate colors.
-set background=dark
+# set background=dark
 # colorscheme blue
-colorscheme darkblue
+# colorscheme darkblue
 # set background=light
 # colorscheme lunaperche
+if exists("$VIMBG")
+    exec $'set background={expandcmd($VIMBG)}'
+endif
+if exists("$VIMCOLORSCHEME")
+    exec $'colorscheme {expandcmd($VIMCOLORSCHEME)}'
+endif
+
 
 # Preview here: https://vimcolorschemes.com/vim/colorschemes (ubunto mono font)
 #     # for vhs tapes:

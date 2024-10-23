@@ -141,11 +141,11 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) > 
 if has('gui')  # MacVim
     plug#begin("~/.local/share/vim-plug/")
     # plug#begin()
-    Plug '~/git/autosuggest.vim'
     # Plug '~/git/scope.vim'
     Plug '~/git/devdocs.vim'
     Plug '~/git/vimbits'
     Plug '~/git/bufline.vim'
+    Plug '~/git/vimsuggest'
     plug#end()
 else
     plug#begin("~/.local/share/vim-plug/")
@@ -168,8 +168,6 @@ else
     # Plug 'girishji/bufline.vim'
     # Plug '~/git/scope.vim'
     Plug '~/git/vimsuggest'
-    # Plug '~/git/autosuggest.vim'
-    # Plug 'girishji/autosuggest.vim'
     Plug '~/git/vimcomplete'
     # Plug 'girishji/vimcomplete'
     Plug '~/git/ngram-complete.vim'
@@ -184,6 +182,8 @@ else
 endif
 
 g:python_highlight_all = 1
+
+g:pythondoc_hh_expand = 1
 
 # g:vimbits_vim9cmdline = true
 

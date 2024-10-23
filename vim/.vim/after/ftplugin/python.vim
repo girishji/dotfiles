@@ -202,7 +202,3 @@ if exists(":LspDocumentSymbol") == 2
 elseif exists('g:loaded_scope')
     nnoremap <buffer> <space>/ <scriptcmd>Things()<CR>
 endif
-
-if exists('g:loaded_pythondoc')
-    g:PythondocExpandHH()
-endif

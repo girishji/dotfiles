@@ -46,19 +46,22 @@ if exists("g:loaded_vimsuggest")
         pum: false,
         # ctrl_np: true,
         # fuzzy: false,
-        # alwayson: true,
+        # alwayson: false,
     }
     VimSuggest.cmd = {
         # enable: true,
+        # ctrl_np: true,
         # pum: true,
         # fuzzy: false,
         # exclude: ['^\s*\d*\s*b\%[uffer]!\?\s\+'],
-        onspace: ['Scope', 'PyGoTo', 'VimGoTo'],
+        # alwayson: false,
+        onspace: ['b', 'Scope', 'PyGoTo', 'VimGoTo'],
         popupattrs: {
             borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
             borderhighlight: ['Normal'],
             highlight: 'Normal',
             border: [1, 1, 1, 1],
+            # maxheight: 20,
         },
     }
     g:VimSuggestSetOptions(VimSuggest)
@@ -85,11 +88,13 @@ if exists("g:loaded_vimsuggest")
 
     # live find
     # g:vimsuggest_shell = true
+    # g:vimsuggest_findprg = 'fd --type f --glob'
     # g:vimsuggest_findprg = 'fd --type f'
     g:vimsuggest_findprg = 'find -EL $* \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name $*'
     nnoremap <leader>ff :VSFindL "*"<left><left>
 
-    # nnoremap <leader>fF :VSExec find -EL . \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name "*"<left><left>
+    nnoremap <leader>fF :VSExec fd --type f<space>
+    # nnoremap <leader>fF find -EL . \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name "*"<left><left>
 
     # XXX: If you use 'find ~/.zsh', it shows nothing since -path matches whole path and dot dirs (including .zsh) are excluded.
     # nnoremap <leader>ff :VSCmd e find . \! \( -path "*/.*" -prune \) -type f -name "*"<left><left>
@@ -102,6 +107,8 @@ if exists("g:loaded_vimsuggest")
 
     # Live grep
     g:vimsuggest_grepprg = 'ggrep -REIHins $* --exclude-dir=.git --exclude=".*"'
+    # g:vimsuggest_grepprg = 'rg --vimgrep --smart-case $* .'
+    # g:vimsuggest_grepprg = 'ag --vimgrep'
     nnoremap <leader>g :VSGrep ""<left>
     nnoremap <leader>G :VSGrep "<c-r>=expand('<cword>')<cr>"<left>
 

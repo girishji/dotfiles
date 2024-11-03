@@ -2,28 +2,29 @@ vim9script
 
 def Quiet()
     if &background == 'dark'
-        highlight  Normal                   ctermbg=None
-        highlight  Comment                  ctermfg=244
-        highlight  LineNr                   ctermfg=244
+        highlight Normal ctermbg=None ctermfg=None
+        # highlight  Comment                  ctermfg=244
+        # highlight  LineNr                   ctermfg=244
         highlight  helpExample              ctermfg=248
         highlight  LspSigActiveParameter    ctermfg=207
-        highlight  statusline    ctermbg=none  ctermfg=242  guibg=Grey35  cterm=none
-        highlight  statuslinenc  ctermbg=none  ctermfg=242  guibg=Grey35  cterm=none
-        highlight  user1         ctermbg=none  ctermfg=250  cterm=none
-        highlight  user2         ctermbg=none  ctermfg=250     cterm=none
-        highlight  user3         ctermbg=none  ctermfg=250     cterm=none
-        highlight  user4         ctermbg=none  ctermfg=3     cterm=none
-        highlight FilterMenuMatch ctermfg=209 cterm=none
-        highlight PopupBorderHighlight ctermfg=244
-        highlight  PmenuKind       ctermfg=246  ctermbg=236   cterm=none
-        highlight! link PmenuKindSel    PmenuSel
-        highlight  PmenuExtra       ctermfg=246  ctermbg=236   cterm=none
-        highlight! link PmenuExtraSel   PmenuSel
-        highlight  Pmenu       ctermfg=none  ctermbg=236   cterm=none
-        highlight  PmenuSel    ctermfg=none  ctermbg=25
-        highlight  PmenuSbar   ctermfg=none  ctermbg=236
-        highlight  PmenuThumb  ctermfg=none  ctermbg=240
-        highlight  helpCommand ctermfg=248   ctermbg=236
+        # highlight  statusline    ctermbg=none  ctermfg=242  guibg=Grey35  cterm=none
+        # highlight  statuslinenc  ctermbg=none  ctermfg=242  guibg=Grey35  cterm=none
+        # highlight  user1         ctermbg=none  ctermfg=250  cterm=none
+        # highlight  user2         ctermbg=none  ctermfg=250     cterm=none
+        # highlight  user3         ctermbg=none  ctermfg=250     cterm=none
+        # highlight  user4         ctermbg=none  ctermfg=3     cterm=none
+        # highlight FilterMenuMatch ctermfg=209 cterm=none
+        # highlight PopupBorderHighlight ctermfg=244
+        # highlight  PmenuKind       ctermfg=246  ctermbg=236   cterm=none
+        # highlight! link PmenuKindSel    PmenuSel
+        # highlight  PmenuExtra       ctermfg=246  ctermbg=236   cterm=none
+        # highlight! link PmenuExtraSel   PmenuSel
+        # highlight  Pmenu       ctermfg=none  ctermbg=236   cterm=none
+        # highlight  PmenuSel    ctermfg=none  ctermbg=25
+        # highlight  PmenuSbar   ctermfg=none  ctermbg=236
+        # highlight  PmenuThumb  ctermfg=none  ctermbg=240
+        highlight helpCommand ctermfg=248   ctermbg=236
+        highlight Statement  cterm=bold ctermfg=253
     else
         highlight statusline cterm=none
         highlight Comment  cterm=none ctermfg=242
@@ -40,19 +41,19 @@ def Quiet()
         highlight  user4         cterm=bold,reverse
         highlight  helpCommand ctermbg=254 ctermfg=240
     endif
-    highlight  PreProc                  cterm=bold
-    highlight  helpHeader               cterm=bold
-    highlight  link helpNote            Normal
+    highlight PreProc                  cterm=bold
+    highlight helpHeader               cterm=bold
+    highlight link helpNote            Normal
     highlight link helpHyperTextEntry Underlined
     highlight link helpHyperTextJump Underlined
-    highlight link manReference Underlined
-    highlight manSectionHeading cterm=bold
-    highlight manSubHeading cterm=bold
-    highlight manOptionDesc cterm=bold
-    highlight manLongOptionDesc cterm=bold
-    highlight manFooter cterm=italic
-    highlight manHeader cterm=italic
-    highlight manCFuncDefinition cterm=bold
+    # highlight link manReference Underlined
+    # highlight manSectionHeading cterm=bold
+    # highlight manSubHeading cterm=bold
+    # highlight manOptionDesc cterm=bold
+    # highlight manLongOptionDesc cterm=bold
+    # highlight manFooter cterm=italic
+    # highlight manHeader cterm=italic
+    # highlight manCFuncDefinition cterm=bold
 enddef
 
 def Slate()
@@ -102,9 +103,8 @@ augroup END
 # appropriate colors.
 # set background=dark
 # colorscheme blue
-# colorscheme darkblue
-# set background=light
-# colorscheme lunaperche
+
+# If env var is set, use it.
 if exists("$VIMBG")
     exec $'set background={expandcmd($VIMBG)}'
 endif
@@ -114,19 +114,6 @@ endif
 
 
 # Preview here: https://vimcolorschemes.com/vim/colorschemes (ubunto mono font)
-#     # for vhs tapes:
-#     # silent! colorscheme dracula
-
-#     # silent! colorscheme declutter
-#     # autocmd BufEnter * g:DeclutterUseTerminalFGBG()
-#     # autocmd BufEnter * g:DeclutterBrightenBoldFont()
-
-#     colorscheme blue
-#     # silent! colorscheme declutter
-#     # autocmd BufEnter * g:DeclutterUseTerminalFGBG()
-#     # silent! colorscheme quiet
-#     # colorscheme lunaperche
-#     echom 'here'
 
 # var curhr = strftime("%H")->str2nr()
 # if curhr > 18 || curhr < 8

@@ -60,7 +60,7 @@ BufReadPre - before file is loaded
 BufWinEnter - executed after the modeline is read
 
 ----------------------------------------
-Spelling ~
+Spelling                         *giri-spell*~
 
 z= 	suggest options
 zg 	add good word to dict (goes into .vim/spell/en-utf8.add)
@@ -301,7 +301,7 @@ to show/filter all highlight groups related to Diag. It prints values.
 ## Sort lines alphabetically:
 visally select and do :sort
 
-## use C-o to execute normal commands in insert mode
+## use C-o to execute normal commands in insert mode ('o' is 2nd char of 'normal')
   C-o 80a <char> Esc
 (bad alternative:) without leaving insert mode:
   C-o :norm 80i<char> Return

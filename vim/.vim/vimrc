@@ -150,6 +150,8 @@ if has('gui')  # MacVim
 else
     plug#begin("~/.local/share/vim-plug/")
     # Make sure you use single quotes
+    Plug 'noahfrederick/vim-noctu'
+    Plug 'letorbi/vim-colors-modern-borland'
     Plug 'airblade/vim-gitgutter'
     # Plug 'lacygoill/vim9asm'
     Plug 'yegappan/lsp'
@@ -175,16 +177,16 @@ else
     Plug '~/git/vimbits'
     # Plug 'girishji/vimbits'
     # Plug 'girishji/pythondoc.vim', {'for': 'python'}
-    Plug '~/git/pythondoc.vim', {'for': 'python'}
+    # Plug '~/git/pythondoc.vim', {'for': 'python'}
+    Plug '~/git/pythondoc.vim'
     Plug '~/git/devdocs.vim'
     # Plug 'girishji/devdocs.vim'
     plug#end()
 endif
 
 g:python_highlight_all = 1
-
-g:pythondoc_hh_expand = 1
-
+g:pythondoc_h_expand = 1
 # g:vimbits_vim9cmdline = true
+g:vimcomplete_tab_enable = 1
 
 # vim: ts=8 sts=4 sw=4 et fdm=marker

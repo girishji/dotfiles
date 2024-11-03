@@ -9,14 +9,13 @@ if exists("g:loaded_vimbits")
 endif
 
 if exists("g:loaded_vimcomplete")
-    g:vimcomplete_tab_enable = 1
     var dictproperties = {
         python: { sortedDict: false },
         text: { sortedDict: true },
         cpp: { sortedDict: false },
     }
     g:VimCompleteOptionsSet({
-        completor: { shuffleEqualPriority: true, alwaysOn: true, debug: false },
+        completor: { shuffleEqualPriority: true, alwaysOn: true, postfixClobber: true, postfixHighlight: false, debug: false },
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
         dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'text', 'cpp'], properties: dictproperties },
         abbrev: { enable: true },
@@ -47,26 +46,31 @@ if exists("g:loaded_vimsuggest")
         # ctrl_np: true,
         # fuzzy: false,
         # alwayson: false,
+        # reverse: true,
     }
     VimSuggest.cmd = {
         # enable: true,
         # ctrl_np: true,
         # pum: true,
-        # fuzzy: false,
+        # fuzzy: true,
         # exclude: ['^\s*\d*\s*b\%[uffer]!\?\s\+'],
+        # onspace: ['colo\%[rscheme]', 'b\%[uffer]', 'e\%[dit]', 'Scope'],
         # alwayson: false,
-        onspace: ['b', 'Scope', 'PyGoTo', 'VimGoTo'],
+        # reverse: true,
         popupattrs: {
             borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
-            borderhighlight: ['Normal'],
-            highlight: 'Normal',
+            # borderhighlight: ['Normal'],
+            # highlight: 'Normal',
             border: [1, 1, 1, 1],
             # maxheight: 20,
         },
     }
     g:VimSuggestSetOptions(VimSuggest)
 
-    highlight link VimSuggestMatch Constant
+    var pm = hlget('PmenuMatch')
+    if !pm->empty() && pm[0]->has_key('ctermfg')
+        exec $'hi VimSuggestMatch ctermfg={pm[0].ctermfg} ctermbg=None'
+    endif
 
     augroup vimsuggest-qf-show
         autocmd!
@@ -79,6 +83,7 @@ if exists("g:loaded_vimsuggest")
     set shell=/bin/zsh
     set shellcmdflag=-c
     nnoremap <leader><space> :VSFind<space>
+    # nnoremap <leader><space> :VSGitFind<space>
     nnoremap <leader>fv :VSFind ~/.vim<space>
     nnoremap <leader>fz :VSFind ~/.zsh/<space>
     nnoremap <leader>fV :VSFind $VIMRUNTIME<space>
@@ -175,25 +180,24 @@ if exists("g:loaded_vimsuggest")
     # nnoremap <leader><space> :VSCmd e ls -1 **/*(.N)<left><left><left><left><left>
 endif
 
-if exists("g:loaded_autosuggest")
-    g:AutoSuggestSetup({
-        search: {
-            enable: true,
-            pum: false,
-            fuzzy: false,
-            alwayson: true,
-        },
-        cmd: {
-            enable: true,
-            pum: true,
-            fuzzy: false,
-            exclude: ['^b$', '^e$', '^v$'],
-            # exclude: ['^buffer ', '^Find', '^Buffer'],
-            onspace: ['buffer', 'e'],
-            editcmdworkaround: true,
-        }
-    })
-endif
+# if exists("g:loaded_autosuggest")
+#     g:AutoSuggestSetup({
+#         search: {
+#             enable: true,
+#             pum: false,
+#             fuzzy: false,
+#             alwayson: true,
+#         },
+#         cmd: {
+#             enable: true,
+#             pum: true,
+#             fuzzy: false,
+#             exclude: ['^b$', '^e$', '^v$'],
+#             # exclude: ['^buffer ', '^Find', '^Buffer'],
+#             editcmdworkaround: true,
+#         }
+#     })
+# endif
 
 if exists("g:loaded_lsp")
     g:LspOptionsSet({

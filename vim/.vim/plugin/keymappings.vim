@@ -1,12 +1,11 @@
 vim9script
 
 # autocomplete with <c-n> and <c-p> when plugins are not available
-def WhitespaceOnly(): bool
-    # strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
-    return strpart(getline('.'), col('.') - 2, 1) =~ '^\s*$'
+def OnWhitespace(): bool
+    return col('.') == 1 || getline('.')->strpart(0, col('.') - 1) =~ '\s$'
 enddef
-inoremap <expr> <Tab>   WhitespaceOnly() ? "\<tab>" : "\<c-n>"
-inoremap <expr> <s-Tab> WhitespaceOnly() ? "\<s-tab>" : "\<c-p>"
+inoremap <expr> <Tab>   OnWhitespace() ? "\<tab>" : "\<c-n>"
+inoremap <expr> <s-Tab> OnWhitespace() ? "\<s-tab>" : "\<c-p>"
 
 # Y mapping, more natural but not vi compatible
 map Y y$

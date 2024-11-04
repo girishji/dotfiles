@@ -253,7 +253,8 @@ if is_mac; then
         if [[ ${bg_color} != "0;15" ]]; then # dark background
             export LS_COLORS='di=1:ln=3:ex=3'
         fi
-        alias ls='gls --color=always -F' # auto/always/never
+        # alias ls='gls --color=always -F' # auto/always/never
+        alias ls='ls -FG' # aliases the command /usr/bin/ls
     else
         alias ls='ls -FG' # aliases the command /usr/bin/ls
     fi

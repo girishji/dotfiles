@@ -3,6 +3,15 @@ if !has('vim9script') || v:version < 900
 endif
 vim9script
 
+# Ansi 16 are standard colors numbered 0-15. In addition, terminals provide
+# background and foreground colors separately. Even though ansi16 colors have
+# fixed RGB values, terminals allow setting these to any arbitrary RGB. This
+# colorscheme uses only ansi colors for syntax coloring of text elements. UI
+# elements can use other colors in the cterm 256 palette. New colors are chosen
+# only when Vim default colors are not appropriate. Only cterm colors are used
+# (gui colors are not used). In addition, there is monochrome option which
+# excludes help files.
+
 g:colors_name = "ansi16"
 highlight clear
 if exists("syntax_on")
@@ -139,16 +148,6 @@ endif
 
 # Apply monochrome colors if variable is set, but exclude help files from
 # monochrome.
-var saved_hi: list<any>
-var monochrome_applied = false
-if exists("$VIMMONOCHROME") || get(g:, 'ansi16_monochrome', false)
-    saved_hi = 'hi'->execute()->split("\n")
-    ApplyMonochrome()
-    augroup Ansi16Monochrome | autocmd!
-        autocmd FileType * ApplyMonochrome()
-    augroup END
-endif
-
 var syntaxgrps = [
     'Constant',
     'Special',
@@ -203,5 +202,15 @@ def ApplyMonochrome()
         monochrome_applied = false
     endif
 enddef
+
+var saved_hi: list<any>
+var monochrome_applied = false
+if exists("$VIMMONOCHROME") || get(g:, 'ansi16_monochrome', false)
+    saved_hi = 'hi'->execute()->split("\n")
+    ApplyMonochrome()
+    augroup Ansi16Monochrome | autocmd!
+        autocmd FileType * ApplyMonochrome()
+    augroup END
+endif
 
 # vim: sw=4 sts=4 et

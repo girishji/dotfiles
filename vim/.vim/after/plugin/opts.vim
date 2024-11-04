@@ -58,7 +58,7 @@ if exists("g:loaded_vimsuggest")
         # alwayson: false,
         # reverse: true,
         popupattrs: {
-            borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+            # borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
             # borderhighlight: ['Normal'],
             # highlight: 'Normal',
             border: [1, 1, 1, 1],

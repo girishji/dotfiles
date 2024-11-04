@@ -209,7 +209,7 @@ if exists("$VIMMONOCHROME") || get(g:, 'ansi16_monochrome', false)
     saved_hi = 'hi'->execute()->split("\n")
     ApplyMonochrome()
     augroup Ansi16Monochrome | autocmd!
-        autocmd FileType * ApplyMonochrome()
+        autocmd WinEnter,BufEnter * ApplyMonochrome()
     augroup END
 endif
 

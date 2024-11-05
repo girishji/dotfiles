@@ -349,7 +349,8 @@ and so on
 ## g then <C-a>: (after rectangular visual selection) incremnts number as a
 sequence (1,2,3,... etc.)
 
-## increment (C-a, a=add) / decrease (C-x) number
+## increment (C-a, a=add) / decrease (C-x) number (also 'g C-a')
+0. g C-a after visual selection will increment subsequent numbers
 1. You can prefix a number for addittion and subtraction
 2. C-a and C-x will seek next digit and add (1 by default) or subtract
 3. To increment letters do:

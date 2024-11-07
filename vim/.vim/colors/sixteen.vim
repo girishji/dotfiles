@@ -19,7 +19,7 @@ vim9script
 # `highlight` command, while not settable in terminal app. Finally, provide a
 # monochrome option for code syntax, and exclude help files from monochrome treatment.
 
-g:colors_name = "term16"
+g:colors_name = "sixteen"
 highlight clear
 if exists("syntax_on")
   syntax reset  # Set colors to Vim default
@@ -60,7 +60,7 @@ var colors = {
     none: 'none',
 }
 
-if exists("$TERM16BRIGHT") || get(g:, 'term16_bright', false)
+if exists("$SIXTEENBRIGHT") || get(g:, 'sixteen_bright', false)
     for c in ['red', 'green', 'yellow', 'blue', 'magenta', 'cyan']
         colors[c] += 8
     endfor
@@ -85,7 +85,7 @@ if &background ==# 'dark'
     # UI elements
     Hi  Pmenu         ctermfg=black      ctermbg=gray      cterm=none
     Hi  PmenuSel      ctermfg=gray       ctermbg=black
-    Hi  PmenuMatch    ctermfg=red        ctermbg=gray      cterm=none
+    Hi  PmenuMatch    ctermfg=rbred      ctermbg=lightgray cterm=none
     Hi  PmenuMatchSel ctermfg=bred       ctermbg=black     cterm=none
     Hi  PmenuSbar     ctermfg=darkgray   ctermbg=darkgray
     Hi  PmenuThumb    ctermfg=none       ctermbg=black
@@ -238,10 +238,10 @@ enddef
 
 var saved_hi: list<any>
 var monochrome_applied = false
-if exists("$VIMMONOCHROME") || get(g:, 'term16_monochrome', false)
+if exists("$SIXTEEN_MONOCHROME") || get(g:, 'sixteen_monochrome', false)
     saved_hi = 'hi'->execute()->split("\n")
     ApplyMonochrome()
-    augroup Term16Monochrome | autocmd!
+    augroup SixteenMonochrome | autocmd!
         autocmd WinEnter,BufEnter * ApplyMonochrome()
     augroup END
 endif

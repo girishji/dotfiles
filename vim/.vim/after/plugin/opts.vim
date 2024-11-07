@@ -15,7 +15,7 @@ if exists("g:loaded_vimcomplete")
         cpp: { sortedDict: false },
     }
     g:VimCompleteOptionsSet({
-        completor: { shuffleEqualPriority: true, alwaysOn: true, postfixClobber: true, postfixHighlight: false, debug: false },
+        completor: { triggerWordLen: 0, shuffleEqualPriority: true, alwaysOn: true, postfixClobber: false, postfixHighlight: true, debug: false },
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
         dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'text', 'cpp'], properties: dictproperties },
         abbrev: { enable: true },
@@ -41,27 +41,28 @@ endif
 if exists("g:loaded_vimsuggest")
     var VimSuggest = {}
     VimSuggest.search = {
-        enable: true,
+        # enable: false,
+        # alwayson: false,
         pum: false,
         # ctrl_np: true,
         # fuzzy: false,
-        # alwayson: false,
         # reverse: true,
     }
     VimSuggest.cmd = {
-        # enable: true,
+        # enable: false,
+        # alwayson: false,
         # ctrl_np: true,
         # pum: true,
         # fuzzy: true,
         # exclude: ['^\s*\d*\s*b\%[uffer]!\?\s\+'],
         # onspace: ['colo\%[rscheme]', 'b\%[uffer]', 'e\%[dit]', 'Scope'],
-        # alwayson: false,
         # reverse: true,
         popupattrs: {
             # borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
             # borderhighlight: ['Normal'],
             # highlight: 'Normal',
-            border: [1, 1, 1, 1],
+            # border: [1, 1, 1, 1],
+            # padding: [1, 1, 1, 1],
             # maxheight: 20,
         },
     }

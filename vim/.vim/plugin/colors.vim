@@ -9,20 +9,20 @@ vim9script
 
 augroup ModifyColorscheme | autocmd!
     autocmd ColorScheme darkblue {
-        hi Pmenu ctermfg=252 ctermbg=18
+        hi Pmenu ctermfg=253 ctermbg=20
         hi PmenuMatch ctermbg=18
-        hi PmenuSel ctermbg=252
-        hi PmenuMatchSel ctermbg=252
+        hi PmenuSel ctermbg=253
+        hi PmenuMatchSel ctermbg=253
         hi MoreMsg ctermfg=34
     }
 augroup END
 
 # If env var is set, use it.
-if exists("$VIMBG") && expandcmd($VIMBG) != null_string
-    exec $'set background={expandcmd($VIMBG)}'
+if expandcmd($VIM_BG) != null_string
+    exec $'set background={expandcmd($VIM_BG)}'
 endif
-if exists("$VIMCOLORSCHEME") && expandcmd($VIMCOLORSCHEME) != null_string
-    exec $'colorscheme {expandcmd($VIMCOLORSCHEME)}'
+if expandcmd($VIM_COLORSCHEME) != null_string
+    exec $'colorscheme {expandcmd($VIM_COLORSCHEME)}'
 endif
 
 # Following should occur after setting colorscheme.

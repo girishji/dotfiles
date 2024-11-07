@@ -1333,5 +1333,13 @@ What is func?
 "func" is a type, a function with any number of arguments and any return type.
 The function can be defined later.
 https://github.com/lacygoill/wiki/blob/main/vim/vim9.md#the-difference-between-using-or-omitting-function-when-saving-a-funcref-in-a-variable
+
+------------------------------------------------------------------------------
+Debug                               *giri-debug*
+The best way to debug .vimrc is to enable the debug and pipe it to
+a log file.
+>
+    vim -V20 2>&1 | tee logfile 
+
 ------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

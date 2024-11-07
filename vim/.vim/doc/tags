@@ -22,6 +22,7 @@ ghelp	giri.txt	/*ghelp*
 giri-[-keymap	giri-nav.txt	/*giri-[-keymap*
 giri-arglist	giri.txt	/*giri-arglist*
 giri-buflist	giri.txt	/*giri-buflist*
+giri-debug	giri.txt	/*giri-debug*
 giri-folds	giri-nav.txt	/*giri-folds*
 giri-g-keymap	giri-nav.txt	/*giri-g-keymap*
 giri-moving-through-program	giri-nav.txt	/*giri-moving-through-program*

@@ -1,25 +1,10 @@
-if !has('vim9script') || v:version < 900
-    finish
-endif
 vim9script
 
-# Terminal apps provide 16 configurable colors, in addition to background and foreground color.
-# These colors are associated with ANSI 16 colors from the past, which had
-# specific RGB values. These values are now termed 'ANSI Default'.
-# The problem with associating syntax highlighting to ANSI colors is that some
-# of the colors from 1-6 of ANSI defaults are not suitable for black background. If the brighter
-# counterparts (9-14) are chosen then colors from other profiles in terminal app do not look good.
-# The solution is to provide an
-# option to switch to brighter colors (for code syntax) only when appropriate.
-# UI elements use background colors extensively. If we limit ourselves to using only 0-15 then
-# some colors will get used as foreground in code syntax as well as background
-# in UI elements. This is not workable. The solution is to use only 7, 8, 15 for
-# UI background colors. In case colored background is needed it will be chosen from
-# 16-255, and these elements thus can only be configured explicitly through
-# `highlight` command, while not settable in terminal app. Finally, provide a
-# monochrome option for code syntax, and exclude help files from monochrome treatment.
+# Default ansi16 colors are not all suitable for black background (esp. 1-6).
+# Use these in general syntax highlighting, but modify the colors in terminal
+# app. Use 7 for ctermbg when &bg=dark for UI elements.
 
-g:colors_name = "sixteen"
+g:colors_name = "defaultplus"
 highlight clear
 if exists("syntax_on")
   syntax reset  # Set colors to Vim default
@@ -59,12 +44,6 @@ var colors = {
     rwhite: 231,
     none: 'none',
 }
-
-if exists("$SIXTEENBRIGHT") || get(g:, 'sixteen_bright', false)
-    for c in ['red', 'green', 'yellow', 'blue', 'magenta', 'cyan']
-        colors[c] += 8
-    endfor
-endif
 
 command -nargs=+ -bang Hi {
     var grp = <q-args>->matchstr('\s*\zs\S\+')
@@ -141,29 +120,28 @@ if &background ==# 'dark'
 else  # bg=light
 
     # UI elements
-    Hi  Pmenu         ctermfg=black       ctermbg=lightgray      cterm=none
-    Hi  PmenuSel      ctermfg=lightgray      ctermbg=black
-    Hi  PmenuMatch    ctermfg=red       ctermbg=lightgray      cterm=none
-    Hi  PmenuMatchSel ctermfg=bred       ctermbg=black       cterm=none
-    Hi  PmenuSbar     ctermfg=lightgray      ctermbg=lightgray
-    Hi  PmenuThumb    ctermfg=none    ctermbg=darkgray
-    Hi  PmenuKind     ctermfg=darkgray       ctermbg=lightgray      cterm=none
-    Hi! link          PmenuKindSel    PmenuSel
-    Hi  PmenuExtra    ctermfg=darkgray       ctermbg=lightgray      cterm=none
-    Hi! link          PmenuExtraSel   PmenuSel
+    Hi  Pmenu         ctermfg=black     ctermbg=lightgray cterm=none
+    Hi  PmenuSel      ctermfg=lightgray ctermbg=black
+    Hi  PmenuMatch    ctermfg=red       ctermbg=lightgray cterm=none
+    Hi  PmenuMatchSel ctermfg=bred      ctermbg=black     cterm=none
+    Hi  PmenuSbar     ctermfg=lightgray ctermbg=lightgray
+    Hi  PmenuThumb    ctermfg=none      ctermbg=darkgray
+    Hi  PmenuKind     ctermfg=darkgray  ctermbg=lightgray cterm=none
+    Hi! link          PmenuKindSel      PmenuSel
+    Hi  PmenuExtra    ctermfg=darkgray  ctermbg=lightgray cterm=none
+    Hi! link          PmenuExtraSel     PmenuSel
     Hi  LineNr        ctermfg=darkgray
-    Hi  SignColumn    ctermfg=darkgray       ctermbg=none
-    Hi  MatchParen    ctermfg=none    ctermbg=lightgray      cterm=bold,underline
-    Hi  StatusLine    ctermfg=black       ctermbg=gray       cterm=none
-    Hi  StatusLineNC  ctermfg=rwhite     ctermbg=lightgray      cterm=none
+    Hi  SignColumn    ctermfg=darkgray  ctermbg=none
+    Hi  MatchParen    ctermfg=none      ctermbg=lightgray cterm=bold,underline
+    Hi  StatusLine    ctermfg=black     ctermbg=gray      cterm=none
+    Hi  StatusLineNC  ctermfg=darkgray  ctermbg=lightgray cterm=none
     Hi  TabLine       cterm=none
     Hi  TabLineSel    cterm=underline
-    Hi  TabLineFill   ctermbg=gray       cterm=none
-    Hi  CursorLineNr  ctermfg=none    cterm=underline
-    Hi  VertSplit     ctermfg=black       ctermbg=gray       cterm=none
+    Hi  TabLineFill   ctermbg=gray      cterm=none
+    Hi  CursorLineNr  ctermfg=none      cterm=underline
+    Hi  VertSplit     ctermfg=black     ctermbg=gray      cterm=none
 
     # Generic syntax
-    # hi  Statement  ctermfg=1
     hi  Statement  ctermfg=none cterm=bold
 
     # Others
@@ -179,8 +157,8 @@ hi! link        helpURL            Underlined
 
 delcommand Hi
 
-# Apply monochrome colors if variable is set, but exclude help files from
-# monochrome.
+# Apply monochrome colors if options is set, but exclude help files from
+# monochrome treatment.
 var syntaxgrps = [
     'Constant',
     'Special',
@@ -238,10 +216,10 @@ enddef
 
 var saved_hi: list<any>
 var monochrome_applied = false
-if exists("$SIXTEEN_MONOCHROME") || get(g:, 'sixteen_monochrome', false)
+if exists("$VIM_MONOCHROME") || get(g:, 'defaut_plus_monochrome', false)
     saved_hi = 'hi'->execute()->split("\n")
     ApplyMonochrome()
-    augroup SixteenMonochrome | autocmd!
+    augroup DefaultPlusMonochrome | autocmd!
         autocmd WinEnter,BufEnter * ApplyMonochrome()
     augroup END
 endif

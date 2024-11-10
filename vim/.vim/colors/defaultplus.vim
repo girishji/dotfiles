@@ -2,15 +2,17 @@ vim9script
 
 # Vim’s default colors are mostly excellent, except for clown colors in popup
 # menus and certain UI background colors that lack contrast.
-# - Set UI element backgrounds (e.g., popup menu) to terminal gray: use `ctermbg` 7
-#   for dark (`&bg=dark`) and 15 for light (`&bg=light`) backgrounds. Customize these
-#   settings in the terminal app if needed.
+# - Set UI element backgrounds (e.g., popup menu) to terminal gray: use
+#   `ctermbg` 7 for dark (`&bg=dark`) and 15 for light (`&bg=light`)
+#   backgrounds. Customize these settings in the terminal app if needed.
 # - Restrict general syntax colors to 1-6 for consistency and readability.
 # - Terminal apps like `ls` and `git diff` use all colors (1-6 and 9-15) for
 #   foregrounds, but Vim uses 9-15 as backgrounds, causing compatibility issues.
-#   To resolve this, set background colors to the closest ANSI defaults where necessary.
-# - Default ANSI16 colors (especially 1-6) may be unsuitable as foregrounds on black
-#   backgrounds; these can be customized in the terminal app for improved contrast.
+#   To resolve this, set background colors to the closest ANSI defaults where
+#   necessary.
+# - Default ANSI16 colors (especially 1-6) are unsuitable as foregrounds on
+#   black background; However, they work fine on white background ('Basic'
+#   profile of terminal app).
 
 g:colors_name = "defaultplus"
 highlight clear

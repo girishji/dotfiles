@@ -1,8 +1,16 @@
 vim9script
 
-# Default ansi16 colors are not all suitable for black background (esp. 1-6).
-# Use these in general syntax highlighting, but modify the colors in terminal
-# app. Use 7 for ctermbg when &bg=dark for UI elements.
+# Vim’s default colors are mostly excellent, except for clown colors in popup
+# menus and certain UI background colors that lack contrast.
+# - Set UI element backgrounds (e.g., popup menu) to terminal gray: use `ctermbg` 7
+#   for dark (`&bg=dark`) and 15 for light (`&bg=light`) backgrounds. Customize these
+#   settings in the terminal app if needed.
+# - Restrict general syntax colors to 1-6 for consistency and readability.
+# - Terminal apps like `ls` and `git diff` use all colors (1-6 and 9-15) for
+#   foregrounds, but Vim uses 9-15 as backgrounds, causing compatibility issues.
+#   To resolve this, set background colors to the closest ANSI defaults where necessary.
+# - Default ANSI16 colors (especially 1-6) may be unsuitable as foregrounds on black
+#   backgrounds; these can be customized in the terminal app for improved contrast.
 
 g:colors_name = "defaultplus"
 highlight clear
@@ -93,7 +101,7 @@ if &background ==# 'dark'
     Hi  SpellBad      ctermbg=rred
     Hi  SpellCap      ctermbg=rblue
     Hi  SpellRare     ctermbg=rmagenta
-    Hi  SpellLocal    ctermbg=rbcyan
+    Hi  SpellLocal    ctermfg=black      ctermbg=rbcyan
     Hi  ErrorMsg      ctermfg=rlightgray ctermbg=rbred
     Hi  MoreMsg       ctermfg=blue
 

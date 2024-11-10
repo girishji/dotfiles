@@ -152,7 +152,9 @@ else  # bg=light
     Hi  VertSplit     ctermfg=black     ctermbg=gray      cterm=none
 
     # Generic syntax
-    hi  Statement  ctermfg=none cterm=bold
+    Hi  Comment    ctermfg=darkgray
+    # Hi  Statement  ctermfg=blue     cterm=italic
+    Hi  Statement  ctermfg=none     cterm=bold
 
     # Others
     Hi  helpExample ctermfg=blue

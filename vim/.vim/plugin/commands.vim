@@ -12,11 +12,24 @@ def SetupCscope()
 enddef
 
 # Find highlight group under cursor
-command HighlightGroupUnderCursor SynStack()
-def SynStack()
-    if !exists("*synstack") | return | endif
-    echo synstack(line('.'), col('.'))->map('synIDattr(v:val, "name")')
-enddef
+command HighlightGroupUnderCursor {
+    if exists("*synstack")
+        for grp in synstack(line('.'), col('.'))->mapnew('synIDattr(v:val, "name")')
+            echo 'Group:' grp
+            var g = grp
+            while true
+                var linksto = $'hi {g}'->execute()->matchstr('links to \zs\S\+')
+                if linksto == null_string
+                    exec 'hi' g
+                    break
+                else
+                    echo '->' linksto
+                    g = linksto
+                endif
+            endwhile
+        endfor
+    endif
+}
 
 # Toggle folding of all folds in buffer (zR, zM)
 command FoldingToggle FoldingToggle()

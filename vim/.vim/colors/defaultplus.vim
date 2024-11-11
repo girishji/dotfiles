@@ -86,8 +86,10 @@ if &background ==# 'dark'
     Hi  SignColumn    ctermfg=darkgray   ctermbg=none
     Hi  MatchParen    ctermfg=lightgray  ctermbg=darkgray  cterm=bold
     Hi  IncSearch     ctermfg=rbyellow   ctermbg=black
-    Hi  StatusLine    ctermfg=black      ctermbg=gray      cterm=none
-    Hi  StatusLineNC  ctermfg=lightgray  ctermbg=none      cterm=underline
+    Hi  StatusLine    ctermfg=rwhite     ctermbg=darkgray  cterm=none
+    Hi  StatusLineNC  ctermfg=darkgray   ctermbg=none      cterm=underline
+    # Hi  StatusLine    ctermfg=black      ctermbg=gray      cterm=none
+    # Hi  StatusLineNC  ctermfg=lightgray  ctermbg=none      cterm=underline
     Hi  TabLineFill   ctermbg=gray       cterm=none
     Hi  Search        ctermfg=black      ctermbg=gray
     Hi  CursorLineNr  ctermfg=none       cterm=underline

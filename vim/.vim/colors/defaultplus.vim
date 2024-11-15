@@ -163,12 +163,6 @@ else  # bg=light
     Hi  helpCommand ctermbg=lightgray ctermfg=darkgray
 endif
 
-hi! link        helpHeadline       Title
-hi! link        helpSectionDelim   Comment
-hi! link        helpHyperTextEntry Statement
-hi! link        helpHyperTextJump  Underlined
-hi! link        helpURL            Underlined
-
 delcommand Hi
 
 # Apply monochrome colors if options is set, but exclude help files from

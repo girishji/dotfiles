@@ -56,22 +56,19 @@ if exists("g:loaded_vimsuggest")
         # fuzzy: true,
         # exclude: ['^\s*\d*\s*b\%[uffer]!\?\s\+'],
         # onspace: ['colo\%[rscheme]', 'b\%[uffer]', 'e\%[dit]', 'Scope'],
+        onspace: '.*',
         # reverse: true,
+        # auto_first: true,  # :hi will not call ':highlight' but calls ':HighlightGroupUnderCursor'
         popupattrs: {
-            # borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+            borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
             # borderhighlight: ['Normal'],
             # highlight: 'Normal',
-            # border: [1, 1, 1, 1],
+            border: [0, 1, 0, 1],
             # padding: [1, 1, 1, 1],
             # maxheight: 20,
         },
     }
     g:VimSuggestSetOptions(VimSuggest)
-
-    var pm = hlget('PmenuMatch')
-    if !pm->empty() && pm[0]->has_key('ctermfg')
-        exec $'hi VimSuggestMatch ctermfg={pm[0].ctermfg} ctermbg=None'
-    endif
 
     augroup vimsuggest-qf-show
         autocmd!
@@ -348,7 +345,8 @@ if exists("g:loaded_bufline")
     else
         # keep defaults
     endif
-    g:BuflineSetup({ highlight: false, showbufnr: false, emphasize: '<%#' })
+    # g:BuflineSetup({ highlight: false, showbufnr: false, emphasize: '<%#' })
+    g:BuflineSetup({ highlight: true, emphasize: '#' })
 endif
 
 # another way

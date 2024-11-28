@@ -115,7 +115,7 @@ if &background ==# 'dark'
     Hi  Special    ctermfg=red
     Hi  Identifier ctermfg=cyan      cterm=none
     Hi  Statement  ctermfg=yellow
-    Hi  PreProc    ctermfg=magenta
+    # Hi  PreProc    ctermfg=magenta
     Hi  Type       ctermfg=green
     Hi  Underlined ctermfg=magenta
     Hi  Ignore     ctermfg=black     ctermbg=lightgray
@@ -209,6 +209,8 @@ def ApplyMonochrome()
                     exec 'hi' grp 'ctermfg=none ctermbg=none cterm=none'
                 endif
             endfor
+            hi Operator ctermfg=magenta
+            hi String   ctermfg=green
             monochrome_applied = true
         endif
     elseif monochrome_applied

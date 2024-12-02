@@ -12,3 +12,4 @@
 hash -d zsh=$ZDOTDIR
 hash -d vim=$HOME/.vim
 hash -d help=$HOME/help
+hash -d nvim=$HOME/.config/nvim

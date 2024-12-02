@@ -165,9 +165,12 @@ alias gd='git diff'
 #
 # from :h zshtips.md
 # grep -i "$1" **/*.{js,php,css}~(libs|temp|tmp|test)/* # exclude directories from grep *N* EXTENDED_GLOB required
-
-# alias gr="grep --color=always -RESIins --exclude={'*.zwc','*.swp','*.git*','*.dict'}"
 #
+# CAUTION: Avoid **/* and ***/* as shell complains 'too many paths to expand' when searching a large directory.
+
+alias gr="ggrep -REIins --exclude={'*.zwc','*.swp','*.git*'} \"\""
+cursor_offset["gr"]=2
+
 # alternative:
 #
 # See comments under 'find' above, and also :h zshtips.md
@@ -194,8 +197,8 @@ alias gd='git diff'
 # grep "cat\|dog" file matches lines containing the word "cat" or the word "dog"
 # grep "I am a \(cat\|dog\)" matches lines containing the string "I am a cat" or the string "I am a dog"
 # grep "Fred\(eric\)\? Smith" file   # grep fred or frederic
-alias gr='ggrep -EIins "" ***/*'  # no need for '-R' since '***' takes care of recursion (and symlink following)
-cursor_offset["gr"]=8
+# alias gr='ggrep -EIins "" ***/*'  # no need for '-R' since '***' takes care of recursion (and symlink following)
+# cursor_offset["gr"]=8
 alias -g G='| ggrep --color -iEI'
 
 # alias pipi='pip install --user '

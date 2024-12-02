@@ -361,7 +361,7 @@ endif
 # endif
 
 if exists('g:loaded_devdocs')
-    nnoremap <leader>vv <cmd>DevdocsFind<CR>
+    nnoremap <leader>fd <cmd>DevdocsFind<CR>
     # nnoremap <leader>I <cmd>DevdocsInstall<CR>
     # nnoremap <leader>U <cmd>DevdocsUninstall<CR>
     # hi link DevdocCode CursorLine

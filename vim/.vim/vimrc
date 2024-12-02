@@ -154,7 +154,7 @@ else
     Plug 'letorbi/vim-colors-modern-borland'
     Plug 'airblade/vim-gitgutter'
     # Plug 'lacygoill/vim9asm'
-    Plug 'yegappan/lsp'
+    # Plug 'yegappan/lsp'
     # Plug '~/git/lsp'
     Plug 'rafamadriz/friendly-snippets'
     Plug 'hrsh7th/vim-vsnip'

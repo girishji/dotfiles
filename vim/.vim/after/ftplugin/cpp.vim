@@ -1,24 +1,45 @@
 vim9script
 
-setl dictionary=/User/gp/.vim/data/cpp.dict
+setl dictionary=/Users/gp/.vim/data/cpp.dict
 
 # setl path-=/usr/include
-setl makeprg=clang++\ -include"$HOME/.clang-repl-incl.h"\ -std=c++23\ -stdlib=libc++\ -fexperimental-library\ -o\ /tmp/a.out\ %\ &&\ /tmp/a.out
+# setl makeprg=clang++\ -include"$HOME/.clang-repl-incl.h"\ -std=c++23\ -stdlib=libc++\ -fexperimental-library\ -o\ /tmp/a.out\ %\ &&\ /tmp/a.out
+# NOTE: brew installs gcc in /opt/homebrew/bin. Currently g++-14 is installed. Note that g++ takes you to clang, os use g++-14.
+setl makeprg=g++-14\ -std=c++23\ -Wall\ -Wextra\ -Wconversion\ -DONLINE_JUDGE\ -O2\ -lstdc++exp\ -o\ /tmp/a.out\ %\ &&\ /tmp/a.out
 
-def Eatchar()
-    abbr#Eatchar()
-enddef
-iabbr <silent><buffer> fori_ for(int i=0; i<; i++) {<c-o>o}<esc>kf;;i<C-R>=Eatchar()<CR>
-iabbr <silent><buffer> forj_ for(int j=0; j<; j++) {<c-o>o}<esc>kf;;i<C-R>=Eatchar()<CR>
-iabbr <silent><buffer> fork_ for(int k=0; k<; k++) {<c-o>o}<esc>kf;;i<C-R>=Eatchar()<CR>
-iabbr <silent><buffer> forr_ for(auto& x : ) {<c-o>o}<esc>kf:la<C-R>=Eatchar()<CR>
-iabbr <silent><buffer> for_iter_ for(auto it=.begin(); it!=.end(); it++) {<c-o>o}<esc>kf.i<C-R>=Eatchar()<CR>
-iabbr <silent><buffer> for_each_ ranges::for_each(, [](int& n) {});<esc>16hi<C-R>=Eatchar()<CR>
-iabbr <silent><buffer> for_each_print_ ranges::for_each(, [](const int& n) {cout << n;});cout<<endl;<esc>F(;a<C-R>=Eatchar()<CR>
-iabbr <silent><buffer> print_range_ ranges::copy(x, ostream_iterator<int>(cout, " "));cout<<endl;<esc>Fxcw<C-R>=Eatchar()<CR>
-iabbr <silent><buffer> all_ a.begin(), a.end()<C-R>=Eatchar()<CR>
-iabbr <silent><buffer> max_element_ ranges::max_element(<C-R>=Eatchar()<CR>
-iabbr <silent><buffer> distance_ ranges::distance(<C-R>=Eatchar()<CR>
+# Use 'gq', or 'gggqG<cr>' to format the whole file.
+setl formatprg=clang-format\ -style='{BasedOnStyle:\ Google,\ IndentWidth:\ 4,\ SpaceBeforeParens:\ false}'
+nnoremap <buffer> <leader>F gggqG<cr>
+
+nnoremap <buffer> <leader>m :make %<cr>
+
+iabbr <silent><buffer> fori; for(unsigned long i = 0; i < ; i++) {<c-o>o}<esc>kf;;i<C-R>=abbr#Eatchar()<CR>
+iabbr <silent><buffer> forj; for(unsigned long j = 0; j < ; j++) {<c-o>o}<esc>kf;;i<C-R>=abbr#Eatchar()<CR>
+iabbr <silent><buffer> fork; for(unsigned long k = 0; k < ; k++) {<c-o>o}<esc>kf;;i<C-R>=abbr#Eatchar()<CR>
+iabbr <silent><buffer> fora; for(auto& x : ) {<c-o>o}<esc>kf:la<C-R>=abbr#Eatchar()<CR>
+iabbr <silent><buffer> for_iter; for(auto it = .begin(); it != .end(); it++) {<c-o>o}<esc>kf.i<C-R>=abbr#Eatchar()<CR>
+iabbr <silent><buffer> for_each; ranges::for_each(, [](int& n) {});<esc>16hi<C-R>=abbr#Eatchar()<CR>
+iabbr <silent><buffer> print_for_each; ranges::for_each(, [](const int& n) {cout << n;});cout<<endl;<esc>F(;a<C-R>=abbr#Eatchar()<CR>
+iabbr <silent><buffer> print_range_copy; ranges::copy(x, ostream_iterator<int>(cout, " "));cout<<endl;<esc>Fxcw<C-R>=abbr#Eatchar()<CR>
+iabbr <silent><buffer> all; a.begin(), a.end()<C-R>=abbr#Eatchar()<CR>
+iabbr <silent><buffer> max_element; ranges::max_element(<C-R>=abbr#Eatchar()<CR>
+iabbr <silent><buffer> distance; ranges::distance(<C-R>=abbr#Eatchar()<CR>
+iabbr <silent><buffer> r; ranges::<C-R>=abbr#Eatchar()<CR>
+
+iabbr <silent><buffer> ll; signed long long
+iabbr <silent><buffer> vi; vector<int>
+iabbr <silent><buffer> vii; vector<vector<int>>
+iabbr <silent><buffer> vs; vector<string>
+iabbr <silent><buffer> pi; pair<int, int>
+iabbr <silent><buffer> f; first<c-r>=abbr#Eatchar()<cr>
+iabbr <silent><buffer> s; second<c-r>=abbr#Eatchar()<cr>
+iabbr <silent><buffer> pb; push_back(<c-r>=abbr#Eatchar()<cr>
+
+iabbr <silent><buffer> in; #include <bits/stdc++.h>
+            \<cr>using namespace std;
+            \<cr>namespace rng = ranges;<cr>
+            \<c-r>=abbr#Eatchar()<cr>
+iabbr <silent><buffer> mn; int main() {<cr><cr>}<up><c-r>=abbr#Eatchar()<cr>
 
 # if exists(":LspDocumentSymbol") == 2
 #     nnoremap <buffer> <leader>/ <cmd>LspDocumentSymbol<CR>
@@ -37,7 +58,7 @@ iabbr <silent><buffer> distance_ ranges::distance(<C-R>=Eatchar()<CR>
 # enddef
 
 # nnoremap <buffer> <leader>H :Cppman<space>
-# cabbr <expr> hh  abbr#ExpandCmd('hh') ? 'Cppman <c-r>=abbr#Eatchar()<cr>' : 'hh'
+# cabbr <expr> hh  abbr#ExpandCmd('hh') ? 'Cppman <c-r>=abbr#abbr#Eatchar()<cr>' : 'hh'
 
 # fuzzy search cppman
 # runtime! after/ftplugin/man.vim

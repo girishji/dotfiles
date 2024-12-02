@@ -12,6 +12,35 @@ map<int, int>
 map<
 unordered_map<
 string::npos
+freopen("file", "r", stdin)
+getline(cin, line)
+stringstream ss(line);
+while(cin >> i1 >> i2) {
+while(getline(cin, line)) { stringstream ss(line); if(ss >> i1 >> i2) {
+for(unsigned long i = 0; i < ; i++) {
+for(unsigned long j = 0; j < ; j++) {
+for(unsigned long k = 0; k < ; k++) {
+for(auto &x : ) {
+for(auto it = .begin(); it != .end(); it++) {
+ranges::for_each(, [](int& n) {});
+ranges::for_each(, [](const int& n) {cout << n;});cout<<endl;
+ranges::copy(x, ostream_iterator<int>(cout, " "));cout<<endl;
+ranges::
+pair<int, int>
+first
+second
+all_of(v.cbegin(), v.cend(), [](int i) { return i % 2 == 0; }))
+any_of(v.cbegin(), v.cend(), DivisibleBy(7)))
+none_of(v.cbegin(), v.cend(), std::bind(std::modulus<>(), std::placeholders::_1, 2)))
+pairwise = ranges::views::zip(numbers, numbers | ranges::views::drop(1));
+increasing_strictly = ranges::adjacent_find(vec, std::greater_equal<int>()) == vec.end();
+increasing = ranges::adjacent_find(vec, std::greater<int>()) == vec.end();
+decreasing_strictly = ranges::adjacent_find(vec, std::less_equal<int>()) == vec.end();
+decreasing = ranges::adjacent_find(vec, std::less<int>()) == vec.end();
+function<void()> f_display_42 = []() { print_num(42); };
+function<int(int)> fac = [&](int n) { return (n < 2) ? 1 : n * fac(n - 1); };
+iterator -> vector<int>::iterator it = vec.begin();
+distance(v.begin(), v.end())
 -- from cppreference.com
 -- keywords
 alignas

@@ -12,12 +12,12 @@ if exists("g:loaded_vimcomplete")
     var dictproperties = {
         python: { sortedDict: false },
         text: { sortedDict: true },
-        cpp: { sortedDict: false },
+        cpp: { sortedDict: false, onlyWords: true },
     }
     g:VimCompleteOptionsSet({
         completor: { triggerWordLen: 0, shuffleEqualPriority: true, alwaysOn: true, postfixClobber: false, postfixHighlight: true, debug: false },
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
-        dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'text', 'cpp'], properties: dictproperties },
+        dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'text', 'cpp'], matcher: 'ignorecase', properties: dictproperties },
         abbrev: { enable: true },
         lsp: { enable: true, maxCount: 10, priority: 8 },
         omnifunc: { enable: false, priority: 10, filetypes: ['tex', 'python'] },

@@ -208,7 +208,7 @@ def ApplyMonochrome()
                 endif
             endfor
             Hi Operator ctermfg=magenta
-            Hi String   ctermfg=red
+            exec 'Hi String' $'ctermfg={&background == "dark" ? "bgreen" : "red"}'
             monochrome_applied = true
         endif
     elseif monochrome_applied

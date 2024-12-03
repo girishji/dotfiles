@@ -75,7 +75,7 @@ if &background ==# 'dark'
     Hi  Pmenu         ctermfg=black      ctermbg=gray      cterm=none
     Hi  PmenuSel      ctermfg=rwhite     ctermbg=rblue
     Hi  PmenuMatch    ctermfg=rbred      ctermbg=lightgray cterm=none
-    Hi  PmenuMatchSel ctermfg=bred       ctermbg=black     cterm=none
+    Hi  PmenuMatchSel ctermfg=bred       ctermbg=rblue     cterm=none
     Hi  PmenuSbar     ctermfg=darkgray   ctermbg=darkgray
     Hi  PmenuThumb    ctermfg=none       ctermbg=black
     Hi  PmenuKind     ctermfg=darkgray   ctermbg=gray      cterm=none

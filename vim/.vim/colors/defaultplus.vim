@@ -1,6 +1,6 @@
 vim9script
 
-# Vim’s default colors are mostly excellent, except for clown colors in popup
+# Vim’s default colors are mostly good enough, except for clown colors in popup
 # menus and certain UI background colors that lack contrast.
 # - Set UI element backgrounds (e.g., popup menu) to terminal gray: use
 #   `ctermbg` 7 for dark (`&bg=dark`) and 15 for light (`&bg=light`)
@@ -73,7 +73,7 @@ command -nargs=+ -bang Hi {
 if &background ==# 'dark'
     # UI elements
     Hi  Pmenu         ctermfg=black      ctermbg=gray      cterm=none
-    Hi  PmenuSel      ctermfg=gray       ctermbg=black
+    Hi  PmenuSel      ctermfg=rwhite     ctermbg=rblue
     Hi  PmenuMatch    ctermfg=rbred      ctermbg=lightgray cterm=none
     Hi  PmenuMatchSel ctermfg=bred       ctermbg=black     cterm=none
     Hi  PmenuSbar     ctermfg=darkgray   ctermbg=darkgray
@@ -145,7 +145,7 @@ else  # bg=light
     Hi  LineNr        ctermfg=darkgray
     Hi  SignColumn    ctermfg=darkgray  ctermbg=none
     Hi  MatchParen    ctermfg=none      ctermbg=lightgray cterm=bold,underline
-    Hi  StatusLine    ctermfg=black     ctermbg=gray      cterm=none
+    Hi  StatusLine    ctermfg=rwhite    ctermbg=darkgray  cterm=none
     Hi  StatusLineNC  ctermfg=darkgray  ctermbg=lightgray cterm=none
     Hi  TabLine       cterm=none
     Hi  TabLineSel    cterm=underline
@@ -162,8 +162,6 @@ else  # bg=light
     Hi  helpExample ctermfg=blue
     Hi  helpCommand ctermbg=lightgray ctermfg=darkgray
 endif
-
-delcommand Hi
 
 # Apply monochrome colors if options is set, but exclude help files from
 # monochrome treatment.
@@ -209,8 +207,8 @@ def ApplyMonochrome()
                     exec 'hi' grp 'ctermfg=none ctermbg=none cterm=none'
                 endif
             endfor
-            hi Operator ctermfg=magenta
-            hi String   ctermfg=green
+            Hi Operator ctermfg=magenta
+            Hi String   ctermfg=red
             monochrome_applied = true
         endif
     elseif monochrome_applied
@@ -233,5 +231,7 @@ if exists("$VIM_MONOCHROME") || get(g:, 'defaut_plus_monochrome', false)
         autocmd WinEnter,BufEnter * ApplyMonochrome()
     augroup END
 endif
+
+delcommand Hi
 
 # vim: sw=4 sts=4 et

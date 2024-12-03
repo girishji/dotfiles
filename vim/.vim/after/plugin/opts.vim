@@ -63,7 +63,7 @@ if exists("g:loaded_vimsuggest")
             borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
             # borderhighlight: ['Normal'],
             # highlight: 'Normal',
-            border: [0, 1, 0, 1],
+            # border: [0, 1, 0, 1],
             # padding: [1, 1, 1, 1],
             # maxheight: 20,
         },

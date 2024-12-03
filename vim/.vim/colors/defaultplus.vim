@@ -55,15 +55,15 @@ var colors = {
     none: 'none',
 }
 
-command -nargs=+ -bang Hi {
+command -nargs=+ -bang HiLight {
     var grp = <q-args>->matchstr('\s*\zs\S\+')
     if grp == 'link'
-        :exe $'hi{expand("<bang>")}' <q-args>
+        :exec $'hi{expand("<bang>")}' <q-args>
     else
         var fg = <q-args>->matchstr('ctermfg=\zs\S\+')
         var bg = <q-args>->matchstr('ctermbg=\zs\S\+')
         var cterm = <q-args>->matchstr('cterm=\zs\S\+')
-        :exe $'hi{expand("<bang>")}' grp (fg != '' ? $'ctermfg={colors[fg]}' : '')
+        :exec $'hi{expand("<bang>")}' grp (fg != '' ? $'ctermfg={colors[fg]}' : '')
                     \ (bg != '' ? $'ctermbg={colors[bg]}' : '')
                     \ (cterm != '' ? $'cterm={cterm}' : '')
     endif
@@ -72,95 +72,95 @@ command -nargs=+ -bang Hi {
 
 if &background ==# 'dark'
     # UI elements
-    Hi  Pmenu         ctermfg=black      ctermbg=gray      cterm=none
-    Hi  PmenuSel      ctermfg=rwhite     ctermbg=rblue
-    Hi  PmenuMatch    ctermfg=rbred      ctermbg=lightgray cterm=none
-    Hi  PmenuMatchSel ctermfg=rwhite     ctermbg=rbblue    cterm=none
-    Hi  PmenuSbar     ctermfg=darkgray   ctermbg=darkgray
-    Hi  PmenuThumb    ctermfg=none       ctermbg=black
-    Hi  PmenuKind     ctermfg=darkgray   ctermbg=gray      cterm=none
-    Hi! link          PmenuKindSel       PmenuSel
-    Hi  PmenuExtra    ctermfg=darkgray   ctermbg=gray      cterm=none
-    Hi! link          PmenuExtraSel      PmenuSel
-    Hi  LineNr        ctermfg=darkgray
-    Hi  SignColumn    ctermfg=darkgray   ctermbg=none
-    Hi  MatchParen    ctermfg=lightgray  ctermbg=darkgray  cterm=bold
-    Hi  IncSearch     ctermfg=rbyellow   ctermbg=black
-    Hi  StatusLine    ctermfg=rwhite     ctermbg=darkgray  cterm=none
-    Hi  StatusLineNC  ctermfg=darkgray   ctermbg=none      cterm=underline
-    # Hi  StatusLine    ctermfg=black      ctermbg=gray      cterm=none
-    # Hi  StatusLineNC  ctermfg=lightgray  ctermbg=none      cterm=underline
-    Hi  TabLineFill   ctermbg=gray       cterm=none
-    Hi  Search        ctermfg=black      ctermbg=gray
-    Hi  CursorLineNr  ctermfg=none       cterm=underline
-    Hi  VertSplit     ctermfg=black      ctermbg=gray      cterm=none
-    Hi  Visual        ctermfg=lightgray  ctermbg=darkgray
-    Hi  WildMenu      ctermfg=black      ctermbg=rbyellow
-    Hi  Folded        ctermfg=bcyan      ctermbg=rdarkgray
-    Hi  FoldColumn    ctermfg=bcyan      ctermbg=rdarkgray
-    Hi  DiffAdd       ctermbg=rblue
-    Hi  DiffChange    ctermbg=rmagenta
-    Hi  DiffDelete    ctermfg=rblack     ctermbg=rbblue
-    Hi  DiffText      cterm=bold         ctermbg=rred
-    Hi  SpellBad      ctermbg=rred
-    Hi  SpellCap      ctermbg=rblue
-    Hi  SpellRare     ctermbg=rmagenta
-    Hi  SpellLocal    ctermfg=black      ctermbg=rbcyan
-    Hi  ErrorMsg      ctermfg=rlightgray ctermbg=rbred
-    Hi  MoreMsg       ctermfg=blue
+    HiLight  Pmenu         ctermfg=black      ctermbg=gray      cterm=none
+    HiLight  PmenuSel      ctermfg=rwhite     ctermbg=rblue
+    HiLight  PmenuMatch    ctermfg=rbred      ctermbg=lightgray cterm=none
+    HiLight  PmenuMatchSel ctermfg=rwhite     ctermbg=rbblue    cterm=none
+    HiLight  PmenuSbar     ctermfg=darkgray   ctermbg=darkgray
+    HiLight  PmenuThumb    ctermfg=none       ctermbg=black
+    HiLight  PmenuKind     ctermfg=darkgray   ctermbg=gray      cterm=none
+    HiLight! link          PmenuKindSel       PmenuSel
+    HiLight  PmenuExtra    ctermfg=darkgray   ctermbg=gray      cterm=none
+    HiLight! link          PmenuExtraSel      PmenuSel
+    HiLight  LineNr        ctermfg=darkgray
+    HiLight  SignColumn    ctermfg=darkgray   ctermbg=none
+    HiLight  MatchParen    ctermfg=lightgray  ctermbg=darkgray  cterm=bold
+    HiLight  IncSearch     ctermfg=rbyellow   ctermbg=black
+    HiLight  StatusLine    ctermfg=rwhite     ctermbg=darkgray  cterm=none
+    HiLight  StatusLineNC  ctermfg=darkgray   ctermbg=none      cterm=underline
+    # HiLight  StatusLine    ctermfg=black      ctermbg=gray      cterm=none
+    # HiLight  StatusLineNC  ctermfg=lightgray  ctermbg=none      cterm=underline
+    HiLight  TabLineFill   ctermbg=gray       cterm=none
+    HiLight  Search        ctermfg=black      ctermbg=gray
+    HiLight  CursorLineNr  ctermfg=none       cterm=underline
+    HiLight  VertSplit     ctermfg=black      ctermbg=gray      cterm=none
+    HiLight  Visual        ctermfg=lightgray  ctermbg=darkgray
+    HiLight  WildMenu      ctermfg=black      ctermbg=rbyellow
+    HiLight  Folded        ctermfg=bcyan      ctermbg=rdarkgray
+    HiLight  FoldColumn    ctermfg=bcyan      ctermbg=rdarkgray
+    HiLight  DiffAdd       ctermbg=rblue
+    HiLight  DiffChange    ctermbg=rmagenta
+    HiLight  DiffDelete    ctermfg=rblack     ctermbg=rbblue
+    HiLight  DiffText      cterm=bold         ctermbg=rred
+    HiLight  SpellBad      ctermbg=rred
+    HiLight  SpellCap      ctermbg=rblue
+    HiLight  SpellRare     ctermbg=rmagenta
+    HiLight  SpellLocal    ctermfg=black      ctermbg=rbcyan
+    HiLight  ErrorMsg      ctermfg=rlightgray ctermbg=rbred
+    HiLight  MoreMsg       ctermfg=blue
 
     # Generic syntax
-    Hi  Comment    ctermfg=blue
-    Hi  Constant   ctermfg=red
-    Hi  Special    ctermfg=red
-    Hi  Identifier ctermfg=cyan      cterm=none
-    Hi  Statement  ctermfg=yellow
-    # Hi  PreProc    ctermfg=magenta
-    Hi  Type       ctermfg=green
-    Hi  Underlined ctermfg=magenta
-    Hi  Ignore     ctermfg=black     ctermbg=lightgray
-    Hi! link       Added             Constant
-    Hi  Changed    ctermfg=bblue
-    Hi  Removed    ctermfg=bred
-    Hi  Error      ctermfg=lightgray ctermbg=rred
-    Hi  Todo       ctermfg=rblack    ctermbg=rbyellow
+    HiLight  Comment    ctermfg=blue
+    HiLight  Constant   ctermfg=red
+    HiLight  Special    ctermfg=red
+    HiLight  Identifier ctermfg=cyan      cterm=none
+    HiLight  Statement  ctermfg=yellow
+    # HiLight  PreProc    ctermfg=magenta
+    HiLight  Type       ctermfg=green
+    HiLight  Underlined ctermfg=magenta
+    HiLight  Ignore     ctermfg=black     ctermbg=lightgray
+    HiLight! link       Added             Constant
+    HiLight  Changed    ctermfg=bblue
+    HiLight  Removed    ctermfg=bred
+    HiLight  Error      ctermfg=lightgray ctermbg=rred
+    HiLight  Todo       ctermfg=rblack    ctermbg=rbyellow
 
     # Others
-    Hi  helpExample ctermfg=magenta
-    Hi  helpCommand ctermfg=gray    ctermbg=black
+    HiLight  helpExample ctermfg=magenta
+    HiLight  helpCommand ctermfg=gray    ctermbg=black
 
 else  # bg=light
 
     # UI elements
-    Hi  Pmenu         ctermfg=black     ctermbg=lightgray cterm=none
-    Hi  PmenuSel      ctermfg=lightgray ctermbg=black
-    Hi  PmenuMatch    ctermfg=red       ctermbg=lightgray cterm=none
-    Hi  PmenuMatchSel ctermfg=bred      ctermbg=black     cterm=none
-    Hi  PmenuSbar     ctermfg=lightgray ctermbg=lightgray
-    Hi  PmenuThumb    ctermfg=none      ctermbg=darkgray
-    Hi  PmenuKind     ctermfg=darkgray  ctermbg=lightgray cterm=none
-    Hi! link          PmenuKindSel      PmenuSel
-    Hi  PmenuExtra    ctermfg=darkgray  ctermbg=lightgray cterm=none
-    Hi! link          PmenuExtraSel     PmenuSel
-    Hi  LineNr        ctermfg=darkgray
-    Hi  SignColumn    ctermfg=darkgray  ctermbg=none
-    Hi  MatchParen    ctermfg=none      ctermbg=lightgray cterm=bold,underline
-    Hi  StatusLine    ctermfg=rwhite    ctermbg=darkgray  cterm=none
-    Hi  StatusLineNC  ctermfg=darkgray  ctermbg=lightgray cterm=none
-    Hi  TabLine       cterm=none
-    Hi  TabLineSel    cterm=underline
-    Hi  TabLineFill   ctermbg=gray      cterm=none
-    Hi  CursorLineNr  ctermfg=none      cterm=underline
-    Hi  VertSplit     ctermfg=black     ctermbg=gray      cterm=none
+    HiLight  Pmenu         ctermfg=black     ctermbg=lightgray cterm=none
+    HiLight  PmenuSel      ctermfg=lightgray ctermbg=black
+    HiLight  PmenuMatch    ctermfg=red       ctermbg=lightgray cterm=none
+    HiLight  PmenuMatchSel ctermfg=bred      ctermbg=black     cterm=none
+    HiLight  PmenuSbar     ctermfg=lightgray ctermbg=lightgray
+    HiLight  PmenuThumb    ctermfg=none      ctermbg=darkgray
+    HiLight  PmenuKind     ctermfg=darkgray  ctermbg=lightgray cterm=none
+    HiLight! link          PmenuKindSel      PmenuSel
+    HiLight  PmenuExtra    ctermfg=darkgray  ctermbg=lightgray cterm=none
+    HiLight! link          PmenuExtraSel     PmenuSel
+    HiLight  LineNr        ctermfg=darkgray
+    HiLight  SignColumn    ctermfg=darkgray  ctermbg=none
+    HiLight  MatchParen    ctermfg=none      ctermbg=lightgray cterm=bold,underline
+    HiLight  StatusLine    ctermfg=rwhite    ctermbg=darkgray  cterm=none
+    HiLight  StatusLineNC  ctermfg=darkgray  ctermbg=lightgray cterm=none
+    HiLight  TabLine       cterm=none
+    HiLight  TabLineSel    cterm=underline
+    HiLight  TabLineFill   ctermbg=gray      cterm=none
+    HiLight  CursorLineNr  ctermfg=none      cterm=underline
+    HiLight  VertSplit     ctermfg=black     ctermbg=gray      cterm=none
 
     # Generic syntax
-    Hi  Comment    ctermfg=darkgray
-    # Hi  Statement  ctermfg=blue     cterm=italic
-    Hi  Statement  ctermfg=none     cterm=bold
+    HiLight  Comment    ctermfg=darkgray
+    # HiLight  Statement  ctermfg=blue     cterm=italic
+    HiLight  Statement  ctermfg=none     cterm=bold
 
     # Others
-    Hi  helpExample ctermfg=blue
-    Hi  helpCommand ctermbg=lightgray ctermfg=darkgray
+    HiLight  helpExample ctermfg=blue
+    HiLight  helpCommand ctermbg=lightgray ctermfg=darkgray
 endif
 
 # Apply monochrome colors if options is set, but exclude help files from
@@ -207,8 +207,8 @@ def ApplyMonochrome()
                     exec 'hi' grp 'ctermfg=none ctermbg=none cterm=none'
                 endif
             endfor
-            Hi Operator ctermfg=magenta
-            exec 'Hi String' $'ctermfg={&background == "dark" ? "bgreen" : "red"}'
+            hi Operator ctermfg=5
+            exec 'hi String' $'ctermfg={&background == "dark" ? 10 : 1}'
             monochrome_applied = true
         endif
     elseif monochrome_applied
@@ -232,6 +232,6 @@ if exists("$VIM_MONOCHROME") || get(g:, 'defaut_plus_monochrome', false)
     augroup END
 endif
 
-delcommand Hi
+delcommand HiLight
 
 # vim: sw=4 sts=4 et

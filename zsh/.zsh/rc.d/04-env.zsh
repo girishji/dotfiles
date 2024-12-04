@@ -12,6 +12,14 @@ export -UT INFOPATH infopath  # -T creates a "tied" pair; see below.
 # Modifying one will also modify the other.
 # Note that each value in an array is expanded separately. Thus, we can use ~
 # for $HOME in each $path entry.
+#
+# 1. path=(...)
+# In shells like zsh, path is an array that specifies directories to search for executable files.
+# Modifying the path changes how the shell looks for commands.
+# 2. /home/linuxbrew/.linuxbrew/bin(N)
+# The (N) qualifier is specific to zsh.
+# (N) means "null glob," which makes the shell skip this path silently if the directory does not exist or is empty.
+
 path=(
     /home/linuxbrew/.linuxbrew/bin(N)   # (N): null if file doesn't exist
     $path
@@ -25,20 +33,6 @@ fpath=(
     ~/.local/share/zsh/site-functions
 )
 
-if command -v brew > /dev/null; then
-  # `znap eval <name> '<command>'` is like `eval "$( <command> )"` but with
-  # caching and compilation of <command>'s output, making it 10 times faster.
-  znap eval brew-shellenv 'brew shellenv'
-
-  # Add dirs containing completion functions to your $fpath and they will be
-  # picked up automatically when the completion system is initialized.
-  # Here, we add it to the end of $fpath, so that we use brew's completions
-  # only for those commands that zsh doesn't already know how to complete.
-  fpath+=(
-      $HOMEBREW_PREFIX/share/zsh/site-functions
-  )
-fi
-
 if is_mac; then
     # Setup to use appropriate brew based on arch value and set
     # HOMEBREW_PREFIX, PATH and other global vars
@@ -47,6 +41,18 @@ if is_mac; then
     else
         eval $(/usr/local/bin/brew shellenv);
     fi
+
+    if command -v brew > /dev/null; then # Verify whether brew exists in the user's PATH.
+        # Add dirs containing completion functions to your $fpath and they will be
+        # picked up automatically when the completion system is initialized.
+        # Here, we add it to the end of $fpath, so that we use brew's completions
+        # only for those commands that zsh doesn't already know how to complete.
+        fpath+=(
+            $HOMEBREW_PREFIX/share/zsh/site-functions
+        )
+    fi
+
+
     # nvim plugins should separated by arch, since treesitter parser executable
     # depends on arch
     export XDG_DATA_HOME="${HOME}/.local/share/"$(arch)
@@ -73,13 +79,13 @@ if is_mac; then
     export MANPAGER='less -s -M +Gg'
 
     # leetcode-api
-    if [[ -f "$HOME/.cargo/env" ]]; then
-        # Rust
-        . "$HOME/.cargo/env"
-        # [[ -f "$Home/.cargo/env" ]] && . "$HOME/.cargo/env"
-        # leetcode (installed through cargo)
-        eval "$(leetcode completions)"
-    fi
+    # if [[ -f "$HOME/.cargo/env" ]]; then
+    #     # Rust
+    #     . "$HOME/.cargo/env"
+    #     # [[ -f "$Home/.cargo/env" ]] && . "$HOME/.cargo/env"
+    #     # leetcode (installed through cargo)
+    #     eval "$(leetcode completions)"
+    # fi
 
     # if python virtual env is present, activate it
     # [[ -f "$HOME/.venv/bin/activate" ]] && source "$HOME/.venv/bin/activate"

@@ -25,15 +25,15 @@ local -a plugins=(
 #   zstyle ':autocomplete:*' async no
 
 
-# Speed up the first startup by cloning all plugins in parallel.
-# This won't clone plugins that we already have.
-znap clone $plugins
+# # Speed up the first startup by cloning all plugins in parallel.
+# # This won't clone plugins that we already have.
+# znap clone $plugins
 
-# Load each plugin, one at a time.
-local p=
-for p in $plugins; do
-  znap source $p
-done
+# # Load each plugin, one at a time.
+# local p=
+# for p in $plugins; do
+#   znap source $p
+# done
 
 # `znap eval <name> '<command>'` is like `eval "$( <command> )"` but with
 # caching and compilation of <command>'s output, making it ~10 times faster.
@@ -44,8 +44,8 @@ eval "$(zoxide init zsh)"
 
 # zsh-autosuggestions: offers suggestions as you type
 if is_mac; then
-    # source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-    source $gitdir/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh
+    source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    # source $gitdir/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh
 else
     source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi

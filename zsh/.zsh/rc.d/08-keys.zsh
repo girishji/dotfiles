@@ -82,18 +82,18 @@ bindkey | grep \"\^\?\" > /dev/null || bindkey "^?" backward-delete-char
 # Add text objects for quotes or brackets: to do something like da" (to delete
 # a quoted substring) or ci( (to change inside parenthesis).
 # select-quoted is a widget from user contribution to zsh (man zshcontrib)
-autoload -Uz select-bracketed select-quoted
-zle -N select-quoted
-zle -N select-bracketed
-for km in viopp visual; do
-  bindkey -M $km -- '-' vi-up-line-or-history
-  for c in {a,i}${(s..)^:-\'\"\`\|,./:;=+@}; do
-    bindkey -M $km $c select-quoted
-  done
-  for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do
-    bindkey -M $km $c select-bracketed
-  done
-done
+# autoload -Uz select-bracketed select-quoted
+# zle -N select-quoted
+# zle -N select-bracketed
+# for km in viopp visual; do
+#   bindkey -M $km -- '-' vi-up-line-or-history
+#   for c in {a,i}${(s..)^:-\'\"\`\|,./:;=+@}; do
+#     bindkey -M $km $c select-quoted
+#   done
+#   for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do
+#     bindkey -M $km $c select-bracketed
+#   done
+# done
 # We loop through the two keymaps viopp (Vi OPERATOR-PENDING mode) and visual (Vi VISUAL mode).
 # We loop through a whole bunch of signs we want to consider as quotes (or
 # brackets), and we add to each of them the prefix i or a (for inside and
@@ -131,7 +131,7 @@ zstyle ':autocomplete:menu-search:*' insert-unambiguous yes
 zstyle ':completion:*:*' matcher-list 'm:{a-z}={a-z}' '+r:|[.]=**'
 
 # Make Enter submit the command line straight from the menu
-bindkey -M menuselect '\r' .accept-line
+# bindkey -M menuselect '\r' .accept-line
 # Limit number of lines shown:
 #   Autocompletion
 zstyle -e ':autocomplete:list-choices:*' list-lines 'reply=( $(( LINES / 3 )) )'

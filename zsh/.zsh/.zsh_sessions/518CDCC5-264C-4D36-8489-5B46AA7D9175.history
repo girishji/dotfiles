@@ -1,0 +1,5 @@
+export VIM_COLORSCHEME=defaultplus VIM_BG=dark VIM_MONOCHROME=1
+ls
+cd
+c rev3
+export VIM_COLORSCHEME=defaultplus VIM_BG=dark VIM_MONOCHROME=1

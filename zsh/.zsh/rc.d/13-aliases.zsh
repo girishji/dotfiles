@@ -32,7 +32,6 @@ alias zmmv='noglob zmv -Wv'  # Type 'zsh' for explanation
 # Note that the dot is implicit; `gz` below stands for files ending in .gz
 alias -s {css,gradle,html,js,json,md,patch,properties,txt,xml,yml}=$PAGER
 alias -s gz='gzip -l'
-alias -s {log,out}='tail -F'
 alias -s git='git clone'
 
 # note: global aliases work even in the middle of command line. non-global ones work
@@ -204,7 +203,7 @@ alias -g G='| ggrep --color -iEI'
 # alias pipi='pip install --user '
 alias pipi='pip install'
 
-alias lc='leetcode'
+# alias lc='leetcode'
 
 alias vim_='vim -Nu NONE -S <(cat <<EOF
     vim9script
@@ -244,6 +243,13 @@ alias makedebug="make SHELL='sh -x'"
 # There is also a venvactivate()
 # Use 'deactivate' to undo
 alias activate='source .venv/bin/activate'
+
+# gcc for competitive programming
+alias gcc_='g++-14 -std=c++23 -Wall -Wextra -Wconversion -DONLINE_JUDGE -O2 -lstdc++exp -o /tmp/a.out  && /tmp/a.out'
+cursor_offset["gcc_"]=15
+# clang with c++23
+alias clang++_='clang++ -include"$HOME/.clang-repl-incl.h" -std=c++23 -stdlib=libc++ -fexperimental-library -o /tmp/a.out  && /tmp/a.out'
+cursor_offset["clang++_"]=15
 
 if is_mac; then
     alias ba='bat --style=plain' # without line numbers

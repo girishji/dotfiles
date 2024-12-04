@@ -1,14 +1,5 @@
 #!/bin/zsh
-#
-# https://github.com/marlonrichert/zsh-launchpad
-#
-# Remove *.zwc file after removing corresponding *.zsh file in this repository.
-# Otherwise, zwc file will get sourced.
-#
-# .zshrc file is sourced by zsh for each interactive shell session.
-#
 
-# girish: checks
 is_mac()     { [[ $OSTYPE == darwin*   ]] }
 is_linux()   { [[ $OSTYPE == linux-gnu ]] }
 has_brew() { [[ -n ${commands[brew]}    ]] }
@@ -31,7 +22,7 @@ is_cloud_shell() {
 # bugs you avoid this way.
 () {
   # `local` sets the variable's scope to this function and its descendendants.
-  local gitdir=~/.local/share/zsh-plugins  # where to keep repos and plugins
+  # local gitdir=~/.local/share/zsh-plugins  # where to keep repos and plugins
 
   # Load all of the files in rc.d that start with <number>- and end in `.zsh`.
   # (n) sorts the results in numerical order.

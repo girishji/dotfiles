@@ -10,7 +10,7 @@ local -a plugins=(
     # marlonrichert/zsh-edit              # Better keyboard shortcuts
     # marlonrichert/zsh-hist              # Edit history from the command line.
     # marlonrichert/zcolors               # Colors for completions and Git
-    zsh-users/zsh-autosuggestions       # Inline suggestions
+    # zsh-users/zsh-autosuggestions       # Inline suggestions
     # zsh-users/zsh-syntax-highlighting   # Command-line syntax highlighting
 )
 

@@ -11,7 +11,28 @@
 # 2) You can run 'zstyle' in your shell to display the styles set in your current
 # session as well as their patterns.
 
-# zsh-autocomplete plugin initializes the completion system (no need for 'compinit' here)
+# Even though zsh-autocomplete plugin initializes the completion system (no
+# need for 'compinit'), call it explicitly so that cache file can be located
+# outside ~/.zsh
+
+ZCACHEFILE=${XDG_DATA_HOME:=~/.local/share}/zsh/zcompdump
+# Just in case: If the parent directory doesn't exist, create it.
+[[ -d $ZCACHEFILE:h ]] ||
+    mkdir -p $ZCACHEFILE:h
+
+autoload -U compinit
+compinit -d $ZCACHEFILE
+
+# $ man zshall
+# /Use of compinit
+#  To speed up the running of compinit, it can be made to produce a dumped
+# configuration that will be read in on future invocations; this is the
+# default, but can be turned off by calling compinit with the option -D.  The
+# dumped file is .zcompdump in the same directory as the startup files (i.e.
+# $ZDOTDIR or $HOME); alternatively, an explicit file name can be given by
+# `compinit -d dumpfile'.  The next invocation of compinit will read the
+# dumped file instead of performing a full initialization.
+
 
 # zsh by default does not include aliases in autocompletion. Call
 # _expand_alias function through completion mechanism. It needs to appear

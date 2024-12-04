@@ -34,3 +34,6 @@
 # As in other shells, ~ expands to $HOME _at the beginning of a value only._
 # ZDOTDIR=${XDG_CONFIG_HOME:=~/.config}/zsh
 ZDOTDIR=$HOME/.zsh
+
+# Disable creation of .zsh/zsh_sessions dir
+export SHELL_SESSIONS_DISABLE=1

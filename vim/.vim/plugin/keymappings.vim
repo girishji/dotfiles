@@ -180,8 +180,8 @@ tnoremap <silent> <C-PageDown> <scriptcmd>SwitchTab('down')<cr>
 :cnoremap <C-A> <Home>
 # back one character
 :cnoremap <C-B> <Left>
-# delete character under cursor
-:cnoremap <C-D> <Del>
+# delete character under cursor (Fn-Backspace is Del in MacOs)
+# :cnoremap <C-D> <Del>
 # end of line
 :cnoremap <C-E> <End>
 # forward one character

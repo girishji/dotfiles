@@ -1,4 +1,5 @@
 -- useful shortcuts
+reverse(str.begin(), str.end()); -> in place, no return value
 vector<int>
 vector<
 vector<vector<int>>
@@ -11,17 +12,19 @@ set<
 map<int, int>
 map<
 unordered_map<
-string::npos
 freopen("file", "r", stdin)
-getline(cin, line)
 stringstream ss(line);
 while(cin >> i1 >> i2) {
-while(getline(cin, line)) { stringstream ss(line); if(ss >> i1 >> i2) {
-for(unsigned long i = 0; i < ; i++) {
-for(unsigned long j = 0; j < ; j++) {
-for(unsigned long k = 0; k < ; k++) {
-for(auto &x : ) {
-for(auto it = .begin(); it != .end(); it++) {
+getline(cin, line)
+getline -> for(string line; getline(cin, line); ) {
+getline -> while(getline(cin, line)) { stringstream ss(line); if(ss >> i1 >> i2) {
+for (unsigned long i = 0; i < ; i++) {
+for (unsigned long j = 0; j < ; j++) {
+for (unsigned long k = 0; k < ; k++) {
+for (auto &x : ) {
+for (auto it = .begin(); it != .end(); it++) {
+for (const auto& x : std::vector{1, 2, 3, 4, 5}) {
+for (const auto& x : std::vector<int>{1, 2, 3, 4, 5}) {
 ranges::for_each(, [](int& n) {});
 ranges::for_each(, [](const int& n) {cout << n;});cout<<endl;
 ranges::copy(x, ostream_iterator<int>(cout, " "));cout<<endl;
@@ -41,6 +44,8 @@ function<void()> f_display_42 = []() { print_num(42); };
 function<int(int)> fac = [&](int n) { return (n < 2) ? 1 : n * fac(n - 1); };
 iterator -> vector<int>::iterator it = vec.begin();
 distance(v.begin(), v.end())
+regex pat {R"(\s+(\w+))"};
+regex iterator -> for(sregex_iterator p(str.begin(), str.end(), pat); p!=sregex_iterator(); ++p) cout << (∗p)[0] << '\n';
 -- from cppreference.com
 -- keywords
 alignas
@@ -221,7 +226,7 @@ find_last_not_of(
 compare(
 starts_with(
 ends_with(
-substr(
+substr(start, length)
 -- constrained algorithms (ranges algorithms)
 ranges::all_of(
 ranges::any_of(

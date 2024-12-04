@@ -12,12 +12,12 @@ if exists("g:loaded_vimcomplete")
     var dictproperties = {
         python: { sortedDict: false },
         text: { sortedDict: true },
-        cpp: { sortedDict: false, onlyWords: true },
+        cpp: { sortedDict: false, onlyWords: false },
     }
     g:VimCompleteOptionsSet({
         completor: { triggerWordLen: 0, shuffleEqualPriority: true, alwaysOn: true, postfixClobber: false, postfixHighlight: true, debug: false },
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
-        dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'text', 'cpp'], matcher: 'ignorecase', properties: dictproperties },
+        dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'cpp'], matcher: 'ignorecase', properties: dictproperties },
         abbrev: { enable: true },
         lsp: { enable: true, maxCount: 10, priority: 8 },
         omnifunc: { enable: false, priority: 10, filetypes: ['tex', 'python'] },
@@ -44,19 +44,19 @@ if exists("g:loaded_vimsuggest")
         # enable: false,
         # alwayson: false,
         pum: false,
-        # ctrl_np: true,
+        # trigger: 'tn',
         # fuzzy: false,
         # reverse: true,
     }
     VimSuggest.cmd = {
         # enable: false,
         # alwayson: false,
-        # ctrl_np: true,
         # pum: true,
         # fuzzy: true,
         # exclude: ['^\s*\d*\s*b\%[uffer]!\?\s\+'],
         # onspace: ['colo\%[rscheme]', 'b\%[uffer]', 'e\%[dit]', 'Scope'],
         onspace: '.*',
+        # trigger: 'tn',
         # reverse: true,
         # auto_first: true,  # :hi will not call ':highlight' but calls ':HighlightGroupUnderCursor'
         popupattrs: {

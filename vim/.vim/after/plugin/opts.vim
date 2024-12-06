@@ -12,7 +12,7 @@ if exists("g:loaded_vimcomplete")
     var dictproperties = {
         python: { sortedDict: false },
         text: { sortedDict: true },
-        cpp: { sortedDict: false, onlyWords: false },
+        cpp: { sortedDict: false, onlyWords: false, matchStr: '\S\+$', triggerWordLen: 2, info: true },
     }
     g:VimCompleteOptionsSet({
         completor: { triggerWordLen: 0, shuffleEqualPriority: true, alwaysOn: true, postfixClobber: false, postfixHighlight: true, debug: false },
@@ -31,10 +31,24 @@ if exists("g:loaded_vimcomplete")
             bigram: false,
             filetypes: ['text', 'help', 'markdown', 'txt'],
             filetypesComments: ['c', 'cpp', 'python', 'java', 'lua', 'vim', 'zsh', 'r'],
+            triggerWordLen: 2,
         },
     })
-    g:VimCompleteInfoPopupOptionsSet({
-        borderhighlight: ['Comment'],
+    # Map keys to scroll "info" window (doc window)
+    inoremap <silent><expr> <Home> g:VimCompleteInfoWindowVisible() ?
+                \ (feedkeys("\<Plug>(vimcomplete-info-window-pageup)", 'ni') ? "" : "") : "\<Home>"
+    inoremap <silent><expr> <End> g:VimCompleteInfoWindowVisible() ?
+                \ (feedkeys("\<Plug>(vimcomplete-info-window-pagedown)", 'ni') ? "" : "") : "\<End>"
+
+    # Remove border from info window (doc window)
+    autocmd VimEnter * set completepopup+=border:on,highlight:Normal
+    # Set more options (not settable through completepopup)
+    g:VimCompleteInfoWindowOptionsSet({
+        # borderhighlight: ['Comment'],
+        borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+        # drag: false,
+        close: 'none',
+        resize: false,
     })
 endif
 
@@ -43,10 +57,18 @@ if exists("g:loaded_vimsuggest")
     VimSuggest.search = {
         # enable: false,
         # alwayson: false,
-        pum: false,
+        # pum: false,
         # trigger: 'tn',
         # fuzzy: false,
         # reverse: true,
+        popupattrs: {
+            borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+            # borderhighlight: ['Normal'],
+            # highlight: 'Normal',
+            # border: [0, 1, 0, 1],
+            # padding: [1, 1, 1, 1],
+            maxheight: 10,
+        },
     }
     VimSuggest.cmd = {
         # enable: false,
@@ -59,6 +81,7 @@ if exists("g:loaded_vimsuggest")
         # trigger: 'tn',
         # reverse: true,
         # auto_first: true,  # :hi will not call ':highlight' but calls ':HighlightGroupUnderCursor'
+        # complete_sg: false,
         popupattrs: {
             borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
             # borderhighlight: ['Normal'],

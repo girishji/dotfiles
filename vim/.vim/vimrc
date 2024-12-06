@@ -150,16 +150,16 @@ if has('gui')  # MacVim
 else
     plug#begin("~/.local/share/vim-plug/")
     # Make sure you use single quotes
-    Plug 'noahfrederick/vim-noctu'
-    Plug 'letorbi/vim-colors-modern-borland'
+    # Plug 'noahfrederick/vim-noctu'
+    # Plug 'letorbi/vim-colors-modern-borland'
     Plug 'airblade/vim-gitgutter'
     # Plug 'lacygoill/vim9asm'
     # Plug 'yegappan/lsp'
     # Plug '~/git/lsp'
-    Plug 'rafamadriz/friendly-snippets'
-    Plug 'hrsh7th/vim-vsnip'
-    Plug 'hrsh7th/vim-vsnip-integ'
-    Plug 'vim-python/python-syntax'
+    # Plug 'rafamadriz/friendly-snippets'
+    # Plug 'hrsh7th/vim-vsnip'
+    # Plug 'hrsh7th/vim-vsnip-integ'
+    # Plug 'vim-python/python-syntax'
     # colorschemes
     # Plug 'cocopon/iceberg.vim'
     # Plug 'dracula/vim'
@@ -188,5 +188,15 @@ g:python_highlight_all = 1
 g:pythondoc_h_expand = 1
 # g:vimbits_vim9cmdline = true
 g:vimcomplete_tab_enable = 1
+
+# Add custom dictionaries (ex. ~/.vim/dicts/python for python dict)
+g:vimfiles_dir = &runtimepath->split(',')[0]
+autocmd FileType * {
+    var dict = $'{g:vimfiles_dir}/dicts/{expand("<amatch>")}'->resolve()->fnamemodify(':p')
+    if dict->filereadable()
+        exe $'setlocal complete+=k{dict}'
+        exe $'setlocal dictionary={dict}'
+    endif
+}
 
 # vim: ts=8 sts=4 sw=4 et fdm=marker

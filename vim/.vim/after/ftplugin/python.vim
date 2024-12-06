@@ -13,7 +13,6 @@ b:undo_ftplugin ..= ' | setl foldignore< formatprg< | silent! autocmd! PythonAut
 # Convince python that 'def' is a macro like C's #define
 setlocal define=^\\s*def
 
-setl dictionary=$HOME/.vim/data/python.dict
 setl makeprg=python3\ %
 
 # NOTE: tidy-imports misses some imports. Put them in ~/.pyflyby

@@ -190,6 +190,10 @@ asdbYasdf (cursor under Y)
 `K` will look for help for word under cursor. 
 (make sure `:setlocal keywordprg=:help`)
 
+`&` will help you search for previously searched pattern. Just like `*`
+searches for word under cursor, `&` searches for previously searched pattern.
+You can also use it in :s//, as in :s/foo/&bar/ will replace foo with foobar.
+
 Search variable/function declarations even without LSP: Use |gD| and |gd|.They
 use |searchdecl| to search. Bram: Use `[<tab>`, it searches other files (in
 same dir, and included ones) and does not highlight like `gd`.

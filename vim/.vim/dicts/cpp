@@ -153,6 +153,85 @@ append_range(
 pop_back(
 resize(
 swap(
+
+vector::
+    The elements are stored contiguously.
+
+    operator= -> assigns values to the container
+    assign -> assigns values to the container
+    assign_range -> assigns a range of values to the container
+    get_allocator -> returns the associated allocator
+    at -> access specified element with bounds checking
+    operator[] -> access specified element
+    front -> access the first element
+    back -> access the last element
+    data -> direct access to the underlying contiguous storage
+    begin
+    cbegin -> returns an iterator to the beginning
+    end
+    cend -> returns an iterator to the end
+    rbegin
+    crbegin -> returns a reverse iterator to the beginning
+    rend
+    crend -> returns a reverse iterator to the end
+
+    Capacity
+    empty -> checks whether the container is empty
+    size -> returns the number of elements
+    max_size -> returns the maximum possible number of elements
+    reserve -> reserves storage
+    capacity -> returns the number of elements that can be held in currently allocated storage
+    shrink_to_fit -> reduces memory usage by freeing unused memory
+
+    Modifiers
+    clear -> clears the contents insert
+    inserts elements
+    insert_range -> inserts a range of elements
+    emplace -> constructs element in-place
+    erase -> erases elements
+    push_back -> adds an element to the end
+    emplace_back -> constructs an element in-place at the end
+    append_range -> adds a range of elements to the end
+    pop_back -> removes the last element
+    resize -> changes the number of elements stored
+    swap -> swaps the contents
+
+    Non-member functions
+    operator==
+    operator!=
+    operator<
+    operator<=
+    operator>
+    operator>=
+    operator<=> -> lexicographically compares the values of two vectors
+    std::swap(std::vector) -> specializes the std::swap algorithm
+    erase(std::vector)
+    erase_if(std::vector) -> erases all elements satisfying specific criteria
+
+    Example
+
+    int main()
+    {
+        // Create a vector containing integers
+        std::vector<int> v = {8, 4, 5, 9};
+
+        // Add two more integers to vector
+        v.push_back(6);
+        v.push_back(9);
+
+        // Overwrite element at position 2
+        v[2] = -1;
+
+        // Print out the vector
+        for (int n : v)
+            std::cout << n << ' ';
+        std::cout << '\n';
+    }
+    Output:
+
+    8 4 -1 9 6 9
+
+
 --- list and deque
 push_front(
 emplace_front(
@@ -166,10 +245,12 @@ unique(
 sort(
 
 list::
-    -> implemented as a doubly-linked list.
+    Implemented as a doubly-linked list.
+
     operator= -> assigns values to the container
     assign() -> assigns values to the container
-    assign_range() -> assigns a range of values to the container
+    assign_range() -> assigns a range of values to the
+        container
     get_allocator() -> returns the associated allocator
     front() -> access the first element
     back() -> access the last element
@@ -183,175 +264,276 @@ list::
     crend() -> returns a reverse iterator to the end()
     empty() -> checks whether the container is empty
     size() -> returns the number of elements
-    max_size() -> returns the maximum possible number of elements
+    max_size() -> returns the maximum possible number of
+        elements
     clear() -> clears the contents
     insert() -> inserts elements
     insert_range() -> inserts a range of elements
     emplace() -> constructs element in-place
     erase() -> erases elements
     push_back() -> adds an element to the end
-    emplace_back() -> constructs an element in-place at the end
+    emplace_back() -> constructs an element in-place at the
+        end
     append_range() -> adds a range of elements to the end
     pop_back() -> removes the last element
     push_front() -> inserts an element to the beginning
-    emplace_front() -> constructs an element in-place at the beginning
-    prepend_range() -> adds a range of elements to the beginning
+    emplace_front() -> constructs an element in-place at the
+        beginning
+    prepend_range() -> adds a range of elements to the
+        beginning
     pop_front() -> removes the first element
     resize() -> changes the number of elements stored
     swap() -> swaps the contents
     merge() -> merges two sorted lists
     splice() -> moves elements from another list
-    remove() -> removes elements satisfying specific criteria
-    remove_if() -> removes elements satisfying specific criteria
+    remove() -> removes elements satisfying specific
+        criteria
+    remove_if() -> removes elements satisfying specific
+        criteria
     reverse() -> reverses the order of the elements
-    unique() -> removes consecutive duplicate elements (keeps the first)
+    unique() -> removes consecutive duplicate elements
+        (keeps the first)
     sort() -> sorts the elements
 
---- list::list -> std::list<int> l = {7, 5, 16, 8}; l.push_back(13); l.push_front(25);
---- list::list -> std::list<int> c1(3, 100); // [100, 100, 100]
---- 
---- list::assign() -> std::list<char> characters; characters.assign(5, 'a'); // a a a a a
---- list::assign() -> const std::string extra(6, 'b'); characters.assign(extra.begin(), extra.end()); // b b b b b b
---- list::assign() -> characters.assign({'C', '+', '+', '1', '1'}); // C + + 1 1
---- 
---- list::assign_range() -> auto source = std::vector{2, 7, 1}; auto destination = std::list{3, 1, 4}; destination.assign_range(source);
---- 
---- list::front() -> assert(letters.front() == 'a');
---- list::back() -> assert(letters.back() == 'd');
---- list::empty() -> returns bool
---- list::size() -> returns number (unsigned long, size_type)
---- list::clear() -> listx.clear()
---- list::insert() -> iterator insert( const_iterator pos, const T& value ); (1)
---- list::insert() -> iterator insert( const_iterator pos, T&& value ); (2)
---- list::insert() -> iterator insert( const_iterator pos, size_type count, const T& value ); (3)
---- list::insert() -> template< class InputIt > iterator insert( const_iterator pos, InputIt first, InputIt last ); (4)
---- list::insert() -> iterator insert( const_iterator pos, std::initializer_list<T> ilist ); (5)
---- list::insert() -> std::list<int> c1(3, 100); auto pos = c1.begin(); pos = c1.insert(pos, 200); // [200, 100, 100, 100]
---- list::insert() -> c1.insert(pos, 2, 300); // [300, 300, 200, 100, 100, 100]
---- list::insert() -> pos = c1.begin();
---- list::insert() -> std::list<int> c2(2, 400); c1.insert(std::next(pos, 2), c2.begin(), c2.end()); // [300, 300, 400, 400, 200, 100, 100, 100]
---- list::insert() -> int arr[] = {501, 502, 503};
---- list::insert() -> c1.insert(c1.begin(), arr, arr + std::size(arr)); // [501, 502, 503, 300, 300, 400, 400, 200, 100, 100, 100]
---- list::insert() -> c1.insert(c1.end(), {601, 602, 603}); // [501, 502, 503, 300, 300, 400, 400, 200, 100, 100, 100, 601, 602, 603]
---- 
---- list::insert_range() -> auto container = std::list{1, 2, 3, 4}; auto pos = std::next(container.begin(), 2);
---- list::insert_range() -> const auto rg = std::vector{-1, -2, -3}; container.insert_range(pos, rg);
---- 
---- list::erase() -> iterator erase( const_iterator pos );
---- list::erase() -> iterator erase( const_iterator first, const_iterator last );
---- list::erase() -> Returns iterator following the last removed element.
---- list::erase() -> c.erase(range_begin, range_end);
---- list::erase() -> it = c.erase(it);
---- 
---- list::push_back() -> letters.push_back("abc"); // return none
---- list::append_range() -> auto head = std::list{1, 2, 3, 4}; const auto tail = std::vector{-5, -6, -7}; head.append_range(tail);
---- list::pop_back() -> numbers.pop_back(); // return none
---- list::push_front() -> letters.push_front("abc"); or letters.push_front(std::move(s)); // return none;
---- list::prepend_range() -> auto container = std::list{0, 1, 2, 3}; const auto rg = std::vector{-3, -2, -1}; container.prepend_range(rg);
---- list::pop_front() -> chars.pop_front() // return none
---- 
---- list::resize() -> void resize( size_type count );
---- list::resize() -> void resize( size_type count, const value_type& value );
---- list::resize() -> (see deque::resize) std::list<int> c = {1, 2, 3}; c.resize(5); c.resize(2); c.resize(6, 4);
---- 
---- list::swap() -> a1.swap(a2);
---- list::merge() -> list1.sort(); list2.sort(); list1.merge(list2); // result is sorted also, return none
---- list::splice() ->
---- list::splice() -> std::list<int> list1{1, 2, 3, 4, 5}; std::list<int> list2{10, 20, 30, 40, 50};
---- list::splice() -> auto it = list1.begin(); std::advance(it, 2); list1.splice(it, list2);
---- list::splice() -> list2 is empty, list1: 1 2 10 20 30 40 50 3 4 5, 'it' points to 3 even after splicing
---- list::splice() -> list2.splice(list2.begin(), list1, it, list1.end()); // list1: 1 2 10 20 30 40 50 list2: 3 4 5
---- 
---- list::remove() -> auto count1 = l.remove(1); // count1 elements (equal to 1) are removed
---- list::remove_if() -> auto count2 = l.remove_if([](int n){ return n > 10; }); // count2 elements are removed
---- list::reverse() -> list.reverse(); // return none
---- list::unique() -> size_type unique(); // returns number of elements removed
---- list::sort() -> list.sort(); list.sort(std::greater<int>()); // return none
+list::list
+    std::list<int> l = {7, 5, 16, 8};
+    l.push_back(13);
+    l.push_front(25);
+    std::list<int> c1(3, 100); // [100, 100, 100]
+
+list::assign()
+    std::list<char> characters;
+    characters.assign(5, 'a'); // a a a a a
+    const std::string extra(6, 'b');
+    characters.assign(extra.begin(), extra.end()); // b b b b b b
+    characters.assign({'C', '+', '+', '1', '1'}); // C + + 1 1
+
+list::assign_range()
+    auto source = std::vector{2, 7, 1};
+    auto destination = std::list{3, 1, 4};
+    destination.assign_range(source);
+
+list::front()
+    assert(letters.front() == 'a');
+list::back()
+    assert(letters.back() == 'd');
+list::empty()
+    returns bool
+list::size()
+    returns number (unsigned long, size_type)
+list::clear()
+    listx.clear()
+list::insert()
+    iterator insert( const_iterator pos, const T& value ); (1)
+    iterator insert( const_iterator pos, T&& value ); (2)
+    iterator insert( const_iterator pos, size_type count,
+        const T& value ); (3)
+    template< class InputIt >
+    iterator insert( const_iterator pos, InputIt first, InputIt last ); (4)
+    iterator insert( const_iterator pos, std::initializer_list<T> ilist ); (5)
+
+    std::list<int> c1(3, 100);
+    auto pos = c1.begin();
+    pos = c1.insert(pos, 200); // [200, 100, 100, 100]
+    c1.insert(pos, 2, 300); // [300, 300, 200, 100, 100, 100]
+    pos = c1.begin();
+    std::list<int> c2(2, 400);
+    c1.insert(std::next(pos, 2), c2.begin(), c2.end());
+    // [300, 300, 400, 400, 200, 100, 100, 100]
+    int arr[] = {501, 502, 503};
+    c1.insert(c1.begin(), arr, arr + std::size(arr));
+    // [501, 502, 503, 300, 300, 400, 400, 200, 100, 100, 100]
+    c1.insert(c1.end(), {601, 602, 603});
+    // [501, 502, 503, 300, 300, 400, 400, 200, 100, 100, 100, 601, 602, 603]
+
+list::insert_range()
+    auto container = std::list{1, 2, 3, 4};
+    auto pos = std::next(container.begin(), 2);
+    const auto rg = std::vector{-1, -2, -3};
+    container.insert_range(pos, rg);
+
+list::erase()
+    iterator erase( const_iterator pos );
+    iterator erase( const_iterator first, const_iterator last );
+    Returns iterator following the last removed element.
+    c.erase(range_begin, range_end);
+    it = c.erase(it);
+
+list::push_back()
+    letters.push_back("abc"); // return none
+list::append_range()
+    auto head = std::list{1, 2, 3, 4};
+    const auto tail = std::vector{-5, -6, -7};
+    head.append_range(tail);
+list::pop_back()
+    numbers.pop_back(); // return none
+list::push_front()
+    letters.push_front("abc");
+    or letters.push_front(std::move(s));
+    // return none;
+list::prepend_range()
+    auto container = std::list{0, 1, 2, 3};
+    const auto rg = std::vector{-3, -2, -1};
+    container.prepend_range(rg);
+list::pop_front()
+    chars.pop_front() // return none
+
+list::resize()
+    void resize( size_type count );
+    void resize( size_type count, const value_type& value );
+    (see deque::resize) std::list<int> c = {1, 2, 3};
+    c.resize(5);
+    c.resize(2);
+    c.resize(6, 4);
+
+list::swap()
+    a1.swap(a2);
+list::merge()
+    list1.sort();
+    list2.sort();
+    list1.merge(list2);
+    // result is sorted also, return none
+list::splice()
+    std::list<int> list1{1, 2, 3, 4, 5};
+    std::list<int> list2{10, 20, 30, 40, 50};
+    auto it = list1.begin();
+    std::advance(it, 2);
+    list1.splice(it, list2);
+    list2 is empty, list1: 1 2 10 20 30 40 50 3 4 5, 'it' points to 3 after splicing
+    list2.splice(list2.begin(), list1, it, list1.end());
+    // list1: 1 2 10 20 30 40 50 list2: 3 4 5
+
+list::remove()
+    auto count1 = l.remove(1);
+    // count1 elements (equal to 1) are removed
+list::remove_if()
+    auto count2 = l.remove_if([](int n){ return n > 10; });
+    // count2 elements are removed
+list::reverse()
+    list.reverse(); // return none
+list::unique()
+    size_type unique(); // returns number of elements removed
+list::sort()
+    list.sort();
+    list.sort(std::greater<int>());
+    // return none
 
 deque::
-deque::at() -> access specified element with bounds checking
-deque::operator[] -> access specified element
-deque::front() -> access the first element
-deque::back() -> access the last element
-deque::begin
-deque::cbegin
-deque::end
-deque::cend
-deque::rbegin
-deque::crbegin() -> returns a reverse iterator to the beginning
-deque::rend
-deque::crend() -> returns a reverse iterator to the end
-deque::empty() -> checks whether the container is empty
-deque::size() -> returns the number of elements
-deque::max_size() -> returns the maximum possible number of elements
-deque::shrink_to_fit() -> (DR*) reduces memory usage by freeing unused memory
-deque::clear() -> clears the contents
-deque::insert() -> inserts elements
-deque::insert_range() -> inserts a range of elements
-deque::emplace() -> constructs element in-place
-deque::erase() -> erases elements
-deque::push_back() -> adds an element to the end
-deque::emplace_back() -> constructs an element in-place at the end
-deque::append_range() -> adds a range of elements to the end
-deque::pop_back() -> removes the last element
-deque::push_front() -> inserts an element to the beginning
-deque::emplace_front() -> constructs an element in-place at the beginning
-deque::prepend_range() -> adds a range of elements to the beginning
-deque::pop_front() -> removes the first element
-deque::resize() -> changes the number of elements stored
-deque::swap() -> swaps the contents
+    at() -> access specified element with bounds checking
+    operator[] -> access specified element
+    front() -> access the first element
+    back() -> access the last element
+    begin
+    cbegin
+    end
+    cend
+    rbegin
+    crbegin() -> returns a reverse iterator to the beginning
+    rend
+    crend() -> returns a reverse iterator to the end
+    empty() -> checks whether the container is empty
+    size() -> returns the number of elements
+    max_size() -> returns the maximum possible number of
+        elements
+    shrink_to_fit() -> (DR*) reduces memory usage by freeing
+        unused memory
+    clear() -> clears the contents
+    insert() -> inserts elements
+    insert_range() -> inserts a range of elements
+    emplace() -> constructs element in-place
+    erase() -> erases elements
+    push_back() -> adds an element to the end
+    emplace_back() -> constructs an element in-place at the
+        end
+    append_range() -> adds a range of elements to the end
+    pop_back() -> removes the last element
+    push_front() -> inserts an element to the beginning
+    emplace_front() -> constructs an element in-place at the
+        beginning
+    prepend_range() -> adds a range of elements to the
+        beginning
+    pop_front() -> removes the first element
+    resize() -> changes the number of elements stored
+    swap() -> swaps the contents
 
-deque::deque -> std::deque<int> d = {7, 5, 16, 8}; d.push_front(13); d.push_back(25);
-deque::deque -> std::deque<int> c1(3, 100);
+deque::deque
+    std::deque<int> d = {7, 5, 16, 8};
+    d.push_front(13);
+    d.push_back(25);
+    std::deque<int> c1(3, 100);
 
-deque::insert -> iterator insert( const_iterator pos, const T& value );
-deque::insert -> iterator insert( const_iterator pos, T&& value );
-deque::insert -> iterator insert( const_iterator pos, size_type count, const T& value );
-deque::insert -> template< class InputIt > iterator insert( const_iterator pos, InputIt first, InputIt last );
-deque::insert -> auto pos = c1.begin(); pos = c1.insert(pos, 200);
-deque::insert -> c1.insert(pos, 2, 300); // overload (3)
-deque::insert -> c1.insert(std::next(pos, 2), c2.begin(), c2.end());
-deque::insert -> c1.insert(c1.end(), {601, 602, 603});
+deque::insert
+    iterator insert( const_iterator pos, const T& value );
+    iterator insert( const_iterator pos, T&& value );
+    iterator insert( const_iterator pos, size_type count, const T& value );
+    template< class InputIt > iterator insert( const_iterator pos, InputIt first, InputIt last );
 
-deque::insert_range -> auto container = std::deque{1, 2, 3, 4}; auto pos = std::next(container.begin(), 2);
-deque::insert_range -> const auto rg = std::list{-1, -2, -3}; container.insert_range(pos, rg); container.insert(pos, rg.cbegin(), rg.cend());
+    auto pos = c1.begin();
+    pos = c1.insert(pos, 200);
+    c1.insert(pos, 2, 300); // overload (3)
+    c1.insert(std::next(pos, 2), c2.begin(), c2.end());
+    c1.insert(c1.end(), {601, 602, 603});
 
-deque::erase -> c.erase(c.begin()); c.erase(c.begin() + 2, c.begin() + 5); it = c.erase(it);
+deque::insert_range
+    auto container = std::deque{1, 2, 3, 4};
+    auto pos = std::next(container.begin(), 2);
+    const auto rg = std::list{-1, -2, -3};
+    container.insert_range(pos, rg);
+    container.insert(pos, rg.cbegin(), rg.cend());
 
-deque::append_range -> auto head = std::deque{1, 2, 3, 4}; const auto tail = std::list{-5, -6, -7};
-deque::append_range -> head.append_range(tail); head.insert(head.end(), tail.cbegin(), tail.cend());
-deque::prepend_range -> (see append_range) container.prepend_range(rg);
+deque::erase
+    c.erase(c.begin()); c.erase(c.begin() + 2, c.begin() + 5); it = c.erase(it);
 
-deque::push_back -> letters.push_back("abc"); // returns nothing
-deque::pop_back -> numbers.pop_back(); // returns nothing
-deque::push_front -> letters.push_front("abc"); // returns nothing
-deque::pop_front -> chars.pop_front(); // returns nothing
-deque::swap -> a1.swap(a2);
+deque::append_range
+    auto head = std::deque{1, 2, 3, 4};
+    const auto tail = std::list{-5, -6, -7};
+    head.append_range(tail);
+    head.insert(head.end(), tail.cbegin(), tail.cend());
+    (see append_range) container.prepend_range(rg);
 
-deque::resize -> std::deque<int> c = {1, 2, 3}; c.resize(5); // After resize up to 5: 1 2 3 0 0
-deque::resize -> c.resize(2); // After resize down to 2: 1 2
-deque::resize -> c.resize(6, 4); // After resize up to 6 (initializer = 4): 1 2 4 4 4 4
+deque::push_back
+    letters.push_back("abc"); // returns nothing
+deque::pop_back
+    numbers.pop_back(); // returns nothing
+deque::push_front
+    letters.push_front("abc"); // returns nothing
+deque::pop_front
+    chars.pop_front(); // returns nothing
+deque::swap
+    a1.swap(a2);
 
-stack:: -> wrapper around deque (see deque)
-stack::top() -> accesses the top element
-stack::empty() -> checks whether the container adaptor is empty
-stack::size() -> returns the number of elements
-stack::push() -> inserts element at the top
-stack::push_range() -> inserts a range of elements at the top
-stack::emplace() -> constructs element in-place at the top
-stack::pop() -> removes the top element
-stack::swap() -> swaps the contents
+deque::resize
+    std::deque<int> c = {1, 2, 3};
+    c.resize(5);
+    // After resize up to 5: 1 2 3 0 0
+    c.resize(2); // After resize down to 2: 1 2
+    c.resize(6, 4);
+    // After resize up to 6 (initializer = 4): 1 2 4 4 4 4
 
-queue:: -> wrapper around deque (see deque)
-queue::front() -> access the first element
-queue::back() -> access the last element
-queue::empty() -> checks whether the container adaptor is empty
-queue::size() -> returns the number of elements
-queue::push() -> inserts element at the end
-queue::push_range() -> inserts a range of elements at the end
-queue::emplace() -> constructs element in-place at the end
-queue::pop() -> removes the first element
-queue::swap() -> swaps the contents
+stack::
+    wrapper around deque (see deque)
+
+    top() -> accesses the top element
+    empty() -> checks whether the container adaptor is empty
+    size() -> returns the number of elements
+    push() -> inserts element at the top
+    push_range() -> inserts a range of elements at the top
+    emplace() -> constructs element in-place at the top
+    pop() -> removes the top element
+    swap() -> swaps the contents
+
+queue::
+    wrapper around deque (see deque)
+
+    front() -> access the first element
+    back() -> access the last element
+    empty() -> checks whether the container adaptor is empty
+    size() -> returns the number of elements
+    push() -> inserts element at the end
+    push_range() -> inserts a range of elements at the end
+    emplace() -> constructs element in-place at the end
+    pop() -> removes the first element
+    swap() -> swaps the contents
 
 --- map and set
 insert_or_assign(
@@ -367,121 +549,170 @@ lower_bound(
 upper_bound(
 key_comp(
 value_comp(
-map::at() <-> access specified element with bounds checking
-map::operator[] <-> access or insert specified element
-map::begin() <-> returns an iterator to the beginning
-map::cbegin() <-> returns an iterator to the beginning
-map::end() <-> returns an iterator to the end
-map::cend() <-> returns an iterator to the end
-map::rbegin() <-> returns a reverse iterator to the beginning
-map::crbegin() <-> returns a reverse iterator to the beginning
-map::rend() <-> returns a reverse iterator to the end
-map::crend() <-> returns a reverse iterator to the end
-map::empty() <-> checks whether the container is empty
-map::size() <-> returns the number of elements
-map::max_size() <-> returns the maximum possible number of elements
-map::clear() <-> clears the contents
-map::insert() <-> inserts elements or nodes(since C++17)
-map::insert_range() <-> inserts a range of elements
-map::insert_or_assign() <-> inserts an element or assigns to the current element if the key already exists
-map::emplace() <-> constructs element in-place
-map::emplace_hint() <-> constructs elements in-place using a hint
-map::try_emplace() <-> inserts in-place if the key does not exist, does nothing if the key exists
-map::erase() <-> erases elements
-map::swap() <-> swaps the contents
-map::extract() <-> extracts nodes from the container
-map::merge() <-> splices nodes from another container
-map::count() <-> returns the number of elements matching specific key
-map::find() <-> finds element with specific key
-map::contains() <-> checks if the container contains element with specific key
-map::equal_range() <-> returns range of elements matching a specific key
-map::lower_bound() <-> returns an iterator to the first element not less than the given key
-map::upper_bound() <-> returns an iterator to the first element greater than the given key
-map::key_comp() <-> returns the function that compares keys
-map::value_comp() <-> returns the function that compares keys in objects of type value_type
 
-map::map -> map<int, int> f {{1,2},{3,4}};
-map::map -> auto f = map{pair{1, 11}, {3, 33}, {2, 22}, {4, 44}};
-map iterate -> for (const auto& [key, value] : m) std::cout << '[' << key << "] = " << value << "; ";
+map::
+    at() <-> access specified element with bounds checking
+    operator[] <-> access or insert specified element
+    begin() <-> returns an iterator to the beginning
+    cbegin() <-> returns an iterator to the beginning
+    end() <-> returns an iterator to the end
+    cend() <-> returns an iterator to the end
+    rbegin() <-> returns a reverse iterator to the beginning
+    crbegin() <-> returns a reverse iterator to the beginning
+    rend() <-> returns a reverse iterator to the end
+    crend() <-> returns a reverse iterator to the end
+    empty() <-> checks whether the container is empty
+    size() <-> returns the number of elements
+    max_size() <-> returns the maximum possible number of elements
+    clear() <-> clears the contents
+    insert() <-> inserts elements or nodes(since C++17)
+    insert_range() <-> inserts a range of elements
+    insert_or_assign() <-> inserts an element or assigns to the current
+        element if the key already exists
+    emplace() <-> constructs element in-place
+    emplace_hint() <-> constructs elements in-place using a hint
+    try_emplace() <-> inserts in-place if the key does not exist, does nothing
+        if the key exists
+    erase() <-> erases elements
+    swap() <-> swaps the contents
+    extract() <-> extracts nodes from the container
+    merge() <-> splices nodes from another container
+    count() <-> returns the number of elements matching specific key
+    find() <-> finds element with specific key
+    contains() <-> checks if the container contains element with specific key
+    equal_range() <-> returns range of elements matching a specific key
+    lower_bound() <-> returns an iterator to the first element not less than
+        the given key
+    upper_bound() <-> returns an iterator to the first element greater than
+        the given key
+    key_comp() <-> returns the function that compares keys
+    value_comp() <-> returns the function that compares keys in objects of
+        type value_type
 
-map::insert -> mapx.insert(pair(1,2))
-map::insert -> mapx.insert({1,2})
-map::insert -> mapx.insert(rg.begin(), rg.end()); -> const auto rg = {std::pair{-1, -11}, {3, -33}, {-2, -22}};
-map::insert -> mapx.insert(rg); -> const auto rg = {std::pair{-1, -11}, {3, -33}, {-2, -22}}; (-> vector)
+map::map
+    map<int, int> f {{1,2},{3,4}};
+    auto f = map{pair{1, 11}, {3, 33}, {2, 22}, {4, 44}};
+    map iterate:
+        for (const auto& [key, value] : m)
+           std::cout << '[' << key << "] = " << value << "; ";
 
-map::emplace -> mapx.emplace("d", "ddd"); -> map<std::string, std::string> mapx;
-map::emplace -> mapx.emplace(std::make_pair("b", "abcd"));
+map::insert
+    mapx.insert(pair(1,2))
+    mapx.insert({1,2})
+    const auto rg = {std::pair{-1, -11}, {3, -33}, {-2, -22}};
+    mapx.insert(rg.begin(), rg.end());
+    const auto rg = {std::pair{-1, -11}, {3, -33}, {-2, -22}}; (-> vector)
+    mapx.insert(rg);
 
-map::erase() -> it = mapx.erase(it);
-map::erase() -> Removes the element at pos, or in the range [first, last), or with the key==a_key
-map::erase() -> Returns iterator following the last removed element, or Number of elements removed.
-map::erase() -> std::erase_if(m, [](const auto& pair){ return pair.second > 25; });
+map::emplace
+    mapx.emplace("d", "ddd"); -> map<std::string, std::string> mapx;
+    mapx.emplace(std::make_pair("b", "abcd"));
 
-map::swap -> mapx.swap(mapy);
+map::erase()
+    it = mapx.erase(it);
+    Removes the element at pos, or in the range [first, last), or with the key==a_key
+    Returns iterator following the last removed element, or Number of elements removed.
+    std::erase_if(m, [](const auto& pair){ return pair.second > 25; });
 
-map::count -> size_type map::count( const Key& key )
+map::swap
+    mapx.swap(mapy);
 
-map::find -> if(auto search = map_foo.find(2); map_foo != example.end()) std::cout << "Found " << map_foo->first << ' ' << map_foo->second << '\n';
+map::count
+    size_type map::count( const Key& key )
 
-map::contains -> if (mapx.contains(x))
+map::find
+    if(auto search = map_foo.find(2); map_foo != example.end())
+        std::cout << "Found " << map_foo->first << ' ' << map_foo->second << '\n';
 
-map::equal_range -> auto p = m.equal_range(key); for (auto& q = p.first; q != p.second; ++q) cout<<q->first<<q->second;
-map::lower_bound -> auto p = m.lower_bound(key);
-map::upper_bound -> auto p = m.upper_bound(key);
+map::contains
+    if (mapx.contains(x))
 
-set::begin()
-set::cbegin()
-set::end()
-set::cend()
-set::rbegin()
-set::crbegin()
-set::rend() <-> returns a reverse iterator to the end
-set::crend() <-> returns a reverse iterator to the end
-set::empty() <-> checks whether the container is empty
-set::size() <-> returns the number of elements
-set::max_size() <-> returns the maximum possible number of elements
-set::clear() <-> clears the contents
-set::insert() <-> inserts elements or nodes(since C++17)
-set::insert_range() <-> inserts a range of elements
-set::emplace() <-> constructs element in-place
-set::emplace_hint() <-> constructs elements in-place using a hint
-set::erase() <-> erases elements
-set::swap() <-> swaps the contents
-set::extract() <-> extracts nodes from the container
-set::merge() <-> splices nodes from another container
-set::count() <-> returns the number of elements matching specific key
-set::find() <-> finds element with specific key
-set::contains() <-> checks if the container contains element with specific key
-set::equal_range() <-> returns range of elements matching a specific key
-set::lower_bound() <-> returns an iterator to the first element not less than the given key
-set::upper_bound() <-> returns an iterator to the first element greater than the given key
-set::key_comp() <-> returns the function that compares keys
-set::value_comp() <-> returns the function that compares keys in objects of type value_type
+map::equal_range
+    auto p = m.equal_range(key);
+    for (auto& q = p.first; q != p.second; ++q)
+        cout<<q->first<<q->second;
+    auto p = m.lower_bound(key);
+    auto p = m.upper_bound(key);
 
-set::set -> set<int> set{1, 5, 3};  // can name a set as 'set'
-set::empty -> if (set.empty())
-set::insert -> set.insert(2);
-set::erase -> set.erase(1);
-set::contains -> if (set.contains(key))
+set::
+    begin()
+    cbegin()
+    end()
+    cend()
+    rbegin()
+    crbegin()
+    rend() <-> returns a reverse iterator to the end
+    crend() <-> returns a reverse iterator to the end
+    empty() <-> checks whether the container is empty
+    size() <-> returns the number of elements
+    max_size() <-> returns the maximum possible number of elements
+    clear() <-> clears the contents
+    insert() <-> inserts elements or nodes(since C++17)
+    insert_range() <-> inserts a range of elements
+    emplace() <-> constructs element in-place
+    emplace_hint() <-> constructs elements in-place using a hint
+    erase() <-> erases elements
+    swap() <-> swaps the contents
+    extract() <-> extracts nodes from the container
+    merge() <-> splices nodes from another container
+    count() <-> returns the number of elements matching specific key
+    find() <-> finds element with specific key
+    contains() <-> checks if the container contains element with specific key
+    equal_range() <-> returns range of elements matching a specific key
+    lower_bound() <-> returns an iterator to the first element not less than the given key
+    upper_bound() <-> returns an iterator to the first element greater than the given key
+    key_comp() <-> returns the function that compares keys
+    value_comp() <-> returns the function that compares keys in objects of type value_type
 
-set print -> for_each(set.begin(), set.end(), [&out](const T& element) out << ", " << element;
+set::set
+    set<int> set{1, 5, 3};  // can name a set as 'set'
+set::empty
+    if (set.empty())
+set::insert
+    set.insert(2);
+set::erase
+    set.erase(1);
+set::contains
+    if (set.contains(key))
 
-set::clear() -> setx.clear();
+set->print
+    for_each(set.begin(), set.end(), [&out](const T& element) out << ", " << element;
 
-set::insert() -> auto result_1 = set.insert(3); assert(result_1.first != set.end()); // it is a valid iterator
-set::insert() -> auto result_1 = set.insert(3); assert(*result_1.first == 3); if (!result_2.second) std::cout << "no insertion\n";
+set::clear()
+    setx.clear();
 
-set::insert_range() -> const auto rg = {-1, 3, -2}; setx.insert_range(rg); OR setx.insert(rg.begin(), rg.end());
+set::insert()
+    auto result_1 = set.insert(3);
+    assert(result_1.first != set.end()); // it is a valid iterator
+set::insert()
+    auto result_1 = set.insert(3);
+    assert(*result_1.first == 3);
+    if (!result_2.second)
+       std::cout << "no insertion\n";
 
-set::erase() -> it = c.erase(it); // see map::erase, can use iterators
+set::insert_range()
+    const auto rg = {-1, 3, -2};
+    setx.insert_range(rg); OR setx.insert(rg.begin(), rg.end());
 
-set::swap() -> a1.swap(a2); Every iterator referring to an element in one container before the swap refers to the same element in the other container after the swap.
+set::erase()
+    it = c.erase(it); // see map::erase, can use iterators
 
-set::find() -> if (auto search = example.find(2); search != example.end())
-set::contains() -> if (example.contains(x))
-set::equal_range() -> auto [begin, end] = characters.equal_range(names); (see map::equal_range)
-set::lower_bound() -> no example
-set::upper_bound() -> no example
+set::swap()
+    a1.swap(a2); E
+    very iterator referring to an element in one container before the swap
+    refers to the same element in the other container after the swap.
+
+set::find()
+    if (auto search = example.find(2);
+        search != example.end())
+set::contains()
+    if (example.contains(x))
+set::equal_range()
+    auto [begin, end] = characters.equal_range(names); (see map::equal_range)
+set::lower_bound()
+    no example
+set::upper_bound()
+    no example
 
 --- string
 assign(
@@ -502,142 +733,556 @@ starts_with(
 ends_with(
 substr(start, length)
 
-std::string	std::basic_string<char>
-std::wstring	std::basic_string<wchar_t> // wide string
-std::u8string   std::basic_string<char8_t>
-std::u16string  std::basic_string<char16_t>
-std::u32string  std::basic_string<char32_t>
+string::
+    mutable (unlike java string, and C's char *f="foo"
 
-string:: -> mutable (unlike java string, and C's char *f="foo"
-string::operator= -> assigns values to the string
-string::assign() -> assign characters to a string
-string::assign_range() -> assign a range of characters to a string
-string::get_allocator() -> returns the associated allocator
-string::at() -> accesses the specified character with bounds checking
-string::operator[]() -> accesses the specified character
-string::front() -> accesses the first character
-string::back() -> accesses the last character
-string::data() -> returns a pointer to the first character of a string
-string::c_str() -> returns a non-modifiable standard C character array version of the string
-string::operator() -> basic_string_view returns a non-modifiable basic_string_view into the entire string
-string::begin()
-string::cbegin()
-string::end()
-string::cend()
-string::rbegin()
-string::crbegin() -> returns a reverse iterator to the beginning
-string::rend()
-string::crend() -> returns a reverse iterator to the end
-string::empty() -> checks whether the string is empty
-string::size() -> returns the number of characters
-string::length() -> returns the number of characters
-string::max_size() -> returns the maximum number of characters
-string::reserve() -> reserves storage
-string::capacity() -> returns the number of characters that can be held in currently allocated storage
-string::shrink_to_fit() -> reduces memory usage by freeing unused memory
-string::clear() -> clears the contents
-string::insert() -> inserts characters
-string::insert_range() -> inserts a range of characters
-string::erase() -> removes characters
-string::push_back() -> appends a character to the end
-string::pop_back() -> removes the last character
-string::append() -> appends characters to the end
-string::append_range() -> appends a range of characters to the end
-string::operator+=() -> appends characters to the end
-string::replace() -> replaces specified portion of a string
-string::replace_with_range() -> replaces specified portion of a string with a range of characters
-string::copy() -> copies characters
-string::resize() -> changes the number of characters stored
-string::resize_and_overwrite() -> changes the number of characters stored and possibly overwrites indeterminate contents via user-provided operation
-string::swap() -> swaps the contents
-string::find() -> finds the first occurrence of the given substring
-string::rfind() -> find the last occurrence of a substring
-string::find_first_of() -> find first occurrence of characters
-string::find_first_not_of() -> find first absence of characters
-string::find_last_of() -> find last occurrence of characters
-string::find_last_not_of() -> find last absence of characters
-string::compare() -> compares two strings
-string::starts_with() -> checks if the string starts with the given prefix
-string::ends_with() -> checks if the string ends with the given suffix
-string::contains() -> checks if the string contains the given substring or character
-string::substr() -> returns a substring
+    operator= -> assigns values to the string
+    assign() -> assign characters to a string
+    assign_range() -> assign a range of characters to a string
+    get_allocator() -> returns the associated allocator
+    at() -> accesses the specified character with bounds checking
+    operator[]() -> accesses the specified character
+    front() -> accesses the first character
+    back() -> accesses the last character
+    data() -> returns a pointer to the first character of a string
+    c_str() -> returns a non-modifiable standard C character array version of the string
+    operator() -> basic_string_view returns a non-modifiable basic_string_view into the entire string
+    begin()
+    cbegin()
+    end()
+    cend()
+    rbegin()
+    crbegin() -> returns a reverse iterator to the beginning
+    rend()
+    crend() -> returns a reverse iterator to the end
+    empty() -> checks whether the string is empty
+    size() -> returns the number of characters
+    length() -> returns the number of characters
+    max_size() -> returns the maximum number of characters
+    reserve() -> reserves storage
+    capacity() -> returns the number of characters that can be held in currently allocated storage
+    shrink_to_fit() -> reduces memory usage by freeing unused memory
+    clear() -> clears the contents
+    insert() -> inserts characters
+    insert_range() -> inserts a range of characters
+    erase() -> removes characters
+    push_back() -> appends a character to the end
+    pop_back() -> removes the last character
+    append() -> appends characters to the end
+    append_range() -> appends a range of characters to the end
+    operator+=() -> appends characters to the end
+    replace() -> replaces specified portion of a string
+    replace_with_range() -> replaces specified portion of a string with a range of characters
+    copy() -> copies characters
+    resize() -> changes the number of characters stored
+    resize_and_overwrite() -> changes the number of characters stored and possibly overwrites indeterminate contents via user-provided operation
+    swap() -> swaps the contents
+    find() -> finds the first occurrence of the given substring
+    rfind() -> find the last occurrence of a substring
+    find_first_of() -> find first occurrence of characters
+    find_first_not_of() -> find first absence of characters
+    find_last_of() -> find last occurrence of characters
+    find_last_not_of() -> find last absence of characters
+    compare() -> compares two strings
+    starts_with() -> checks if the string starts with the given prefix
+    ends_with() -> checks if the string ends with the given suffix
+    contains() -> checks if the string contains the given substring or character
+    substr() -> returns a substring
 
-string::(non-member fn) operator+ concatenates two strings, a string and a char, or a string and string_view
-string::(non-member fn) operator== operator!= operator< operator> operator<= operator>= operator<=> lexicographically compares two strings
-string::(non-member fn) std::swap(std::basic_string) specializes the std::swap algorithm
-string::(non-member fn) std::erase(std::basic_string) erases all elements satisfying specific criteria
-string::(non-member fn) std::erase_if(std::basic_string) erases all elements satisfying specific criteria
 string::(non-member fn)
-string::(non-member fn) operator<< operator>> -> performs stream input and output on strings
-string::(non-member fn) getline() -> read data from an I/O stream into a string
-string::(non-member fn) stoi() stol() stoll() -> converts a string to a signed integer
-string::(non-member fn) stoul() stoull() -> converts a string to an unsigned integer
-string::(non-member fn) stof() stod() stold() -> converts a string to a floating point value
-string::(non-member fn) to_string() -> converts an integral or floating-point value to string
-string::(non-member fn) to_wstring() -> converts an integral or floating-point value to wstring
+    operator+ concatenates two strings, a string and a char, or a string and string_view
+    operator==
+    operator!=
+    operator<
+    operator>
+    operator<=
+    operator>=
+    operator<=>
+        lexicographically compares two strings
+    std::swap(std::basic_string) specializes the std::swap algorithm
+    std::erase(std::basic_string) erases all elements satisfying specific criteria
+    std::erase_if(std::basic_string) erases all elements satisfying specific criteria
+    operator<< and operator>> -> performs stream input and output on strings
+    getline() -> read data from an I/O stream into a string
+    stoi() stol() stoll() -> converts a string to a signed integer
+    stoul() stoull() -> converts a string to an unsigned integer
+    stof() stod() stold() -> converts a string to a floating point value
+    to_string() -> converts an integral or floating-point value to string
+    to_wstring() -> converts an integral or floating-point value to wstring
 
-string::assign -> s.assign(4, '='); // "===="; s.assign(c); // assign(const basic_string& str)
-string::assign -> s.assign(c, 0, c.length() - 1); assign(const basic_string& str, size_type pos, size_type count)
-string::assign -> s.assign(std::string("C++ by ") + "example"); // assign(basic_string&& str)
-string::assign -> s.assign("C-style string", 7); // assign(const CharT* s, size_type count)
-string::assign -> s.assign("C-style\0string"); // assign(const CharT* s)
-string::assign -> char mutable_c_str[] = "C-style string"; s.assign(std::begin(mutable_c_str), std::end(mutable_c_str) - 1); // assign(InputIt first, InputIt last)
-string::assign -> s.assign({'C', '-', 's', 't', 'y', 'l', 'e'}); // assign(std::initializer_list<CharT> ilist)
+string::()
+    std::string	std::basic_string<char>
+    std::wstring	std::basic_string<wchar_t> // wide string
+    std::u8string   std::basic_string<char8_t>
+    std::u16string  std::basic_string<char16_t>
+    std::u32string  std::basic_string<char32_t>
 
-string::assign_range() -> destination.assign_range(source); // same as destination.assign(source.begin(), source.end());
+string::assign
+    s.assign(4, '='); // "====";
+    s.assign(c); // assign(const basic_string& str)
+    s.assign(c, 0, c.length() - 1);
+       // assign(const basic_string& str, size_type pos, size_type count)
+    s.assign(std::string("C++ by ") + "example");
+       // assign(basic_string&& str)
+    s.assign("C-style string", 7); // assign(const CharT* s, size_type count)
+    s.assign("C-style\0string"); // assign(const CharT* s)
+    char mutable_c_str[] = "C-style string";
+    s.assign(std::begin(mutable_c_str), std::end(mutable_c_str) - 1);
+       // assign(InputIt first, InputIt last)
+    s.assign({'C', '-', 's', 't', 'y', 'l', 'e'});
+       // assign(std::initializer_list<CharT> ilist)
 
-string::insert() -> s.insert(0, 1, 'E'); // insert(size_type index, size_type count, char ch)
-string::insert() -> s.insert(2, "e"); // insert(size_type index, const char* s)
-string::insert() -> s.insert(6, "a"s); // insert(size_type index, string const& str)
-string::insert() -> s.insert(8, " is an example string."s, 0, 14); // insert(size_type index, string const& str, size_type s_index, size_type count)
-string::insert() -> s.insert(s.cbegin() + s.find_first_of('n') + 1, ':'); // insert(const_iterator pos, char ch)
-string::insert() -> s.insert(s.cbegin() + s.find_first_of(':') + 1, 2, '='); // insert(const_iterator pos, size_type count, char ch)
-string::insert() -> s.insert(s.begin() + s.find_last_of('e') + 1, std::begin(seq), std::end(seq)); // insert(const_iterator pos, InputIt first, InputIt last)
-string::insert() -> s.insert(s.cbegin() + s.find_first_of('g') + 1, {'.'}); // insert(const_iterator pos, std::initializer_list<char>)
+string::assign_range()
+    destination.assign_range(source); // same as destination.assign(source.begin(), source.end());
 
-string::insert_range() -> target.insert_range(iter, source); // same as target.insert(iter, source.begin(), source.end());
+string::insert()
+    s.insert(0, 1, 'E'); // insert(size_type index, size_type count, char ch)
+    s.insert(2, "e"); // insert(size_type index, const char* s)
+    s.insert(6, "a"s); // insert(size_type index, string const& str)
+    s.insert(8, " is an example string."s, 0, 14);
+     // insert(size_type index, string const& str, size_type s_index, size_type count)
+    s.insert(s.cbegin() + s.find_first_of('n') + 1, ':');
+     // insert(const_iterator pos, char ch)
+    s.insert(s.cbegin() + s.find_first_of(':') + 1, 2, '=');
+     // insert(const_iterator pos, size_type count, char ch)
+    s.insert(s.begin() + s.find_last_of('e') + 1, std::begin(seq), std::end(seq));
+     // insert(const_iterator pos, InputIt first, InputIt last)
+    s.insert(s.cbegin() + s.find_first_of('g') + 1, {'.'});
+     // insert(const_iterator pos, std::initializer_list<char>)
 
-string::erase() -> std::string s = "This Is An Example"; s.erase(7, 3); // erases " An"
-string::erase() -> s.erase(std::find(s.begin(), s.end(), ' ')); // erases first ' ';
-string::erase() -> s.erase(s.find(' ')); // trims from ' ' to the end of the string;
-string::erase() -> auto it = std::next(s.begin(), s.find('s')); // obtains iterator to the first 's'
-string::erase() -> s.erase(it, std::next(it, 2)); // erases "sI";
+string::insert_range()
+    target.insert_range(iter, source); // same as target.insert(iter, source.begin(), source.end());
 
-string::push_back() -> str.push_back('!');
-string::pop_back() -> str.pop_back();
+string::erase()
+    std::string s = "This Is An Example"; s.erase(7, 3); // erases " An"
+    s.erase(std::find(s.begin(), s.end(), ' ')); // erases first ' ';
+    s.erase(s.find(' ')); // trims from ' ' to the end of the string;
+    auto it = std::next(s.begin(), s.find('s')); // obtains iterator to the first 's'
+    s.erase(it, std::next(it, 2)); // erases "sI";
 
-string::append -> std::basic_string<char> str = "string";
-string::append -> const char* cptr = "C-string";
-string::append -> const char carr[] = "Two and one";
-string::append -> std::string output;
-string::append -> output.append(3, '*'); // 1) Append a char 3 times. 
-string::append -> output.append(str); // 2) Append a whole string
-string::append -> output.append(str, 3, 3); // 3) Append part of a string (last 3 letters, in this case)
-string::append -> output.append(1, ' ').append(carr, 4); // 4) Append part of a C-string. `append` returns *this, we can chain calls together
-string::append -> output.append(cptr); // 5) Append a whole C-string
-string::append -> output.append(&carr[3], std::end(carr)); // 6) Append range
-string::append -> output.append({' ', 'l', 'i', 's', 't'}); // 7) Append initializer list
+string::push_back()
+    str.push_back('!');
+string::pop_back()
+    str.pop_back();
 
-string::append_range() -> 
-string::operator+=() -> 
-string::replace() -> 
-string::replace_with_range() -> 
-string::copy() -> 
-string::resize() -> 
-string::resize_and_overwrite() -> 
-string::swap() -> 
-string::find() -> 
-string::rfind() -> 
-string::find_first_of() -> 
-string::find_first_not_of() -> 
-string::find_last_of() -> 
-string::find_last_not_of() -> 
-string::compare() -> 
-string::starts_with() -> 
-string::ends_with() -> 
-string::contains() -> 
-string::substr() -> 
+string::append
+    std::basic_string<char> str = "string";
+    const char* cptr = "C-string";
+    const char carr[] = "Two and one";
+    std::string output;
+    output.append(3, '*'); // 1) Append a char 3 times.
+    output.append(str); // 2) Append a whole string
+    output.append(str, 3, 3); // 3) Append part of a string (last 3 letters, in this case)
+    output.append(1, ' ').append(carr, 4);
+     // 4) Append part of a C-string. `append` returns *this, we can chain calls together
+    output.append(cptr); // 5) Append a whole C-string
+    output.append(&carr[3], std::end(carr)); // 6) Append range
+    output.append({' ', 'l', 'i', 's', 't'}); // 7) Append initializer list
 
+
+string::append_range()
+
+
+string::operator+=()
+
+
+string::replace()
+
+
+string::replace_with_range()
+
+
+string::copy()
+
+
+string::resize()
+
+
+string::resize_and_overwrite()
+
+
+string::swap()
+
+
+string::find()
+
+
+string::rfind()
+
+
+string::find_first_of()
+
+
+string::find_first_not_of()
+
+
+string::find_last_of()
+
+
+string::find_last_not_of()
+
+
+string::compare()
+
+
+string::starts_with()
+    constexpr bool
+        starts_with( std::basic_string_view<CharT,Traits> sv ) const noexcept;
+    (1)	(since C++20)
+    constexpr bool
+        starts_with( CharT ch ) const noexcept;
+    (2)	(since C++20)
+    constexpr bool
+        starts_with( const CharT* s ) const;
+    (3)	(since C++20)
+    Checks if the string begins with the given prefix. The prefix may be one
+    of the following:
+
+    1) A string view sv (which may be a result of implicit conversion from
+    another std::basic_string).
+    2) A single character ch.
+    3) A null-terminated character string s.
+    All three overloads effectively return std::basic_string_view<CharT,
+    Traits>(data(), size()).starts_with(x), where x is the parameter.
+
+    Parameters
+    sv	-	a string view which may be a result of implicit conversion from
+    another std::basic_string
+    ch	-	a single character
+    s	-	a null-terminated character string
+    Return value
+    true if the string begins with the provided prefix, false otherwise.
+
+    Example
+
+    int main()
+    {
+        using namespace std::literals;
+
+        const auto str = "Hello, C++20!"s;
+
+        assert
+        (""
+            && str.starts_with("He"sv)  // (1)
+            && !str.starts_with("he"sv) // (1)
+            && str.starts_with("He"s)   // (1) implicit conversion string to
+    string_view
+            && !str.starts_with("he"s)  // (1) implicit conversion string to
+    string_view
+            && str.starts_with('H')     // (2)
+            && !str.starts_with('h')    // (2)
+            && str.starts_with("He")    // (3)
+            && !str.starts_with("he")   // (3)
+        );
+    }
+
+    string::ends_with()
+    constexpr bool
+        ends_with( std::basic_string_view<CharT, Traits> sv ) const noexcept;
+    (1)	(since C++20)
+    constexpr bool
+        ends_with( CharT ch ) const noexcept;
+    (2)	(since C++20)
+    constexpr bool
+        ends_with( const CharT* s ) const;
+    (3)	(since C++20)
+    Checks if the string ends with the given suffix. The suffix may be one of
+    the following:
+
+    1) A string view sv (which may be a result of implicit conversion from
+    another std::basic_string).
+    2) A single character ch.
+    3) A null-terminated character string s.
+    All three overloads effectively return std::basic_string_view<CharT,
+    Traits>(data(), size()).ends_with(x), where x is the parameter.
+
+    Parameters
+    sv	-	a string view which may be a result of implicit conversion from
+    another std::basic_string
+    ch	-	a single character
+    s	-	a null-terminated character string
+    Return value
+    true if the string ends with the provided suffix, false otherwise.
+
+    Example
+
+    int main()
+    {
+        using namespace std::literals;
+
+        const auto str = "Hello, C++20!"s;
+
+        assert
+        (""
+            && str.ends_with("C++20!"sv)  // (1)
+            && !str.ends_with("c++20!"sv) // (1)
+            && str.ends_with("C++20!"s)   // (1) implicit conversion string to string_view
+            && !str.ends_with("c++20!"s)  // (1) implicit conversion string to string_view
+            && str.ends_with('!')         // (2)
+            && !str.ends_with('?')        // (2)
+            && str.ends_with("C++20!")    // (3)
+            && !str.ends_with("c++20!")   // (3)
+        );
+    }
+
+string::contains()
+    constexpr bool
+        contains( std::basic_string_view<CharT,Traits> sv ) const noexcept;
+    (1)	(since C++23)
+    constexpr bool
+        contains( CharT ch ) const noexcept;
+    (2)	(since C++23)
+    constexpr bool
+        contains( const CharT* s ) const;
+    (3)	(since C++23)
+    Checks if the string contains the given substring. The substring may be
+    one of the following:
+
+    1) A string view sv (which may be a result of implicit conversion from
+    another std::basic_string).
+    2) A single character ch.
+    3) A null-terminated character string s.
+    All three overloads are equivalent to return find(x) != npos;, where x is
+    the parameter.
+
+    Parameters
+    sv	-	a string view which may be a result of implicit conversion from
+    another std::basic_string
+    ch	-	a single character
+    s	-	a null-terminated character string
+    Return value
+    true if the string contains the provided substring, false otherwise.
+
+    Example
+
+    template<typename SubstrType>
+    void test_substring(const std::string& str, SubstrType subs)
+    {
+        constexpr char delim = std::is_scalar_v<SubstrType> ? '\'' : '\"';
+        std::cout << std::quoted(str)
+                  << (str.contains(subs) ? " contains "
+                                         : " does not contain ")
+                  << std::quoted(std::string{subs}, delim) << '\n';
+    }
+
+    int main()
+    {
+        using namespace std::literals;
+
+        auto helloWorld = "hello world"s;
+
+        test_substring(helloWorld, "hello"sv);
+        test_substring(helloWorld, "goodbye"sv);
+        test_substring(helloWorld, 'w');
+        test_substring(helloWorld, 'x');
+    }
+    Output:
+
+    "hello world" contains "hello"
+    "hello world" does not contain "goodbye"
+    "hello world" contains 'w'
+    "hello world" does not contain 'x'
+
+string::substr()
+    basic_string substr( size_type pos = 0, size_type count = npos ) const;
+    constexpr basic_string
+        substr( size_type pos = 0, size_type count = npos ) const&;
+    constexpr basic_string substr( size_type pos = 0, size_type count = npos )
+        &&;
+    Returns a substring [pos, pos + count). If the requested substring extends
+    past the end of the string, i.e. the count is greater than size() - pos (e.g.
+    if count == npos), the returned substring is [pos, size()).
+
+    Parameters
+    pos	-	position of the first character to include
+    count	-	length of the substring
+
+    Return value
+    String containing the substring [pos, pos + count) or [pos, size()).
+
+    int main()
+    {
+        std::string a = "0123456789abcdefghij";
+
+        // count is npos, returns [pos, size())
+        std::string sub1 = a.substr(10);
+        std::cout << sub1 << '\n';
+
+        // both pos and pos + count are within bounds, returns [pos, pos + count)
+        std::string sub2 = a.substr(5, 3);
+        std::cout << sub2 << '\n';
+
+        // pos is within bounds, pos + count is not, returns [pos, size())
+        std::string sub4 = a.substr(a.size() - 3, 50);
+        // this is effectively equivalent to
+        // std::string sub4 = a.substr(17, 3);
+        // since a.size() == 20, pos == a.size() - 3 == 17, and a.size() - pos == 3
+
+        std::cout << sub4 << '\n';
+
+        try
+        {
+            // pos is out of bounds, throws
+            std::string sub5 = a.substr(a.size() + 3, 50);
+            std::cout << sub5 << '\n';
+        }
+        catch (const std::out_of_range& ex)
+        {
+            std::cout << ex.what() << '\n';
+        }
+    }
+    Possible output:
+
+    abcdefghij
+    567
+    hij
+    basic_string::substr: __pos (which is 23) > this->size() (which is 20)
+
+string::(non-member fn) std::erase, std::erase_if
+    template< class CharT, class Traits, class Alloc, class U >
+    constexpr std::basic_string<CharT, Traits, Alloc>::size_type
+        erase( std::basic_string<CharT, Traits, Alloc>& c, const U& value );
+    (since C++20)
+    (until C++26)
+    template< class CharT, class Traits, class Alloc, class U = CharT >
+    constexpr std::basic_string<CharT, Traits, Alloc>::size_type
+        erase( std::basic_string<CharT, Traits, Alloc>& c, const U& value );
+    (since C++26)
+    template< class CharT, class Traits, class Alloc, class Pred >
+    constexpr std::basic_string<CharT, Traits, Alloc>::size_type
+        erase_if( std::basic_string<CharT, Traits, Alloc>& c, Pred pred );
+
+    c	-	container from which to erase
+    value	-	value to be removed
+    pred	-	unary predicate which returns true if the element should be
+    erased.
+
+    int main()
+    {
+        std::string word{"startling"};
+        std::cout << "Initially, word = " << std::quoted(word) << '\n';
+
+        std::erase(word, 'l');
+        std::cout << "After erase 'l': " << std::quoted(word) << '\n';
+
+        auto erased = std::erase_if(word, [](char x)
+        {
+            return x == 'a' or x == 'r' or x == 't';
+        });
+
+        std::cout << "After erase all 'a', 'r', and 't': " <<
+            std::quoted(word) << '\n';
+        std::cout << "Erased symbols count: " << erased << '\n';
+
+    #if __cpp_lib_algorithm_default_value_type
+        std::erase(word, {'g'});
+        std::cout << "After erase {'g'}: " << std::quoted(word) << '\n';
+    #endif
+    }
+    Possible output:
+
+    Initially, word = "startling"
+    After erase 'l', word = "starting"
+    After erase all 'a', 'r', and 't': "sing"
+    Erased symbols count: 4
+    After erase {'g'}: "sin"gs
+
+string::(non-member fn) getline std::getline
+    int main()
+    {
+        // greet the user
+        std::string name;
+        std::cout << "What is your name? ";
+        std::getline(std::cin, name);
+        std::cout << "Hello " << name << ", nice to meet you.\n";
+
+        // read file line by line
+        std::istringstream input;
+        input.str("1\n2\n3\n4\n5\n6\n7\n");
+        int sum = 0;
+        for (std::string line; std::getline(input, line);)
+            sum += std::stoi(line);
+        std::cout << "\nThe sum is " << sum << ".\n\n";
+
+        // use separator to read parts of the line
+        std::istringstream input2;
+        input2.str("a;b;c;d");
+        for (std::string line; std::getline(input2, line, ';');)
+            std::cout << line << '\n';
+    }
+    Possible output:
+
+    What is your name? John Q. Public
+    Hello John Q. Public, nice to meet you.
+
+    The sum is 28.
+
+    a
+    b
+    c
+    d
+
+string::(non-member fn) operator<<,>>
+        int main()
+        {
+            std::string greeting = "Hello, whirled!";
+            std::istringstream iss(greeting);
+            std::string hello_comma, whirled, word;
+            iss >> hello_comma;
+            iss >> whirled;
+            std::cout << greeting << '\n'
+                      << hello_comma << '\n' << whirled << '\n';
+            // Reset the stream
+            iss.clear();
+            iss.seekg(0);
+            while (iss >> word)
+                std::cout << '+' << word << '\n';
+        }
+        Output:
+        Hello, whirled!
+        Hello,
+        whirled!
+        +Hello,
+        +whirled!
+
+
+--- standard library headers
+
+<cctype>
+    Functions
+    isalnum -> checks if a character is alphanumeric
+    isalpha -> checks if a character is alphabetic
+    islower -> checks if a character is lowercase
+    isupper -> checks if a character is an uppercase character
+    isdigit -> checks if a character is a digit
+    isxdigit -> checks if a character is a hexadecimal character
+    iscntrl -> checks if a character is a control character
+    isgraph -> checks if a character is a graphical character
+    isspace -> checks if a character is a space character
+    isblank -> checks if a character is a blank character
+    isprint -> checks if a character is a printing character
+    ispunct -> checks if a character is a punctuation character
+    tolower -> converts a character to lowercase
+    toupper -> converts a character to uppercase
+
+    Synopsis
+
+    namespace std {
+      int isalnum(int c);
+      int isalpha(int c);
+      int isblank(int c);
+      int iscntrl(int c);
+      int isdigit(int c);
+      int isgraph(int c);
+      int islower(int c);
+      int isprint(int c);
+      int ispunct(int c);
+      int isspace(int c);
+      int isupper(int c);
+      int isxdigit(int c);
+      int tolower(int c);
+      int toupper(int c);
+    }
 
 --- constrained algorithms (ranges algorithms)
 ranges::
@@ -799,3 +1444,5 @@ ranges::advance(
 ranges::distance(
 ranges::next(
 ranges::prev(
+
+--- vim:tw=78:ts=4:sw=4:sts=4:et:fo+=t:

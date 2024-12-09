@@ -55,7 +55,7 @@ cursor_offset["F"]=6
 #  - -name refers to last componenet of path
 #  - when using glob chars like *, ?, use single quotes to escape shell interpretation
 #  - cannot alias 'fi' since it is a reserved keyword, 'fg' is foreground cmd
-alias fF='find -E . ! \( -regex ".*\.(zwc|swp|git|zsh_.*)" -prune \) -type f -follow -name "*"'
+alias fF='find -E . ! \( -regex ".*\.(swp|git|zsh_.*)" -prune \) -type f -follow -name "*"'
 cursor_offset["fF"]=3
 # alias ffg="find . -name '*.c' -print -follow -exec grep --color -EHni xxx {} \;"
 #
@@ -85,8 +85,8 @@ cursor_offset["fF"]=3
 # foo*(/) = only directories matching foo*
 # dir/**/foo* = foo* in the directory dir and all its subdirectories, recursively
 #
-# Add your pattern as in 'ls **/*<pat>...'. excludes files *.zwc, *.swp and dir plugged.
-alias ff='ls **/*~(*.zwc|*.swp|build/*)'
+# Add your pattern as in 'ls **/*<pat>...'. excludes files *.swp and dir plugged.
+alias ff='ls **/*~(*.swp|build/*)'
 cursor_offset["ff"]=24
 
 # git
@@ -167,7 +167,7 @@ alias gd='git diff'
 #
 # CAUTION: Avoid **/* and ***/* as shell complains 'too many paths to expand' when searching a large directory.
 
-alias gr="ggrep -REIins --exclude={'*.zwc','*.swp','*.git*'} \"\""
+alias gr="ggrep -REIins --exclude={'*.swp','*.git*'} \"\""
 cursor_offset["gr"]=2
 
 # alternative:

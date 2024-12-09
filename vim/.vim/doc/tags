@@ -32,6 +32,7 @@ giri-pattern	giri.txt	/*giri-pattern*
 giri-quickfix	giri.txt	/*giri-quickfix*
 giri-substitute	giri.txt	/*giri-substitute*
 giri-tabs	giri.txt	/*giri-tabs*
+giri-tags	giri.txt	/*giri-tags*
 giri-term	giri.txt	/*giri-term*
 giri-tips	giri.txt	/*giri-tips*
 giri-vim-file-org	giri.txt	/*giri-vim-file-org*

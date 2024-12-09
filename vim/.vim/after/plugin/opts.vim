@@ -15,7 +15,7 @@ if exists("g:loaded_vimcomplete")
         cpp: { sortedDict: false, onlyWords: false, matchStr: '\S\+$', triggerWordLen: 2, info: true },
     }
     g:VimCompleteOptionsSet({
-        completor: { triggerWordLen: 0, shuffleEqualPriority: true, alwaysOn: true, postfixClobber: false, postfixHighlight: true, debug: false },
+        completor: { triggerWordLen: 0, shuffleEqualPriority: true, alwaysOn: true, postfixClobber: false, postfixHighlight: true, showSource: false, showKind: false, debug: false },
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
         dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'cpp'], matcher: 'ignorecase', properties: dictproperties },
         abbrev: { enable: true },
@@ -132,7 +132,7 @@ if exists("g:loaded_vimsuggest")
     # nnoremap <leader>g :VSExec grep -IHins "" . **/*\~node_modules/*<c-left><left><left><left><left>
 
     # Live grep
-    g:vimsuggest_grepprg = 'ggrep -REIHins $* --exclude-dir=.git --exclude=".*"'
+    g:vimsuggest_grepprg = 'ggrep -REIHns $* --exclude-dir=.git --exclude=".*"'
     # g:vimsuggest_grepprg = 'rg --vimgrep --smart-case $* .'
     # g:vimsuggest_grepprg = 'ag --vimgrep'
     nnoremap <leader>g :VSGrep ""<left>

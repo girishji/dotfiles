@@ -962,17 +962,16 @@ You get IDE like navigation with the above. Set the `path` variable to be root
 of project.
 For some languages like Go, include search does not work perfectly. The
 fallback is always using 'tags'. Very simple:
-
+							*giri-tags*
 :!ctags -R
 run ctags at your project root.
-:tj symbol
+:tj tag jump
 :ptj foo (preview tag jump)
 go back and forth using:
 :ptp
 :ptn
 <c-w>z will close the preview window
 :ta (navigate tag stack)
-
 
 ----------------------------------------
 Ex commands line range 

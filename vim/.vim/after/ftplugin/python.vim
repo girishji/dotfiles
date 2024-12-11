@@ -42,21 +42,29 @@ g:pyindent_open_paren = 'shiftwidth()' # https://github.com/vim/vim/blob/v8.2.0/
 
 # Abbreviations
 
-def GetSurroundingFn(): string
-    var fpat = '\vdef\s+\zs\k+'
-    var lnum = search(fpat, 'nb')
-    if lnum > 0
-        var fname = getline(lnum)->matchstr(fpat) .. '()'
-        var cpat = '\vclass\s+\zs\k+'
-        lnum = search(cpat, 'nb')
-        if lnum > 0
-            return getline(lnum)->matchstr(cpat) .. '().' .. fname
-        endif
-        return fname
-    endif
-    return ''
-enddef
+# switch statement
+iabbr <buffer>       case_ match myval:
+            \<cr>case 10:
+            \<cr>pass
+            \<cr>case _:<esc>3k_fm;i<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       match_case_ match myval:
+            \<cr>case 10:
+            \<cr>pass
+            \<cr>case _:<esc>3k_fm;i<c-r>=abbr#Eatchar()<cr>
 
+# print
+iabbr <buffer>       prerr;            print(, file=stderr)<esc>F,i<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       p;             print()<c-o>i<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       pr;            print(, end="\n")<c-o>F,<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       pr_;           print(, end="")<c-o>F,<c-r>=abbr#Eatchar()<cr>
+
+iabbr <buffer>       enum;          Color = Enum('Color', ['RED', 'GRN'])<esc>_fC<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       tuple_         Point = namedtuple('Point', 'x y')<esc>_<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       tuple__        Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       namedtuple_    Point = namedtuple('Point', 'x y')<esc>_<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       namedtuple__   Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=abbr#Eatchar()<cr>
+
+# Misc
 iabbr <buffer><expr> def      abbr#NotCtx('def') ? 'def' : 'def ):<cr><esc>-f)i<c-r>=abbr#Eatchar()<cr>'
 iabbr <buffer>       def_     def ():<cr>"""."""<esc>-f(i<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer>       def__    def ():<c-o>o'''<cr>>>> print()<cr><cr>'''<esc>4k_f(i<c-r>=abbr#Eatchar()<cr>
@@ -74,28 +82,8 @@ iabbr <buffer>       main__
             \ if __name__ == "__main__":
             \<cr>main()<esc><c-r>=abbr#Eatchar()<cr>
 iabbr <buffer>       python3#    #!/usr/bin/env python3<esc><c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       '''_ '''
-            \<cr>>>> print(<c-r>=<SID>GetSurroundingFn()<cr>)
-            \<cr>'''<esc>ggOfrom sys import stderr<esc>Go<c-u><esc>o<esc>
-            \:normal imain__2<cr>
-            \?>>> print<cr>:nohl<cr>g_hi<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       """            """."""<c-o>3h<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       case_ match myval:
-            \<cr>case 10:
-            \<cr>pass
-            \<cr>case _:<esc>3k_fm;i<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       match_case_ match myval:
-            \<cr>case 10:
-            \<cr>pass
-            \<cr>case _:<esc>3k_fm;i<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       enum_          Color = Enum('Color', ['RED', 'GRN'])<esc>_fC<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       pre            print(, file=stderr)<esc>F,i<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       pr             print()<c-o>i<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       tuple_         Point = namedtuple('Point', 'x y')<esc>_<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       tuple__        Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       namedtuple_    Point = namedtuple('Point', 'x y')<esc>_<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       namedtuple__   Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=abbr#Eatchar()<cr>
-#
+iabbr <buffer>       memo;       @functools.cache<cr><esc>-f)i<c-r>=abbr#Eatchar()<cr>'
+
 # collections
 iabbr  <buffer>  defaultdict_     defaultdict(int)<c-r>=abbr#Eatchar()<cr>
 iabbr  <buffer>  defaultdict__    defaultdict(set)<c-r>=abbr#Eatchar()<cr>
@@ -111,6 +99,29 @@ iabbr <buffer>   __sub__         def __sub__(self, other):<cr><c-r>=abbr#Eatchar
 iabbr <buffer>   __mul__         def __mul__(self, other):<cr><c-r>=abbr#Eatchar()<cr>
 iabbr <buffer>   __truediv__     def __truediv__(self, other):<cr><c-r>=abbr#Eatchar()<cr>
 iabbr <buffer>   __floordiv__    def __floordiv__(self, other):<cr><c-r>=abbr#Eatchar()<cr>
+
+# Leetcode
+def GetSurroundingFn(): string
+    var fpat = '\vdef\s+\zs\k+'
+    var lnum = search(fpat, 'nb')
+    if lnum > 0
+        var fname = getline(lnum)->matchstr(fpat) .. '()'
+        var cpat = '\vclass\s+\zs\k+'
+        lnum = search(cpat, 'nb')
+        if lnum > 0
+            return getline(lnum)->matchstr(cpat) .. '().' .. fname
+        endif
+        return fname
+    endif
+    return ''
+enddef
+
+iabbr <buffer>       '''_ '''
+            \<cr>>>> print(<c-r>=<SID>GetSurroundingFn()<cr>)
+            \<cr>'''<esc>ggOfrom sys import stderr<esc>Go<c-u><esc>o<esc>
+            \:normal imain__2<cr>
+            \?>>> print<cr>:nohl<cr>g_hi<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       """            """."""<c-o>3h<c-r>=abbr#Eatchar()<cr>
 
 # commands
 

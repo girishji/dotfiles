@@ -3,7 +3,7 @@ vim9script
 setlocal commentstring=//%s
 setl path-=/usr/include
 
-nnoremap <leader>j :tj <C-R><C-W><cr>
+# nnoremap <leader>j :tj <C-R><C-W><cr>
 
 def Make()
     if filereadable("Makefile")

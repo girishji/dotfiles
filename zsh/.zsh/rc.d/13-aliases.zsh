@@ -247,6 +247,8 @@ alias activate='source .venv/bin/activate'
 # gcc for competitive programming
 alias gcc_='g++-14 -std=c++23 -Wall -Wextra -Wconversion -DONLINE_JUDGE -O2 -lstdc++exp -o /tmp/a.out  && /tmp/a.out'
 cursor_offset["gcc_"]=15
+alias g++-14_='g++-14 -std=c++23 -Wall -Wextra -Wconversion -DONLINE_JUDGE -O2 -lstdc++exp -o /tmp/a.out  && /tmp/a.out'
+cursor_offset["g++-14_"]=15
 # clang with c++23
 alias clang++_='clang++ -include"$HOME/.clang-repl-incl.h" -std=c++23 -stdlib=libc++ -fexperimental-library -o /tmp/a.out  && /tmp/a.out'
 cursor_offset["clang++_"]=15

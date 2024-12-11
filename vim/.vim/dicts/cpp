@@ -1550,6 +1550,843 @@ ranges::min_max_result(
 ranges::in_found_result(
 ranges::in_value_result(
 ranges::out_value_result(
+--- Algorithms in std::
+
+--- Views (ranges::views or views::) -- use as 'somecollection | views::xxx'
+
+views::filter
+    a view that consists of the elements of a range that satisfies a predicate
+
+    auto even = [](int i) { return 0 == i % 2; };
+    auto square = [](int i) { return i * i; };
+ 
+    for (int i : std::views::iota(0, 6)
+               | std::views::filter(even)
+               | std::views::transform(square))
+        std::cout << i << ' ';
+    std::cout << '\n';
+
+views::transform
+    a view of a sequence that applies a transformation function to each element
+    char rot13a(const char x, const char a)
+    {
+        return a + (x - a + 13) % 26;
+    }
+    char rot13(const char x)
+    {
+        if ('Z' >= x and x >= 'A')
+            return rot13a(x, 'A');
+        if ('z' >= x and x >= 'a')
+            return rot13a(x, 'a');
+        return x;
+    }
+    int main()
+    {
+        auto show = [](const unsigned char x) { std::putchar(x); };
+        std::string in{"cppreference.com\n"};
+        std::ranges::for_each(in, show);
+        std::ranges::for_each(in | std::views::transform(rot13), show);
+     
+        std::string out;
+        std::ranges::copy(std::views::transform(in, rot13), std::back_inserter(out));
+        std::ranges::for_each(out, show);
+        std::ranges::for_each(out | std::views::transform(rot13), show);
+    }
+views::take
+    a view consisting of the first N elements of another view
+    namespace views = std::views;
+    auto print = [](char x){ std::cout << x; };
+ 
+    for (const char nums[]{'1', '2', '3'};
+         int n : views::iota(0, 5))
+    {
+        std::cout << "take(" << n << "): ";
+        // safely takes only upto min(n, nums.size()) elements:
+        std::ranges::for_each(nums | views::take(n), print);
+        std::cout << '\n';
+    }
+    Output:
+
+    take(0): 
+    take(1): 1
+    take(2): 12
+    take(3): 123
+    take(4): 123
+views::take_while
+    a view consisting of the initial elements of another view, until the first
+    element on which a predicate returns false
+
+    for (int year : std::views::iota(2020)
+                  | std::views::take_while([](int y){ return y < 2026; }))
+        std::cout << year << ' ';
+    std::cout << '\n';
+ 
+    const char note[]{"Today is yesterday's tomorrow!..."};
+    auto not_dot = [](char c){ return c != '.'; };
+    for (char x : std::ranges::take_while_view(note, not_dot))
+        std::cout << x;
+    std::cout << '\n';
+
+    Output:
+
+    2020 2021 2022 2023 2024 2025
+    Today is yesterday's tomorrow!
+views::drop
+    a view consisting of elements of another view, skipping the first N elements
+
+    const auto nums = {1, 2, 3, 4, 5, 6, 7};
+    std::cout << "drop " << 2 << ": ";
+    for (int i : std::ranges::drop_view{nums, 2})
+        std::cout << i << ' ';
+    std::cout << '\n';
+    std::cout << "drop " << 3 << ": ";
+    for (int i : nums | std::views::drop(3))
+        std::cout << i << ' ';
+    std::cout << '\n';
+    std::cout << "drop " << 4 << ": ";
+    for (int i : std::views::iota(1, 8) | std::views::drop(4))
+        std::cout << i << ' ';
+    std::cout << '\n';
+    // Note that dropping more than the number of elements is OK:
+    for (int dp : {5, 6, 7, 890, 100500})
+    {
+        std::cout << "drop " << dp << ": ";
+        for (int i : std::views::iota(1, 8) | std::views::drop(dp))
+            std::cout << i << ' ';
+        std::cout << '\n';
+    }
+
+    Output:
+
+    drop 2: 3 4 5 6 7
+    drop 3: 4 5 6 7
+    drop 4: 5 6 7
+    drop 5: 6 7
+    drop 6: 7
+    drop 7:
+    drop 890: 
+    drop 100500:
+
+views::drop_while
+    a view consisting of the elements of another view, skipping the initial
+    subsequence of elements until the first element where the predicate returns
+    false
+
+    using std::operator""sv; // string literal to string_view
+ 
+    [[nodiscard]]
+    constexpr bool is_space(char p) noexcept
+    {
+        auto ne = [p](auto q) { return p != q; };
+        return !!(" \t\n\v\r\f" | std::views::drop_while(ne));
+    };
+    [[nodiscard("trims the output")]]
+    constexpr std::string_view trim_left(std::string_view const in) noexcept
+    {
+        auto view = in | std::views::drop_while(is_space);
+        return {view.begin(), view.end()};
+    }
+    [[nodiscard("trims the output")]]
+    constexpr std::string trim(std::string_view const in)
+    {
+        auto view = in
+                  | std::views::drop_while(is_space)
+                  | std::views::reverse
+                  | std::views::drop_while(is_space)
+                  | std::views::reverse
+                  ;
+        return {view.begin(), view.end()};
+    }
+    int main()
+    {
+        static_assert(trim_left(" \n C++23") == "C++23"sv);
+     
+        constexpr auto src{" \f\n\t\r\vHello, C++20!\f\n\t\r\v "sv};
+        static_assert(trim(src) == "Hello, C++20!");
+     
+        static constexpr auto v = {0, 1, 2, 3, 4, 5};
+        for (int n : v | std::views::drop_while([](int i) { return i < 3; }))
+            std::cout << n << ' ';
+        std::cout << '\n';
+    }
+    Output:
+    3 4 5
+views::join
+    a view consisting of the sequence obtained from flattening a view of ranges
+    using namespace std::literals;
+ 
+    const auto bits = {"https:"sv, "//"sv, "cppreference"sv, "."sv, "com"sv};
+    for (char const c : bits | std::views::join)
+        std::cout << c;
+    std::cout << '\n';
+ 
+    const std::vector<std::vector<int>> v{{1, 2}, {3, 4, 5}, {6}, {7, 8, 9}};
+    auto jv = std::ranges::join_view(v);
+    for (int const e : jv)
+        std::cout << e << ' ';
+    std::cout << '\n';
+
+    Output:
+    https://cppreference.com
+    1 2 3 4 5 6 7 8 9
+views::join_with
+    a view consisting of the sequence obtained from flattening a view of ranges, with the delimiter in between elements
+
+    using namespace std::literals;
+ 
+    std::vector v{"This"sv, "is"sv, "a"sv, "test."sv};
+    auto joined = v | std::views::join_with(' ');
+ 
+    for (auto c : joined)
+        std::cout << c;
+    std::cout << '\n';
+
+    Output:
+    This is a test.
+views::lazy_split
+    a view over the subranges obtained from splitting another view using a delimiter
+views::split
+    a view over the subranges obtained from splitting another view using a delimiter
+
+    using std::operator""sv;  // to string_view
+    constexpr auto words{"Hello^_^C++^_^20^_^!"sv};
+    constexpr auto delim{"^_^"sv};
+ 
+    for (const auto word : std::views::split(words, delim))
+        // with string_view's C++23 range constructor:
+        std::cout << std::quoted(std::string_view(word)) << ' ';
+    std::cout << '\n';
+
+    Output:
+    "Hello" "C++" "20" "!"
+views::concat
+    a view consisting of concatenation of the adapted views
+
+    std::vector<int> v0{1, 2, 3}, v1{4, 5};
+    int a[]{6, 7};
+    int i{8};
+    auto ie{std::views::single(i)};
+ 
+    auto con = std::views::concat(v0, v1, a, ie);
+    assert(con.size() == v0.size() + v1.size() + std::size(a) + ie.size());
+    std::println("con.size(): {}", con.size());
+    std::println("con: {}", con);
+    con[6] = 42; // con is random_access_range, operator[] returns a reference
+    assert(a[1] == 42); // a[1] was modified via con[6]
+    std::println("con: {}", con);
+ 
+    std::list<int> l{7, 8}; // list is bidirectional range
+    auto cat = std::views::concat(v0, l);
+    std::println("cat: {}", cat);
+    // cat[0] = 13; // compile-time error: cat is bidirectional => no operator[]
+
+    Output:
+    con.size(): 8
+    con: [1, 2, 3, 4, 5, 6, 7, 8]
+    con: [1, 2, 3, 4, 5, 6, 42, 8]
+    cat: [1, 2, 3, 7, 8]
+
+views::counted
+    creates a subrange from an iterator and a count
+
+    const int a[]{1, 2, 3, 4, 5, 6, 7};
+    for (int i : std::views::counted(a, 3))
+        std::cout << i << ' ';
+    std::cout << '\n';
+ 
+    const auto il = {1, 2, 3, 4, 5};
+    for (int i : std::views::counted(il.begin() + 1, 3))
+        std::cout << i << ' ';
+    std::cout << '\n';
+
+    Output:
+
+    1 2 3
+    2 3 4
+
+views::common
+    converts a view into a common_range
+views::reverse
+    a view that iterates over the elements of another bidirectional view in reverse order
+
+    static constexpr auto il = {3, 1, 4, 1, 5, 9};
+ 
+    std::ranges::reverse_view rv{il};
+    for (int i : rv)
+        std::cout << i << ' ';
+    std::cout << '\n';
+ 
+    for (int i : il | std::views::reverse)
+        std::cout << i << ' ';
+    std::cout << '\n';
+ 
+    // operator[] is inherited from std::view_interface
+    for (auto i{0U}; i != rv.size(); ++i)
+        std::cout << rv[i] << ' ';
+    std::cout << '\n';
+
+    Output:
+
+    9 5 1 4 1 3
+    9 5 1 4 1 3
+    9 5 1 4 1 3
+views::as_const
+    converts a view into a constant_range
+
+    int x[]{1, 2, 3, 4, 5};
+ 
+    auto v1 = x | std::views::drop(2);
+    assert(v1.back() == 5);
+    v1[0]++; // OK, can modify non-const element
+ 
+    auto v2 = x | std::views::drop(2) | std::views::as_const;
+    assert(v2.back() == 5);
+    // v2[0]++; // Compile-time error, cannot modify read-only element
+
+views::elements
+    takes a view consisting of tuple-like values and a number N and produces a view of Nth element of each tuple
+
+    const std::vector<std::tuple<int, char, std::string>> vt
+    {
+        {1, 'A', "α"},
+        {2, 'B', "β"},
+        {3, 'C', "γ"},
+        {4, 'D', "δ"},
+        {5, 'E', "ε"},
+    };
+ 
+    for (int const e : std::views::elements<0>(vt))
+        std::cout << e << ' ';
+    std::cout << '\n';
+ 
+    for (char const e : vt | std::views::elements<1>)
+        std::cout << e << ' ';
+    std::cout << '\n';
+ 
+    for (std::string const& e : std::views::elements<2>(vt))
+        std::cout << e << ' ';
+    std::cout << '\n';
+
+    Output:
+
+    1 2 3 4 5
+    A B C D E
+    α β γ δ ε
+
+views::keys
+    takes a view consisting of pair-like values and produces a view of the first elements of each pair
+
+    const std::vector<std::tuple<std::string, double, bool>> quark_mass_charge
+    {
+        // name, MeV/c², has positive electric-charge:
+        {"up", 2.3, true}, {"down", 4.8, false},
+        {"charm", 1275, true}, {"strange", 95, false},
+        {"top", 173'210, true}, {"bottom", 4'180, false},
+    };
+ 
+    std::cout.imbue(std::locale("en_US.utf8"));
+    std::cout << "Quark name:  │ ";
+    for (std::string const& name : std::views::keys(quark_mass_charge))
+        std::cout << std::setw(9) << name << " │ ";
+ 
+    std::cout << "\n" "Mass MeV/c²: │ ";
+    for (const double mass : std::views::values(quark_mass_charge))
+        std::cout << std::setw(9) << mass << " │ ";
+ 
+    std::cout << "\n" "E-charge:    │ ";
+    for (const bool pos : std::views::elements<2>(quark_mass_charge))
+        std::cout << std::setw(9) << (pos ? "+2/3" : "-1/3") << " │ ";
+    std::cout << '\n';
+
+    Output:
+
+    Quark name:  │        up │      down │     charm │   strange │       top │    bottom │
+    Mass MeV/c²: │       2.3 │       4.8 │     1,275 │        95 │   173,210 │     4,180 │
+    E-charge:    │      +2/3 │      -1/3 │      +2/3 │      -1/3 │      +2/3 │      -1/3 │
+
+views::values
+    takes a view consisting of pair-like values and produces a view of the second elements of each pair
+
+    const auto list = {std::pair{1, 11.1}, {2, 22.2}, {3, 33.3}};
+    std::cout << "pair::second values in the list: ";
+    for (double value : list | std::views::values)
+        std::cout << value << ' ';
+ 
+    std::map<char, int> map{{'A', 1}, {'B', 2}, {'C', 3}, {'D', 4}, {'E', 5}};
+    auto odd = [](int x) { return 0 != (x & 1); };
+    std::cout << "\nodd values in the map: ";
+    for (int value : map | std::views::values | std::views::filter(odd))
+        std::cout << value << ' ';
+    std::cout << '\n';
+
+    Output:
+
+    pair::second values in the list: 11.1 22.2 33.3
+    odd values in the map: 1 3 5
+
+views::enumerate
+    a view that maps each element of adapted sequence to a tuple of both the element's position and its value
+
+    constexpr static auto v = {'A', 'B', 'C', 'D'};
+ 
+    for (auto const [index, letter] : std::views::enumerate(v))
+        std::cout << '(' << index << ':' << letter << ") ";
+    std::cout << '\n';
+ 
+    // create a map using the position of each element as key
+    auto m = v | std::views::enumerate | std::ranges::to<std::map>();
+ 
+    for (auto const [key, value] : m)
+        std::cout << '[' << key << "]:" << value << ' ';
+    std::cout << '\n';
+ 
+    std::vector<int> numbers{1, 3, 5, 7};
+    // num is mutable even with const, which does not propagate to reference to
+    // make it const, use `std::views::enumerate(numbers) | std::views::as_const`
+    // or `std::views::enumerate(std::as_const(numbers))`
+    for (auto const [index, num] : std::views::enumerate(numbers))
+    {
+        ++num; // the type is int&
+        std::cout << numbers[index] << ' ';
+    }
+    std::cout << '\n';
+
+    Possible output:
+    (0:A) (1:B) (2:C) (3:D)
+    [0]:A [1]:B [2]:C [3]:D
+    2 4 6 8
+
+views::zip
+    a view consisting of tuples of references to corresponding elements of the adapted views
+
+    auto x = std::vector{1, 2, 3, 4};
+    auto y = std::list<std::string>{"α", "β", "γ", "δ", "ε"};
+    auto z = std::array{'A', 'B', 'C', 'D', 'E', 'F'};
+ 
+    print("Source views:", "");
+    print("x: ", x);
+    print("y: ", y);
+    print("z: ", z);
+ 
+    print("\nzip(x,y,z):", "");
+ 
+    for (std::tuple<int&, std::string&, char&> elem : std::views::zip(x, y, z))
+    {
+        std::cout << std::get<0>(elem) << ' '
+                  << std::get<1>(elem) << ' '
+                  << std::get<2>(elem) << '\n';
+ 
+        std::get<char&>(elem) += ('a' - 'A'); // modifies the element of z
+    }
+ 
+    print("\nAfter modification, z: ", z);
+
+    Output:
+
+    Source views:
+    x: 1 2 3 4
+    y: α β γ δ ε
+    z: A B C D E F
+     
+    zip(x,y,z):
+    1 α A
+    2 β B
+    3 γ C
+    4 δ D
+ 
+    After modification, z: a b c d E F
+
+views::zip_transform
+    a view consisting of results of application of a transformation function to corresponding elements of the adapted views
+
+    void print(auto const rem, auto const& r)
+    {
+        std::cout << rem << '{'; 
+        for (char o[]{0,' ',0}; auto const& e : r)
+            std::cout << o << e, *o = ',';
+        std::cout << "}\n";
+    }
+     
+    int main()
+    {
+        auto v1 = std::vector<float>{1, 2, 3};
+        auto v2 = std::list<short>{1, 2, 3, 4};
+        auto v3 = std::to_array({1, 2, 3, 4, 5});
+     
+        auto add = [](auto a, auto b, auto c) { return a + b + c; };
+     
+        auto sum = std::views::zip_transform(add, v1, v2, v3);
+     
+        print("v1:  ", v1);
+        print("v2:  ", v2);
+        print("v3:  ", v3);
+        print("sum: ", sum);
+    }
+    Output:
+
+    v1:  {1, 2, 3}
+    v2:  {1, 2, 3, 4}
+    v3:  {1, 2, 3, 4, 5}
+    sum: {3, 6, 9}
+views::adjacent
+    a view consisting of tuples of references to adjacent elements of the adapted view
+    (same also views::pairwise)
+
+    constexpr std::array v{1, 2, 3, 4, 5, 6};
+    std::cout << "v = [1 2 3 4 5 6]\n";
+ 
+    for (int i{}; std::tuple t : v | std::views::adjacent<3>)
+    {
+        auto [t0, t1, t2] = t;
+        std::cout << std::format("e = {:<{}}[{} {} {}]\n", "", 2 * i++, t0, t1, t2);
+    }
+    
+    Output:
+
+    v = [1 2 3 4 5 6]
+    e = [1 2 3]
+    e =   [2 3 4]
+    e =     [3 4 5]
+    e =       [4 5 6]
+
+views::pairwise
+    a view consisting of tuples of references to adjacent elements of the adapted view
+    (same as views::adjacent<2>, see example there)
+
+views::adjacent_transform
+    a view consisting of results of application of a transformation function to adjacent elements of the adapted view
+
+    constexpr static std::array data{1, 2, 3, 4, 5, 6};
+    constexpr int window{3};
+ 
+    auto Fun = [](auto... ints) { return (... + ints); };
+    // Alternatively, the Fun could be any ternary (if window == 3) callable, e.g.:
+    // auto Fun = [](int x, int y, int z) { return x + y + z; };
+ 
+    constexpr auto view = data | std::views::adjacent_transform<window>(Fun);
+ 
+    static_assert(
+        view.size() == (data.size() - window + 1)
+        && std::array{6, 9, 12, 15}
+        == std::array{view[0], view[1], view[2], view[3]}
+        && view[0] == Fun(data[0], data[1], data[2])
+        && view[1] == Fun(data[1], data[2], data[3])
+        && view[2] == Fun(data[2], data[3], data[4])
+        && view[3] == Fun(data[3], data[4], data[5])
+    );
+ 
+    for (int x : view)
+        std::cout << x << ' ';
+    std::cout << '\n';
+    
+    Output:
+
+    6 9 12 15
+
+views::pairwise_transform
+    a view consisting of results of application of a transformation function to adjacent elements of the adapted view
+    Same as adjacent_transform<2>. See example there.
+
+views::chunk
+    a range of views that are N-sized non-overlapping successive chunks of the elements of another view
+
+    auto print_subrange = [](std::ranges::viewable_range auto&& r)
+    {
+        std::cout << '[';
+        for (int pos{}; auto elem : r)
+            std::cout << (pos++ ? " " : "") << elem;
+        std::cout << "] ";
+    };
+     
+    int main()
+    {
+        const auto v = {1, 2, 3, 4, 5, 6};
+     
+        for (const unsigned width : std::views::iota(1U, 2U + v.size()))
+        {
+            auto const chunks = v | std::views::chunk(width);
+            std::cout << "chunk(" << width << "): ";
+            std::ranges::for_each(chunks, print_subrange);
+            std::cout << '\n';
+        }
+    }
+    Output:
+
+    chunk(1): [1] [2] [3] [4] [5] [6]
+    chunk(2): [1 2] [3 4] [5 6]
+    chunk(3): [1 2 3] [4 5 6]
+    chunk(4): [1 2 3 4] [5 6]
+    chunk(5): [1 2 3 4 5] [6]
+    chunk(6): [1 2 3 4 5 6]
+    chunk(7): [1 2 3 4 5 6]
+
+views::slide
+    a view whose Mth element is a view over the Mth through (M + N - 1)th elements of another view
+
+    auto print_subrange = [](std::ranges::viewable_range auto&& r)
+    {
+        std::cout << '[';
+        for (char space[]{0,0}; auto elem : r)
+            std::cout << space << elem, *space = ' ';
+        std::cout << "] ";
+    };
+     
+    int main()
+    {
+        const auto v = {1, 2, 3, 4, 5, 6};
+     
+        std::cout << "All sliding windows of width:\n";
+        for (const unsigned width : std::views::iota(1U, 1U + v.size()))
+        {
+            auto const windows = v | std::views::slide(width);
+            std::cout << "W = " << width << ": ";
+            std::ranges::for_each(windows, print_subrange);
+            std::cout << '\n';
+        }
+    }
+    Output:
+
+    All sliding windows of width W:
+    W = 1: [1] [2] [3] [4] [5] [6] 
+    W = 2: [1 2] [2 3] [3 4] [4 5] [5 6] 
+    W = 3: [1 2 3] [2 3 4] [3 4 5] [4 5 6] 
+    W = 4: [1 2 3 4] [2 3 4 5] [3 4 5 6] 
+    W = 5: [1 2 3 4 5] [2 3 4 5 6] 
+    W = 6: [1 2 3 4 5 6]
+
+views::chunk_by
+    splits the view into subranges between each pair of adjacent elements for which the given predicate returns false
+
+    void print_chunks(auto view, std::string_view separator = ", ")
+    {
+        for (auto const subrange : view)
+        {
+            std::cout << '[';
+            for (std::string_view prefix; auto const& elem : subrange)
+                std::cout << prefix << elem, prefix = separator;
+            std::cout << "] ";
+        }
+        std::cout << '\n';
+    }
+     
+    int main()
+    {
+        std::initializer_list v1 = {1, 2, 3, 1, 2, 3, 3, 3, 1, 2, 3};
+        auto fn1 = std::ranges::less{};
+        auto view1 = v1 | std::views::chunk_by(fn1);
+        print_chunks(view1);
+     
+        std::initializer_list v2 = {1, 2, 3, 4, 4, 0, 2, 3, 3, 3, 2, 1};
+        auto fn2 = std::ranges::not_equal_to{};
+        auto view2 = v2 | std::views::chunk_by(fn2);
+        print_chunks(view2);
+     
+        std::string_view v3 = "__cpp_lib_ranges_chunk_by";
+        auto fn3 = [](auto x, auto y) { return not(x == '_' or y == '_'); };
+        auto view3 = v3 | std::views::chunk_by(fn3);
+        print_chunks(view3, "");
+     
+        std::string_view v4 = "\u007a\u00df\u6c34\u{1f34c}"; // "zß水🍌"
+        auto fn4 = [](auto, auto ß) { return 128 == ((128 + 64) & ß); };
+        auto view4 = v4 | std::views::chunk_by(fn4);
+        print_chunks(view4, "");
+    }
+    Output:
+
+    [1, 2, 3] [1, 2, 3] [3] [3] [1, 2, 3] 
+    [1, 2, 3, 4] [4, 0, 2, 3] [3] [3, 2, 1] 
+    [_] [_] [cpp] [_] [lib] [_] [ranges] [_] [chunk] [_] [by]
+    [z] [ß] [水] [🍌]
+
+views::stride
+    a view consisting of elements of another view, advancing over N elements at a time
+
+    void print(std::ranges::viewable_range auto&& v, std::string_view separator = " ")
+    {
+        for (auto const& x : v)
+            std::cout << x << separator;
+        std::cout << '\n';
+    }
+     
+    int main()
+    {
+        print(std::views::iota(1, 13) | std::views::stride(3));
+        print(std::views::iota(1, 13) | std::views::stride(3) | std::views::reverse);
+        print(std::views::iota(1, 13) | std::views::reverse | std::views::stride(3));
+     
+        print("0x0!133713337*x//42/A$@"sv | std::views::stride(0B11) |
+              std::views::transform([](char O) -> char { return 0100 | O; }),
+              "");
+    }
+    Output:
+    1 4 7 10
+    10 7 4 1
+    12 9 6 3
+    password
+
+views::cartesian_product
+    a view consisting of tuples of results calculated by the n-ary cartesian product of the adapted views
+
+    void print(std::tuple<char const&, int const&, std::string const&> t, int pos)
+    {
+        const auto& [a, b, c] = t;
+        std::cout << '(' << a << ' ' << b << ' ' << c << ')' << (pos % 4 ? " " : "\n");
+    }
+    int main()
+    {
+        const auto x = std::array{'A', 'B'};
+        const auto y = std::vector{1, 2, 3};
+        const auto z = std::list<std::string>{"α", "β", "γ", "δ"};
+     
+        for (int i{1}; auto const& tuple : std::views::cartesian_product(x, y, z))
+            print(tuple, i++);
+    }
+    Output:
+
+    (A 1 α) (A 1 β) (A 1 γ) (A 1 δ)
+    (A 2 α) (A 2 β) (A 2 γ) (A 2 δ)
+    (A 3 α) (A 3 β) (A 3 γ) (A 3 δ)
+    (B 1 α) (B 1 β) (B 1 γ) (B 1 δ)
+    (B 2 α) (B 2 β) (B 2 γ) (B 2 δ)
+    (B 3 α) (B 3 β) (B 3 γ) (B 3 δ)
+
+--- Function objects
+..fn_obj plus<void>
+    function object implementing x + y
+    auto string_plus = std::plus<void>{}; // “void” can be omitted
+    std::string a = "Hello ";
+    const char* b = "world";
+    std::cout << string_plus(a, b) << '\n';
+..fn_obj minus<void>
+    function object implementing x - y
+    auto complex_minus = std::minus<void>{}; // “void” can be omitted
+    constexpr std::complex<int> z(4, 2);
+    std::cout << complex_minus(z, 1) << '\n';
+    std::cout << (z - 1) << '\n';
+..fn_obj multiplies<void>
+    function object implementing x * y
+    auto complex_multiplies = std::multiplies<void>{}; // “void” can be omitted
+    constexpr std::complex z1{1.0, 2.0}, z2{3.0, 4.0};
+    std::cout << std::showpos
+              << complex_multiplies(z1, z2) << ' ' << z1 * z2 << '\n';
+..fn_obj divides<void>
+    function object implementing x / y
+    auto complex_divides = std::divides<void>{}; // “void” can be omitted
+    constexpr std::complex z1{8.0, 4.0}, z2{1.0, 2.0};
+    std::cout << std::showpos
+              << complex_divides(z1, z2) << ' ' << z1 / z2 << '\n';
+..fn_obj modulus<void>
+    function object implementing x % y
+    std::modulus<void>{}(m, 42); // calls operator%(M, int)
+..fn_obj negate<void>
+    function object implementing -x
+    auto complex_negate = std::negate<void>{}; // “void” can be omitted
+    constexpr std::complex z(4, 2);
+    std::cout << complex_negate(z) << '\n';
+..fn_obj equal_to<void>
+    function object implementing x == y
+    constexpr int a = 0, b = 8;
+    std::equal_to<> equal{};
+    static_assert(equal(a, a));
+    static_assert(!equal(a, b));
+..fn_obj not_equal_to<void>
+    function object implementing x != y
+    constexpr int p = 0, q = 8;
+    std::not_equal_to<> not_equal{};
+    static_assert(!not_equal(p, p));
+    static_assert(not_equal(p, q));
+..fn_obj greater<void>
+    function object implementing x > y
+
+    constexpr bool strictly_positive(int lhs)
+    {
+        return std::greater<>()(lhs, 0);
+    }
+     
+    int main()
+    {
+        constexpr std::int64_t low = 0B11;
+        constexpr std::uint16_t high = 0X11;
+        std::greater<> greater{};
+        static_assert(greater(high, low));
+     
+        constexpr static auto arr = {0, 1, 2, 3, 4, 5};
+        static_assert(!std::all_of(arr.begin(), arr.end(), strictly_positive));
+        static_assert(std::all_of(arr.begin() + 1, arr.end(), strictly_positive));
+    }
+..fn_obj less<void>
+    function object implementing x < y
+
+    constexpr bool strictly_negative(int lhs)
+    {
+        return std::less<>()(lhs, 0);
+    }
+     
+    int main()
+    {
+        constexpr signed low = 010;
+        constexpr unsigned high = 10;
+        std::less<> less{};
+        static_assert(less(low, high));
+     
+        constexpr static auto arr = {0, -1, -2, -3, -4, -5};
+        static_assert(!std::all_of(arr.begin(), arr.end(), strictly_negative));
+        static_assert(std::all_of(arr.begin() + 1, arr.end(), strictly_negative));
+    }
+
+..fn_obj greater_equal<void>
+    function object implementing x >= y
+
+    constexpr bool strictly_not_negative(int lhs)
+    {
+        return std::greater_equal<>()(lhs, 0);
+    }
+     
+    int main()
+    {
+        constexpr int low = 0, high = 8;
+        std::greater_equal<> greater_equal{};
+        static_assert(greater_equal(high, low));
+        static_assert(greater_equal(low, low));
+     
+        static constexpr auto arr = {-1, 0, 1, 2, 3, 4};
+        static_assert(!std::all_of(arr.begin(), arr.end(), strictly_not_negative));
+        static_assert(std::all_of(arr.begin() + 1, arr.end(), strictly_not_negative));
+    }
+..fn_obj less_equal<void>
+    function object implementing x <= y
+
+    constexpr bool strictly_not_positive(int lhs)
+    {
+        return std::less_equal<>()(lhs, 0);
+    }
+     
+    int main()
+    {
+        constexpr int low = 0, high = 8;
+        std::less_equal<> less_equal{};
+        static_assert(less_equal(low, high));
+        static_assert(less_equal(low, low));
+     
+        static constexpr auto arr = {1, 0, -1, -2, -3, -4};
+        static_assert(!std::all_of(arr.begin(), arr.end(), strictly_not_positive));
+        static_assert(std::all_of(arr.begin() + 1, arr.end(), strictly_not_positive));
+    }
+..fn_obj logical_and<void>
+    function object implementing x && y
+..fn_obj logical_or<void>
+    function object implementing x || y
+..fn_obj logical_not<void>
+    function object implementing !x
+..fn_obj bit_and<void>
+    function object implementing x & y
+..fn_obj bit_or<void>
+    function object implementing x | y
+..fn_obj bit_xor<void>
+    function object implementing x ^ y
+..fn_obj bit_not<void>
+    function object implementing ~x
+
 --- iterator library
 reverse_iterator(
 make_reverse_iterator(

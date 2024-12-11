@@ -146,6 +146,7 @@ if has('gui')  # MacVim
     Plug '~/git/vimbits'
     Plug '~/git/bufline.vim'
     Plug '~/git/vimsuggest'
+    # Plug '~/git/vimcomplete'
     plug#end()
 else
     plug#begin("~/.local/share/vim-plug/")

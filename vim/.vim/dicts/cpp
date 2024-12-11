@@ -1423,134 +1423,899 @@ string:: operator<<,>>
       int toupper(int c);
     }
 
---- constrained algorithms (ranges algorithms)
-ranges::
-ranges::all_of(
-ranges::any_of(
-ranges::none_of(
-ranges::for_each(
-ranges::for_each_n(
-ranges::count(
-ranges::count_if(
-ranges::mismatch(
-ranges::equal(
-ranges::lexicographical_compare(
-ranges::find(
-ranges::find_if(
-ranges::find_if_not(
-ranges::find_last(
-ranges::find_last_if(
-ranges::find_last_if_not(
-ranges::find_end(
-ranges::find_first_of(
-ranges::adjacent_find(
-ranges::search(
-ranges::search_n(
-ranges::contains(
-ranges::contains_subrange(
-ranges::starts_with(
-ranges::ends_with(
-ranges::copy(
-ranges::copy_if(
-ranges::copy_n(
-ranges::copy_backward(
-ranges::move(
-ranges::move_backward(
-ranges::fill(
-ranges::fill_n(
-ranges::transform(
-ranges::generate(
-ranges::generate_n(
-ranges::remove(
-ranges::remove_if(
-ranges::remove_copy(
-ranges::remove_copy_if(
-ranges::replace(
-ranges::replace_if(
-ranges::replace_copy(
-ranges::replace_copy_if(
-ranges::swap_ranges(
-ranges::reverse(
-ranges::reverse_copy(
-ranges::rotate(
-ranges::rotate_copy(
-ranges::shuffle(
-ranges::shift_left(
-ranges::shift_right(
-ranges::sample(
-ranges::unique(
-ranges::unique_copy(
-ranges::is_partitioned(
-ranges::partition(
-ranges::partition_copy(
-ranges::stable_partition(
-ranges::partition_point(
-ranges::is_sorted(
-ranges::is_sorted_until(
-ranges::sort(
-ranges::partial_sort(
-ranges::partial_sort_copy(
-ranges::stable_sort(
-ranges::nth_element(
-ranges::lower_bound(
-ranges::upper_bound(
-ranges::binary_search(
-ranges::equal_range(
-ranges::merge(
-ranges::inplace_merge(
-ranges::includes(
-ranges::set_difference(
-ranges::set_intersection(
-ranges::set_symmetric_difference(
-ranges::set_union(
-ranges::is_heap(
-ranges::is_heap_until(
-ranges::make_heap(
-ranges::push_heap(
-ranges::pop_heap(
-ranges::sort_heap(
-ranges::max(
-ranges::max_element(
-ranges::min(
-ranges::min_element(
-ranges::minmax(
-ranges::minmax_element(
-ranges::clamp(
-ranges::is_permutation(
-ranges::next_permutation(
-ranges::prev_permutation(
-ranges::iota(
-ranges::fold_left(
-ranges::fold_left_first(
-ranges::fold_right(
-ranges::fold_right_last(
-ranges::fold_left_with_iter(
-ranges::fold_left_first_with_iter(
-ranges::uninitialized_copy(
-ranges::uninitialized_copy_n(
-ranges::uninitialized_fill(
-ranges::uninitialized_fill_n(
-ranges::uninitialized_move(
-ranges::uninitialized_move_n(
-ranges::uninitialized_default_construct(
-ranges::uninitialized_default_construct_n(
-ranges::uninitialized_value_construct(
-ranges::uninitialized_value_construct_n(
-ranges::destroy(
-ranges::destroy_n(
-ranges::destroy_at(
-ranges::construct_at(
-ranges::generate_random(
-ranges::in_fun_result(
-ranges::in_in_result(
-ranges::in_out_result(
-ranges::in_in_out_result(
-ranges::in_out_out_result(
-ranges::min_max_result(
-ranges::in_found_result(
-ranges::in_value_result(
-ranges::out_value_result(
---- Algorithms in std::
+--- Algorithms
+
+..alg_batch
+    for_each
+        applies a function to a range of elements
+    ranges::for_each
+        applies a function to a range of elements
+    for_each_n
+        applies a function object to the first N elements of a sequence
+    ranges::for_each_n
+        applies a function object to the first N elements of a sequence
+
+..alg for_each
+    applies a function to a range of elements
+..alg ranges::for_each
+    applies a function to a range of elements
+..alg for_each_n
+    applies a function object to the first N elements of a sequence
+..alg ranges::for_each_n
+    applies a function object to the first N elements of a sequence
+
+..alg_search
+    all_of
+        checks if a predicate is true for all, any or none of the elements in a range
+    any_of
+        checks if a predicate is true for all, any or none of the elements in a range
+    none_of
+        checks if a predicate is true for all, any or none of the elements in a range
+    ranges::all_of
+        checks if a predicate is true for all, any or none of the elements in a range
+    ranges::any_of
+        checks if a predicate is true for all, any or none of the elements in a range
+    ranges::none_of
+        checks if a predicate is true for all, any or none of the elements in a range
+    ranges::contains
+        checks if the range contains the given element or subrange
+    ranges::contains_subrange
+        checks if the range contains the given element or subrange
+    find
+        finds the first element satisfying specific criteria
+    find_if
+        finds the first element satisfying specific criteria
+    find_if_not
+        finds the first element satisfying specific criteria
+    ranges::find
+        finds the first element satisfying specific criteria
+    ranges::find_if
+        finds the first element satisfying specific criteria
+    ranges::find_if_not
+        finds the first element satisfying specific criteria
+    ranges::find_last
+        finds the last element satisfying specific criteria
+    ranges::find_last_if
+        finds the last element satisfying specific criteria
+    ranges::find_last_if_not
+        finds the last element satisfying specific criteria
+    find_end
+        finds the last sequence of elements in a certain range
+    ranges::find_end
+        finds the last sequence of elements in a certain range
+    find_first_of
+        searches for any one of a set of elements
+    ranges::find_first_of
+        searches for any one of a set of elements
+    adjacent_find
+        finds the first two adjacent items that are equal (or satisfy a given predicate)
+    ranges::adjacent_find
+        finds the first two adjacent items that are equal (or satisfy a given predicate)
+    count
+        returns the number of elements satisfying specific criteria
+    count_if
+        returns the number of elements satisfying specific criteria
+    ranges::count
+        returns the number of elements satisfying specific criteria
+    ranges::count_if
+        returns the number of elements satisfying specific criteria
+    mismatch
+        finds the first position where two ranges differ
+    ranges::mismatch
+        finds the first position where two ranges differ
+    equal
+        determines if two sets of elements are the same
+    ranges::equal
+        determines if two sets of elements are the same
+    search
+        searches for the first occurrence of a range of elements
+    ranges::search
+        searches for the first occurrence of a range of elements
+    search_n
+        searches for the first occurrence of a number consecutive copies of an element in a range
+    ranges::search_n
+        searches for the first occurrence of a number consecutive copies of an element in a range
+    ranges::starts_with
+        checks whether a range starts with another range
+    ranges::ends_with
+        checks whether a range ends with another range
+
+..alg all_of
+    checks if a predicate is true for all, any or none of the elements in a range
+..alg any_of
+    checks if a predicate is true for all, any or none of the elements in a range
+..alg none_of
+    checks if a predicate is true for all, any or none of the elements in a range
+..alg ranges::all_of
+    checks if a predicate is true for all, any or none of the elements in a range
+..alg ranges::any_of
+    checks if a predicate is true for all, any or none of the elements in a range
+..alg ranges::none_of
+    checks if a predicate is true for all, any or none of the elements in a range
+..alg ranges::contains
+    checks if the range contains the given element or subrange
+..alg ranges::contains_subrange
+    checks if the range contains the given element or subrange
+..alg find
+    finds the first element satisfying specific criteria
+..alg find_if
+    finds the first element satisfying specific criteria
+..alg find_if_not
+    finds the first element satisfying specific criteria
+..alg ranges::find
+    finds the first element satisfying specific criteria
+..alg ranges::find_if
+    finds the first element satisfying specific criteria
+..alg ranges::find_if_not
+    finds the first element satisfying specific criteria
+..alg ranges::find_last
+    finds the last element satisfying specific criteria
+..alg ranges::find_last_if
+    finds the last element satisfying specific criteria
+..alg ranges::find_last_if_not
+    finds the last element satisfying specific criteria
+..alg find_end
+    finds the last sequence of elements in a certain range
+..alg ranges::find_end
+    finds the last sequence of elements in a certain range
+..alg find_first_of
+    searches for any one of a set of elements
+..alg ranges::find_first_of
+    searches for any one of a set of elements
+..alg adjacent_find
+    finds the first two adjacent items that are equal (or satisfy a given predicate)
+..alg ranges::adjacent_find
+    finds the first two adjacent items that are equal (or satisfy a given predicate)
+..alg count
+    returns the number of elements satisfying specific criteria
+..alg count_if
+    returns the number of elements satisfying specific criteria
+..alg ranges::count
+    returns the number of elements satisfying specific criteria
+..alg ranges::count_if
+    returns the number of elements satisfying specific criteria
+..alg mismatch
+    finds the first position where two ranges differ
+..alg ranges::mismatch
+    finds the first position where two ranges differ
+..alg equal
+    determines if two sets of elements are the same
+..alg ranges::equal
+    determines if two sets of elements are the same
+..alg search
+    searches for the first occurrence of a range of elements
+..alg ranges::search
+    searches for the first occurrence of a range of elements
+..alg search_n
+    searches for the first occurrence of a number consecutive copies of an element in a range
+..alg ranges::search_n
+    searches for the first occurrence of a number consecutive copies of an element in a range
+..alg ranges::starts_with
+    checks whether a range starts with another range
+..alg ranges::ends_with
+    checks whether a range ends with another range
+
+..alg_fold
+    ranges::fold_left
+        left-folds a range of elements
+    ranges::fold_left_first
+        left-folds a range of elements using the first element as an initial value
+    ranges::fold_right
+        right-folds a range of elements
+    ranges::fold_right_last
+        right-folds a range of elements using the last element as an initial value
+    ranges::fold_left_with_iter
+        left-folds a range of elements, and returns a pair (iterator, value)
+    ranges::fold_left_first_with_iter
+        left-folds a range of elements using the first element as an initial value, and returns a pair (iterator, optional)
+
+..alg ranges::fold_left
+    left-folds a range of elements
+..alg ranges::fold_left_first
+    left-folds a range of elements using the first element as an initial value
+..alg ranges::fold_right
+    right-folds a range of elements
+..alg ranges::fold_right_last
+    right-folds a range of elements using the last element as an initial value
+..alg ranges::fold_left_with_iter
+    left-folds a range of elements, and returns a pair (iterator, value)
+..alg ranges::fold_left_first_with_iter
+    left-folds a range of elements using the first element as an initial value, and returns a pair (iterator, optional)
+
+..alg_copy
+    copy
+        copies a range of elements to a new location
+    copy_if
+        copies a range of elements to a new location
+    ranges::copy
+        copies a range of elements to a new location
+    ranges::copy_if
+        copies a range of elements to a new location
+    copy_n
+        copies a number of elements to a new location
+    ranges::copy_n
+        copies a number of elements to a new location
+    copy_backward
+        copies a range of elements in backwards order
+    ranges::copy_backward
+        copies a range of elements in backwards order
+
+..alg copy
+    copies a range of elements to a new location
+..alg copy_if
+    copies a range of elements to a new location
+..alg ranges::copy
+    copies a range of elements to a new location
+..alg ranges::copy_if
+    copies a range of elements to a new location
+..alg copy_n
+    copies a number of elements to a new location
+..alg ranges::copy_n
+    copies a number of elements to a new location
+..alg copy_backward
+    copies a range of elements in backwards order
+..alg ranges::copy_backward
+    copies a range of elements in backwards order
+
+..alg_move
+    move
+        moves a range of elements to a new location
+    ranges::move
+        moves a range of elements to a new location
+    move_backward
+        moves a range of elements to a new location in backwards order
+    ranges::move_backward
+        moves a range of elements to a new location in backwards order
+
+..alg move
+    moves a range of elements to a new location
+..alg ranges::move
+    moves a range of elements to a new location
+..alg move_backward
+    moves a range of elements to a new location in backwards order
+..alg ranges::move_backward
+    moves a range of elements to a new location in backwards order
+
+..alg_swap
+    swap
+        swaps the values of two objects
+    swap_ranges
+        swaps two ranges of elements
+    ranges::swap_ranges
+        swaps two ranges of elements
+    iter_swap
+        swaps the elements pointed to by two iterators
+
+..alg swap
+    swaps the values of two objects
+..alg swap_ranges
+    swaps two ranges of elements
+..alg ranges::swap_ranges
+    swaps two ranges of elements
+..alg iter_swap
+    swaps the elements pointed to by two iterators
+
+..alg_transform
+    transform
+        applies a function to a range of elements, storing results in a destination range
+    ranges::transform
+        applies a function to a range of elements
+
+..alg transform
+    applies a function to a range of elements, storing results in a destination range
+..alg ranges::transform
+    applies a function to a range of elements
+
+..alg_replace
+    replace
+        replaces all values satisfying specific criteria with another value
+    replace_if
+        replaces all values satisfying specific criteria with another value
+    ranges::replace
+        replaces all values satisfying specific criteria with another value
+    ranges::replace_if
+        replaces all values satisfying specific criteria with another value
+    replace_copy
+        copies a range, replacing elements satisfying specific criteria with another value
+    replace_copy_if
+        copies a range, replacing elements satisfying specific criteria with another value
+    ranges::replace_copy
+        copies a range, replacing elements satisfying specific criteria with another value
+    ranges::replace_copy_if
+        copies a range, replacing elements satisfying specific criteria with another value
+
+..alg dreplace
+    replaces all values satisfying specific criteria with another value
+..alg dreplace_if
+    replaces all values satisfying specific criteria with another value
+..alg dranges::replace
+    replaces all values satisfying specific criteria with another value
+..alg dranges::replace_if
+    replaces all values satisfying specific criteria with another value
+..alg dreplace_copy
+    copies a range, replacing elements satisfying specific criteria with another value
+..alg dreplace_copy_if
+    copies a range, replacing elements satisfying specific criteria with another value
+..alg dranges::replace_copy
+    copies a range, replacing elements satisfying specific criteria with another value
+..alg dranges::replace_copy_if
+    copies a range, replacing elements satisfying specific criteria with another value
+
+..alg_generate
+    fill
+        copy-assigns the given value to every element in a range
+    ranges::fill
+        assigns a range of elements a certain value
+    fill_n
+        copy-assigns the given value to N elements in a range
+    ranges::fill_n
+        assigns a value to a number of elements
+    generate
+        assigns the results of successive function calls to every element in a range
+    ranges::generate
+        saves the result of a function in a range
+    generate_n
+        assigns the results of successive function calls to N elements in a range
+    ranges::generate_n
+        saves the result of N applications of a function
+
+..alg fill
+    copy-assigns the given value to every element in a range
+..alg ranges::fill
+    assigns a range of elements a certain value
+..alg fill_n
+    copy-assigns the given value to N elements in a range
+..alg ranges::fill_n
+    assigns a value to a number of elements
+..alg generate
+    assigns the results of successive function calls to every element in a range
+..alg ranges::generate
+    saves the result of a function in a range
+..alg generate_n
+    assigns the results of successive function calls to N elements in a range
+..alg ranges::generate_n
+    saves the result of N applications of a function
+
+..alg_remove
+    remove
+        removes elements satisfying specific criteria
+    remove_if
+        removes elements satisfying specific criteria
+    ranges::remove
+        removes elements satisfying specific criteria
+    ranges::remove_if
+        removes elements satisfying specific criteria
+    remove_copy
+        copies a range of elements omitting those that satisfy specific criteria
+    remove_copy_if
+        copies a range of elements omitting those that satisfy specific criteria
+    ranges::remove_copy
+        copies a range of elements omitting those that satisfy specific criteria
+    ranges::remove_copy_if
+        copies a range of elements omitting those that satisfy specific criteria
+    unique
+        removes consecutive duplicate elements in a range
+    ranges::unique
+        removes consecutive duplicate elements in a range
+    unique_copy
+        creates a copy of some range of elements that contains no consecutive duplicates
+    ranges::unique_copy
+        creates a copy of some range of elements that contains no consecutive duplicates
+
+..alg remove
+    removes elements satisfying specific criteria
+..alg remove_if
+    removes elements satisfying specific criteria
+..alg ranges::remove
+    removes elements satisfying specific criteria
+..alg ranges::remove_if
+    removes elements satisfying specific criteria
+..alg remove_copy
+    copies a range of elements omitting those that satisfy specific criteria
+..alg remove_copy_if
+    copies a range of elements omitting those that satisfy specific criteria
+..alg ranges::remove_copy
+    copies a range of elements omitting those that satisfy specific criteria
+..alg ranges::remove_copy_if
+    copies a range of elements omitting those that satisfy specific criteria
+..alg unique
+    removes consecutive duplicate elements in a range
+..alg ranges::unique
+    removes consecutive duplicate elements in a range
+..alg unique_copy
+    creates a copy of some range of elements that contains no consecutive duplicates
+..alg ranges::unique_copy
+    creates a copy of some range of elements that contains no consecutive duplicates
+
+..alg_reverse
+    reverse
+        reverses the order of elements in a range
+    ranges::reverse
+        reverses the order of elements in a range
+    reverse_copy
+        creates a copy of a range that is reversed
+    ranges::reverse_copy
+        creates a copy of a range that is reversed
+
+..alg reverse
+    reverses the order of elements in a range
+..alg ranges::reverse
+    reverses the order of elements in a range
+..alg reverse_copy
+    creates a copy of a range that is reversed
+..alg ranges::reverse_copy
+    creates a copy of a range that is reversed
+
+..alg_rotate_shift_shuffle
+
+    rotate
+        rotates the order of elements in a range
+    ranges::rotate
+        rotates the order of elements in a range
+    rotate_copy
+        copies and rotate a range of elements
+    ranges::rotate_copy
+        copies and rotate a range of elements
+    shift_left
+        shifts elements in a range
+    shift_right
+        shifts elements in a range
+    shuffle
+        randomly re-orders elements in a range
+    ranges::shuffle
+        randomly re-orders elements in a range
+    ranges::shift_left
+        shifts elements in a range
+    ranges::shift_right
+        shifts elements in a range
+
+..alg rotate
+    rotates the order of elements in a range
+..alg ranges::rotate
+    rotates the order of elements in a range
+..alg rotate_copy
+    copies and rotate a range of elements
+..alg ranges::rotate_copy
+    copies and rotate a range of elements
+..alg shift_left
+    shifts elements in a range
+..alg shift_right
+    shifts elements in a range
+..alg shuffle
+    randomly re-orders elements in a range
+..alg ranges::shuffle
+    randomly re-orders elements in a range
+..alg ranges::shift_left
+    shifts elements in a range
+..alg ranges::shift_right
+    shifts elements in a range
+
+..alg_sample
+    sample
+        selects N random elements from a sequence
+    ranges::sample
+        selects N random elements from a sequence
+
+..alg sample
+    selects N random elements from a sequence
+..alg ranges::sample
+    selects N random elements from a sequence
+
+..alg_partition
+    is_partitioned
+        determines if the range is partitioned by the given predicate
+    ranges::is_partitioned
+        determines if the range is partitioned by the given predicate
+    partition
+        divides a range of elements into two groups
+    ranges::partition
+        divides a range of elements into two groups
+    partition_copy
+        copies a range dividing the elements into two groups
+    ranges::partition_copy
+        copies a range dividing the elements into two groups
+    stable_partition
+        divides elements into two groups while preserving their relative order
+    ranges::stable_partition
+        divides elements into two groups while preserving their relative order
+    partition_point
+        locates the partition point of a partitioned range
+    ranges::partition_point
+        locates the partition point of a partitioned range
+
+..alg is_partitioned
+    determines if the range is partitioned by the given predicate
+..alg ranges::is_partitioned
+    determines if the range is partitioned by the given predicate
+..alg partition
+    divides a range of elements into two groups
+..alg ranges::partition
+    divides a range of elements into two groups
+..alg partition_copy
+    copies a range dividing the elements into two groups
+..alg ranges::partition_copy
+    copies a range dividing the elements into two groups
+..alg stable_partition
+    divides elements into two groups while preserving their relative order
+..alg ranges::stable_partition
+    divides elements into two groups while preserving their relative order
+..alg partition_point
+    locates the partition point of a partitioned range
+..alg ranges::partition_point
+    locates the partition point of a partitioned range
+
+..alg_sort
+    sort
+        sorts a range into ascending order
+    ranges::sort
+        sorts a range into ascending order
+    stable_sort
+        sorts a range of elements while preserving order between equal elements
+    ranges::stable_sort
+        sorts a range of elements while preserving order between equal elements
+    partial_sort
+        sorts the first N elements of a range
+    ranges::partial_sort
+        sorts the first N elements of a range
+    partial_sort_copy
+        copies and partially sorts a range of elements
+    ranges::partial_sort_copy
+        copies and partially sorts a range of elements
+    is_sorted
+        checks whether a range is sorted into ascending order
+    ranges::is_sorted
+        checks whether a range is sorted into ascending order
+    is_sorted_until
+        finds the largest sorted subrange
+    ranges::is_sorted_until
+        finds the largest sorted subrange
+    nth_element
+        partially sorts the given range making sure that it is partitioned by the given element
+    ranges::nth_element
+        partially sorts the given range making sure that it is partitioned by the given element
+
+..alg sort
+    sorts a range into ascending order
+..alg ranges::sort
+    sorts a range into ascending order
+..alg stable_sort
+    sorts a range of elements while preserving order between equal elements
+..alg ranges::stable_sort
+    sorts a range of elements while preserving order between equal elements
+..alg partial_sort
+    sorts the first N elements of a range
+..alg ranges::partial_sort
+    sorts the first N elements of a range
+..alg partial_sort_copy
+    copies and partially sorts a range of elements
+..alg ranges::partial_sort_copy
+    copies and partially sorts a range of elements
+..alg is_sorted
+    checks whether a range is sorted into ascending order
+..alg ranges::is_sorted
+    checks whether a range is sorted into ascending order
+..alg is_sorted_until
+    finds the largest sorted subrange
+..alg ranges::is_sorted_until
+    finds the largest sorted subrange
+..alg nth_element
+    partially sorts the given range making sure that it is partitioned by the given element
+..alg ranges::nth_element
+    partially sorts the given range making sure that it is partitioned by the given element
+
+..alg_binsearch
+    lower_bound
+        returns an iterator to the first element not less than the given value
+    ranges::lower_bound
+        returns an iterator to the first element not less than the given value
+    upper_bound
+        returns an iterator to the first element greater than a certain value
+    ranges::upper_bound
+        returns an iterator to the first element greater than a certain value
+    equal_range
+        returns range of elements matching a specific key
+    ranges::equal_range
+        returns range of elements matching a specific key
+    binary_search
+        determines if an element exists in a partially-ordered range
+    ranges::binary_search
+        determines if an element exists in a partially-ordered range
+
+..alg lower_bound
+    returns an iterator to the first element not less than the given value
+..alg ranges::lower_bound
+    returns an iterator to the first element not less than the given value
+..alg upper_bound
+    returns an iterator to the first element greater than a certain value
+..alg ranges::upper_bound
+    returns an iterator to the first element greater than a certain value
+..alg equal_range
+    returns range of elements matching a specific key
+..alg ranges::equal_range
+    returns range of elements matching a specific key
+..alg binary_search
+    determines if an element exists in a partially-ordered range
+..alg ranges::binary_search
+    determines if an element exists in a partially-ordered range
+
+..alg_set_opertions
+    includes
+        returns true if one sequence is a subsequence of another
+    ranges::includes
+        returns true if one sequence is a subsequence of another
+    set_union
+        computes the union of two sets
+    ranges::set_union
+        computes the union of two sets
+    set_intersection
+        computes the intersection of two sets
+    ranges::set_intersection
+        computes the intersection of two sets
+    set_difference
+        computes the difference between two sets
+    ranges::set_difference
+        computes the difference between two sets
+    set_symmetric_difference
+        computes the symmetric difference between two sets
+    ranges::set_symmetric_difference
+        computes the symmetric difference between two sets
+
+..alg includes
+    returns true if one sequence is a subsequence of another
+..alg ranges::includes
+    returns true if one sequence is a subsequence of another
+..alg set_union
+    computes the union of two sets
+..alg ranges::set_union
+    computes the union of two sets
+..alg set_intersection
+    computes the intersection of two sets
+..alg ranges::set_intersection
+    computes the intersection of two sets
+..alg set_difference
+    computes the difference between two sets
+..alg ranges::set_difference
+    computes the difference between two sets
+..alg set_symmetric_difference
+    computes the symmetric difference between two sets
+..alg ranges::set_symmetric_difference
+    computes the symmetric difference between two sets
+
+..alg_merge
+    merge
+        merges two sorted ranges
+    ranges::merge
+        merges two sorted ranges
+    inplace_merge
+        merges two ordered ranges in-place
+    ranges::inplace_merge
+        merges two ordered ranges in-place
+
+..alg merge
+    merges two sorted ranges
+..alg ranges::merge
+    merges two sorted ranges
+..alg inplace_merge
+    merges two ordered ranges in-place
+..alg ranges::inplace_merge
+    merges two ordered ranges in-place
+
+..alg_heap
+    std::make_heap
+        A heap can be created by std::make_heap and ranges::make_heap(since C++20).
+    ranges::make_heap
+        A heap can be created by std::make_heap and ranges::make_heap(since C++20).
+    push_heap
+        adds an element to a max heap
+    ranges::push_heap
+        adds an element to a max heap
+    pop_heap
+        removes the largest element from a max heap
+    ranges::pop_heap
+        removes the largest element from a max heap
+    make_heap
+        creates a max heap out of a range of elements
+    ranges::make_heap
+        creates a max heap out of a range of elements
+    sort_heap
+        turns a max heap into a range of elements sorted in ascending order
+    ranges::sort_heap
+        turns a max heap into a range of elements sorted in ascending order
+    is_heap
+        checks if the given range is a max heap
+    ranges::is_heap
+        checks if the given range is a max heap
+    is_heap_until
+        finds the largest subrange that is a max heap
+    ranges::is_heap_until
+        finds the largest subrange that is a max heap
+
+..alg std::make_heap
+    A heap can be created by std::make_heap and ranges::make_heap(since C++20).
+..alg ranges::make_heap
+    A heap can be created by std::make_heap and ranges::make_heap(since C++20).
+..alg push_heap
+    adds an element to a max heap
+..alg ranges::push_heap
+    adds an element to a max heap
+..alg pop_heap
+    removes the largest element from a max heap
+..alg ranges::pop_heap
+    removes the largest element from a max heap
+..alg make_heap
+    creates a max heap out of a range of elements
+..alg ranges::make_heap
+    creates a max heap out of a range of elements
+..alg sort_heap
+    turns a max heap into a range of elements sorted in ascending order
+..alg ranges::sort_heap
+    turns a max heap into a range of elements sorted in ascending order
+..alg is_heap
+    checks if the given range is a max heap
+..alg ranges::is_heap
+    checks if the given range is a max heap
+..alg is_heap_until
+    finds the largest subrange that is a max heap
+..alg ranges::is_heap_until
+    finds the largest subrange that is a max heap
+
+..alg_minmax
+    max
+        returns the greater of the given values
+    ranges::max
+        returns the greater of the given values
+    max_element
+        returns the largest element in a range
+    ranges::max_element
+        returns the largest element in a range
+    min
+        returns the smaller of the given values
+    ranges::min
+        returns the smaller of the given values
+    min_element
+        returns the smallest element in a range
+    ranges::min_element
+        returns the smallest element in a range
+    minmax
+        returns the smaller and larger of two elements
+    ranges::minmax
+        returns the smaller and larger of two elements
+    minmax_element
+        returns the smallest and the largest elements in a range
+    ranges::minmax_element
+        returns the smallest and the largest elements in a range
+    clamp
+        clamps a value between a pair of boundary values
+    ranges::clamp
+        clamps a value between a pair of boundary values
+
+..alg max
+    returns the greater of the given values
+..alg ranges::max
+    returns the greater of the given values
+..alg max_element
+    returns the largest element in a range
+..alg ranges::max_element
+    returns the largest element in a range
+..alg min
+    returns the smaller of the given values
+..alg ranges::min
+    returns the smaller of the given values
+..alg min_element
+    returns the smallest element in a range
+..alg ranges::min_element
+    returns the smallest element in a range
+..alg minmax
+    returns the smaller and larger of two elements
+..alg ranges::minmax
+    returns the smaller and larger of two elements
+..alg minmax_element
+    returns the smallest and the largest elements in a range
+..alg ranges::minmax_element
+    returns the smallest and the largest elements in a range
+..alg clamp
+    clamps a value between a pair of boundary values
+..alg ranges::clamp
+    clamps a value between a pair of boundary values
+
+..alg_lexical_comp
+    lexicographical_compare
+        returns true if one range is lexicographically less than another
+    ranges::lexicographical_compare
+        returns true if one range is lexicographically less than another
+    lexicographical_compare_three_way
+        compares two ranges using three-way comparison
+
+..alg lexicographical_compare
+    returns true if one range is lexicographically less than another
+..alg ranges::lexicographical_compare
+    returns true if one range is lexicographically less than another
+..alg lexicographical_compare_three_way
+    compares two ranges using three-way comparison
+..alg_permut
+    next_permutation
+        generates the next greater lexicographic permutation of a range of elements
+    ranges::next_permutation
+        generates the next greater lexicographic permutation of a range of elements
+    prev_permutation
+        generates the next smaller lexicographic permutation of a range of elements
+    ranges::prev_permutation
+        generates the next smaller lexicographic permutation of a range of elements
+    is_permutation
+        determines if a sequence is a permutation of another sequence
+    ranges::is_permutation
+        determines if a sequence is a permutation of another sequence
+
+..alg next_permutation
+    generates the next greater lexicographic permutation of a range of elements
+..alg ranges::next_permutation
+    generates the next greater lexicographic permutation of a range of elements
+..alg prev_permutation
+    generates the next smaller lexicographic permutation of a range of elements
+..alg ranges::prev_permutation
+    generates the next smaller lexicographic permutation of a range of elements
+..alg is_permutation
+    determines if a sequence is a permutation of another sequence
+..alg ranges::is_permutation
+    determines if a sequence is a permutation of another sequence
+
+..alg_numeric
+    iota
+        fills a range with successive increments of the starting value
+    ranges::iota
+        fills a range with successive increments of the starting value
+    accumulate
+        sums up or folds a range of elements
+    inner_product
+        computes the inner product of two ranges of elements
+    adjacent_difference
+        computes the differences between adjacent elements in a range
+    partial_sum
+        computes the partial sum of a range of elements
+    reduce
+        similar to std::accumulate, except out of order
+    exclusive_scan
+        similar to std::partial_sum, excludes the ith input element from the ith sum
+    inclusive_scan
+        similar to std::partial_sum, includes the ith input element in the ith sum
+    transform_reduce
+        applies an invocable, then reduces out of order
+    transform_exclusive_scan
+        applies an invocable, then calculates exclusive scan
+    transform_inclusive_scan
+        applies an invocable, then calculates inclusive scan
+
+..alg iota
+    fills a range with successive increments of the starting value
+..alg ranges::iota
+    fills a range with successive increments of the starting value
+..alg accumulate
+    sums up or folds a range of elements
+..alg inner_product
+    computes the inner product of two ranges of elements
+..alg adjacent_difference
+    computes the differences between adjacent elements in a range
+..alg partial_sum
+    computes the partial sum of a range of elements
+..alg reduce
+    similar to std::accumulate, except out of order
+..alg exclusive_scan
+    similar to std::partial_sum, excludes the ith input element from the ith sum
+..alg inclusive_scan
+    similar to std::partial_sum, includes the ith input element in the ith sum
+..alg transform_reduce
+    applies an invocable, then reduces out of order
+..alg transform_exclusive_scan
+    applies an invocable, then calculates exclusive scan
+..alg transform_inclusive_scan
+    applies an invocable, then calculates inclusive scan
+
+..alg_random
+    ranges::generate_random
+        fills a range with random numbers from a uniform random bit generator
+
+..alg ranges::generate_random
+    fills a range with random numbers from a uniform random bit generator
 
 --- Views (ranges::views or views::) -- use as 'somecollection | views::xxx'
 
@@ -1559,7 +2324,7 @@ views::filter
 
     auto even = [](int i) { return 0 == i % 2; };
     auto square = [](int i) { return i * i; };
- 
+
     for (int i : std::views::iota(0, 6)
                | std::views::filter(even)
                | std::views::transform(square))
@@ -1586,7 +2351,7 @@ views::transform
         std::string in{"cppreference.com\n"};
         std::ranges::for_each(in, show);
         std::ranges::for_each(in | std::views::transform(rot13), show);
-     
+
         std::string out;
         std::ranges::copy(std::views::transform(in, rot13), std::back_inserter(out));
         std::ranges::for_each(out, show);
@@ -1596,7 +2361,7 @@ views::take
     a view consisting of the first N elements of another view
     namespace views = std::views;
     auto print = [](char x){ std::cout << x; };
- 
+
     for (const char nums[]{'1', '2', '3'};
          int n : views::iota(0, 5))
     {
@@ -1607,7 +2372,7 @@ views::take
     }
     Output:
 
-    take(0): 
+    take(0):
     take(1): 1
     take(2): 12
     take(3): 123
@@ -1620,7 +2385,7 @@ views::take_while
                   | std::views::take_while([](int y){ return y < 2026; }))
         std::cout << year << ' ';
     std::cout << '\n';
- 
+
     const char note[]{"Today is yesterday's tomorrow!..."};
     auto not_dot = [](char c){ return c != '.'; };
     for (char x : std::ranges::take_while_view(note, not_dot))
@@ -1664,7 +2429,7 @@ views::drop
     drop 5: 6 7
     drop 6: 7
     drop 7:
-    drop 890: 
+    drop 890:
     drop 100500:
 
 views::drop_while
@@ -1673,7 +2438,7 @@ views::drop_while
     false
 
     using std::operator""sv; // string literal to string_view
- 
+
     [[nodiscard]]
     constexpr bool is_space(char p) noexcept
     {
@@ -1700,10 +2465,10 @@ views::drop_while
     int main()
     {
         static_assert(trim_left(" \n C++23") == "C++23"sv);
-     
+
         constexpr auto src{" \f\n\t\r\vHello, C++20!\f\n\t\r\v "sv};
         static_assert(trim(src) == "Hello, C++20!");
-     
+
         static constexpr auto v = {0, 1, 2, 3, 4, 5};
         for (int n : v | std::views::drop_while([](int i) { return i < 3; }))
             std::cout << n << ' ';
@@ -1714,12 +2479,12 @@ views::drop_while
 views::join
     a view consisting of the sequence obtained from flattening a view of ranges
     using namespace std::literals;
- 
+
     const auto bits = {"https:"sv, "//"sv, "cppreference"sv, "."sv, "com"sv};
     for (char const c : bits | std::views::join)
         std::cout << c;
     std::cout << '\n';
- 
+
     const std::vector<std::vector<int>> v{{1, 2}, {3, 4, 5}, {6}, {7, 8, 9}};
     auto jv = std::ranges::join_view(v);
     for (int const e : jv)
@@ -1733,10 +2498,10 @@ views::join_with
     a view consisting of the sequence obtained from flattening a view of ranges, with the delimiter in between elements
 
     using namespace std::literals;
- 
+
     std::vector v{"This"sv, "is"sv, "a"sv, "test."sv};
     auto joined = v | std::views::join_with(' ');
- 
+
     for (auto c : joined)
         std::cout << c;
     std::cout << '\n';
@@ -1751,7 +2516,7 @@ views::split
     using std::operator""sv;  // to string_view
     constexpr auto words{"Hello^_^C++^_^20^_^!"sv};
     constexpr auto delim{"^_^"sv};
- 
+
     for (const auto word : std::views::split(words, delim))
         // with string_view's C++23 range constructor:
         std::cout << std::quoted(std::string_view(word)) << ' ';
@@ -1766,7 +2531,7 @@ views::concat
     int a[]{6, 7};
     int i{8};
     auto ie{std::views::single(i)};
- 
+
     auto con = std::views::concat(v0, v1, a, ie);
     assert(con.size() == v0.size() + v1.size() + std::size(a) + ie.size());
     std::println("con.size(): {}", con.size());
@@ -1774,7 +2539,7 @@ views::concat
     con[6] = 42; // con is random_access_range, operator[] returns a reference
     assert(a[1] == 42); // a[1] was modified via con[6]
     std::println("con: {}", con);
- 
+
     std::list<int> l{7, 8}; // list is bidirectional range
     auto cat = std::views::concat(v0, l);
     std::println("cat: {}", cat);
@@ -1793,7 +2558,7 @@ views::counted
     for (int i : std::views::counted(a, 3))
         std::cout << i << ' ';
     std::cout << '\n';
- 
+
     const auto il = {1, 2, 3, 4, 5};
     for (int i : std::views::counted(il.begin() + 1, 3))
         std::cout << i << ' ';
@@ -1810,16 +2575,16 @@ views::reverse
     a view that iterates over the elements of another bidirectional view in reverse order
 
     static constexpr auto il = {3, 1, 4, 1, 5, 9};
- 
+
     std::ranges::reverse_view rv{il};
     for (int i : rv)
         std::cout << i << ' ';
     std::cout << '\n';
- 
+
     for (int i : il | std::views::reverse)
         std::cout << i << ' ';
     std::cout << '\n';
- 
+
     // operator[] is inherited from std::view_interface
     for (auto i{0U}; i != rv.size(); ++i)
         std::cout << rv[i] << ' ';
@@ -1834,11 +2599,11 @@ views::as_const
     converts a view into a constant_range
 
     int x[]{1, 2, 3, 4, 5};
- 
+
     auto v1 = x | std::views::drop(2);
     assert(v1.back() == 5);
     v1[0]++; // OK, can modify non-const element
- 
+
     auto v2 = x | std::views::drop(2) | std::views::as_const;
     assert(v2.back() == 5);
     // v2[0]++; // Compile-time error, cannot modify read-only element
@@ -1854,15 +2619,15 @@ views::elements
         {4, 'D', "δ"},
         {5, 'E', "ε"},
     };
- 
+
     for (int const e : std::views::elements<0>(vt))
         std::cout << e << ' ';
     std::cout << '\n';
- 
+
     for (char const e : vt | std::views::elements<1>)
         std::cout << e << ' ';
     std::cout << '\n';
- 
+
     for (std::string const& e : std::views::elements<2>(vt))
         std::cout << e << ' ';
     std::cout << '\n';
@@ -1883,16 +2648,16 @@ views::keys
         {"charm", 1275, true}, {"strange", 95, false},
         {"top", 173'210, true}, {"bottom", 4'180, false},
     };
- 
+
     std::cout.imbue(std::locale("en_US.utf8"));
     std::cout << "Quark name:  │ ";
     for (std::string const& name : std::views::keys(quark_mass_charge))
         std::cout << std::setw(9) << name << " │ ";
- 
+
     std::cout << "\n" "Mass MeV/c²: │ ";
     for (const double mass : std::views::values(quark_mass_charge))
         std::cout << std::setw(9) << mass << " │ ";
- 
+
     std::cout << "\n" "E-charge:    │ ";
     for (const bool pos : std::views::elements<2>(quark_mass_charge))
         std::cout << std::setw(9) << (pos ? "+2/3" : "-1/3") << " │ ";
@@ -1911,7 +2676,7 @@ views::values
     std::cout << "pair::second values in the list: ";
     for (double value : list | std::views::values)
         std::cout << value << ' ';
- 
+
     std::map<char, int> map{{'A', 1}, {'B', 2}, {'C', 3}, {'D', 4}, {'E', 5}};
     auto odd = [](int x) { return 0 != (x & 1); };
     std::cout << "\nodd values in the map: ";
@@ -1928,18 +2693,18 @@ views::enumerate
     a view that maps each element of adapted sequence to a tuple of both the element's position and its value
 
     constexpr static auto v = {'A', 'B', 'C', 'D'};
- 
+
     for (auto const [index, letter] : std::views::enumerate(v))
         std::cout << '(' << index << ':' << letter << ") ";
     std::cout << '\n';
- 
+
     // create a map using the position of each element as key
     auto m = v | std::views::enumerate | std::ranges::to<std::map>();
- 
+
     for (auto const [key, value] : m)
         std::cout << '[' << key << "]:" << value << ' ';
     std::cout << '\n';
- 
+
     std::vector<int> numbers{1, 3, 5, 7};
     // num is mutable even with const, which does not propagate to reference to
     // make it const, use `std::views::enumerate(numbers) | std::views::as_const`
@@ -1962,23 +2727,23 @@ views::zip
     auto x = std::vector{1, 2, 3, 4};
     auto y = std::list<std::string>{"α", "β", "γ", "δ", "ε"};
     auto z = std::array{'A', 'B', 'C', 'D', 'E', 'F'};
- 
+
     print("Source views:", "");
     print("x: ", x);
     print("y: ", y);
     print("z: ", z);
- 
+
     print("\nzip(x,y,z):", "");
- 
+
     for (std::tuple<int&, std::string&, char&> elem : std::views::zip(x, y, z))
     {
         std::cout << std::get<0>(elem) << ' '
                   << std::get<1>(elem) << ' '
                   << std::get<2>(elem) << '\n';
- 
+
         std::get<char&>(elem) += ('a' - 'A'); // modifies the element of z
     }
- 
+
     print("\nAfter modification, z: ", z);
 
     Output:
@@ -1987,13 +2752,13 @@ views::zip
     x: 1 2 3 4
     y: α β γ δ ε
     z: A B C D E F
-     
+
     zip(x,y,z):
     1 α A
     2 β B
     3 γ C
     4 δ D
- 
+
     After modification, z: a b c d E F
 
 views::zip_transform
@@ -2001,22 +2766,22 @@ views::zip_transform
 
     void print(auto const rem, auto const& r)
     {
-        std::cout << rem << '{'; 
+        std::cout << rem << '{';
         for (char o[]{0,' ',0}; auto const& e : r)
             std::cout << o << e, *o = ',';
         std::cout << "}\n";
     }
-     
+
     int main()
     {
         auto v1 = std::vector<float>{1, 2, 3};
         auto v2 = std::list<short>{1, 2, 3, 4};
         auto v3 = std::to_array({1, 2, 3, 4, 5});
-     
+
         auto add = [](auto a, auto b, auto c) { return a + b + c; };
-     
+
         auto sum = std::views::zip_transform(add, v1, v2, v3);
-     
+
         print("v1:  ", v1);
         print("v2:  ", v2);
         print("v3:  ", v3);
@@ -2034,13 +2799,13 @@ views::adjacent
 
     constexpr std::array v{1, 2, 3, 4, 5, 6};
     std::cout << "v = [1 2 3 4 5 6]\n";
- 
+
     for (int i{}; std::tuple t : v | std::views::adjacent<3>)
     {
         auto [t0, t1, t2] = t;
         std::cout << std::format("e = {:<{}}[{} {} {}]\n", "", 2 * i++, t0, t1, t2);
     }
-    
+
     Output:
 
     v = [1 2 3 4 5 6]
@@ -2058,13 +2823,13 @@ views::adjacent_transform
 
     constexpr static std::array data{1, 2, 3, 4, 5, 6};
     constexpr int window{3};
- 
+
     auto Fun = [](auto... ints) { return (... + ints); };
     // Alternatively, the Fun could be any ternary (if window == 3) callable, e.g.:
     // auto Fun = [](int x, int y, int z) { return x + y + z; };
- 
+
     constexpr auto view = data | std::views::adjacent_transform<window>(Fun);
- 
+
     static_assert(
         view.size() == (data.size() - window + 1)
         && std::array{6, 9, 12, 15}
@@ -2074,11 +2839,11 @@ views::adjacent_transform
         && view[2] == Fun(data[2], data[3], data[4])
         && view[3] == Fun(data[3], data[4], data[5])
     );
- 
+
     for (int x : view)
         std::cout << x << ' ';
     std::cout << '\n';
-    
+
     Output:
 
     6 9 12 15
@@ -2097,11 +2862,11 @@ views::chunk
             std::cout << (pos++ ? " " : "") << elem;
         std::cout << "] ";
     };
-     
+
     int main()
     {
         const auto v = {1, 2, 3, 4, 5, 6};
-     
+
         for (const unsigned width : std::views::iota(1U, 2U + v.size()))
         {
             auto const chunks = v | std::views::chunk(width);
@@ -2130,11 +2895,11 @@ views::slide
             std::cout << space << elem, *space = ' ';
         std::cout << "] ";
     };
-     
+
     int main()
     {
         const auto v = {1, 2, 3, 4, 5, 6};
-     
+
         std::cout << "All sliding windows of width:\n";
         for (const unsigned width : std::views::iota(1U, 1U + v.size()))
         {
@@ -2147,11 +2912,11 @@ views::slide
     Output:
 
     All sliding windows of width W:
-    W = 1: [1] [2] [3] [4] [5] [6] 
-    W = 2: [1 2] [2 3] [3 4] [4 5] [5 6] 
-    W = 3: [1 2 3] [2 3 4] [3 4 5] [4 5 6] 
-    W = 4: [1 2 3 4] [2 3 4 5] [3 4 5 6] 
-    W = 5: [1 2 3 4 5] [2 3 4 5 6] 
+    W = 1: [1] [2] [3] [4] [5] [6]
+    W = 2: [1 2] [2 3] [3 4] [4 5] [5 6]
+    W = 3: [1 2 3] [2 3 4] [3 4 5] [4 5 6]
+    W = 4: [1 2 3 4] [2 3 4 5] [3 4 5 6]
+    W = 5: [1 2 3 4 5] [2 3 4 5 6]
     W = 6: [1 2 3 4 5 6]
 
 views::chunk_by
@@ -2168,24 +2933,24 @@ views::chunk_by
         }
         std::cout << '\n';
     }
-     
+
     int main()
     {
         std::initializer_list v1 = {1, 2, 3, 1, 2, 3, 3, 3, 1, 2, 3};
         auto fn1 = std::ranges::less{};
         auto view1 = v1 | std::views::chunk_by(fn1);
         print_chunks(view1);
-     
+
         std::initializer_list v2 = {1, 2, 3, 4, 4, 0, 2, 3, 3, 3, 2, 1};
         auto fn2 = std::ranges::not_equal_to{};
         auto view2 = v2 | std::views::chunk_by(fn2);
         print_chunks(view2);
-     
+
         std::string_view v3 = "__cpp_lib_ranges_chunk_by";
         auto fn3 = [](auto x, auto y) { return not(x == '_' or y == '_'); };
         auto view3 = v3 | std::views::chunk_by(fn3);
         print_chunks(view3, "");
-     
+
         std::string_view v4 = "\u007a\u00df\u6c34\u{1f34c}"; // "zß水🍌"
         auto fn4 = [](auto, auto ß) { return 128 == ((128 + 64) & ß); };
         auto view4 = v4 | std::views::chunk_by(fn4);
@@ -2193,8 +2958,8 @@ views::chunk_by
     }
     Output:
 
-    [1, 2, 3] [1, 2, 3] [3] [3] [1, 2, 3] 
-    [1, 2, 3, 4] [4, 0, 2, 3] [3] [3, 2, 1] 
+    [1, 2, 3] [1, 2, 3] [3] [3] [1, 2, 3]
+    [1, 2, 3, 4] [4, 0, 2, 3] [3] [3, 2, 1]
     [_] [_] [cpp] [_] [lib] [_] [ranges] [_] [chunk] [_] [by]
     [z] [ß] [水] [🍌]
 
@@ -2207,13 +2972,13 @@ views::stride
             std::cout << x << separator;
         std::cout << '\n';
     }
-     
+
     int main()
     {
         print(std::views::iota(1, 13) | std::views::stride(3));
         print(std::views::iota(1, 13) | std::views::stride(3) | std::views::reverse);
         print(std::views::iota(1, 13) | std::views::reverse | std::views::stride(3));
-     
+
         print("0x0!133713337*x//42/A$@"sv | std::views::stride(0B11) |
               std::views::transform([](char O) -> char { return 0100 | O; }),
               "");
@@ -2237,7 +3002,7 @@ views::cartesian_product
         const auto x = std::array{'A', 'B'};
         const auto y = std::vector{1, 2, 3};
         const auto z = std::list<std::string>{"α", "β", "γ", "δ"};
-     
+
         for (int i{1}; auto const& tuple : std::views::cartesian_product(x, y, z))
             print(tuple, i++);
     }
@@ -2302,14 +3067,14 @@ views::cartesian_product
     {
         return std::greater<>()(lhs, 0);
     }
-     
+
     int main()
     {
         constexpr std::int64_t low = 0B11;
         constexpr std::uint16_t high = 0X11;
         std::greater<> greater{};
         static_assert(greater(high, low));
-     
+
         constexpr static auto arr = {0, 1, 2, 3, 4, 5};
         static_assert(!std::all_of(arr.begin(), arr.end(), strictly_positive));
         static_assert(std::all_of(arr.begin() + 1, arr.end(), strictly_positive));
@@ -2321,14 +3086,14 @@ views::cartesian_product
     {
         return std::less<>()(lhs, 0);
     }
-     
+
     int main()
     {
         constexpr signed low = 010;
         constexpr unsigned high = 10;
         std::less<> less{};
         static_assert(less(low, high));
-     
+
         constexpr static auto arr = {0, -1, -2, -3, -4, -5};
         static_assert(!std::all_of(arr.begin(), arr.end(), strictly_negative));
         static_assert(std::all_of(arr.begin() + 1, arr.end(), strictly_negative));
@@ -2341,14 +3106,14 @@ views::cartesian_product
     {
         return std::greater_equal<>()(lhs, 0);
     }
-     
+
     int main()
     {
         constexpr int low = 0, high = 8;
         std::greater_equal<> greater_equal{};
         static_assert(greater_equal(high, low));
         static_assert(greater_equal(low, low));
-     
+
         static constexpr auto arr = {-1, 0, 1, 2, 3, 4};
         static_assert(!std::all_of(arr.begin(), arr.end(), strictly_not_negative));
         static_assert(std::all_of(arr.begin() + 1, arr.end(), strictly_not_negative));
@@ -2360,14 +3125,14 @@ views::cartesian_product
     {
         return std::less_equal<>()(lhs, 0);
     }
-     
+
     int main()
     {
         constexpr int low = 0, high = 8;
         std::less_equal<> less_equal{};
         static_assert(less_equal(low, high));
         static_assert(less_equal(low, low));
-     
+
         static constexpr auto arr = {1, 0, -1, -2, -3, -4};
         static_assert(!std::all_of(arr.begin(), arr.end(), strictly_not_positive));
         static_assert(std::all_of(arr.begin() + 1, arr.end(), strictly_not_positive));

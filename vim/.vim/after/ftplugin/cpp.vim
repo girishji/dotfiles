@@ -24,6 +24,11 @@ def MakeOnly()
 enddef
 nnoremap <buffer> <leader>M <scriptcmd>MakeOnly()<cr>
 
+# Abbreviations:
+# - They do not axpand after '.', so 'iabbr fr; first' for x.fr; (x.first) does not work
+# - When naming, ignore vowels inless they indicate type (ex. vi; -> vector<int>)
+# - Append a ';' so abbrevs are distinct and do not expand unexpectedly
+
 # Type 'ff; e 10<cr>' and it will insert 'for (int e = 0; e < 10; ++e) {<cr>.'
 iab <buffer> ff; <c-o>:FFI
 command! -nargs=* FFI call FF("int", "", <f-args>)
@@ -81,8 +86,6 @@ iabbr <silent><buffer> ll; signed long long
 iabbr <silent><buffer> vi; vector<int>
 iabbr <silent><buffer> vii; vector<vector<int>>
 iabbr <silent><buffer> vs; vector<string>
-iabbr <silent><buffer> fr; first<c-r>=abbr#Eatchar()<cr>
-iabbr <silent><buffer> sc; second<c-r>=abbr#Eatchar()<cr>
 iabbr <silent><buffer> setp; set<pair<int, int>><c-r>=abbr#Eatchar()<cr>
 iabbr <silent><buffer> seti; set<int><c-r>=abbr#Eatchar()<cr>
 iabbr <silent><buffer> mapii; map<int, int><c-r>=abbr#Eatchar()<cr>
@@ -107,8 +110,6 @@ iabbr <silent><buffer> in; #include <bits/stdc++.h>
 iabbr <silent><buffer> mn; int main() {<cr>}<esc>O<c-r>=abbr#Eatchar()<cr>
 iabbr <silent><buffer> c; cout <<  << endl;<esc>8hi<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> for_iota; for (auto _ : views::iota(0, 10)) {<c-r>=abbr#Eatchar()<cr>
-# following is identical to above
-# iabbr <buffer> for_iota; for (auto _ : ranges::iota_view{0, 10}) {<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> for_iota2; for (int i : views::iota(1) \| views::take(9)) {<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> for_iota3; ranges::for_each(views::iota(0, 10), [](int i) { cout << i << ' '; });<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> for_iota4; for (auto _ : views::iota(0) \| rv::take(5)) {<c-r>=abbr#Eatchar()<cr>
@@ -133,8 +134,9 @@ iabbr <buffer> increasing_strictly; = ranges::adjacent_find(vec, std::greater_eq
 iabbr <buffer> increasing; = ranges::adjacent_find(vec, std::greater<int>()) == vec.end()// see ..fn_obj less_equal;<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> decreasing_strictly; = ranges::adjacent_find(vec, std::less_equal<int>()) == vec.end();// see ..fn_obj less_equal<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> decreasing; = ranges::adjacent_find(vec, std::less<int>()) == vec.end();// see ..fn_obj less_equal<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> function; function<void()> f_display_42 = []() { print_num(42); };<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> function2; function<int(int)> fac = [&](int n) { return (n < 2) ? 1 : n * fac(n - 1); };<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> function; function<int(int)> fac = [&fac](int n) { return (n < 2) ? 1 : n * fac(n - 1); };<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> recursive_lambda; function<int(int)> fac = [&fac](int n) { return (n < 2) ? 1 : n * fac(n - 1); };<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> lambda_recursive; function<int(int)> fac = [&fac](int n) { return (n < 2) ? 1 : n * fac(n - 1); };<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> iterator; vector<int>::iterator it = vec.begin();<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> distance; distance(v.begin(), v.end()) // returns number of hops from begin to end<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> regex; regex pat {R"(\s+(\w+))"};<c-r>=abbr#Eatchar()<cr>
@@ -176,10 +178,12 @@ iabbr <buffer> conv_str_int; stoi(str)<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> conv_str_int2; istringstream(str) >> num;<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> conv_str_ull; stoull(str)<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> conv_str_int2; istringstream(str) >> ulongnum;<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> conv_str_chars; while (auto ch : str) OR vector<char>(s.begin(), s.end())<c-r>=abbr#Eatchar()<cr>
 # convert a view to a container
 iabbr <buffer> conv_view_container; auto squared = numbers // a vector
             \<cr>\| views::transform( [](int n) { return n * n; } )
-            \<cr>\| ranges::to<std::deque>();  // Convert to a deque<int>
+            \<cr>\| ranges::to<std::deque>();
+iabbr <buffer> ranges_to; ranges::to<std::deque>();
 
 # string
 iabbr <buffer> string_iterate; for (char c : str) {<c-r>=abbr#Eatchar()<cr>
@@ -196,11 +200,18 @@ iabbr <buffer> bitset_iterate; for (size_t i = 0; i < bits.size(); ++i) {<c-r>=a
 iabbr <buffer> bitset_iterate2; for (bool bit : bits) {<c-r>=abbr#Eatchar()<cr>
 
 # printing containers
-iabbr <buffer> pr_container; for (const auto& el : container) { cout << el << " "; }; cout << endl;<C-R>=abbr#Eatchar()<CR>
+iabbr <buffer> pr_cont; for (const auto& el : container) { cout << el << " "; }; cout << endl;<C-R>=abbr#Eatchar()<CR>
 iabbr <buffer> pr_map; for (const auto& [key, value] : map) { cout << key << ": " << value << endl; }<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> pr_map_container; for (const auto& [key, container] : map) {
+iabbr <buffer> pr_map_cont; for (const auto& [key, container] : map) {
             \<cr>cout << key << ": { ";
             \<cr>for (const auto& value : container) {
+            \<cr>cout << value << " ";
+            \<cr>}
+            \<cr>cout << "}" << std::endl;
+            \<cr>}<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> pr_vec_cont; for (const auto& cont : vec_cont) {
+            \<cr>cout << "{ ";
+            \<cr>for (const auto& value : cont) {
             \<cr>cout << value << " ";
             \<cr>}
             \<cr>cout << "}" << std::endl;
@@ -308,11 +319,9 @@ iabbr <buffer> templ_val; template<int N>
 
 # Algorithms
 # (0, 0), (0, 1), (0, 2), ... (1, 0), (1, 1), ...
-iabbr <buffer> product; std::views::cartesian_product(range(m), range(n))<c-r>=abbr#Eatchar()<cr>
-# emulate 2 nested for loops. cartesian_product returns a range of tuples which are used in 'structure binding'
+iabbr <buffer> product; views::cartesian_product(views::iota(0, m), views::iota(0, n))<c-r>=abbr#Eatchar()<cr>
 # emulates 2 loops: for (i = 0; i < m; i++) { for (j = 0; j < n; j++) ...
-iabbr <buffer> for2loops; for_each(views::cartesian_product(range(m), range(n)),
-            \<cr>[](auto [i, j]) { my_func(i, j); }<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> for2loops; for (auto [i, j] : views::cartesian_product(views::iota(0, m), views::iota(0, n))) {<c-r>=abbr#Eatchar()<cr>
 # emulates 2 loops: for (i = 0; i < m; i++) { for (j = 0; j < n; j++) ...
-iabbr <buffer> for2loops;; for (int k = 0; k < m * n; ++k)<c-r>=abbr#Eatchar()<cr>
+# iabbr <buffer> for2loops_; for (int k = 0; k < m * n; ++k)<c-r>=abbr#Eatchar()<cr>
 

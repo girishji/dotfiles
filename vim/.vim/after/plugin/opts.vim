@@ -15,10 +15,10 @@ if exists("g:loaded_vimcomplete")
         cpp: { sortedDict: false, onlyWords: false, matchStr: '\S\+$', triggerWordLen: 2, info: true },
     }
     g:VimCompleteOptionsSet({
-        completor: { triggerWordLen: 0, shuffleEqualPriority: true, alwaysOn: true, postfixClobber: false, postfixHighlight: true, showSource: false, showKind: false, debug: false },
+        completor: { triggerWordLen: 0, shuffleEqualPriority: true, alwaysOn: true, postfixClobber: false, postfixHighlight: true, showKind: false, debug: false },
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
         dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'cpp'], matcher: 'ignorecase', properties: dictproperties },
-        abbrev: { enable: true },
+        abbrev: { enable: true, maxCount: 30 },
         lsp: { enable: true, maxCount: 10, priority: 8 },
         omnifunc: { enable: false, priority: 10, filetypes: ['tex', 'python'] },
         vsnip: { enable: true, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },

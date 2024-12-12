@@ -111,11 +111,11 @@ if &background ==# 'dark'
 
     # Generic syntax
     HiLight  Comment    ctermfg=blue
-    HiLight  Constant   ctermfg=red
-    HiLight  Special    ctermfg=red
+    # HiLight  Constant   ctermfg=red  |# default is 13 (bmagenta)
+    # HiLight  Special    ctermfg=red  |# no good choices, let default hardcoded yellow(224) prevail
     HiLight  Identifier ctermfg=cyan      cterm=none
     HiLight  Statement  ctermfg=yellow
-    # HiLight  PreProc    ctermfg=magenta
+    # HiLight  PreProc    ctermfg=magenta |# no good choices, let default hardcoded cyan(81) prevail
     HiLight  Type       ctermfg=green
     HiLight  Underlined ctermfg=magenta
     HiLight  Ignore     ctermfg=black     ctermbg=lightgray
@@ -165,7 +165,7 @@ endif
 
 # Apply monochrome colors if options is set, but exclude help files from
 # monochrome treatment.
-var syntaxgrps = [
+const syntax_groups = [
     'Constant',
     'Special',
     'Identifier',
@@ -201,7 +201,7 @@ var syntaxgrps = [
 def ApplyMonochrome()
     if &ft !~ 'help\|markdown\|devdoc\|man'
         if !monochrome_applied
-            for grp in syntaxgrps
+            for grp in syntax_groups
                 var props = saved_hi[saved_hi->match($'^{grp}\s.*')]
                 if props !~ 'links to'
                     exec 'hi' grp 'ctermfg=none ctermbg=none cterm=none'
@@ -212,7 +212,7 @@ def ApplyMonochrome()
             monochrome_applied = true
         endif
     elseif monochrome_applied
-        for grp in syntaxgrps
+        for grp in syntax_groups
             var props = saved_hi[saved_hi->match($'^{grp}\s.*')]
             if props !~ 'links to'
                 exec 'hi' props->substitute('\sxxx\s', '', '')
@@ -224,6 +224,7 @@ enddef
 
 var saved_hi: list<any>
 var monochrome_applied = false
+
 if exists("$VIM_MONOCHROME") || get(g:, 'defaut_plus_monochrome', false)
     saved_hi = 'hi'->execute()->split("\n")
     ApplyMonochrome()

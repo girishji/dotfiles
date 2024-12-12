@@ -7,6 +7,10 @@ setl formatprg=clang-format\ -style='{BasedOnStyle:\ Google,\ IndentWidth:\ 4,\ 
 # setl formatprg=clang-format\ -style='{BasedOnStyle:\ Google,\ IndentWidth:\ 4}'
 nnoremap <buffer> <leader>F gggqG<cr>
 
+if exists('g:loaded_devdocs')
+    nnoremap <leader>; <cmd>DevdocsFind<CR>
+endif
+
 # make and execute
 # setl makeprg=clang++\ -include"$HOME/.clang-repl-incl.h"\ -std=c++23\ -stdlib=libc++\ -fexperimental-library\ -o\ /tmp/a.out\ %\ &&\ /tmp/a.out
 # NOTE: brew installs gcc in /opt/homebrew/bin. Currently g++-14 is installed. Note that g++ takes you to clang, os use g++-14.
@@ -42,6 +46,7 @@ def FF(type: string, cast: string, i: string, x: string)
     exe "normal o}\ekA"
 enddef
 
+# 'ffit' -> for (auto it ...)
 iabbr <buffer> ffit; <c-o>:FFIT
 command! -nargs=* FFIT call FFIT(false, <f-args>)
 iabbr <buffer> ffitr; <c-o>:FFITR
@@ -64,6 +69,13 @@ iab <buffer> all; <c-o>:ALL
 command! -nargs=* ALL call ALL(<f-args>)
 def ALL(x: string)
     exe 'normal! a' .. $'{x}.begin(), {x}.end()'
+enddef
+
+# print .first and .second of a pair
+iab <buffer> pr_pair; <c-o>:PRPAIR
+command! -nargs=* ALL call PRPAIR(<f-args>)
+def PRPAIR(x: string)
+    exe 'normal! a' .. $'{x}.first << " " << {x}.second'
 enddef
 
 # for

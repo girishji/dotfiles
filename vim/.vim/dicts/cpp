@@ -806,8 +806,6 @@ set::set
     set<int> set{1, 5, 3};  // can name a set as 'set'
 set::empty
     if (set.empty())
-set::insert
-    set.insert(2);
 set::erase
     set.erase(1);
 set::contains
@@ -820,9 +818,11 @@ set::clear()
     setx.clear();
 
 set::insert()
+    set.insert(v.begin(), v.end());
+
     auto result_1 = set.insert(3);
     assert(result_1.first != set.end()); // it is a valid iterator
-set::insert()
+
     auto result_1 = set.insert(3);
     assert(*result_1.first == 3);
     if (!result_2.second)
@@ -830,7 +830,8 @@ set::insert()
 
 set::insert_range()
     const auto rg = {-1, 3, -2};
-    setx.insert_range(rg); OR setx.insert(rg.begin(), rg.end());
+    setx.insert_range(rg);  // in C++20
+    setx.insert(rg.begin(), rg.end());
 
 set::erase()
     it = c.erase(it); // see map::erase, can use iterators
@@ -1435,13 +1436,13 @@ string:: operator<<,>>
     ranges::for_each_n
         applies a function object to the first N elements of a sequence
 
-..alg for_each
+for_each
     applies a function to a range of elements
-..alg ranges::for_each
+ranges::for_each
     applies a function to a range of elements
-..alg for_each_n
+for_each_n
     applies a function object to the first N elements of a sequence
-..alg ranges::for_each_n
+ranges::for_each_n
     applies a function object to the first N elements of a sequence
 
 ..alg_search
@@ -1520,79 +1521,79 @@ string:: operator<<,>>
     ranges::ends_with
         checks whether a range ends with another range
 
-..alg all_of
+all_of
     checks if a predicate is true for all, any or none of the elements in a range
-..alg any_of
+any_of
     checks if a predicate is true for all, any or none of the elements in a range
-..alg none_of
+none_of
     checks if a predicate is true for all, any or none of the elements in a range
-..alg ranges::all_of
+ranges::all_of
     checks if a predicate is true for all, any or none of the elements in a range
-..alg ranges::any_of
+ranges::any_of
     checks if a predicate is true for all, any or none of the elements in a range
-..alg ranges::none_of
+ranges::none_of
     checks if a predicate is true for all, any or none of the elements in a range
-..alg ranges::contains
+ranges::contains
     checks if the range contains the given element or subrange
-..alg ranges::contains_subrange
+ranges::contains_subrange
     checks if the range contains the given element or subrange
-..alg find
+find
     finds the first element satisfying specific criteria
-..alg find_if
+find_if
     finds the first element satisfying specific criteria
-..alg find_if_not
+find_if_not
     finds the first element satisfying specific criteria
-..alg ranges::find
+ranges::find
     finds the first element satisfying specific criteria
-..alg ranges::find_if
+ranges::find_if
     finds the first element satisfying specific criteria
-..alg ranges::find_if_not
+ranges::find_if_not
     finds the first element satisfying specific criteria
-..alg ranges::find_last
+ranges::find_last
     finds the last element satisfying specific criteria
-..alg ranges::find_last_if
+ranges::find_last_if
     finds the last element satisfying specific criteria
-..alg ranges::find_last_if_not
+ranges::find_last_if_not
     finds the last element satisfying specific criteria
-..alg find_end
+find_end
     finds the last sequence of elements in a certain range
-..alg ranges::find_end
+ranges::find_end
     finds the last sequence of elements in a certain range
-..alg find_first_of
+find_first_of
     searches for any one of a set of elements
-..alg ranges::find_first_of
+ranges::find_first_of
     searches for any one of a set of elements
-..alg adjacent_find
+adjacent_find
     finds the first two adjacent items that are equal (or satisfy a given predicate)
-..alg ranges::adjacent_find
+ranges::adjacent_find
     finds the first two adjacent items that are equal (or satisfy a given predicate)
-..alg count
+count
     returns the number of elements satisfying specific criteria
-..alg count_if
+count_if
     returns the number of elements satisfying specific criteria
-..alg ranges::count
+ranges::count
     returns the number of elements satisfying specific criteria
-..alg ranges::count_if
+ranges::count_if
     returns the number of elements satisfying specific criteria
-..alg mismatch
+mismatch
     finds the first position where two ranges differ
-..alg ranges::mismatch
+ranges::mismatch
     finds the first position where two ranges differ
-..alg equal
+equal
     determines if two sets of elements are the same
-..alg ranges::equal
+ranges::equal
     determines if two sets of elements are the same
-..alg search
+search
     searches for the first occurrence of a range of elements
-..alg ranges::search
+ranges::search
     searches for the first occurrence of a range of elements
-..alg search_n
+search_n
     searches for the first occurrence of a number consecutive copies of an element in a range
-..alg ranges::search_n
+ranges::search_n
     searches for the first occurrence of a number consecutive copies of an element in a range
-..alg ranges::starts_with
+ranges::starts_with
     checks whether a range starts with another range
-..alg ranges::ends_with
+ranges::ends_with
     checks whether a range ends with another range
 
 ..alg_fold
@@ -1609,17 +1610,17 @@ string:: operator<<,>>
     ranges::fold_left_first_with_iter
         left-folds a range of elements using the first element as an initial value, and returns a pair (iterator, optional)
 
-..alg ranges::fold_left
+ranges::fold_left
     left-folds a range of elements
-..alg ranges::fold_left_first
+ranges::fold_left_first
     left-folds a range of elements using the first element as an initial value
-..alg ranges::fold_right
+ranges::fold_right
     right-folds a range of elements
-..alg ranges::fold_right_last
+ranges::fold_right_last
     right-folds a range of elements using the last element as an initial value
-..alg ranges::fold_left_with_iter
+ranges::fold_left_with_iter
     left-folds a range of elements, and returns a pair (iterator, value)
-..alg ranges::fold_left_first_with_iter
+ranges::fold_left_first_with_iter
     left-folds a range of elements using the first element as an initial value, and returns a pair (iterator, optional)
 
 ..alg_copy
@@ -1640,21 +1641,21 @@ string:: operator<<,>>
     ranges::copy_backward
         copies a range of elements in backwards order
 
-..alg copy
+copy
     copies a range of elements to a new location
-..alg copy_if
+copy_if
     copies a range of elements to a new location
-..alg ranges::copy
+ranges::copy
     copies a range of elements to a new location
-..alg ranges::copy_if
+ranges::copy_if
     copies a range of elements to a new location
-..alg copy_n
+copy_n
     copies a number of elements to a new location
-..alg ranges::copy_n
+ranges::copy_n
     copies a number of elements to a new location
-..alg copy_backward
+copy_backward
     copies a range of elements in backwards order
-..alg ranges::copy_backward
+ranges::copy_backward
     copies a range of elements in backwards order
 
 ..alg_move
@@ -1667,13 +1668,13 @@ string:: operator<<,>>
     ranges::move_backward
         moves a range of elements to a new location in backwards order
 
-..alg move
+move
     moves a range of elements to a new location
-..alg ranges::move
+ranges::move
     moves a range of elements to a new location
-..alg move_backward
+move_backward
     moves a range of elements to a new location in backwards order
-..alg ranges::move_backward
+ranges::move_backward
     moves a range of elements to a new location in backwards order
 
 ..alg_swap
@@ -1686,13 +1687,13 @@ string:: operator<<,>>
     iter_swap
         swaps the elements pointed to by two iterators
 
-..alg swap
+swap
     swaps the values of two objects
-..alg swap_ranges
+swap_ranges
     swaps two ranges of elements
-..alg ranges::swap_ranges
+ranges::swap_ranges
     swaps two ranges of elements
-..alg iter_swap
+iter_swap
     swaps the elements pointed to by two iterators
 
 ..alg_transform
@@ -1701,9 +1702,9 @@ string:: operator<<,>>
     ranges::transform
         applies a function to a range of elements
 
-..alg transform
+transform
     applies a function to a range of elements, storing results in a destination range
-..alg ranges::transform
+ranges::transform
     applies a function to a range of elements
 
 ..alg_replace
@@ -1724,21 +1725,21 @@ string:: operator<<,>>
     ranges::replace_copy_if
         copies a range, replacing elements satisfying specific criteria with another value
 
-..alg dreplace
+dreplace
     replaces all values satisfying specific criteria with another value
-..alg dreplace_if
+dreplace_if
     replaces all values satisfying specific criteria with another value
-..alg dranges::replace
+dranges::replace
     replaces all values satisfying specific criteria with another value
-..alg dranges::replace_if
+dranges::replace_if
     replaces all values satisfying specific criteria with another value
-..alg dreplace_copy
+dreplace_copy
     copies a range, replacing elements satisfying specific criteria with another value
-..alg dreplace_copy_if
+dreplace_copy_if
     copies a range, replacing elements satisfying specific criteria with another value
-..alg dranges::replace_copy
+dranges::replace_copy
     copies a range, replacing elements satisfying specific criteria with another value
-..alg dranges::replace_copy_if
+dranges::replace_copy_if
     copies a range, replacing elements satisfying specific criteria with another value
 
 ..alg_generate
@@ -1759,21 +1760,21 @@ string:: operator<<,>>
     ranges::generate_n
         saves the result of N applications of a function
 
-..alg fill
+fill
     copy-assigns the given value to every element in a range
-..alg ranges::fill
+ranges::fill
     assigns a range of elements a certain value
-..alg fill_n
+fill_n
     copy-assigns the given value to N elements in a range
-..alg ranges::fill_n
+ranges::fill_n
     assigns a value to a number of elements
-..alg generate
+generate
     assigns the results of successive function calls to every element in a range
-..alg ranges::generate
+ranges::generate
     saves the result of a function in a range
-..alg generate_n
+generate_n
     assigns the results of successive function calls to N elements in a range
-..alg ranges::generate_n
+ranges::generate_n
     saves the result of N applications of a function
 
 ..alg_remove
@@ -1802,29 +1803,29 @@ string:: operator<<,>>
     ranges::unique_copy
         creates a copy of some range of elements that contains no consecutive duplicates
 
-..alg remove
+remove
     removes elements satisfying specific criteria
-..alg remove_if
+remove_if
     removes elements satisfying specific criteria
-..alg ranges::remove
+ranges::remove
     removes elements satisfying specific criteria
-..alg ranges::remove_if
+ranges::remove_if
     removes elements satisfying specific criteria
-..alg remove_copy
+remove_copy
     copies a range of elements omitting those that satisfy specific criteria
-..alg remove_copy_if
+remove_copy_if
     copies a range of elements omitting those that satisfy specific criteria
-..alg ranges::remove_copy
+ranges::remove_copy
     copies a range of elements omitting those that satisfy specific criteria
-..alg ranges::remove_copy_if
+ranges::remove_copy_if
     copies a range of elements omitting those that satisfy specific criteria
-..alg unique
+unique
     removes consecutive duplicate elements in a range
-..alg ranges::unique
+ranges::unique
     removes consecutive duplicate elements in a range
-..alg unique_copy
+unique_copy
     creates a copy of some range of elements that contains no consecutive duplicates
-..alg ranges::unique_copy
+ranges::unique_copy
     creates a copy of some range of elements that contains no consecutive duplicates
 
 ..alg_reverse
@@ -1837,13 +1838,13 @@ string:: operator<<,>>
     ranges::reverse_copy
         creates a copy of a range that is reversed
 
-..alg reverse
+reverse
     reverses the order of elements in a range
-..alg ranges::reverse
+ranges::reverse
     reverses the order of elements in a range
-..alg reverse_copy
+reverse_copy
     creates a copy of a range that is reversed
-..alg ranges::reverse_copy
+ranges::reverse_copy
     creates a copy of a range that is reversed
 
 ..alg_rotate_shift_shuffle
@@ -1869,25 +1870,25 @@ string:: operator<<,>>
     ranges::shift_right
         shifts elements in a range
 
-..alg rotate
+rotate
     rotates the order of elements in a range
-..alg ranges::rotate
+ranges::rotate
     rotates the order of elements in a range
-..alg rotate_copy
+rotate_copy
     copies and rotate a range of elements
-..alg ranges::rotate_copy
+ranges::rotate_copy
     copies and rotate a range of elements
-..alg shift_left
+shift_left
     shifts elements in a range
-..alg shift_right
+shift_right
     shifts elements in a range
-..alg shuffle
+shuffle
     randomly re-orders elements in a range
-..alg ranges::shuffle
+ranges::shuffle
     randomly re-orders elements in a range
-..alg ranges::shift_left
+ranges::shift_left
     shifts elements in a range
-..alg ranges::shift_right
+ranges::shift_right
     shifts elements in a range
 
 ..alg_sample
@@ -1896,9 +1897,9 @@ string:: operator<<,>>
     ranges::sample
         selects N random elements from a sequence
 
-..alg sample
+sample
     selects N random elements from a sequence
-..alg ranges::sample
+ranges::sample
     selects N random elements from a sequence
 
 ..alg_partition
@@ -1923,25 +1924,25 @@ string:: operator<<,>>
     ranges::partition_point
         locates the partition point of a partitioned range
 
-..alg is_partitioned
+is_partitioned
     determines if the range is partitioned by the given predicate
-..alg ranges::is_partitioned
+ranges::is_partitioned
     determines if the range is partitioned by the given predicate
-..alg partition
+partition
     divides a range of elements into two groups
-..alg ranges::partition
+ranges::partition
     divides a range of elements into two groups
-..alg partition_copy
+partition_copy
     copies a range dividing the elements into two groups
-..alg ranges::partition_copy
+ranges::partition_copy
     copies a range dividing the elements into two groups
-..alg stable_partition
+stable_partition
     divides elements into two groups while preserving their relative order
-..alg ranges::stable_partition
+ranges::stable_partition
     divides elements into two groups while preserving their relative order
-..alg partition_point
+partition_point
     locates the partition point of a partitioned range
-..alg ranges::partition_point
+ranges::partition_point
     locates the partition point of a partitioned range
 
 ..alg_sort
@@ -1974,33 +1975,33 @@ string:: operator<<,>>
     ranges::nth_element
         partially sorts the given range making sure that it is partitioned by the given element
 
-..alg sort
+sort
     sorts a range into ascending order
-..alg ranges::sort
+ranges::sort
     sorts a range into ascending order
-..alg stable_sort
+stable_sort
     sorts a range of elements while preserving order between equal elements
-..alg ranges::stable_sort
+ranges::stable_sort
     sorts a range of elements while preserving order between equal elements
-..alg partial_sort
+partial_sort
     sorts the first N elements of a range
-..alg ranges::partial_sort
+ranges::partial_sort
     sorts the first N elements of a range
-..alg partial_sort_copy
+partial_sort_copy
     copies and partially sorts a range of elements
-..alg ranges::partial_sort_copy
+ranges::partial_sort_copy
     copies and partially sorts a range of elements
-..alg is_sorted
+is_sorted
     checks whether a range is sorted into ascending order
-..alg ranges::is_sorted
+ranges::is_sorted
     checks whether a range is sorted into ascending order
-..alg is_sorted_until
+is_sorted_until
     finds the largest sorted subrange
-..alg ranges::is_sorted_until
+ranges::is_sorted_until
     finds the largest sorted subrange
-..alg nth_element
+nth_element
     partially sorts the given range making sure that it is partitioned by the given element
-..alg ranges::nth_element
+ranges::nth_element
     partially sorts the given range making sure that it is partitioned by the given element
 
 ..alg_binsearch
@@ -2021,21 +2022,21 @@ string:: operator<<,>>
     ranges::binary_search
         determines if an element exists in a partially-ordered range
 
-..alg lower_bound
+lower_bound
     returns an iterator to the first element not less than the given value
-..alg ranges::lower_bound
+ranges::lower_bound
     returns an iterator to the first element not less than the given value
-..alg upper_bound
+upper_bound
     returns an iterator to the first element greater than a certain value
-..alg ranges::upper_bound
+ranges::upper_bound
     returns an iterator to the first element greater than a certain value
-..alg equal_range
+equal_range
     returns range of elements matching a specific key
-..alg ranges::equal_range
+ranges::equal_range
     returns range of elements matching a specific key
-..alg binary_search
+binary_search
     determines if an element exists in a partially-ordered range
-..alg ranges::binary_search
+ranges::binary_search
     determines if an element exists in a partially-ordered range
 
 ..alg_set_opertions
@@ -2060,25 +2061,25 @@ string:: operator<<,>>
     ranges::set_symmetric_difference
         computes the symmetric difference between two sets
 
-..alg includes
+includes
     returns true if one sequence is a subsequence of another
-..alg ranges::includes
+ranges::includes
     returns true if one sequence is a subsequence of another
-..alg set_union
+set_union
     computes the union of two sets
-..alg ranges::set_union
+ranges::set_union
     computes the union of two sets
-..alg set_intersection
+set_intersection
     computes the intersection of two sets
-..alg ranges::set_intersection
+ranges::set_intersection
     computes the intersection of two sets
-..alg set_difference
+set_difference
     computes the difference between two sets
-..alg ranges::set_difference
+ranges::set_difference
     computes the difference between two sets
-..alg set_symmetric_difference
+set_symmetric_difference
     computes the symmetric difference between two sets
-..alg ranges::set_symmetric_difference
+ranges::set_symmetric_difference
     computes the symmetric difference between two sets
 
 ..alg_merge
@@ -2091,13 +2092,13 @@ string:: operator<<,>>
     ranges::inplace_merge
         merges two ordered ranges in-place
 
-..alg merge
+merge
     merges two sorted ranges
-..alg ranges::merge
+ranges::merge
     merges two sorted ranges
-..alg inplace_merge
+inplace_merge
     merges two ordered ranges in-place
-..alg ranges::inplace_merge
+ranges::inplace_merge
     merges two ordered ranges in-place
 
 ..alg_heap
@@ -2130,33 +2131,33 @@ string:: operator<<,>>
     ranges::is_heap_until
         finds the largest subrange that is a max heap
 
-..alg std::make_heap
+std::make_heap
     A heap can be created by std::make_heap and ranges::make_heap(since C++20).
-..alg ranges::make_heap
+ranges::make_heap
     A heap can be created by std::make_heap and ranges::make_heap(since C++20).
-..alg push_heap
+push_heap
     adds an element to a max heap
-..alg ranges::push_heap
+ranges::push_heap
     adds an element to a max heap
-..alg pop_heap
+pop_heap
     removes the largest element from a max heap
-..alg ranges::pop_heap
+ranges::pop_heap
     removes the largest element from a max heap
-..alg make_heap
+make_heap
     creates a max heap out of a range of elements
-..alg ranges::make_heap
+ranges::make_heap
     creates a max heap out of a range of elements
-..alg sort_heap
+sort_heap
     turns a max heap into a range of elements sorted in ascending order
-..alg ranges::sort_heap
+ranges::sort_heap
     turns a max heap into a range of elements sorted in ascending order
-..alg is_heap
+is_heap
     checks if the given range is a max heap
-..alg ranges::is_heap
+ranges::is_heap
     checks if the given range is a max heap
-..alg is_heap_until
+is_heap_until
     finds the largest subrange that is a max heap
-..alg ranges::is_heap_until
+ranges::is_heap_until
     finds the largest subrange that is a max heap
 
 ..alg_minmax
@@ -2189,33 +2190,33 @@ string:: operator<<,>>
     ranges::clamp
         clamps a value between a pair of boundary values
 
-..alg max
+max
     returns the greater of the given values
-..alg ranges::max
+ranges::max
     returns the greater of the given values
-..alg max_element
+max_element
     returns the largest element in a range
-..alg ranges::max_element
+ranges::max_element
     returns the largest element in a range
-..alg min
+min
     returns the smaller of the given values
-..alg ranges::min
+ranges::min
     returns the smaller of the given values
-..alg min_element
+min_element
     returns the smallest element in a range
-..alg ranges::min_element
+ranges::min_element
     returns the smallest element in a range
-..alg minmax
+minmax
     returns the smaller and larger of two elements
-..alg ranges::minmax
+ranges::minmax
     returns the smaller and larger of two elements
-..alg minmax_element
+minmax_element
     returns the smallest and the largest elements in a range
-..alg ranges::minmax_element
+ranges::minmax_element
     returns the smallest and the largest elements in a range
-..alg clamp
+clamp
     clamps a value between a pair of boundary values
-..alg ranges::clamp
+ranges::clamp
     clamps a value between a pair of boundary values
 
 ..alg_lexical_comp
@@ -2226,11 +2227,11 @@ string:: operator<<,>>
     lexicographical_compare_three_way
         compares two ranges using three-way comparison
 
-..alg lexicographical_compare
+lexicographical_compare
     returns true if one range is lexicographically less than another
-..alg ranges::lexicographical_compare
+ranges::lexicographical_compare
     returns true if one range is lexicographically less than another
-..alg lexicographical_compare_three_way
+lexicographical_compare_three_way
     compares two ranges using three-way comparison
 ..alg_permut
     next_permutation
@@ -2246,17 +2247,17 @@ string:: operator<<,>>
     ranges::is_permutation
         determines if a sequence is a permutation of another sequence
 
-..alg next_permutation
+next_permutation
     generates the next greater lexicographic permutation of a range of elements
-..alg ranges::next_permutation
+ranges::next_permutation
     generates the next greater lexicographic permutation of a range of elements
-..alg prev_permutation
+prev_permutation
     generates the next smaller lexicographic permutation of a range of elements
-..alg ranges::prev_permutation
+ranges::prev_permutation
     generates the next smaller lexicographic permutation of a range of elements
-..alg is_permutation
+is_permutation
     determines if a sequence is a permutation of another sequence
-..alg ranges::is_permutation
+ranges::is_permutation
     determines if a sequence is a permutation of another sequence
 
 ..alg_numeric
@@ -2285,36 +2286,36 @@ string:: operator<<,>>
     transform_inclusive_scan
         applies an invocable, then calculates inclusive scan
 
-..alg iota
+iota
     fills a range with successive increments of the starting value
-..alg ranges::iota
+ranges::iota
     fills a range with successive increments of the starting value
-..alg accumulate
+accumulate
     sums up or folds a range of elements
-..alg inner_product
+inner_product
     computes the inner product of two ranges of elements
-..alg adjacent_difference
+adjacent_difference
     computes the differences between adjacent elements in a range
-..alg partial_sum
+partial_sum
     computes the partial sum of a range of elements
-..alg reduce
+reduce
     similar to std::accumulate, except out of order
-..alg exclusive_scan
+exclusive_scan
     similar to std::partial_sum, excludes the ith input element from the ith sum
-..alg inclusive_scan
+inclusive_scan
     similar to std::partial_sum, includes the ith input element in the ith sum
-..alg transform_reduce
+transform_reduce
     applies an invocable, then reduces out of order
-..alg transform_exclusive_scan
+transform_exclusive_scan
     applies an invocable, then calculates exclusive scan
-..alg transform_inclusive_scan
+transform_inclusive_scan
     applies an invocable, then calculates inclusive scan
 
 ..alg_random
     ranges::generate_random
         fills a range with random numbers from a uniform random bit generator
 
-..alg ranges::generate_random
+ranges::generate_random
     fills a range with random numbers from a uniform random bit generator
 
 --- Views (ranges::views or views::) -- use as 'somecollection | views::xxx'

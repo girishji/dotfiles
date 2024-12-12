@@ -63,9 +63,10 @@ iabbr <silent><buffer> foritr; for (auto it = .rbegin(); it != .rend(); it++) {<
 iab <buffer> all; <c-o>:ALL
 command! -nargs=* ALL call ALL(<f-args>)
 def ALL(x: string)
-    exe 'normal! a' .. $'{x}.begin(), {x}.end(), '
+    exe 'normal! a' .. $'{x}.begin(), {x}.end()'
 enddef
 
+# for
 iabbr <silent><buffer> fori; for (int i = 0; i < ; i++) {<c-o>o}<esc>kf;;i<C-R>=abbr#Eatchar()<CR>
 iabbr <silent><buffer> forj; for (int j = 0; j < ; j++) {<c-o>o}<esc>kf;;i<C-R>=abbr#Eatchar()<CR>
 iabbr <silent><buffer> fork; for (int k = 0; k < ; k++) {<c-o>o}<esc>kf;;i<C-R>=abbr#Eatchar()<CR>
@@ -75,9 +76,6 @@ iabbr <silent><buffer> forku; for (unsigned long k = 0; k < ; k++) {<c-o>o}<esc>
 iabbr <silent><buffer> fora; for (const auto& el : ) {<c-o>o}<esc>kf:la<C-R>=abbr#Eatchar()<CR>
 iabbr <silent><buffer> for_it; for (auto it = .begin(); it != .end(); it++) {<c-o>o}<esc>kf.i<C-R>=abbr#Eatchar()<CR>
 iabbr <silent><buffer> for_each; ranges::for_each(, [](int& n) {});<esc>16hi<C-R>=abbr#Eatchar()<CR>
-iabbr <silent><buffer> max_element; ranges::max_element(<C-R>=abbr#Eatchar()<CR>
-iabbr <silent><buffer> distance; ranges::distance(<C-R>=abbr#Eatchar()<CR>
-iabbr <silent><buffer> r; ranges::<C-R>=abbr#Eatchar()<CR>
 
 # Types
 iabbr <silent><buffer> u64; std::uint64_t
@@ -86,9 +84,12 @@ iabbr <silent><buffer> ll; signed long long
 iabbr <silent><buffer> vi; vector<int>
 iabbr <silent><buffer> vii; vector<vector<int>>
 iabbr <silent><buffer> vs; vector<string>
-iabbr <silent><buffer> setp; set<pair<int, int>><c-r>=abbr#Eatchar()<cr>
-iabbr <silent><buffer> seti; set<int><c-r>=abbr#Eatchar()<cr>
-iabbr <silent><buffer> mapii; map<int, int><c-r>=abbr#Eatchar()<cr>
+iabbr <silent><buffer> setp; set<pair<int, int>>
+iabbr <silent><buffer> sp; set<pair<int, int>>
+iabbr <silent><buffer> seti; set<int>
+iabbr <silent><buffer> si; set<int>
+iabbr <silent><buffer> mapii; map<int, int>
+iabbr <silent><buffer> mii; map<int, int>
 # pair
 iabbr <buffer> pii; pair<int, int>
 iabbr <buffer> pair; make_pair(<c-r>=abbr#Eatchar()<cr>
@@ -150,6 +151,9 @@ iabbr <buffer> max_int; std::numeric_limits<int>::max();<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> using; using in_list_t = std::list<int>;<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> struct; struct disk_element {<cr>int id{ -1 };<cr>};<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> lambda; auto fn = [&x, *y](int x) -> char { }<cr>};<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> max_element; ranges::max_element(<C-R>=abbr#Eatchar()<CR>
+iabbr <buffer> distance; ranges::distance(<C-R>=abbr#Eatchar()<CR>
+iabbr <buffer> r; ranges::<C-R>=abbr#Eatchar()<CR>
 
 # float and double
 iabbr <buffer> comp_zero; if (b == 0.0f) // 0.0 for double

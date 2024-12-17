@@ -70,6 +70,8 @@ command -nargs=+ -bang HiLight {
 }
 
 
+const ansi_default = exists("$VIM_ANSI_DEFAULT") || get(g:, 'defaut_plus_ansi_default', false)
+
 if &background ==# 'dark'
     # UI elements
     HiLight  Pmenu         ctermfg=black      ctermbg=gray      cterm=none
@@ -88,8 +90,6 @@ if &background ==# 'dark'
     HiLight  IncSearch     ctermfg=rbyellow   ctermbg=black
     HiLight  StatusLine    ctermfg=rwhite     ctermbg=darkgray  cterm=none
     HiLight  StatusLineNC  ctermfg=darkgray   ctermbg=none      cterm=underline
-    # HiLight  StatusLine    ctermfg=black      ctermbg=gray      cterm=none
-    # HiLight  StatusLineNC  ctermfg=lightgray  ctermbg=none      cterm=underline
     HiLight  TabLineFill   ctermbg=gray       cterm=none
     HiLight  Search        ctermfg=black      ctermbg=gray
     HiLight  CursorLineNr  ctermfg=none       cterm=underline
@@ -110,12 +110,18 @@ if &background ==# 'dark'
     HiLight  MoreMsg       ctermfg=blue
 
     # Generic syntax
-    HiLight  Comment    ctermfg=blue
     # HiLight  Constant   ctermfg=red  |# default is 13 (bmagenta)
-    # HiLight  Special    ctermfg=red  |# no good choices, let default hardcoded yellow(224) prevail
+    if ansi_default
+        HiLight  Comment    ctermfg=darkgray
+    else
+        # Special: default hardcoded to yellow(224)
+        HiLight  Special    ctermfg=red
+        # PreProc: default hardcoded to cyan(81)
+        HiLight  PreProc    ctermfg=red
+        HiLight  Comment    ctermfg=blue
+    endif
     HiLight  Identifier ctermfg=cyan      cterm=none
     HiLight  Statement  ctermfg=yellow
-    # HiLight  PreProc    ctermfg=magenta |# no good choices, let default hardcoded cyan(81) prevail
     HiLight  Type       ctermfg=green
     HiLight  Underlined ctermfg=magenta
     HiLight  Ignore     ctermfg=black     ctermbg=lightgray
@@ -128,6 +134,7 @@ if &background ==# 'dark'
     # Others
     HiLight  helpExample ctermfg=magenta
     HiLight  helpCommand ctermfg=gray    ctermbg=black
+    hi link  markdownCodeBlock String
 
 else  # bg=light
 

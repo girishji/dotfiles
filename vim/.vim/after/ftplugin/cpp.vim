@@ -29,16 +29,17 @@ enddef
 nnoremap <buffer> <leader>M <scriptcmd>MakeOnly()<cr>
 
 # Abbreviations:
-# - They do not axpand after '.', so 'iabbr fr; first' for x.fr; (x.first) does not work
 # - When naming, ignore vowels inless they indicate type (ex. vi; -> vector<int>)
-# - Append a ';' so abbrevs are distinct and do not expand unexpectedly
+# - Appending a ';' is problematic, since it is not a keyword. abbrev will not
+#   expand if there is '(' or '.' before the abbrev. So use ';' in cases where
+#   there is bound to be a space before abbrev.
 
 # Type 'ff; e 10<cr>' and it will insert 'for (int e = 0; e < 10; ++e) {<cr>.'
 iab <buffer> ff; <c-o>:FFI
 command! -nargs=* FFI call FF("int", "", <f-args>)
-iab ffc; <c-o>:FFC
+iab <buffer> ffc; <c-o>:FFC
 command! -nargs=* FFC call FF("int", "(int)", <f-args>)
-iab ffs; <c-o>:FFS
+iab <buffer> ffs; <c-o>:FFS
 command! -nargs=* FFS call FF("size_t", "", <f-args>)
 def FF(type: string, cast: string, i: string, x: string)
     exe 'normal! a' .. $'for ({type} {i} = 0; {i} < {cast}{x}; ++{i}) {{'
@@ -61,22 +62,13 @@ def FFIT(reverse: bool, a: string, it: string = "it")
     exe "normal o}\ekA"
 enddef
 
-iabbr <silent><buffer> forit; for (auto it = .begin(); it != .end(); it++) {<c-o>o}<esc>kf.i<C-R>=abbr#Eatchar()<CR>
-iabbr <silent><buffer> foritr; for (auto it = .rbegin(); it != .rend(); it++) {<c-o>o}<esc>kf.i<C-R>=abbr#Eatchar()<CR>
-
 # Type 'all; a<cr>' and it will insert 'a.begin(), a.end(), '
-iab <buffer> all; <c-o>:ALL
-command! -nargs=* ALL call ALL(<f-args>)
-def ALL(x: string)
-    exe 'normal! a' .. $'{x}.begin(), {x}.end()'
-enddef
-
-# print .first and .second of a pair
-iab <buffer> pr_pair; <c-o>:PRPAIR
-command! -nargs=* ALL call PRPAIR(<f-args>)
-def PRPAIR(x: string)
-    exe 'normal! a' .. $'{x}.first << " " << {x}.second'
-enddef
+# iab <buffer> all; <c-o>:ALL
+# command! -nargs=* ALL call ALL(<f-args>)
+# def ALL(x: string)
+#     exe 'normal! a' .. $'{x}.begin(), {x}.end()'
+# enddef
+iabbr <buffer> alle .begin(), .end()<esc>BBi<C-R>=abbr#Eatchar()<CR>
 
 # for
 iabbr <silent><buffer> fori; for (int i = 0; i < ; i++) {<c-o>o}<esc>kf;;i<C-R>=abbr#Eatchar()<CR>
@@ -86,24 +78,26 @@ iabbr <silent><buffer> foriu; for (unsigned long i = 0; i < ; i++) {<c-o>o}<esc>
 iabbr <silent><buffer> forju; for (unsigned long j = 0; j < ; j++) {<c-o>o}<esc>kf;;i<C-R>=abbr#Eatchar()<CR>
 iabbr <silent><buffer> forku; for (unsigned long k = 0; k < ; k++) {<c-o>o}<esc>kf;;i<C-R>=abbr#Eatchar()<CR>
 iabbr <silent><buffer> fora; for (const auto& el : ) {<c-o>o}<esc>kf:la<C-R>=abbr#Eatchar()<CR>
-iabbr <silent><buffer> for_it; for (auto it = .begin(); it != .end(); it++) {<c-o>o}<esc>kf.i<C-R>=abbr#Eatchar()<CR>
-iabbr <silent><buffer> for_each; ranges::for_each(, [](int& n) {});<esc>16hi<C-R>=abbr#Eatchar()<CR>
+iabbr <silent><buffer> foreach; ranges::for_each(, [](int& n) {});<esc>16hi<C-R>=abbr#Eatchar()<CR>
+iabbr <silent><buffer> forit; for (auto it = .begin(); it != .end(); it++) {<c-o>o}<esc>kf.i<C-R>=abbr#Eatchar()<CR>
+iabbr <silent><buffer> foritr; for (auto it = .rbegin(); it != .rend(); it++) {<c-o>o}<esc>kf.i<C-R>=abbr#Eatchar()<CR>
+
 
 # Types
-iabbr <silent><buffer> u64; std::uint64_t
-iabbr <silent><buffer> ul; unsigned long
-iabbr <silent><buffer> ll; signed long long
+# iabbr <silent><buffer> u64 std::uint64_t
+# iabbr <silent><buffer> ul unsigned long
+# iabbr <silent><buffer> ll signed long long
 iabbr <silent><buffer> vi; vector<int>
-iabbr <silent><buffer> vii; vector<vector<int>>
+iabbr <silent><buffer> vvi; vector<vector<int>>
 iabbr <silent><buffer> vs; vector<string>
+iabbr <silent><buffer> vpii; vector<pair<int, int>>
 iabbr <silent><buffer> setp; set<pair<int, int>>
-iabbr <silent><buffer> sp; set<pair<int, int>>
 iabbr <silent><buffer> seti; set<int>
 iabbr <silent><buffer> si; set<int>
 iabbr <silent><buffer> mapii; map<int, int>
 iabbr <silent><buffer> mii; map<int, int>
 # pair
-iabbr <buffer> pii; pair<int, int>
+iabbr <buffer> pii pair<int, int><c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> pair; make_pair(<c-r>=abbr#Eatchar()<cr>
 # tuple
 iabbr <buffer> tuple; tuple<int, string, double> myTuple = {42, "World", 2.718};
@@ -116,7 +110,10 @@ iabbr <buffer> optional; optional<t> // takes std::nullopt also
 # Convenience
 iabbr <silent><buffer> in; #include <bits/stdc++.h>
             \<cr>using namespace std;
+            \<cr>namespace rg = std::ranges;
+            \<cr>namespace rv = std::ranges::views;
             \<cr>using u64 = std::uint64_t;
+            \<cr>using i64 = std::int64_t;
             \<cr>#define F first
             \<cr>#define S second
             \<cr><cr><c-r>=abbr#Eatchar()<cr>
@@ -137,12 +134,14 @@ iabbr <buffer> freopen2; freopen("file", "r", stdin);<cr>for (string line; getli
 iabbr <buffer> stringstream; stringstream ss(line);<cr>while (ss >> i1 >> i2) {<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> getline; getline(cin, line)<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> getline2; while (getline(cin, line)) {<cr>stringstream ss(line);<cr>if (ss >> i1 >> i2)<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> for_vector; for (const auto& x : std::vector{1, 2}) {<c-r>=abbr#Eatchar()<cr>
+# iabbr <buffer> for_vector; for (const auto& x : std::vector{1, 2}) {<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> for_vector; for (const auto& x : {1, 2}) {<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> for_container; for (const auto& x : std::vector<int>{1, 2}) {<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> all_of; all_of(v.cbegin(), v.cend(), [](int i) { return i % 2 == 0; }))<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> any_of; any_of(v.cbegin(), v.cend(), DivisibleBy(7)))<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> none_of; none_of(v.cbegin(), v.cend(), [](int i) { return i % 2 == 0; }));<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> pairwise; pairwise = ranges::zip(numbers, numbers \| views::drop(1));<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> pairwise; pairwise = views::zip(numbers, numbers \| views::drop(1));<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> zip; pairwise = views::zip(<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> increasing_strictly; = ranges::adjacent_find(vec, std::greater_equal<int>()) == vec.end();// see ..fn_obj less_equal<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> increasing; = ranges::adjacent_find(vec, std::greater<int>()) == vec.end()// see ..fn_obj less_equal;<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> decreasing_strictly; = ranges::adjacent_find(vec, std::less_equal<int>()) == vec.end();// see ..fn_obj less_equal<c-r>=abbr#Eatchar()<cr>
@@ -152,12 +151,13 @@ iabbr <buffer> recursive_lambda; function<int(int)> fac = [&fac](int n) { return
 iabbr <buffer> lambda_recursive; function<int(int)> fac = [&fac](int n) { return (n < 2) ? 1 : n * fac(n - 1); };<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> iterator; vector<int>::iterator it = vec.begin();<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> distance; distance(v.begin(), v.end()) // returns number of hops from begin to end<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> regex; regex pat {R"(\s+(\w+))"};<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> regex_iterator; for (sregex_iterator p(str.begin(), str.end(), pat); p!=sregex_iterator(); ++p) cout << (∗p)[0] << '\n';<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> smallest_int; std::numeric_limits<int>::min();<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> min_int; std::numeric_limits<int>::min();<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> largest_int; std::numeric_limits<int>::max();<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> max_int; std::numeric_limits<int>::max();<c-r>=abbr#Eatchar()<cr>
+
+# Math
+iabbr <buffer> abs; std::abs(<c-r>=abbr#Eatchar()<cr>
 
 # Misc
 iabbr <buffer> using; using in_list_t = std::list<int>;<c-r>=abbr#Eatchar()<cr>
@@ -200,6 +200,7 @@ iabbr <buffer> conv_view_container; auto squared = numbers // a vector
             \<cr>\| views::transform( [](int n) { return n * n; } )
             \<cr>\| ranges::to<std::deque>();
 iabbr <buffer> ranges_to; ranges::to<std::deque>();
+iabbr <buffer> conv_char_string; s += ch; string(1, ch); s.push_back(ch);
 
 # string
 iabbr <buffer> string_iterate; for (char c : str) {<c-r>=abbr#Eatchar()<cr>
@@ -238,6 +239,27 @@ iabbr <buffer> pr_range_copy; ranges::copy(x, ostream_iterator<int>(cout, " "));
 # using views and std::print
 iabbr <buffer> pr; print("{}\n", );<left><left><c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> pr_view; print("{}\n", views::zip(v1, v2) OR v2 \| views::pairwise);<c-r>=abbr#Eatchar()<cr>
+# pair (place this outside main()) - it is in global namespace
+iabbr <buffer> pr_pair_fn; std::ostream& operator<<(std::ostream& os, const std::pair<int, int>& p) {
+            \<cr>os << '(' << p.first << ", " << p.second << ')';
+            \<cr>return os;
+            \<cr>}<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> pr_vector_fn; template<typename T>
+            \<cr>std::ostream& operator<<(std::ostream& os, const std::vector<T>& v) {
+            \<cr>ranges::for_each(v, [&os](const T& n) { os << n << " "; });
+            \<cr>return os;
+            \<cr>}<c-r>=abbr#Eatchar()<cr>
+
+# operator
+iabb <buffer> operator_plus; pair<int, int> operator+(const pair<int, int>& lhs, const pair<int, int>& rhs) {
+            \<cr>return make_pair(lhs.first + rhs.first, lhs.second + rhs.second);
+            \<cr>}<c-r>=abbr#Eatchar()<cr>
+iabb <bufer> operator_mult; pair<int, int> operator*(const pair<int, int>& l, int n) {
+            \<cr>return make_pair(l.F * n, l.S * n);
+            \<cr>}<c-r>=abbr#Eatchar()<cr>
+
+# map
+iabb <buffer> map_init; map<std::string, int> ages = { {"Alice", 30}, {"Bob", 25}, {"Charlie", 35} };
 
 # map iterate
 iabbr <buffer> map_iterate; for (const auto& [key, value] : map) {<c-r>=abbr#Eatchar()<cr>
@@ -286,6 +308,7 @@ iabbr <buffer> swap_range; swap_ranges(v.begin(), v.begin() + 3 (// end of range
 # i, j = j, -i -> so that if you start with (0, 1), you get all 4 directions in 2D space.
 # tie() just uses references, otherwise like swap() which uses copies
 # int i = 4, j = 8;
+iabbr <buffer> swap_modify2; swap(i, j), j = -j<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> swap_modify; tie(i, j) = tuple{j, -i};<c-r>=abbr#Eatchar()<cr>
 
 # iterator: do not do (map.end() - 1), but std::prev(map.end())
@@ -297,7 +320,10 @@ iabbr <buffer> it_next2; next(m.begin(), 2);
 # reduce, fold_left, accumulate
 # reduce, accumulate -> difference is that reduce can be parallelized (out of order execution)
 # Caution: both reduce and accumulate do not evaluate 'unsigned long long' correctly. Don't use them.
-iabbr <buffer> fold_left; ranges::fold_left(v, 0, [](){})<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> reduce; use fold_left
+iabbr <buffer> fold_left; ranges::fold_left(v, 0, [](int acc, const pair<int, int>& (or auto&) cur) {
+            \<cr>return acc + cur...; (or return std::max(acc, cur);)
+            \<cr>})<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> fold_left_; int sum = std::ranges::fold_left(v.begin(), v.end(), 0, std::plus<int>());
             \<cr>int mul = std::ranges::fold_left(v, 1, std::multiplies<int>()); // (2)
             \<cr>std::vector<std::pair<char, float>> data {{'A', 2.f}, {'B', 3.f}, {'C', 3.5f}};
@@ -334,10 +360,39 @@ iabbr <buffer> templ_val; template<int N>
             \<cr>auto const part1 = blink<25>;
 
 # Algorithms
+#
+# cartesian_product
 # (0, 0), (0, 1), (0, 2), ... (1, 0), (1, 1), ...
 iabbr <buffer> product; views::cartesian_product(views::iota(0, m), views::iota(0, n))<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> cartesian_product; views::cartesian_product(views::iota(0, m), views::iota(0, n))<c-r>=abbr#Eatchar()<cr>
 # emulates 2 loops: for (i = 0; i < m; i++) { for (j = 0; j < n; j++) ...
 iabbr <buffer> for2loops; for (auto [i, j] : views::cartesian_product(views::iota(0, m), views::iota(0, n))) {<c-r>=abbr#Eatchar()<cr>
 # emulates 2 loops: for (i = 0; i < m; i++) { for (j = 0; j < n; j++) ...
 # iabbr <buffer> for2loops_; for (int k = 0; k < m * n; ++k)<c-r>=abbr#Eatchar()<cr>
+#
+# Iterate over unique keys (elements) in a sorted range
+iabbr <buffer> for_uniqe_keys; for (auto it = p.begin(); it != p.end();
+            \<cr>it = ranges::upper_bound(it, p.end(), it->first, {}, &plot_loc_t::first)) {<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> for_uniqe_keys2; for (auto it = data.begin(); it != data.end();
+            \<cr>it = ranges::upper_bound(it, data.end(), *it)) {<c-r>=abbr#Eatchar()<cr>
+# Iterate over subrange of identical keys in a sorted range
+iabbr <buffer> for_subrange_equal_key; for (const auto& el : ranges::equal_range(p, it->first, {}, &plot_loc_t::first)) {<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> for_subrange_equal_key2; for (auto& el : ranges::equal_range(data, key)) {<c-r>=abbr#Eatchar()<cr>
 
+# Sort using projection, pair.first
+iabbr <buffer> sort_projection; pair<int, int> v; ranges::sort(v, {}, &pair<int, int>::first);<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> sort_projection2; pair<int, int> v; ranges::sort(v, ranges::less{}, &pair<int, int>::first);<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> sort_descending_projection; pair<int, int> v; ranges::sort(v, ranges::greater{}, &pair<int, int>::first);<c-r>=abbr#Eatchar()<cr>
+
+# regex
+iabbr <buffer> regex; smatch matches;
+            \<cr>regex pat {R"(\w{2}\s∗\d{5}(−\d{4})?)"};
+            \<cr>if (regex_search(line, matches, pat)) {
+            \<cr>cout << lineno << ": " << matches[0] << '\n'; // the complete match
+            \<cr>if (1<matches.size() && matches[1].matched) // if there is a sub-pattern
+            \<cr>int x = std::stoi(matches[1].str());
+iabbr <buffer> regex2; regex pat {R"(\s+(\w+))"};<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> regex_iterator; for (sregex_iterator p(str.begin(), str.end(), pat); p!=sregex_iterator(); ++p) cout << (∗p)[0] << '\n';<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> regex_array; vector<regex> pat{
+            \<cr>regex(R"(Button A: X\+(\d+), Y\+(\d+))"),
+            \<cr>regex(R"(Button B: X\+(\d+), Y\+(\d+))")};

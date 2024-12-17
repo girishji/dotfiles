@@ -878,16 +878,72 @@ gcG –> comment current line and all the lines including last line in file
 ----------------------------------------
 QuickFix                         *giri-quickfix*
 
-:chistory - shows all quickfix lists
-:colder and :cnewer to navigate through your quickfix lists (up to 10).
-:copen and :cclose to open and close quickfix list that is active (:cw[indow] toggles, after :copen has opened the list)
+QuickFix is a jump list. (https://youtu.be/F3ZfdeAWP2Y)
+ - good for task management while editing
+ - helps refactoring in large projects
 
-:cc [nr] - display error number [nr]
-[c and ]c mapped to :cnext and :cprevious, [C and ]C to :cfirst and :clast
+Creating -> :make, :grep, :vimgrep, :helpgrep
+Open and Close -> :copen, :cclose
+	:copen and :cclose to open and close quickfix list that is active
+	:cwindow (open qf window ONLY if there are entries, or toggle)
+	(:cw[indow] toggles, after :copen has opened the list)
+Jumping ->
+  -> :cc [nr] jump to entry [nr] (or current entry again) when not in qf window
+	:cc [nr] - display error number [nr]
+	[c and ]c mapped to :cnext and :cprevious, [C and ]C to :cfirst and :clast
+  -> <CR> jump to entry under cursor
+  -> <C-W><CR> jump to entry but in a new window (helpful)
+  -> :cnext/cprevious
+  (also:)
+  -> :cnfile/:cpfile jump to entry in next/previous file
+  -> :cfirst(:crewind)/:clast
+  -> :cabove/:cbelow jump to entry above/below current line
+  -> :cafter/:cbefore jump to entry before/after cursor in current line
 
-:cex[pr] [] - Empty the current quickfix list.
-:cfdo[!] {cmd} - Execute {cmd} in each file in the quickfix list.
-:cdo <cmd> - Execute a command <cmd> on each valid entry of the current quickfix list.
+Managing QF lists
+	:chistory - shows all quickfix lists
+	:colder and :cnewer to navigate through your quickfix lists (up to 10).
+
+Batch Operations
+:cdo Execute commands for each entry (each line)
+	:cdo s/OLD/NEW/g | w
+:cfdo Execute commands for each file
+	:cfdo %s/OLD/NEW/g | w ( <- apply to entire file, not just first match)
+
+Bundled plugins
+Cfilter
+	What if you need to use :cdo but exclude certian entries?
+	:packadd cfilter (bundled plugin)
+	:Cfilter[!] /pat/
+Qfreplace
+	To perform replacement on filtered iterms:
+	:Qfreplace 
+
+Location list - specific to window (not global). You can have many location
+		lists open in different windows.
+	Quickfix -> buffer1, buffer2
+	Location List 1 -> buffer1, Location List 2 -> buffer2
+
+Clear/delete current quickfix list
+	:cex[pr] [] - Empty the current quickfix list.
+
+Saving
+:w filename -> write quickfix buffer
+Loading from file
+:cfile / :cgetfile -> read from file
+	:cfile <filename> or :cgetfile <filename>
+Loading from buffer
+:cbuffer / :cgetbuffer -> read from buffer
+	:e <filename>
+	:cbuffer or :cgetbuffer
+
+Using macros with quickfix
+	qq - start recording
+	(perform some operations on file)
+	:w
+	:cnext - move to next entry
+	q - stop recording 
+	@q or 10@q
 
 ----------------------------------------
 # 'gn'

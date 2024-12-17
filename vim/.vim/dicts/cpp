@@ -872,6 +872,15 @@ starts_with(
 ends_with(
 substr(start, length)
 
+string::npos
+      value returnd when string.find() does not find the substring.
+      std::string::size_type n;
+      std::string const s = "This is a string"; /*
+      n = s.find("is", 5);
+      print(2, n, s);
+      if (std::string::npos == n)
+          std::cout << "not found! n == npos\n";
+
 string::
     mutable (unlike java string, and C's char *f="foo"
 
@@ -2863,11 +2872,9 @@ views::chunk
             std::cout << (pos++ ? " " : "") << elem;
         std::cout << "] ";
     };
-
     int main()
     {
         const auto v = {1, 2, 3, 4, 5, 6};
-
         for (const unsigned width : std::views::iota(1U, 2U + v.size()))
         {
             auto const chunks = v | std::views::chunk(width);
@@ -2877,7 +2884,6 @@ views::chunk
         }
     }
     Output:
-
     chunk(1): [1] [2] [3] [4] [5] [6]
     chunk(2): [1 2] [3 4] [5 6]
     chunk(3): [1 2 3] [4 5 6]
@@ -3152,6 +3158,105 @@ views::cartesian_product
     function object implementing x ^ y
 ..fn_obj bit_not<void>
     function object implementing ~x
+
+--- Function Objects (without ..fn_obj prefix)
+
+std::not_fn
+    creates a function object that negates the result of the callable object passed to it.
+std::plus
+    function object implementing x + y
+std::plus<void>
+    function object implementing x + y deducing parameter and return types
+std::minus
+    function object implementing x - y
+std::minus<void>
+    function object implementing x - y deducing parameter and return types
+std::multiplies
+    function object implementing x * y
+std::multiplies<void>
+    function object implementing x * y deducing parameter and return types
+std::divides
+    function object implementing x / y
+std::divides<void>
+    function object implementing x / y deducing parameter and return types
+std::modulus
+    function object implementing x % y
+std::modulus<void>
+    function object implementing x % y deducing parameter and return types
+std::negate
+    function object implementing -x
+std::negate<void>
+    function object implementing -x deducing parameter and return types
+--- Comparisons
+std::equal_to
+    function object implementing x == y
+std::equal_to<void>
+    function object implementing x == y deducing parameter and return types
+std::not_equal_to
+    function object implementing x != y
+std::not_equal_to<void>
+    function object implementing x != y deducing parameter and return types
+std::greater
+    function object implementing x > y
+std::greater<void>
+    function object implementing x > y deducing parameter and return types
+std::less
+    function object implementing x < y
+std::less<void>
+    function object implementing x < y deducing parameter and return types
+std::greater_equal
+    function object implementing x >= y
+std::greater_equal<void>
+    function object implementing x >= y deducing parameter and return types
+std::less_equal
+    function object implementing x <= y
+std::less_equal<void>
+    function object implementing x <= y deducing parameter and return types
+--- Logical operations
+std::logical_and
+    function object implementing x && y
+std::logical_and<void>
+    function object implementing x && y deducing parameter and return types
+std::logical_or
+    function object implementing x || y
+std::logical_or<void>
+    function object implementing x || y deducing parameter and return types
+std::logical_not
+    function object implementing !x
+std::logical_not<void>
+    function object implementing !x deducing parameter and return types
+--- Bitwise operations
+std::bit_and
+    function object implementing x & y
+std::bit_and<void>
+    function object implementing x & y deducing parameter and return types
+std::bit_or
+    function object implementing x | y
+std::bit_or<void>
+    function object implementing x | y deducing parameter and return types
+std::bit_xor
+    function object implementing x ^ y
+std::bit_xor<void>
+    function object implementing x ^ y deducing parameter and return types
+std::bit_not
+    function object implementing ~x
+std::bit_not<void>
+    function object implementing ~x deducing parameter and return types
+--- Constrained comparison function objects
+ranges::equal_to
+    constrained function object implementing x == y
+ranges::not_equal_to
+    constrained function object implementing x != y
+ranges::less
+    constrained function object implementing x < y
+ranges::greater
+    constrained function object implementing x > y
+ranges::less_equal
+    constrained function object implementing x <= y
+ranges::greater_equal
+    constrained function object implementing x >= y
+compare_three_way
+    constrained function object implementing x <=> y
 
 --- iterator library
 reverse_iterator(

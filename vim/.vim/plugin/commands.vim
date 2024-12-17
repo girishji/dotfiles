@@ -1,16 +1,5 @@
 vim9script
 
-command CscopeDB SetupCscope()
-def SetupCscope()
-    if filereadable('./cscope.out')
-        cscope add ./cscope.out
-    elseif filereadable('./../cscope.out')
-        cscope add ./../cscope.out
-    elseif filereadable(expand('~/cscope/cscope.out'))
-        cscope add ~/cscope/cscope.out
-    endif
-enddef
-
 # Find highlight group under cursor
 command HighlightGroupUnderCursor {
     if exists("*synstack")
@@ -124,4 +113,15 @@ def Align(line1: number, line2: number, delimit = null_string)
         line ..= lwords->empty() ? '' : lwords[-1]
         $'{indent[lnum]}{line}'->setline(line1 + lnum)
     })
+enddef
+
+command CscopeDB SetupCscope()
+def SetupCscope()
+    if filereadable('./cscope.out')
+        cscope add ./cscope.out
+    elseif filereadable('./../cscope.out')
+        cscope add ./../cscope.out
+    elseif filereadable(expand('~/cscope/cscope.out'))
+        cscope add ~/cscope/cscope.out
+    endif
 enddef

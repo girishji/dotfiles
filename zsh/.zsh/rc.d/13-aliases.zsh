@@ -260,12 +260,15 @@ if is_mac; then
         # TIP: brew install coreutils
         # All the gnu commands will be prefixed with 'g'. Can do 'man gls'.
         # Note: https://apple.stackexchange.com/questions/432386/use-ls-colors-not-lscolors-on-mac-os
-        # export LS_COLORS='di=1:ln=3:ex=4'
+        #
+        # See ~/bin/ls
+        # Example: export LS_COLORS="di=1;34:ln=1;36:ex=1;32:*.txt=1;33"
+        #
         if [[ ${bg_color} != "0;15" ]]; then # dark background
-            export LS_COLORS='di=1:ln=3:ex=3'
+            # export LS_COLORS='di=1:ln=3:ex=3'  # 1=bold, 3=italic, see ~/help/ls
+            export LS_COLORS='di=1;36:ln=1;35:ex=1;33'  # see help/ls
         fi
-        # alias ls='gls --color=always -F' # auto/always/never
-        alias ls='ls -FG' # aliases the command /usr/bin/ls
+        alias ls='gls --color=always -F' # auto/always/never
     else
         alias ls='ls -FG' # aliases the command /usr/bin/ls
     fi
@@ -278,6 +281,7 @@ if is_mac; then
     alias op='open'
     # -fexperimental-library is needed for std::ranges
     alias cr='clang-repl --Xcc=-include"$HOME/.clang-repl-incl.h" --Xcc=-std=c++23 --Xcc=-stdlib=libc++ --Xcc=-fexperimental-library'
+    alias clang_repl='clang-repl --Xcc=-include"$HOME/.clang-repl-incl.h" --Xcc=-std=c++23 --Xcc=-stdlib=libc++ --Xcc=-fexperimental-library'
     # alias gssh='gcloud compute ssh --zone "us-central1-a" "n2dstd" --project "sandbox-403316" --ssh-flag="-ServerAliveInterval=30"'
     # alias gscp='gcloud compute scp --recurse n2dstd:~/foo ~/bar'
     # alias gstop='gcloud compute instances stop n2dstd'

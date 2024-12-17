@@ -59,8 +59,9 @@ if exists("g:loaded_vimsuggest")
         # alwayson: false,
         # pum: false,
         # trigger: 'tn',
-        # fuzzy: false,
         # reverse: true,
+        # fuzzy: false,
+        # prefixlen: 3,
         popupattrs: {
             borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
             # borderhighlight: ['Normal'],
@@ -82,7 +83,7 @@ if exists("g:loaded_vimsuggest")
         # reverse: true,
         # auto_first: true,  # :hi will not call ':highlight' but calls ':HighlightGroupUnderCursor'
         # complete_sg: false,
-        # prefix: 3,
+        # prefixlen: 3,
         popupattrs: {
             borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
             # borderhighlight: ['Normal'],

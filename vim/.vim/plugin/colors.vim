@@ -21,8 +21,15 @@ augroup END
 if expandcmd($VIM_BG) != null_string
     exec $'set background={expandcmd($VIM_BG)}'
 endif
+
 if expandcmd($VIM_COLORSCHEME) != null_string
     exec $'colorscheme {expandcmd($VIM_COLORSCHEME)}'
+endif
+
+# Not having any colorscheme is good enough for some terminal profiles (like
+# Iceberg).
+if get(g:, 'colors_name', null_string) == null_string
+    hi LineNr ctermfg=8
 endif
 
 # Following should occur after setting colorscheme.

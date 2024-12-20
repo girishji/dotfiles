@@ -214,7 +214,8 @@ def ApplyMonochrome()
                     exec 'hi' grp 'ctermfg=none ctermbg=none cterm=none'
                 endif
             endfor
-            hi Operator ctermfg=5
+            hi Operator ctermfg=1
+            hi VimdefBody ctermfg=1
             exec 'hi String' $'ctermfg={&background == "dark" ? 10 : 1}'
             monochrome_applied = true
         endif

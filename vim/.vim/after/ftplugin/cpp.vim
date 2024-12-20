@@ -7,26 +7,14 @@ setl formatprg=clang-format\ -style='{BasedOnStyle:\ Google,\ IndentWidth:\ 4,\ 
 # setl formatprg=clang-format\ -style='{BasedOnStyle:\ Google,\ IndentWidth:\ 4}'
 nnoremap <buffer> <leader>F gggqG<cr>
 
-if exists('g:loaded_devdocs')
-    nnoremap <leader>; <cmd>DevdocsFind<CR>
-endif
-
 # make and execute
 # setl makeprg=clang++\ -include"$HOME/.clang-repl-incl.h"\ -std=c++23\ -stdlib=libc++\ -fexperimental-library\ -o\ /tmp/a.out\ %\ &&\ /tmp/a.out
-# NOTE: brew installs gcc in /opt/homebrew/bin. Currently g++-14 is installed. Note that g++ takes you to clang, os use g++-14.
-setl makeprg=g++-14\ -std=c++23\ -Wall\ -Wextra\ -Wconversion\ -DONLINE_JUDGE\ -O2\ -lstdc++exp\ -o\ /tmp/a.out\ %\ &&\ /tmp/a.out
-nnoremap <buffer> <leader>m :make %<cr>
-# make only (no execution) -- now you can do :cw
-def MakeOnly()
-    var saved = &makeprg
-    try
-        setl makeprg=g++-14\ -std=c++23\ -Wall\ -Wextra\ -Wconversion\ -DONLINE_JUDGE\ -O2\ -lstdc++exp\ -o\ /tmp/a.out\ %
-        :make %
-    finally # can also use :defer
-        exec $'setl makeprg={saved}'
-    endtry
-enddef
-nnoremap <buffer> <leader>M <scriptcmd>MakeOnly()<cr>
+#
+# NOTE: brew installs gcc in /opt/homebrew/bin. Currently g++-14 is installed.
+#       Note that g++ is linked to clang, so use g++-14.
+#
+nnoremap <buffer> <leader>M :setl makeprg=sh\ -c\ \"g++-14\ -std=c++23\ -Wall\ -Wextra\ -Wconversion\ -DONLINE_JUDGE\ -O2\ -lstdc++exp\ -o\ /tmp/a.out\ %\ \&\&\ /tmp/a.out\"<cr>:make %<cr>
+nnoremap <buffer> <leader>m :setl makeprg=sh\ -c\ \"g++-14\ -std=c++23\ -Wall\ -Wextra\ -Wconversion\ -DONLINE_JUDGE\ -O2\ -lstdc++exp\ -o\ /tmp/a.out\ %\"<cr>:make %<cr>
 
 # Abbreviations:
 # - When naming, ignore vowels inless they indicate type (ex. vi; -> vector<int>)
@@ -100,19 +88,32 @@ iabbr <silent><buffer> mii; map<int, int>
 iabbr <buffer> pii pair<int, int><c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> pair; make_pair(<c-r>=abbr#Eatchar()<cr>
 # tuple
+iabbr <buffer> tiic; tuple<int, int, char><c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> tccc; tuple<char, char, char><c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> tuple; tuple<int, string, double> myTuple = {42, "World", 2.718};
             \<cr>auto myTuple = make_tuple(42, "World", 2.718);
             \<cr>auto [a, b, c] = myTuple;
             \<cr>cout << std::get<0>(myTuple) << endl; // 42
 # optional
-iabbr <buffer> optional; optional<t> // takes std::nullopt also
+iabbr <buffer> optional; std::optional<std::vector<int>> functionWithOptionalVector() {
+            \<cr>if (some_condition) {
+            \<cr>return std::vector<int>{1, 2, 3};
+            \<cr>}
+            \<cr>return std::nullopt; <cr>}
+            \<cr>// Checking if a value exists
+            \<cr>if (maybeInt1) {
+            \<cr>std::cout << "Has value: " << *maybeInt1 << std::endl; <CR> }
+            \<cr>// Throws if no value
+            \<cr>int value = maybeInt1.value();
+            \<cr>// Safe access with default
+            \<cr>int safeValue = maybeInt1.value_or(0);
 
 # Convenience
 iabbr <silent><buffer> in; #include <bits/stdc++.h>
             \<cr>using namespace std;
+            \<cr>using namespace std::string_view_literals;
             \<cr>namespace rg = std::ranges;
             \<cr>namespace rv = std::ranges::views;
-            \<cr>using u64 = std::uint64_t;
             \<cr>using i64 = std::int64_t;
             \<cr>#define F first
             \<cr>#define S second
@@ -131,7 +132,7 @@ iabbr <buffer> for_reverse; for (auto i : views::iota(0, 9) \| views::reverse) {
 iabbr <buffer> reverse; reverse(str.begin(), str.end()); // in place, no return value<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> freopen; freopen("file", "r", stdin);<cr>while (cin >> i1 >> i2) {<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> freopen2; freopen("file", "r", stdin);<cr>for (string line; getline(cin, line); ) {<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> stringstream; stringstream ss(line);<cr>while (ss >> i1 >> i2) {<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> istringstream; istringstream ss(line);<cr>while (ss >> i1 >> i2) {<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> getline; getline(cin, line)<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> getline2; while (getline(cin, line)) {<cr>stringstream ss(line);<cr>if (ss >> i1 >> i2)<c-r>=abbr#Eatchar()<cr>
 # iabbr <buffer> for_vector; for (const auto& x : std::vector{1, 2}) {<c-r>=abbr#Eatchar()<cr>
@@ -181,8 +182,14 @@ iabbr <buffer> take_while; for (int n : v \| std::views::take_while([](int i) { 
 iabbr <buffer> string_view; constexpr std::string_view src = " \f\n\t\r\vHello, C++20!\f\n\t\r\v ";<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> map_values; map \| views::values<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> map_keys; map \| views::keys<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> split_smth; views::split(word, delim) // see doc views::split<c-r>=abbr#Eatchar()<cr>
-
+iabbr <buffer> split_smth; views::split(word, delim_sv)
+            \<cr>constexpr auto delim{"^_^"sv};
+            \<cr>for (const auto word : std::views::split(words, delim))
+            \<cr>string s(string_view{word});
+            \<cr>std::cout << std::quoted(std::string_view(word)) << ' ';
+            \<cr>if (isdigit(string_view(word).front()))
+            \<cr>prog.push_back(stoi(string_view(word).data()));
+ 
 # Conversions and checks
 iabbr <buffer> conv_SINGLE_digit_to_char; '0' + 5<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> conv_char_to_a_digit; ch - '0'<c-r>=abbr#Eatchar()<cr>
@@ -217,8 +224,8 @@ iabbr <buffer> bitset_iterate; for (size_t i = 0; i < bits.size(); ++i) {<c-r>=a
 iabbr <buffer> bitset_iterate2; for (bool bit : bits) {<c-r>=abbr#Eatchar()<cr>
 
 # printing containers
-iabbr <buffer> pr_cont; for (const auto& el : container) { cout << el << " "; }; cout << endl;<C-R>=abbr#Eatchar()<CR>
-iabbr <buffer> pr_map; for (const auto& [key, value] : map) { cout << key << ": " << value << endl; }<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> pr_cont; for (const auto& el : ) { cout << el << " "; }; cout << endl;<esc>12Bi<C-R>=abbr#Eatchar()<CR>
+iabbr <buffer> pr_map; for (const auto& [key, value] : ) { cout << key << ": " << value << endl; }<esc>12Bi<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> pr_map_cont; for (const auto& [key, container] : map) {
             \<cr>cout << key << ": { ";
             \<cr>for (const auto& value : container) {
@@ -226,7 +233,7 @@ iabbr <buffer> pr_map_cont; for (const auto& [key, container] : map) {
             \<cr>}
             \<cr>cout << "}" << std::endl;
             \<cr>}<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> pr_vec_cont; for (const auto& cont : vec_cont) {
+iabbr <buffer> pr_vec_vec; for (const auto& cont : vec_cont) {
             \<cr>cout << "{ ";
             \<cr>for (const auto& value : cont) {
             \<cr>cout << value << " ";
@@ -256,6 +263,10 @@ iabb <buffer> operator_plus; pair<int, int> operator+(const pair<int, int>& lhs,
             \<cr>}<c-r>=abbr#Eatchar()<cr>
 iabb <bufer> operator_mult; pair<int, int> operator*(const pair<int, int>& l, int n) {
             \<cr>return make_pair(l.F * n, l.S * n);
+            \<cr>}<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> operator<<; std::ostream& operator<<(std::ostream& os, const std::pair<int, int>& p) {
+            \<cr>os << '(' << p.first << ", " << p.second << ')';
+            \<cr>return os;
             \<cr>}<c-r>=abbr#Eatchar()<cr>
 
 # map
@@ -396,3 +407,45 @@ iabbr <buffer> regex_iterator; for (sregex_iterator p(str.begin(), str.end(), pa
 iabbr <buffer> regex_array; vector<regex> pat{
             \<cr>regex(R"(Button A: X\+(\d+), Y\+(\d+))"),
             \<cr>regex(R"(Button B: X\+(\d+), Y\+(\d+))")};
+
+# concat
+iabbr <buffer> concat_vec; vec1.insert(vec1.end(), vec2.begin(), vec2.end());<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> concat_vec2; copy(vec.begin(),vec.end(),back_inserter(res)); // append to res
+iabbr <buffer> concat_vec3; unique_copy(vec.begin(),vec.end(),back_inserter(res)); // append to res
+iabbr <buffer> concat_str; s1 = s1 + s2;<c-r>=abbr#Eatchar()<cr>
+
+# find
+iabbr <buffer> find_ranges; // find searches for an element equal to value (using operator==).
+            \<cr>if (ranges::find(v, 5) != v.end())
+            \<cr>std::cout << "v contains: 5" << '\n';
+iabbr <buffer> find_if_ranges; // find_if searches for an element for which predicate p returns true.
+            \<cr>auto indices = views::cartesian_product(views::iota(0, 4), views::iota(0, 5));
+            \<cr>auto it = std::ranges::find_if(indices, [&](const auto& idx) { // use 'auto', not pair<int,int>
+            \<cr>auto [i, j] = idx;
+            \<cr>return matrix[i][j] == target;
+            \<cr>});
+            \<cr>if (it != indices.end()) cout << *it;
+iabbr <buffer> find_if_not_ranges; // find_if_not searches for an element for which predicate q returns false.
+            \<cr>// see find_if_ranges
+
+# join vector into a string
+iabbr <buffer> join_vec_str2 ostringstream oss;
+            \<cr>ranges::copy(numbers, ostream_iterator<int>(oss, ","));
+            \<cr>string s = oss.str(); oss.pop_back();
+iabbr <buffer> join_vec_str; ostringstream oss;
+            \<cr>for (const auto& n : vec) { oss << n << ","; };
+            \<cr>string s = oss.str(); oss.pop_back();
+
+# slice vector
+iabbr <buffer> slice_vec; vector<int>(vec.begin() + i, vec.begin() + j)
+
+# min max
+iabbr <buffer> min; ranges::min() ranges::min({"foo"sv, "bar"sv, "hello"sv}, {}, &std::string_view::size)
+            \<cr>min( const T& a, const T& b, Comp comp = {}, Proj proj = {} );
+            \<cr>ranges::min(1, 9999)
+            \<cr>ranges::min('a', 'b')
+iabbr <buffer> max; ranges::max() ranges::max({"foo"sv, "bar"sv, "hello"sv}, {}, &std::string_view::size)
+            \<cr>max( const T& a, const T& b, Comp comp = {}, Proj proj = {} );
+            \<cr>ranges::max(1, 9999)
+            \<cr>ranges::max('a', 'b')
+

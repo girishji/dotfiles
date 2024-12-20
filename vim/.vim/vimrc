@@ -25,7 +25,8 @@ map <BS> <Leader>
 &t_SI = "\e[6 q" #SI = INSERT mode
 &t_SR = "\e[4 q" #SR = REPLACE mode
 &t_EI = "\e[2 q" #EI = NORMAL mode (ALL ELSE)
-# reset the cursor on start
+# Reset the cursor on start. After suspend-resume, cursor changes to beam even
+# in normal mode. This will prevent that.
 autocmd VimEnter,VimResume * silent execute '!echo -ne "\e[2 q"' | redraw!
 
 # Format usin 'gq'. :h fo-table

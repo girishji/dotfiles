@@ -1041,10 +1041,14 @@ string::replace_with_range()
 
 
 string::copy()
-
+    size_type copy( CharT* dest, size_type count, size_type pos = 0 ) const;
+      Copies a substring [pos, pos + count) to character string pointed to by dest.
+    Return value
+      Number of characters copied.
 
 string::resize()
 
+string::empty()
 
 string::resize_and_overwrite()
 
@@ -1715,6 +1719,7 @@ transform
     applies a function to a range of elements, storing results in a destination range
 ranges::transform
     applies a function to a range of elements
+    See views::transform -> can be used in {rhs} of '|'
 
 ..alg_replace
     replace
@@ -3291,5 +3296,171 @@ ranges::advance(
 ranges::distance(
 ranges::next(
 ranges::prev(
+
+--- priority_queue
+priority_queue::
+    The priority queue is a container adaptor that provides constant time lookup of the largest (by default) element, at the expense of logarithmic insertion and extraction.
+
+    const auto data = {1, 8, 5, 6, 3, 4, 0, 9, 7, 2};
+    std::priority_queue<int> max_priority_queue;
+    // Fill the priority queue.
+    for (int n : data)
+        max_priority_queue.push(n);
+
+    // std::greater<int> makes the max priority queue act as a min priority queue.
+    std::priority_queue<int, std::vector<int>, std::greater<int>>
+        min_priority_queue1(data.begin(), data.end());
+    // Second way to define a min priority queue.
+    std::priority_queue min_priority_queue2(data.begin(), data.end(), std::greater<int>());
+    // Using a custom function object to compare elements.
+    struct
+    {
+        bool operator()(const int l, const int r) const { return l > r; }
+    } customLess;
+    std::priority_queue custom_priority_queue(data.begin(), data.end(), customLess);
+    // Using lambda to compare elements.
+    auto cmp = [](int left, int right) { return (left ^ 1) < (right ^ 1); };
+    std::priority_queue<int, std::vector<int>, decltype(cmp)> lambda_priority_queue(cmp);
+    for (int n : data)
+        lambda_priority_queue.push(n);
+
+priority_queue::operator=
+    assigns values to the container adaptor
+priority_queue::top
+    accesses the top element
+priority_queue::empty
+    checks whether the container adaptor is empty
+priority_queue::size
+    returns the number of elements
+priority_queue::push
+    inserts element and sorts the underlying container
+priority_queue::push_range
+    inserts a range of elements and sorts the underlying container
+priority_queue::emplace
+    constructs element in-place and sorts the underlying container
+priority_queue::pop
+    removes the top element
+priority_queue::swap
+    swaps the contents
+priority_queue swap(std::priority_queue)
+    specializes the std::swap algorithm (non member function)
+
+--- string_view
+
+string_view::
+
+    C++ Strings library std::basic_string_view 
+    Defined in header <string_view>
+    template<
+        class CharT,
+        class Traits = std::char_traits<CharT>
+    > class basic_string_view;
+
+    The class template basic_string_view describes an object that can refer to a constant contiguous sequence of CharT with the first element of the sequence at position zero.
+
+    For a basic_string_view str, pointers, iterators, and references to elements of str are invalidated when an operation invalidates a pointer in the range [str.data(), str.data() + str.size()).
+     
+    Note: iterator and const_iterator are the same type because string views are views into constant character sequences.
+
+string_view::operator=
+    assigns a view
+string_view::begin
+string_view::cbegin
+string_view::end
+string_view::cend
+string_view::rbegin
+string_view::crbegin
+string_view::rend
+string_view::crend
+string_view::operator[]
+    accesses the specified character
+string_view::at
+    accesses the specified character with bounds checking
+string_view::front
+    accesses the first character
+string_view::back
+    accesses the last character
+string_view::data
+    returns a pointer to the first character of a view
+string_view::size
+    returns the number of characters
+string_view::length
+    returns the number of characters
+string_view::max_size
+    returns the maximum number of characters
+string_view::empty
+    checks whether the view is empty
+string_view::remove_prefix
+    shrinks the view by moving its start forward
+string_view::remove_suffix
+    shrinks the view by moving its end backward
+string_view::swap
+    swaps the contents
+string_view::copy
+    copies characters
+string_view::substr
+    returns a substring
+string_view::compare
+    compares two views
+string_view::starts_with
+    checks if the string view starts with the given prefix
+string_view::ends_with
+    checks if the string view ends with the given suffix
+string_view::contains
+    checks if the string view contains the given substring or character
+string_view::find
+    find characters in the view
+string_view::rfind
+    find the last occurrence of a substring
+string_view::find_first_of
+    find first occurrence of characters
+string_view::find_last_of
+    find last occurrence of characters
+string_view::find_first_not_of
+    find first absence of characters
+string_view::find_last_not_of
+    find last absence of characters
+string_view::npos
+    special value. The exact meaning depends on the context
+string_view  operator==
+string_view  operator!=
+string_view  operator<
+string_view  operator>
+string_view  operator<=
+string_view  operator>=
+string_view  operator<=>
+    lexicographically compares two string views
+string_view operator<<
+    performs stream output on string views
+string_view operator""sv
+    creates a string view of a character array literal
+
+--- stringstream
+stringstream
+    see istringstream and ostringstream
+
+istringstream
+    The class template std::basic_istringstream implements input operations on string based streams. It effectively stores an instance of std::basic_string and performs input operations on it.
+istringstream::str
+    gets or sets the contents of underlying string device object
+istringstream::view
+    obtains a view over the contents of underlying string device object
+istringstream::eof
+    checks if end-of-file has been reached
+istringstream operator>>
+    extracts formatted data
+
+ostringstream
+ostringstream::str
+    gets or sets the contents of underlying string device object
+ostringstream::view
+    obtains a view over the contents of underlying string device object
+ostringstream::eof
+    checks if end-of-file has been reached
+ostringstream operator<<
+    inserts formatted data
+
+
+
 
 --- vim:tw=78:ts=4:sw=4:sts=4:et:fo+=t:

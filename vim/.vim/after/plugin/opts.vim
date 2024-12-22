@@ -25,8 +25,9 @@ if exists("g:loaded_vimcomplete")
         vimscript: { enable: true, priority: 10 },
         tmux: { enable: false },
         tag: { enable: false },
+        path: { enable: true },
         ngram: {
-            enable: true,
+            enable: false,
             priority: 10,
             bigram: false,
             filetypes: ['text', 'help', 'markdown', 'txt'],

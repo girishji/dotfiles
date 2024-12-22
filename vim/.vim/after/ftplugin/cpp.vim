@@ -256,6 +256,7 @@ iabbr <buffer> pr_vector_fn; template<typename T>
             \<cr>ranges::for_each(v, [&os](const T& n) { os << n << " "; });
             \<cr>return os;
             \<cr>}<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> format; cout << format("{} {}\n", x, y);
 
 # operator
 iabb <buffer> operator_plus; pair<int, int> operator+(const pair<int, int>& lhs, const pair<int, int>& rhs) {

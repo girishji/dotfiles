@@ -86,6 +86,7 @@ iabbr <silent><buffer> mapii; map<int, int>
 iabbr <silent><buffer> mii; map<int, int>
 # pair
 iabbr <buffer> pii pair<int, int><c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> pss pair<string, string><c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> pair; make_pair(<c-r>=abbr#Eatchar()<cr>
 # tuple
 iabbr <buffer> tiic; tuple<int, int, char><c-r>=abbr#Eatchar()<cr>
@@ -132,7 +133,7 @@ iabbr <buffer> for_reverse; for (auto i : views::iota(0, 9) \| views::reverse) {
 iabbr <buffer> reverse; reverse(str.begin(), str.end()); // in place, no return value<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> freopen; freopen("file", "r", stdin);<cr>while (cin >> i1 >> i2) {<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> freopen2; freopen("file", "r", stdin);<cr>for (string line; getline(cin, line); ) {<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> istringstream; istringstream ss(line);<cr>while (ss >> i1 >> i2) {<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> istringstream; istringstream iss(line);<cr>while (iss >> i1 >> i2) {<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> getline; getline(cin, line)<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> getline2; while (getline(cin, line)) {<cr>stringstream ss(line);<cr>if (ss >> i1 >> i2)<c-r>=abbr#Eatchar()<cr>
 # iabbr <buffer> for_vector; for (const auto& x : std::vector{1, 2}) {<c-r>=abbr#Eatchar()<cr>
@@ -186,14 +187,17 @@ iabbr <buffer> take_while; for (int n : v \| std::views::take_while([](int i) { 
 iabbr <buffer> string_view; constexpr std::string_view src = " \f\n\t\r\vHello, C++20!\f\n\t\r\v ";<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> map_values; map \| views::values<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> map_keys; map \| views::keys<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> split_smth; views::split(word, delim_sv)
+iabbr <buffer> split_str2; views::split(word, delim_sv)
             \<cr>constexpr auto delim{"^_^"sv};
             \<cr>for (const auto word : std::views::split(words, delim))
             \<cr>string s(string_view{word});
             \<cr>std::cout << std::quoted(std::string_view(word)) << ' ';
             \<cr>if (isdigit(string_view(word).front()))
             \<cr>prog.push_back(stoi(string_view(word).data()));
- 
+iabbr <buffer> split_str; istringstream iss(line);
+            \<cr>string fr, to;
+            \<cr>getline(iss, fr, '-');  // delim has to be char (not string)
+            \<cr>while(getline(iss, fr, '-')) {
 # Conversions and checks
 iabbr <buffer> conv_SINGLE_digit_to_char; '0' + 5<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> conv_char_to_a_digit; ch - '0'<c-r>=abbr#Eatchar()<cr>
@@ -228,6 +232,7 @@ iabbr <buffer> bitset_iterate; for (size_t i = 0; i < bits.size(); ++i) {<c-r>=a
 iabbr <buffer> bitset_iterate2; for (bool bit : bits) {<c-r>=abbr#Eatchar()<cr>
 
 # printing containers
+iabbr <buffer> prcnt; for (const auto& t : ) { cout << t << " "; }; cout << endl;<esc>12Bi<C-R>=abbr#Eatchar()<CR>
 iabbr <buffer> pr_cont; for (const auto& el : ) { cout << el << " "; }; cout << endl;<esc>12Bi<C-R>=abbr#Eatchar()<CR>
 iabbr <buffer> pr_map; for (const auto& [key, value] : ) { cout << key << ": " << value << endl; }<esc>12Bi<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> pr_map_cont; for (const auto& [key, container] : map) {

@@ -255,6 +255,87 @@ vector::vector
 
     8 4 -1 9 6 9
 
+vector::operator=
+    -> assigns values to the container
+vector::assign
+    -> assigns values to the container
+vector::assign_range
+    -> assigns a range of values to the container
+vector::get_allocator
+    -> returns the associated allocator
+vector::at
+    -> access specified element with bounds checking
+vector::operator[]
+    -> access specified element
+vector::front
+    -> access the first element
+vector::back
+    -> access the last element
+vector::data
+    -> direct access to the underlying contiguous storage
+vector::begin
+vector::cbegin
+    -> returns an iterator to the beginning
+vector::end
+vector::cend
+    -> returns an iterator to the end
+vector::rbegin
+vector::crbegin
+    -> returns a reverse iterator to the beginning
+vector::rend
+vector::crend
+    -> returns a reverse iterator to the end
+
+vector::empty
+    -> checks whether the container is empty
+vector::size
+    -> returns the number of elements
+vector::max_size
+    -> returns the maximum possible number of elements
+vector::reserve
+    -> reserves storage
+vector::capacity
+    -> returns the number of elements that can be held in currently allocated storage
+vector::shrink_to_fit
+    -> reduces memory usage by freeing unused memory
+
+vector::clear
+    -> clears the contents insert
+vector::insert
+    -> inserts elements
+vector::insert_range
+    -> inserts a range of elements
+vector::emplace
+    -> constructs element in-place
+vector::erase
+    -> erases elements
+vector::push_back
+    -> adds an element to the end
+vector::emplace_back
+    -> constructs an element in-place at the end
+vector::append_range
+    -> adds a range of elements to the end
+vector::pop_back
+    -> removes the last element
+vector::resize
+    -> changes the number of elements stored
+vector::swap
+    -> swaps the contents
+
+vector::operator==
+vector::operator!=
+vector::operator<
+vector::operator<=
+vector::operator>
+vector::operator>=
+vector::operator<=>
+    -> lexicographically compares the values of two vectors
+vector::std::swap(std::vector)
+    -> specializes the std::swap algorithm
+vector::erase(std::vector)
+vector::erase_if(std::vector)
+    -> erases all elements satisfying specific criteria
+
 vector::assign
     assigns values to the container
 
@@ -433,6 +514,79 @@ list::
         (keeps the first)
     sort() -> sorts the elements
 
+list::operator=
+    -> assigns values to the container
+list::assign()
+    -> assigns values to the container
+list::assign_range()
+    -> assigns a range of values to the container
+list::get_allocator()
+    -> returns the associated allocator
+list::front()
+    -> access the first element
+list::back()
+    -> access the last element
+list::begin()
+list::cbegin()
+list::end()
+list::cend()
+list::rbegin()
+list::crbegin()
+    -> returns a reverse iterator to the beginning
+list::rend()
+list::crend()
+    -> returns a reverse iterator to the end()
+list::empty()
+    -> checks whether the container is empty
+list::size()
+    -> returns the number of elements
+list::max_size()
+    -> returns the maximum possible number of elements
+list::clear()
+    -> clears the contents
+list::insert()
+    -> inserts elements
+list::insert_range()
+    -> inserts a range of elements
+list::emplace()
+    -> constructs element in-place
+list::erase()
+    -> erases elements
+list::push_back()
+    -> adds an element to the end
+list::emplace_back()
+    -> constructs an element in-place at the end
+list::append_range()
+    -> adds a range of elements to the end
+list::pop_back()
+    -> removes the last element
+list::push_front()
+    -> inserts an element to the beginning
+list::emplace_front()
+    -> constructs an element in-place at the beginning
+list::prepend_range()
+    -> adds a range of elements to the beginning
+list::pop_front()
+    -> removes the first element
+list::resize()
+    -> changes the number of elements stored
+list::swap()
+    -> swaps the contents
+list::merge()
+    -> merges two sorted lists
+list::splice()
+    -> moves elements from another list
+list::remove()
+    -> removes elements satisfying specific  criteria
+list::remove_if()
+    -> removes elements satisfying specific criteria
+list::reverse()
+    -> reverses the order of the elements
+list::unique()
+    -> removes consecutive duplicate elements (keeps the first)
+list::sort()
+    -> sorts the elements
+
 list::list
     std::list<int> l = {7, 5, 16, 8};
     l.push_back(13);
@@ -566,33 +720,83 @@ deque::
     end
     cend
     rbegin
-    crbegin() -> returns a reverse iterator to the beginning
-    rend
+    crbegin() -> returns a reverse iterator to the beginning rend
     crend() -> returns a reverse iterator to the end
     empty() -> checks whether the container is empty
     size() -> returns the number of elements
-    max_size() -> returns the maximum possible number of
-        elements
-    shrink_to_fit() -> (DR*) reduces memory usage by freeing
-        unused memory
+    max_size() -> returns the maximum possible number of elements
+    shrink_to_fit() -> (DR*) reduces memory usage by freeing unused memory
     clear() -> clears the contents
     insert() -> inserts elements
     insert_range() -> inserts a range of elements
     emplace() -> constructs element in-place
     erase() -> erases elements
     push_back() -> adds an element to the end
-    emplace_back() -> constructs an element in-place at the
-        end
+    emplace_back() -> constructs an element in-place at the end
     append_range() -> adds a range of elements to the end
     pop_back() -> removes the last element
     push_front() -> inserts an element to the beginning
-    emplace_front() -> constructs an element in-place at the
-        beginning
-    prepend_range() -> adds a range of elements to the
-        beginning
+    emplace_front() -> constructs an element in-place at the beginning
+    prepend_range() -> adds a range of elements to the beginning
     pop_front() -> removes the first element
     resize() -> changes the number of elements stored
     swap() -> swaps the contents
+
+deque::at()
+    -> access specified element with bounds checking
+deque::operator[]
+    -> access specified element
+deque::front()
+    -> access the first element
+deque::back()
+    -> access the last element
+deque::begin
+deque::cbegin
+deque::end
+deque::cend
+deque::rbegin
+deque::crbegin()
+    -> returns a reverse iterator to the beginning rend
+deque::crend()
+    -> returns a reverse iterator to the end
+deque::empty()
+    -> checks whether the container is empty
+deque::size()
+    -> returns the number of elements
+deque::max_size()
+    -> returns the maximum possible number of elements
+deque::shrink_to_fit()
+    -> (DR*) reduces memory usage by freeing unused memory
+deque::clear()
+    -> clears the contents
+deque::insert()
+    -> inserts elements
+deque::insert_range()
+    -> inserts a range of elements
+deque::emplace()
+    -> constructs element in-place
+deque::erase()
+    -> erases elements
+deque::push_back()
+    -> adds an element to the end
+deque::emplace_back()
+    -> constructs an element in-place at the end
+deque::append_range()
+    -> adds a range of elements to the end
+deque::pop_back()
+    -> removes the last element
+deque::push_front()
+    -> inserts an element to the beginning
+deque::emplace_front()
+    -> constructs an element in-place at the beginning
+deque::prepend_range()
+    -> adds a range of elements to the beginning
+deque::pop_front()
+    -> removes the first element
+deque::resize()
+    -> changes the number of elements stored
+deque::swap()
+    -> swaps the contents
 
 deque::deque
     std::deque<int> d = {7, 5, 16, 8};
@@ -727,6 +931,72 @@ map::
     value_comp() <-> returns the function that compares keys in objects of
         type value_type
 
+map::at()
+    -> access specified element with bounds checking
+map::operator[]
+    -> access or insert specified element
+map::begin()
+    -> returns an iterator to the beginning
+map::cbegin()
+    -> returns an iterator to the beginning
+map::end()
+    -> returns an iterator to the end
+map::cend()
+    -> returns an iterator to the end
+map::rbegin()
+    -> returns a reverse iterator to the beginning
+map::crbegin()
+    -> returns a reverse iterator to the beginning
+map::rend()
+    -> returns a reverse iterator to the end
+map::crend()
+    -> returns a reverse iterator to the end
+map::empty()
+    -> checks whether the container is empty
+map::size()
+    -> returns the number of elements
+map::max_size()
+    -> returns the maximum possible number of elements
+map::clear()
+    -> clears the contents
+map::insert()
+    -> inserts elements or nodes(since C++17)
+map::insert_range()
+    -> inserts a range of elements
+map::insert_or_assign()
+    -> inserts an element or assigns to the current element if the key already exists
+map::emplace()
+    -> constructs element in-place
+map::emplace_hint()
+    -> constructs elements in-place using a hint
+map::try_emplace()
+    -> inserts in-place if the key does not exist, does nothing if the key exists
+map::erase()
+    -> erases elements
+map::swap()
+    -> swaps the contents
+map::extract()
+    -> extracts nodes from the container
+map::merge()
+    -> splices nodes from another container
+map::count()
+    -> returns the number of elements matching specific key
+map::find()
+    -> finds element with specific key
+map::contains()
+    -> checks if the container contains element with specific key
+map::equal_range()
+    -> returns range of elements matching a specific key
+map::lower_bound()
+    -> returns an iterator to the first element not less than the given key
+map::upper_bound()
+    -> returns an iterator to the first element greater than the given key
+map::key_comp()
+    -> returns the function that compares keys
+map::value_comp()
+    -> returns the function that compares keys in objects of type value_type
+
+
 map::map
     map<int, int> f {{1,2},{3,4}};
     auto f = map{pair{1, 11}, {3, 33}, {2, 22}, {4, 44}};
@@ -802,22 +1072,85 @@ set::
     key_comp() <-> returns the function that compares keys
     value_comp() <-> returns the function that compares keys in objects of type value_type
 
+set::begin()
+set::cbegin()
+set::end()
+set::cend()
+set::rbegin()
+set::crbegin()
+set::rend()
+    -> returns a reverse iterator to the end
+set::crend()
+    -> returns a reverse iterator to the end
+set::empty()
+    -> checks whether the container is empty
+set::size()
+    -> returns the number of elements
+set::max_size()
+    -> returns the maximum possible number of elements
+set::clear()
+    -> clears the contents
+set::insert()
+    -> inserts elements or nodes(since C++17)
+set::insert_range()
+    -> inserts a range of elements
+set::emplace()
+    -> constructs element in-place
+set::emplace_hint()
+    -> constructs elements in-place using a hint
+set::erase()
+    -> erases elements
+set::swap()
+    -> swaps the contents
+set::extract()
+    -> extracts nodes from the container
+set::merge()
+    -> splices nodes from another container
+set::count()
+    -> returns the number of elements matching specific key
+set::find()
+    -> finds element with specific key
+set::contains()
+    -> checks if the container contains element with specific key
+set::equal_range()
+    -> returns range of elements matching a specific key
+set::lower_bound()
+    -> returns an iterator to the first element not less than the given key
+set::upper_bound()
+    -> returns an iterator to the first element greater than the given key
+set::key_comp()
+    -> returns the function that compares keys
+set::value_comp()
+    -> returns the function that compares keys in objects of type value_type
+
 set::set
     set<int> set{1, 5, 3};  // can name a set as 'set'
-set::empty
-    if (set.empty())
-set::erase
-    set.erase(1);
-set::contains
-    if (set.contains(key))
-
 set->print
     for_each(set.begin(), set.end(), [&out](const T& element) out << ", " << element;
 
+set::begin()
+set::cbegin()
+set::end()
+set::cend()
+set::rbegin()
+set::crbegin()
+set::rend()
+    -> returns a reverse iterator to the end
+set::crend()
+    -> returns a reverse iterator to the end
+set::empty()
+    -> checks whether the container is empty
+    if (set.empty())
+set::size()
+    -> returns the number of elements
+set::max_size()
+    -> returns the maximum possible number of elements
 set::clear()
+    -> clears the contents
     setx.clear();
 
 set::insert()
+    -> inserts elements or nodes(since C++17)
     set.insert(v.begin(), v.end());
 
     auto result_1 = set.insert(3);
@@ -829,29 +1162,48 @@ set::insert()
        std::cout << "no insertion\n";
 
 set::insert_range()
+    -> inserts a range of elements
     const auto rg = {-1, 3, -2};
     setx.insert_range(rg);  // in C++20
     setx.insert(rg.begin(), rg.end());
 
+set::emplace()
+    -> constructs element in-place
+set::emplace_hint()
+    -> constructs elements in-place using a hint
 set::erase()
+    -> erases elements
     it = c.erase(it); // see map::erase, can use iterators
 
 set::swap()
+    -> swaps the contents
     a1.swap(a2); E
     very iterator referring to an element in one container before the swap
     refers to the same element in the other container after the swap.
-
+set::extract()
+    -> extracts nodes from the container
+set::merge()
+    -> splices nodes from another container
+set::count()
+    -> returns the number of elements matching specific key
 set::find()
+    -> finds element with specific key
     if (auto search = example.find(2);
         search != example.end())
 set::contains()
-    if (example.contains(x))
+    -> checks if the container contains element with specific key
+    if (set.contains(key))
 set::equal_range()
+    -> returns range of elements matching a specific key
     auto [begin, end] = characters.equal_range(names); (see map::equal_range)
 set::lower_bound()
-    no example
+    -> returns an iterator to the first element not less than the given key
 set::upper_bound()
-    no example
+    -> returns an iterator to the first element greater than the given key
+set::key_comp()
+    -> returns the function that compares keys
+set::value_comp()
+    -> returns the function that compares keys in objects of type value_type
 
 --- string
 assign(
@@ -861,7 +1213,7 @@ length(
 append(
 replace_with_range(
 resize_and_overwrite(
-find(
+Find(
 rfind(
 find_first_of(
 find_first_not_of(
@@ -964,6 +1316,107 @@ string::()
     std::u8string   std::basic_string<char8_t>
     std::u16string  std::basic_string<char16_t>
     std::u32string  std::basic_string<char32_t>
+
+
+string::operator=
+    -> assigns values to the string
+string::assign()
+    -> assign characters to a string
+string::assign_range()
+    -> assign a range of characters to a string
+string::get_allocator()
+    -> returns the associated allocator
+string::at()
+    -> accesses the specified character with bounds checking
+string::operator[]()
+    -> accesses the specified character
+string::front()
+    -> accesses the first character
+string::back()
+    -> accesses the last character
+string::data()
+    -> returns a pointer to the first character of a string
+string::c_str()
+    -> returns a non-modifiable standard C character array version of the string
+string::operator()
+    -> basic_string_view returns a non-modifiable basic_string_view into the entire string
+string::begin()
+string::cbegin()
+string::end()
+string::cend()
+string::rbegin()
+string::crbegin()
+    -> returns a reverse iterator to the beginning
+string::rend()
+string::crend()
+    -> returns a reverse iterator to the end
+string::empty()
+    -> checks whether the string is empty
+string::size()
+    -> returns the number of characters
+string::length()
+    -> returns the number of characters
+string::max_size()
+    -> returns the maximum number of characters
+string::reserve()
+    -> reserves storage
+string::capacity()
+    -> returns the number of characters that can be held in currently allocated storage
+string::shrink_to_fit()
+    -> reduces memory usage by freeing unused memory
+string::clear()
+    -> clears the contents
+string::insert()
+    -> inserts characters
+string::insert_range()
+    -> inserts a range of characters
+string::erase()
+    -> removes characters
+string::push_back()
+    -> appends a character to the end
+string::pop_back()
+    -> removes the last character
+string::append()
+    -> appends characters to the end
+string::append_range()
+    -> appends a range of characters to the end
+string::operator+=()
+    -> appends characters to the end
+string::replace()
+    -> replaces specified portion of a string
+string::replace_with_range()
+    -> replaces specified portion of a string with a range of characters
+string::copy()
+    -> copies characters
+string::resize()
+    -> changes the number of characters stored
+string::resize_and_overwrite()
+    -> changes the number of characters stored and possibly overwrites indeterminate contents via user-provided operation
+string::swap()
+    -> swaps the contents
+string::find()
+    -> finds the first occurrence of the given substring
+string::rfind()
+    -> find the last occurrence of a substring
+string::find_first_of()
+    -> find first occurrence of characters
+string::find_first_not_of()
+    -> find first absence of characters
+string::find_last_of()
+    -> find last occurrence of characters
+string::find_last_not_of()
+    -> find last absence of characters
+string::compare()
+    -> compares two strings
+string::starts_with()
+    -> checks if the string starts with the given prefix
+string::ends_with()
+    -> checks if the string ends with the given suffix
+string::contains()
+    -> checks if the string contains the given substring or character
+string::substr()
+    -> returns a substring
+
 
 string::assign
     s.assign(4, '='); // "====";
@@ -1436,6 +1889,35 @@ string:: operator<<,>>
       int tolower(int c);
       int toupper(int c);
     }
+
+isalnum
+    -> checks if a character is alphanumeric
+isalpha
+    -> checks if a character is alphabetic
+islower
+    -> checks if a character is lowercase
+isupper
+    -> checks if a character is an uppercase character
+isdigit
+    -> checks if a character is a digit
+isxdigit
+    -> checks if a character is a hexadecimal character
+iscntrl
+    -> checks if a character is a control character
+isgraph
+    -> checks if a character is a graphical character
+isspace
+    -> checks if a character is a space character
+isblank
+    -> checks if a character is a blank character
+isprint
+    -> checks if a character is a printing character
+ispunct
+    -> checks if a character is a punctuation character
+tolower
+    -> converts a character to lowercase
+toupper
+    -> converts a character to uppercase
 
 --- Algorithms
 

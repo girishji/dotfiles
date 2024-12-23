@@ -21,7 +21,7 @@ if exists("g:loaded_vimcomplete")
         abbrev: { enable: true, maxCount: 30 },
         lsp: { enable: true, maxCount: 10, priority: 8 },
         omnifunc: { enable: false, priority: 10, filetypes: ['tex', 'python'] },
-        vsnip: { enable: true, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },
+        vsnip: { enable: false, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },
         vimscript: { enable: true, priority: 10 },
         tmux: { enable: false },
         tag: { enable: false },

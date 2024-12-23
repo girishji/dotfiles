@@ -165,6 +165,10 @@ iabbr <buffer> using; using in_list_t = std::list<int>;<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> struct; struct disk_element {<cr>int id{ -1 };<cr>};<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> lambda; auto fn = [&x, *y](int x) -> char { }<cr>};<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> max_element; ranges::max_element(<C-R>=abbr#Eatchar()<CR>
+iabbr <buffer> max_element2; auto maxPair = *std::ranges::max_element(myMap, [](const auto& a, const auto& b) {
+            \<cr>return a.second < b.second; // Compare by map values
+            \<cr>});
+            \<cr>cout << "Key with the maximum value: " << maxPair.first << endl;
 iabbr <buffer> distance; ranges::distance(<C-R>=abbr#Eatchar()<CR>
 iabbr <buffer> r; ranges::<C-R>=abbr#Eatchar()<CR>
 

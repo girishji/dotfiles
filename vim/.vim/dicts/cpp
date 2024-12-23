@@ -3349,7 +3349,7 @@ priority_queue swap(std::priority_queue)
 
 string_view::
 
-    C++ Strings library std::basic_string_view 
+    C++ Strings library std::basic_string_view
     Defined in header <string_view>
     template<
         class CharT,
@@ -3359,7 +3359,7 @@ string_view::
     The class template basic_string_view describes an object that can refer to a constant contiguous sequence of CharT with the first element of the sequence at position zero.
 
     For a basic_string_view str, pointers, iterators, and references to elements of str are invalidated when an operation invalidates a pointer in the range [str.data(), str.data() + str.size()).
-     
+
     Note: iterator and const_iterator are the same type because string views are views into constant character sequences.
 
 string_view::operator=
@@ -3459,8 +3459,6 @@ ostringstream::eof
     checks if end-of-file has been reached
 ostringstream operator<<
     inserts formatted data
-
-
 
 
 --- vim:tw=78:ts=4:sw=4:sts=4:et:fo+=t:

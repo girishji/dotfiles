@@ -1401,7 +1401,7 @@ a log file.
     vim -V20 2>&1 | tee logfile 
 
 ------------------------------------------------------------------------------
-Call stack                          giri-callstack
+Call stack                          *giri-callstack* *giri-stacktrace*
 
 In Vimscript, you can use the :echo or :echom commands in combination with
 debug information to inspect and print the call stack of functions. The :debug
@@ -1409,15 +1409,15 @@ command and the :verbose flag also help in examining the function call stack.
 
 Method 1: Use :throw and v:exception
 >
-    function! PrintCallStack()
+    def PrintCallStack()
       try
         throw "Capturing call stack"
       catch
-        echomsg "Call Stack: " . v:throwpoint
+        echomsg "Call Stack: " .. v:throwpoint
       endtry
-    endfunction
+    enddef
 
-Call the function call PrintCallStack()
+Call the function PrintCallStack()
 
 Method 2: Enable debug Mode
 
@@ -1425,6 +1425,7 @@ The :debug command lets you inspect the call stack interactively. For example:
 
 Enter :debug function_name() to run a function in debug mode.
 Use :backtrace or :bt to print the call stack.
+
 Method 3: Use the :verbose Option
 When invoking a function with the :verbose flag, you can sometimes infer the
 stack trace, but this is less direct.

@@ -15,10 +15,6 @@ augroup ModifyColorscheme | autocmd!
         hi PmenuMatchSel ctermbg=253
         hi MoreMsg ctermfg=34
     }
-    autocmd ColorScheme defaultplus {
-        hi def link gCppSpecialChar Operator
-        hi def link gCppOperator Operator
-    }
 augroup END
 
 # If env var is set, use it.
@@ -35,9 +31,11 @@ endif
 if get(g:, 'colors_name', null_string) == null_string
     hi LineNr ctermfg=8
     hi Comment ctermfg=8
+    hi PmenuSel ctermfg=248
     hi link FfTtSubtle Ignore
     hi link markdownCodeBlock Constant
-    hi link PmenuMatch PmenuSel
+    hi link PmenuMatch wildmenu
+    hi MatchParen ctermbg=none cterm=underline
     if &bg == 'light'
         hi Type ctermfg=None |# Type is set to green which can be too light
     endif

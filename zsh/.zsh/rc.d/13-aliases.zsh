@@ -167,7 +167,8 @@ alias gd='git diff'
 #
 # CAUTION: Avoid **/* and ***/* as shell complains 'too many paths to expand' when searching a large directory.
 
-alias gr="ggrep -REIins --exclude={'*.swp','*.git*'} \"\""
+# NOTEa: ggrep is broken since it always lists .git/* even when told not to.
+alias gr="grep -REIins --exclude={'*.swp','*.git*'} \"\""
 cursor_offset["gr"]=2
 
 # alternative:

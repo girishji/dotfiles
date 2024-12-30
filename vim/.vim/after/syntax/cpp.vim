@@ -2,11 +2,11 @@
 syn clear cErrInBracket
 
 " Define special characters group
-" syn match gCppSpecialChar /[(){}\[\];:]/
+" syn match myCppSpecialChar /[(){}\[\];:]/
 
 " Define operators group
-" syn match gCppOperator /[+\-*%=<>!&|^~]/
+" syn match mygCppOperator /[+\-*%=<>!&|^~]/
 
 " Link to highlighting groups
-" hi def link cppSpecialChar Operator
-" hi def link cppOperator Operator
+" hi def link mygCppSpecialChar Operator
+" hi def link mygCppOperator Operator

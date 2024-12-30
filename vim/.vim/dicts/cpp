@@ -234,45 +234,250 @@ vector::
     8 4 -1 9 6 9
 
 vector::vector
+    template<typename T>
+    std::ostream& operator<<(std::ostream& s, const std::vector<T>& v)
+    {
+        s.put('{');
+        for (char comma[]{'\0', ' ', '\0'}; const auto& e : v)
+            s << comma << e, comma[0] = ',';
+        return s << "}\n";
+    }
+
     int main()
     {
-        // Create a vector containing integers
-        std::vector<int> v = {8, 4, 5, 9};
+        // C++11 initializer list syntax:
+        std::vector<std::string> words1{"the", "frogurt", "is", "also", "cursed"};
+        std::cout << "1: " << words1;
 
-        // Add two more integers to vector
-        v.push_back(6);
-        v.push_back(9);
+        // words2 == words1
+        std::vector<std::string> words2(words1.begin(), words1.end());
+        std::cout << "2: " << words2;
 
-        // Overwrite element at position 2
-        v[2] = -1;
+        // words3 == words1
+        std::vector<std::string> words3(words1);
+        std::cout << "3: " << words3;
 
-        // Print out the vector
-        for (int n : v)
-            std::cout << n << ' ';
-        std::cout << '\n';
+        // words4 is {"Mo", "Mo", "Mo", "Mo", "Mo"}
+        std::vector<std::string> words4(5, "Mo");
+        std::cout << "4: " << words4;
+
+        const auto rg = {"cat", "cow", "crow"};
+    #ifdef __cpp_lib_containers_ranges
+        std::vector<std::string> words5(std::from_range, rg); // overload (6)
+    #else
+        std::vector<std::string> words5(rg.begin(), rg.end()); // overload (5)
+    #endif
+        std::cout << "5: " << words5;
     }
     Output:
 
-    8 4 -1 9 6 9
+    1: {the, frogurt, is, also, cursed}
+    2: {the, frogurt, is, also, cursed}
+    3: {the, frogurt, is, also, cursed}
+    4: {Mo, Mo, Mo, Mo, Mo}
+    5: {cat, cow, crow}
 
 vector::operator=
     -> assigns values to the container
+
 vector::assign
     -> assigns values to the container
+    void print(auto const comment, auto const& container)
+    {
+        auto size = std::size(container);
+        std::cout << comment << "{ ";
+        for (auto const& element : container)
+            std::cout << element << (--size ? ", " : " ");
+        std::cout << "}\n";
+    }
+
+    int main()
+    {
+        std::vector<int> x{1, 2, 3}, y, z;
+        const auto w = {4, 5, 6, 7};
+
+        std::cout << "Initially:\n";
+        print("x = ", x);
+        print("y = ", y);
+        print("z = ", z);
+
+        std::cout << "Copy assignment copies data from x to y:\n";
+        y = x;
+        print("x = ", x);
+        print("y = ", y);
+
+        std::cout << "Move assignment moves data from x to z, modifying both x and z:\n";
+        z = std::move(x);
+        print("x = ", x);
+        print("z = ", z);
+
+        std::cout << "Assignment of initializer_list w to z:\n";
+        z = w;
+        print("w = ", w);
+        print("z = ", z);
+    }
+    Output:
+
+    Initially:
+    x = { 1, 2, 3 }
+    y = { }
+    z = { }
+    Copy assignment copies data from x to y:
+    x = { 1, 2, 3 }
+    y = { 1, 2, 3 }
+    Move assignment moves data from x to z, modifying both x and z:
+    x = { }
+    z = { 1, 2, 3 }
+    Assignment of initializer_list w to z:
+    w = { 4, 5, 6, 7 }
+    z = { 4, 5, 6, 7 }
+
 vector::assign_range
     -> assigns a range of values to the container
+    int main()
+    {
+        const auto source = std::list{2, 7, 1};
+        auto destination = std::vector{3, 1, 4};
+    #ifdef __cpp_lib_containers_ranges
+        destination.assign_range(source);
+    #else
+        destination.assign(source.cbegin(), source.cend());
+    #endif
+        assert(std::ranges::equal(source, destination));
+    }
+
 vector::get_allocator
     -> returns the associated allocator
 vector::at
     -> access specified element with bounds checking
+
+    int main()
+    {
+        std::vector<int> data{1, 2, 4, 5, 5, 6};
+
+        // Set element 1
+        data.at(1) = 88;
+
+        // Read element 2
+        std::cout << "Element at index 2 has value " << data.at(2) << '\n';
+
+        std::cout << "data size = " << data.size() << '\n';
+
+        try
+        {
+            // Try to set an element at random position >= size()
+            auto moon_phase = []
+            {
+                return std::chrono::system_clock::now().time_since_epoch().count() % 8;
+            };
+            data.at(data.size() + moon_phase()) = 13;
+        }
+        catch(const std::out_of_range& ex)
+        {
+            std::cout << ex.what() << '\n';
+        }
+
+        // Print final values
+        std::cout << "data:";
+        for (int elem : data)
+            std::cout << ' ' << elem;
+        std::cout << '\n';
+    }
+
 vector::operator[]
     -> access specified element
+
+    int main()
+    {
+        std::vector<int> numbers{2, 4, 6, 8};
+
+        std::cout << "Second element: " << numbers[1] << '\n';
+
+        numbers[0] = 5;
+
+        std::cout << "All numbers:";
+        for (auto i : numbers)
+            std::cout << ' ' << i;
+        std::cout << '\n';
+    }
+
+    // Since C++20 std::vector can be used in constexpr context:
+    #if defined(__cpp_lib_constexpr_vector) and defined(__cpp_consteval)
+    // Gets the sum of all primes in [0, N) using sieve of Eratosthenes
+    consteval auto sum_of_all_primes_up_to(unsigned N)
+    {
+        if (N < 2)
+            return 0ULL;
+
+        std::vector<bool> is_prime(N, true);
+        is_prime[0] = is_prime[1] = false;
+
+        auto propagate_non_primality = [&](decltype(N) n)
+        {
+            for (decltype(N) m = n + n; m < is_prime.size(); m += n)
+                is_prime[m] = false;
+        };
+
+        auto sum{0ULL};
+        for (decltype(N) n{2}; n != N; ++n)
+            if (is_prime[n])
+            {
+                sum += n;
+                propagate_non_primality(n);
+            }
+
+        return sum;
+    } //< vector's memory is released here
+
+    static_assert(sum_of_all_primes_up_to(42) == 0xEE);
+    static_assert(sum_of_all_primes_up_to(100) == 0x424);
+    static_assert(sum_of_all_primes_up_to(1001) == 76127);
+    #endif
+    Output:
+
+    Second element: 4
+    All numbers: 5 4 6 8
+
 vector::front
     -> access the first element
+     assert(letters.front() == 'a');
+
 vector::back
     -> access the last element
 vector::data
     -> direct access to the underlying contiguous storage
+
+    void pointer_func(const int* p, std::size_t size)
+    {
+        std::cout << "data = ";
+        for (std::size_t i = 0; i < size; ++i)
+            std::cout << p[i] << ' ';
+        std::cout << '\n';
+    }
+
+    void span_func(std::span<const int> data) // since C++20
+    {
+        std::cout << "data = ";
+        for (const int e : data)
+            std::cout << e << ' ';
+        std::cout << '\n';
+    }
+
+    int main()
+    {
+        std::vector<int> container{1, 2, 3, 4};
+
+        // Prefer container.data() over &container[0]
+        pointer_func(container.data(), container.size());
+
+        // std::span is a safer alternative to separated pointer/size.
+        span_func({container.data(), container.size()});
+    }
+    Output:
+
+    data = 1 2 3 4
+    data = 1 2 3 4
+
 vector::begin
 vector::cbegin
     -> returns an iterator to the beginning
@@ -292,164 +497,556 @@ vector::size
     -> returns the number of elements
 vector::max_size
     -> returns the maximum possible number of elements
+    int main()
+    {
+        std::vector<char> p;
+        std::vector<long> q;
+
+        std::cout.imbue(std::locale("en_US.UTF-8"));
+        std::cout << std::uppercase
+                  << "p.max_size() = " << std::dec << p.max_size() << " = 0x"
+                  << std::hex << p.max_size() << '\n'
+                  << "q.max_size() = " << std::dec << q.max_size() << " = 0x"
+                  << std::hex << q.max_size() << '\n';
+    }
+    Possible output:
+
+    p.max_size() = 9,223,372,036,854,775,807 = 0x7,FFF,FFF,FFF,FFF,FFF
+    q.max_size() = 1,152,921,504,606,846,975 = 0xFFF,FFF,FFF,FFF,FFF
+
 vector::reserve
     -> reserves storage
+
+    constexpr int max_elements = 32;
+
+        std::cout << "using reserve: \n";
+        {
+            std::vector<int, NAlloc<int>> v1;
+            v1.reserve(max_elements); // reserves at least max_elements * sizeof(int) bytes
+
+            for (int n = 0; n < max_elements; ++n)
+                v1.push_back(n);
+        }
+
 vector::capacity
     -> returns the number of elements that can be held in currently allocated storage
+    int main()
+    {
+        int sz = 100;
+        std::vector<int> v;
+
+        auto cap = v.capacity();
+        std::cout << "Initial size: " << v.size() << ", capacity: " << cap << '\n';
+
+        std::cout << "\nDemonstrate the capacity's growth policy."
+                     "\nSize:  Capacity:  Ratio:\n" << std::left;
+        while (sz-- > 0)
+        {
+            v.push_back(sz);
+            if (cap != v.capacity())
+            {
+                std::cout << std::setw( 7) << v.size()
+                          << std::setw(11) << v.capacity()
+                          << std::setw(10) << v.capacity() / static_cast<float>(cap) << '\n';
+                cap = v.capacity();
+            }
+        }
+
+        std::cout << "\nFinal size: " << v.size() << ", capacity: " << v.capacity() << '\n';
+    }
+    Possible output:
+
+    Initial size: 0, capacity: 0
+
+    Demonstrate the capacity's growth policy.
+    Size:  Capacity:  Ratio:
+    1      1          inf
+    2      2          2
+    3      4          2
+    5      8          2
+    9      16         2
+    17     32         2
+    33     64         2
+    65     128        2
+
+    Final size: 100, capacity: 128
 vector::shrink_to_fit
     -> reduces memory usage by freeing unused memory
 
 vector::clear
     -> clears the contents insert
+
+    void print_info(std::string_view rem, const std::vector<int>& v)
+    {
+        std::cout << rem << "{ ";
+        for (const auto& value : v)
+            std::cout << value << ' ';
+        std::cout << "}\n";
+        std::cout << "Size=" << v.size() << ", Capacity=" << v.capacity() << '\n';
+    }
+
+    int main()
+    {
+        std::vector<int> container{1, 2, 3};
+        print_info("Before clear: ", container);
+        container.clear();
+        print_info("After clear: ", container);
+    }
+    Output:
+
+    Before clear: { 1 2 3 }
+    Size=3, Capacity=3
+    After clear: { }
+    Size=0, Capacity=3
+
 vector::insert
     -> inserts elements
+
+    namespace stq {
+    void println(std::string_view rem, const std::vector<int>& container)
+    {
+        std::cout << rem.substr(0, rem.size() - 2) << '[';
+        bool first{true};
+        for (const int x : container)
+            std::cout << (first ? first = false, "" : ", ") << x;
+        std::cout << "]\n";
+    }
+    }
+
+    int main()
+    {
+        std::vector<int> c1(3, 100);
+        stq::println("1. {}", c1);
+
+        auto pos = c1.begin();
+        pos = c1.insert(pos, 200); // overload (1)
+        stq::println("2. {}", c1);
+
+        c1.insert(pos, 2, 300); // overload (3)
+        stq::println("3. {}", c1);
+
+        // pos no longer valid, get a new one:
+        pos = c1.begin();
+
+        std::vector<int> c2(2, 400);
+        c1.insert(std::next(pos, 2), c2.begin(), c2.end()); // overload (4)
+        stq::println("4. {}", c1);
+
+        int arr[] = {501, 502, 503};
+        c1.insert(c1.begin(), arr, arr + std::size(arr)); // overload (4)
+        stq::println("5. {}", c1);
+
+        c1.insert(c1.end(), {601, 602, 603}); // overload (5)
+        stq::println("6. {}", c1);
+    }
+    Output:
+
+    1. [100, 100, 100]
+    2. [200, 100, 100, 100]
+    3. [300, 300, 200, 100, 100, 100]
+    4. [300, 300, 400, 400, 200, 100, 100, 100]
+    5. [501, 502, 503, 300, 300, 400, 400, 200, 100, 100, 100]
+    6. [501, 502, 503, 300, 300, 400, 400, 200, 100, 100, 100, 601, 602, 603]
+
 vector::insert_range
     -> inserts a range of elements
+
+    int main()
+    {
+        auto container = std::vector{1, 2, 3, 4};
+        auto pos = std::next(container.begin(), 2);
+        assert(*pos == 3);
+        const auto rg = std::list{-1, -2, -3};
+
+    #ifdef __cpp_lib_containers_ranges
+        container.insert_range(pos, rg);
+    #else
+        container.insert(pos, rg.cbegin(), rg.cend());
+    #endif
+        assert(std::ranges::equal(container, std::vector{1, 2, -1, -2, -3, 3, 4}));
+    }
+
 vector::emplace
     -> constructs element in-place
+    The element is constructed through std::allocator_traits::construct, which
+    typically uses placement-new to construct the element in-place at a location
+    provided by the container.
+
+
+    struct A
+    {
+        std::string s;
+
+        A(std::string str) : s(std::move(str)) { std::cout << " constructed\n"; }
+
+        A(const A& o) : s(o.s) { std::cout << " copy constructed\n"; }
+
+        A(A&& o) : s(std::move(o.s)) { std::cout << " move constructed\n"; }
+
+        A& operator=(const A& other)
+        {
+            s = other.s;
+            std::cout << " copy assigned\n";
+            return *this;
+        }
+
+        A& operator=(A&& other)
+        {
+            s = std::move(other.s);
+            std::cout << " move assigned\n";
+            return *this;
+        }
+    };
+
+    int main()
+    {
+        std::vector<A> container;
+        // reserve enough place so vector does not have to resize
+        container.reserve(10);
+        std::cout << "construct 2 times A:\n";
+        A two{"two"};
+        A three{"three"};
+
+        std::cout << "emplace:\n";
+        container.emplace(container.end(), "one");
+
+        std::cout << "emplace with A&:\n";
+        container.emplace(container.end(), two);
+
+        std::cout << "emplace with A&&:\n";
+        container.emplace(container.end(), std::move(three));
+
+        std::cout << "content:\n";
+        for (const auto& obj : container)
+            std::cout << ' ' << obj.s;
+        std::cout << '\n';
+    }
+    Output:
+
+    construct 2 times A:
+     constructed
+     constructed
+    emplace:
+     constructed
+    emplace with A&:
+     copy constructed
+    emplace with A&&:
+     move constructed
+    content:
+     one two three
+
 vector::erase
     -> erases elements
+
+    void print_container(const std::vector<int>& c)
+    {
+        for (int i : c)
+            std::cout << i << ' ';
+        std::cout << '\n';
+    }
+
+    int main()
+    {
+        std::vector<int> c{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        print_container(c);
+
+        c.erase(c.begin());
+        print_container(c);
+
+        c.erase(c.begin() + 2, c.begin() + 5);
+        print_container(c);
+
+        // Erase all even numbers
+        for (std::vector<int>::iterator it = c.begin(); it != c.end();)
+        {
+            if (*it % 2 == 0)
+                it = c.erase(it);
+            else
+                ++it;
+        }
+        print_container(c);
+    }
+    Output:
+
+    0 1 2 3 4 5 6 7 8 9
+    1 2 3 4 5 6 7 8 9
+    1 2 6 7 8 9
+    1 7 9
+
 vector::push_back
     -> adds an element to the end
+    int main()
+    {
+        std::vector<std::string> letters;
+
+        letters.push_back("abc");
+        std::string s{"def"};
+        letters.push_back(std::move(s));
+
+        std::cout << "std::vector letters holds: ";
+        for (auto&& e : letters)
+            std::cout << std::quoted(e) << ' ';
+
+        std::cout << "\nMoved-from string s holds: " << std::quoted(s) << '\n';
+    }
+    Possible output:
+
+    std::vector letters holds: "abc" "def"
+    Moved-from string s holds: ""
+
 vector::emplace_back
     -> constructs an element in-place at the end
+    struct President
+    {
+        std::string name;
+        std::string country;
+        int year;
+
+        President(std::string p_name, std::string p_country, int p_year)
+            : name(std::move(p_name)), country(std::move(p_country)), year(p_year)
+        {
+            std::cout << "I am being constructed.\n";
+        }
+
+        President(President&& other)
+            : name(std::move(other.name)), country(std::move(other.country)), year(other.year)
+        {
+            std::cout << "I am being moved.\n";
+        }
+
+        President& operator=(const President& other) = default;
+    };
+
+    int main()
+    {
+        std::vector<President> elections;
+        std::cout << "emplace_back:\n";
+        auto& ref = elections.emplace_back("Nelson Mandela", "South Africa", 1994);
+        assert(ref.year == 1994 && "uses a reference to the created object (C++17)");
+
+        std::vector<President> reElections;
+        std::cout << "\npush_back:\n";
+        reElections.push_back(President("Franklin Delano Roosevelt", "the USA", 1936));
+
+        std::cout << "\nContents:\n";
+        for (President const& president: elections)
+            std::cout << president.name << " was elected president of "
+                      << president.country << " in " << president.year << ".\n";
+
+        for (President const& president: reElections)
+            std::cout << president.name << " was re-elected president of "
+                      << president.country << " in " << president.year << ".\n";
+    }
+    Output:
+
+    emplace_back:
+    I am being constructed.
+
+    push_back:
+    I am being constructed.
+    I am being moved.
+
+    Contents:
+    Nelson Mandela was elected president of South Africa in 1994.
+    Franklin Delano Roosevelt was re-elected president of the USA in 1936.
+
 vector::append_range
     -> adds a range of elements to the end
+
+    int main()
+    {
+        auto head = std::vector{1, 2, 3, 4};
+        const auto tail = std::list{-5, -6, -7};
+    #ifdef __cpp_lib_containers_ranges
+        head.append_range(tail);
+    #else
+        head.insert(head.end(), tail.cbegin(), tail.cend());
+    #endif
+        assert((head == std::vector{1, 2, 3, 4, -5, -6, -7}));
+    }
+
 vector::pop_back
     -> removes the last element
+    namespace stq {
+    template<typename T>
+    void println(auto, const T& xz)
+    {
+        std::cout << '[';
+        bool first{true};
+        for (auto const& x : xz)
+            std::cout << (first ? first = false, "" : ", ") << x;
+        std::cout << "]\n";
+    }
+    }
+
+    int main()
+    {
+        std::vector<int> numbers{1, 2, 3};
+        stq::println("{}", numbers);
+        while (not numbers.empty())
+        {
+            numbers.pop_back();
+            stq::println("{}", numbers);
+        }
+    }
+    Output:
+
+    [1, 2, 3]
+    [1, 2]
+    [1]
+    []
+
 vector::resize
     -> changes the number of elements stored
+
+    void print(auto rem, const std::vector<int>& c)
+    {
+        for (std::cout << rem; const int el : c)
+            std::cout << el << ' ';
+        std::cout << '\n';
+    }
+
+    int main()
+    {
+        std::vector<int> c = {1, 2, 3};
+        print("The vector holds: ", c);
+
+        c.resize(5);
+        print("After resize up to 5: ", c);
+
+        c.resize(2);
+        print("After resize down to 2: ", c);
+
+        c.resize(6, 4);
+        print("After resize up to 6 (initializer = 4): ", c);
+    }
+    Output:
+
+    The vector holds: 1 2 3
+    After resize up to 5: 1 2 3 0 0
+    After resize down to 2: 1 2
+    After resize up to 6 (initializer = 4): 1 2 4 4 4 4
+
 vector::swap
     -> swaps the contents
 
 vector::operator==
-vector::operator!=
-vector::operator<
-vector::operator<=
-vector::operator>
-vector::operator>=
 vector::operator<=>
     -> lexicographically compares the values of two vectors
+
 vector::std::swap(std::vector)
     -> specializes the std::swap algorithm
+
+    template<class Os, class Co>
+    Os& operator<<(Os& os, const Co& co)
+    {
+        os << '{';
+        for (auto const& i : co)
+            os << ' ' << i;
+        return os << " } ";
+    }
+
+    int main()
+    {
+        std::vector<int> a1{1, 2, 3}, a2{4, 5};
+
+        auto it1 = std::next(a1.begin());
+        auto it2 = std::next(a2.begin());
+
+        int& ref1 = a1.front();
+        int& ref2 = a2.front();
+
+        std::cout << a1 << a2 << *it1 << ' ' << *it2 << ' ' << ref1 << ' ' << ref2 << '\n';
+        a1.swap(a2);
+        std::cout << a1 << a2 << *it1 << ' ' << *it2 << ' ' << ref1 << ' ' << ref2 << '\n';
+
+        // Note that after swap the iterators and references stay associated with their
+        // original elements, e.g. it1 that pointed to an element in 'a1' with value 2
+        // still points to the same element, though this element was moved into 'a2'.
+    }
+    Output:
+
+    { 1 2 3 } { 4 5 } 2 5 1 4
+    { 4 5 } { 1 2 3 } 2 5 1 4
+
 vector::erase(std::vector)
+    void println(std::string_view comment, const auto& c)
+    {
+        std::cout << comment << '[';
+        bool first{true};
+        for (const auto& x : c)
+            std::cout << (first ? first = false, "" : ", ") << x;
+        std::cout << "]\n";
+    }
+
+    int main()
+    {
+        std::vector<char> cnt(10);
+        std::iota(cnt.begin(), cnt.end(), '0');
+        println("Initially, cnt = ", cnt);
+
+        std::erase(cnt, '3');
+        println("After erase '3', cnt = ", cnt);
+
+        auto erased = std::erase_if(cnt, [](char x) { return (x - '0') % 2 == 0; });
+        println("After erase all even numbers, cnt = ", cnt);
+        std::cout << "Erased even numbers: " << erased << '\n';
+
+        std::vector<std::complex<double>> nums{{2, 2}, {4, 2}, {4, 8}, {4, 2}};
+        #ifdef __cpp_lib_algorithm_default_value_type
+            std::erase(nums, {4, 2});
+        #else
+            std::erase(nums, std::complex<double>{4, 2});
+        #endif
+        println("After erase {4, 2}, nums = ", nums);
+    }
+    Output:
+
+    Initially, cnt = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    After erase '3', cnt = [0, 1, 2, 4, 5, 6, 7, 8, 9]
+    After erase all even numbers, cnt = [1, 5, 7, 9]
+    Erased even numbers: 5
+    After erase {4, 2}, nums = [(2,2), (4,8)]
+
 vector::erase_if(std::vector)
     -> erases all elements satisfying specific criteria
+    void println(std::string_view comment, const auto& c)
+    {
+        std::cout << comment << '[';
+        bool first{true};
+        for (const auto& x : c)
+            std::cout << (first ? first = false, "" : ", ") << x;
+        std::cout << "]\n";
+    }
 
-vector::assign
-    assigns values to the container
+    int main()
+    {
+        std::vector<char> cnt(10);
+        std::iota(cnt.begin(), cnt.end(), '0');
+        println("Initially, cnt = ", cnt);
 
-vector::assign_range
-    assigns a range of values to the container
+        std::erase(cnt, '3');
+        println("After erase '3', cnt = ", cnt);
 
-vector::get_allocator
-    returns the associated allocator
+        auto erased = std::erase_if(cnt, [](char x) { return (x - '0') % 2 == 0; });
+        println("After erase all even numbers, cnt = ", cnt);
+        std::cout << "Erased even numbers: " << erased << '\n';
 
-vector::at
-    access specified element with bounds checking
+        std::vector<std::complex<double>> nums{{2, 2}, {4, 2}, {4, 8}, {4, 2}};
+        #ifdef __cpp_lib_algorithm_default_value_type
+            std::erase(nums, {4, 2});
+        #else
+            std::erase(nums, std::complex<double>{4, 2});
+        #endif
+        println("After erase {4, 2}, nums = ", nums);
+    }
+    Output:
 
-vector::operator[]
-    access specified element
-
-vector::front
-    access the first element
-
-vector::back
-    access the last element
-
-vector::data
-    direct access to the underlying contiguous storage
-
-vector::begin
-
-vector::cbegin
-    returns an iterator to the beginning
-
-vector::end
-
-vector::cend
-    returns an iterator to the end
-
-vector::rbegin
-
-vector::crbegin
-    returns a reverse iterator to the beginning
-
-vector::rend
-
-vector::crend
-    returns a reverse iterator to the end
-
-vector::empty
-    checks whether the container is empty
-
-vector::size
-    returns the number of elements
-
-vector::max_size
-    returns the maximum possible number of elements
-
-vector::reserve
-    reserves storage
-
-vector::capacity
-    returns the number of elements that can be held in currently allocated storage
-
-vector::shrink_to_fit
-    reduces memory usage by freeing unused memory
-
-vector::clear
-    clears the contents insert
-
-vector::insert
-    inserts elements
-
-vector::insert_range
-    inserts a range of elements
-
-vector::emplace
-    constructs element in-place
-
-vector::erase
-    erases elements
-
-vector::push_back
-    adds an element to the end
-
-vector::emplace_back
-    constructs an element in-place at the end
-
-vector::append_range
-    adds a range of elements to the end
-
-vector::pop_back
-    removes the last element
-
-vector::resize
-    changes the number of elements stored
-
-vector::swap
-    swaps the contents
-
-vector:: operator==
-    lexicographically compares the values of two vectors (non member fn)
-vector:: operator!=
-    lexicographically compares the values of two vectors (non member fn)
-vector:: operator<
-    lexicographically compares the values of two vectors (non member fn)
-vector:: operator<=
-    lexicographically compares the values of two vectors (non member fn)
-vector:: operator>
-    lexicographically compares the values of two vectors (non member fn)
-vector:: operator>=
-    lexicographically compares the values of two vectors (non member fn)
-vector:: operator<=>
-    lexicographically compares the values of two vectors (non member fn)
-vector:: std::swap()
-    specializes the std::swap algorithm
-vector:: std::erase()
-vector:: std::erase_if()
-    erases all elements satisfying specific criteria
+    Initially, cnt = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    After erase '3', cnt = [0, 1, 2, 4, 5, 6, 7, 8, 9]
+    After erase all even numbers, cnt = [1, 5, 7, 9]
+    Erased even numbers: 5
+    After erase {4, 2}, nums = [(2,2), (4,8)]
 
 --- list and deque
 push_front(
@@ -1482,16 +2079,203 @@ string::append
 
 
 string::append_range()
+    int main()
+    {
+        std::string head{"long long"};
+        const auto tail = {' ', 'i', 'n', 't'};
 
+    #ifdef __cpp_lib_containers_ranges
+        head.append_range(tail);
+    #else
+        head.append(tail.begin(), tail.end());
+    #endif
+
+        assert(head == "long long int");
+    }
 
 string::operator+=()
+    int main()
+    {
+        std::string str;
 
+        // reserve sufficient storage space to avoid memory reallocation
+        str.reserve(50);
+
+        std::cout << std::quoted(str) << '\n'; // empty string
+
+        str += "This";
+        std::cout << std::quoted(str) << '\n';
+
+        str += std::string(" is ");
+        std::cout << std::quoted(str) << '\n';
+
+        str += 'a';
+        std::cout << std::quoted(str) << '\n';
+
+        str += {' ', 's', 't', 'r', 'i', 'n', 'g', '.'};
+        std::cout << std::quoted(str) << '\n';
+
+        str += 69.96; // Equivalent to str += static_cast<char>(69.96);
+                      // 'E' (ASCII code 69) is appended by overload (2),
+                      // which might not be the intent.
+
+        // To add a numeric value, consider std::to_string():
+        str += std::to_string(1729);
+
+        std::cout << std::quoted(str) << '\n';
+    }
+    Output:
+
+    ""
+    "This"
+    "This is "
+    "This is a"
+    "This is a string."
+    "This is a string.E1729"
 
 string::replace()
 
+    basic_string& replace( size_type pos, size_type count,
+                           const basic_string& str );
+    (1)	(constexpr since C++20)
+    basic_string& replace( const_iterator first, const_iterator last,
+                           const basic_string& str );
+    (2)	(constexpr since C++20)
+    (3)
+    basic_string& replace( size_type pos, size_type count,
+                           const basic_string& str,
+
+                           size_type pos2, size_type count2 );
+    (until C++14)
+    basic_string& replace( size_type pos, size_type count,
+                           const basic_string& str,
+
+                           size_type pos2, size_type count2 = npos );
+    (since C++14)
+    (constexpr since C++20)
+    basic_string& replace( size_type pos, size_type count,
+                           const CharT* cstr, size_type count2 );
+    (4)	(constexpr since C++20)
+    basic_string& replace( const_iterator first, const_iterator last,
+                           const CharT* cstr, size_type count2 );
+    (5)	(constexpr since C++20)
+    basic_string& replace( size_type pos, size_type count,
+                           const CharT* cstr );
+    (6)	(constexpr since C++20)
+    basic_string& replace( const_iterator first, const_iterator last,
+                           const CharT* cstr );
+    (7)	(constexpr since C++20)
+    basic_string& replace( size_type pos, size_type count,
+                           size_type count2, CharT ch );
+    (8)	(constexpr since C++20)
+    basic_string& replace( const_iterator first, const_iterator last,
+                           size_type count2, CharT ch );
+    (9)	(constexpr since C++20)
+    template< class InputIt >
+    basic_string& replace( const_iterator first, const_iterator last,
+
+                           InputIt first2, InputIt last2 );
+    (10)	(constexpr since C++20)
+    basic_string& replace( const_iterator first, const_iterator last,
+                           std::initializer_list<CharT> ilist );
+    (11)	(since C++11)
+    (constexpr since C++20)
+    template< class StringViewLike >
+    basic_string& replace( size_type pos, size_type count,
+
+                           const StringViewLike& t );
+    (12)	(since C++17)
+    (constexpr since C++20)
+    template< class StringViewLike >
+    basic_string& replace( const_iterator first, const_iterator last,
+
+                           const StringViewLike& t );
+    (13)	(since C++17)
+    (constexpr since C++20)
+    template< class StringViewLike >
+    basic_string& replace( size_type pos, size_type count,
+                           const StringViewLike& t,
+
+                           size_type pos2, size_type count2 = npos );
+    (14)	(since C++17)
+    (constexpr since C++20)
+    Replaces the characters in the range [begin() + pos, begin() + std::min(pos + count, size())) or [first, last) with given characters.
+
+    1,2) Those characters are replaced with str.
+    3) Those characters are replaced with a substring [pos2, std::min(pos2 + count2, str.size())) of str.
+    4,5) Those characters are replaced with the characters in the range [cstr, cstr + count2).
+     If [cstr, cstr + count2) is not a valid range, the behavior is undefined.
+    6,7) Those characters are replaced with the characters in the range [cstr, cstr + Traits::length(cstr)).
+    8,9) Those characters are replaced with count2 copies of ch.
+    10) Those characters are replaced with the characters in the range [first2, last2) as if by replace(first, last, basic_string(first2, last2, get_allocator())).
+    11) Those characters are replaced with the characters in ilist.
+    12,13) Implicitly converts t to a string view sv as if by std::basic_string_view<CharT, Traits> sv = t;, then those characters are replaced with the characters from sv.
+     These overloads participate in overload resolution only if std::is_convertible_v<const StringViewLike&,
+                          std::basic_string_view<CharT, Traits>> is true and std::is_convertible_v<const StringViewLike&, const CharT*> is false.
+    14) Implicitly converts t to a string view sv as if by std::basic_string_view<CharT, Traits> sv = t;, then those characters are replaced with the characters from the subview sv.substr(pos2, count2).
+     This overload participates in overload resolution only if std::is_convertible_v<const StringViewLike&,
+                          std::basic_string_view<CharT, Traits>> is true and std::is_convertible_v<const StringViewLike&, const CharT*> is false.
+    If [begin(), first) or [first, last) is not a valid range, the behavior is undefined.
+
+    Parameters
+    pos	-	start of the substring that is going to be replaced
+    count	-	length of the substring that is going to be replaced
+    first, last	-	range of characters that is going to be replaced
+    str	-	string to use for replacement
+    pos2	-	start of the substring to replace with
+    count2	-	number of characters to replace with
+    cstr	-	pointer to the character string to use for replacement
+    ch	-	character value to use for replacement
+    first2, last2	-	range of characters to use for replacement
+    ilist	-	initializer list with the characters to use for replacement
+    t	-	object (convertible to std::basic_string_view) with the characters to use for replacement
+    Type requirements
+    -InputIt must meet the requirements of LegacyInputIterator.
+    Return value
+    *this.
+
+    return replace(first,
+                   last,
+                   std::basic_string(
+                       std::from_range,
+                       std::forward<R>(rg),
+                       get_allocator())
+    );
 
 string::replace_with_range()
+    Equivalent to
 
+    return replace(first,
+                   last,
+                   std::basic_string(
+                       std::from_range,
+                       std::forward<R>(rg),
+                       get_allocator())
+    );
+
+    int main()
+    {
+        using namespace std::literals;
+
+        auto s{"Today is today!"s};
+        constexpr auto today{"today"sv};
+        constexpr auto tomorrow{"tomorrow's yesterday"sv};
+        std::forward_list<char> rg;
+        std::ranges::reverse_copy(tomorrow, std::front_inserter(rg));
+
+        const auto pos{s.rfind(today)};
+        assert(pos != s.npos);
+        const auto first{std::next(s.begin(), pos)};
+        const auto last{std::next(first, today.length())};
+
+    #ifdef __cpp_lib_containers_ranges
+        s.replace_range(first, last, rg);
+    #else
+        s.replace(first, last, rg.cbegin(), rg.cend());
+    #endif
+
+        assert("Today is tomorrow's yesterday!" == s);
+    }
 
 string::copy()
     size_type copy( CharT* dest, size_type count, size_type pos = 0 ) const;
@@ -1501,34 +2285,489 @@ string::copy()
 
 string::resize()
 
+    int main()
+    {
+        const unsigned desired_length{8};
+        std::string long_string("Where is the end?");
+        std::string short_string("H");
+
+        std::cout << "Basic functionality:\n"
+                  << "Shorten:\n"
+                  << "1. Before: " << std::quoted(long_string) << '\n';
+        long_string.resize(desired_length);
+        std::cout << "2. After:  " << std::quoted(long_string) << '\n';
+
+        std::cout << "Lengthen with a given value 'a':\n"
+                  << "3. Before: " << std::quoted(short_string) << '\n';
+        short_string.resize(desired_length, 'a');
+        std::cout << "4. After:  " << std::quoted(short_string) << '\n';
+
+        std::cout << "Lengthen with char() == " << static_cast<int>(char()) << '\n'
+                  << "5. Before: " << std::quoted(short_string) << '\n';
+        short_string.resize(desired_length + 3);
+        std::cout << "6. After:  \"";
+        for (char c : short_string)
+            std::cout << (c == char() ? '@' : c);
+        std::cout << "\"\n\n";
+
+        std::cout << "Errors:\n";
+        std::string s;
+
+        try
+        {
+            // size is OK, no length_error
+            // (may throw bad_alloc)
+            s.resize(s.max_size() - 1, 'x');
+        }
+        catch (const std::bad_alloc& ex)
+        {
+            std::cout << "1. Exception: " << ex.what() << '\n';
+        }
+
+        try
+        {
+            // size is OK, no length_error
+            // (may throw bad_alloc)
+            s.resize(s.max_size(), 'x');
+        }
+        catch (const std::bad_alloc& ex)
+        {
+            std::cout << "2. Exception: " << ex.what() << '\n';
+        }
+
+        try
+        {
+            // size is BAD, throw length_error
+            s.resize(s.max_size() + 1, 'x');
+        }
+        catch (const std::length_error& ex)
+        {
+            std::cout << "3. Length error: " << ex.what() << '\n';
+        }
+    }
+    Possible output:
+
+    Basic functionality:
+    Shorten:
+    1. Before: "Where is the end?"
+    2. After:  "Where is"
+    Lengthen with a given value 'a':
+    3. Before: "H"
+    4. After:  "Haaaaaaa"
+    Lengthen with char() == 0
+    5. Before: "Haaaaaaa"
+    6. After:  "Haaaaaaa@@@"
+
+    Errors:
+    1. Exception: std::bad_alloc
+    2. Exception: std::bad_alloc
+    3. Length error: basic_string::_M_replace_aux
+
 string::empty()
 
 string::resize_and_overwrite()
 
+    static_assert(__cpp_lib_string_resize_and_overwrite);
+
+    constexpr std::string_view fruits[]{"apple", "banana", "coconut", "date", "elderberry"};
+
+    int main()
+    {
+        // A simple case, append only fruits[0]. The string size will be increased.
+        std::string s{"Food: "};
+        s.resize_and_overwrite(16, [sz = s.size()](char* buf, std::size_t buf_size) noexcept
+        {
+            const auto to_copy = std::min(buf_size - sz, fruits[0].size());
+            std::memcpy(buf + sz, fruits[0].data(), to_copy);
+            return sz + to_copy;
+        });
+        std::cout << "1. " << std::quoted(s) << '\n';
+
+        // The size shrinking case. Note, that the user's lambda is always invoked.
+        s.resize_and_overwrite(10, [](char* buf, int n) noexcept
+        {
+            return std::find(buf, buf + n, ':') - buf;
+        });
+        std::cout << "2. " << std::quoted(s) << '\n';
+
+        std::cout << "3. Copy data until the buffer is full. Print data and sizes.\n";
+        std::string food{"Food:"};
+        const auto resize_to{27};
+        std::cout << "Initially, food.size: " << food.size()
+                  << ", food.capacity: " << food.capacity()
+                  << ", resize_to: " << resize_to
+                  << ", food: " << std::quoted(food) << '\n';
+
+        food.resize_and_overwrite
+        (
+            resize_to,
+            [food_size = food.size()](char* p, std::size_t n) noexcept -> std::size_t
+            {
+                // p[0]..p[n] is the assignable range
+                // p[0]..p[min(n, food_size) - 1] is the readable range
+                // (contents initially equal to the original string)
+
+                // Debug print:
+                std::cout << "In Operation(); n: " << n << '\n';
+
+                // Copy fruits to the buffer p while there is enough space.
+                char* first = p + food_size;
+
+                for (char* const end = p + n; const std::string_view fruit : fruits)
+                {
+                    char* last = first + fruit.size() + 1;
+                    if (last > end)
+                        break;
+                    *first++ = ' ';
+                    std::ranges::copy(fruit, first);
+                    first = last;
+                }
+
+                const auto final_size{static_cast<std::size_t>(first - p)};
+
+                // Debug print:
+                std::cout << "In Operation(); final_size: " << final_size << '\n';
+
+                assert(final_size <= n);
+                return final_size; // Return value is the actual new length
+                                   // of the string, must be in range 0..n
+            }
+        );
+
+        std::cout << "Finally, food.size: " << food.size()
+                  << ", food.capacity: " << food.capacity()
+                  << ", food: " << std::quoted(food) << '\n';
+    }
+    Possible output:
+
+    1. "Food: apple"
+    2. "Food"
+    3. Copy data until the buffer is full. Print data and sizes.
+    Initially, food.size: 5, food.capacity: 15, resize_to: 27, food: "Food:"
+    In Operation(); n: 27
+    In Operation(); final_size: 26
+    Finally, food.size: 26, food.capacity: 30, food: "Food: apple banana coconut"
 
 string::swap()
 
+    int main()
+    {
+        std::string a = "AAA";
+        std::string b = "BBBB";
+
+        std::cout << "Before swap:\n"
+                     "a = " << a << "\n"
+                     "b = " << b << "\n\n";
+
+        a.swap(b);
+
+        std::cout << "After swap:\n"
+                     "a = " << a << "\n"
+                     "b = " << b << '\n';
+    }
+    Output:
+
+    Before swap:
+    a = AAA
+    b = BBBB
+
+    After swap:
+    a = BBBB
+    b = AAA
 
 string::find()
 
+    void print(int id, std::string::size_type n, std::string const& s)
+    {
+        std::cout << id << ") ";
+        if (std::string::npos == n)
+            std::cout << "not found! n == npos\n";
+        else
+            std::cout << "found @ n = " << n << ", substr(" << n << ") = "
+                      << std::quoted(s.substr(n)) << '\n';
+    }
+
+    int main()
+    {
+        std::string::size_type n;
+        std::string const s = "This is a string"; /*
+                                 ^  ^  ^
+                                 1  2  3          */
+
+        // search from beginning of string
+        n = s.find("is");
+        print(1, n, s);
+
+        // search from position 5
+        n = s.find("is", 5);
+        print(2, n, s);
+
+        // find a single character
+        n = s.find('a');
+        print(3, n, s);
+
+        // find a single character
+        n = s.find('q');
+        print(4, n, s);
+    }
+    Output:
+
+    1) found @ n = 2, substr(2) = "is is a string"
+    2) found @ n = 5, substr(5) = "is a string"
+    3) found @ n = 8, substr(8) = "a string"
+    4) not found! n == npos
 
 string::rfind()
 
+    void print(std::string::size_type n,
+               std::string::size_type len,
+               std::string const &s)
+    {
+        if (n == std::string::npos)
+            std::cout << "not found\n";
+        else
+            std::cout << "found: " << std::quoted(s.substr(n, len)) << " at " << n << '\n';
+    }
+
+    int main()
+    {
+        std::string::size_type n;
+        std::string const s = "This is a string";
+
+        // search backwards from end of string
+        n = s.rfind("is");
+        print(n, 2, s);
+
+        // search backwards from position 4
+        n = s.rfind("is", 4);
+        print(n, 2, s);
+
+        // find a single character
+        n = s.rfind('s');
+        print(n, 1, s);
+
+        // find a single character
+        n = s.rfind('q');
+        print(n, 1, s);
+
+        // find the prefix (see also s.starts_with("This"))
+        n = s.rfind("This", 0);
+        print(n, 4, s);
+    }
+    Output:
+
+    found: "is" at 5
+    found: "is" at 2
+    found: "s" at 10
+    not found
+    found: "This" at 0
 
 string::find_first_of()
 
+    int main()
+    {
+        using namespace std::literals;
+        std::string::size_type sz;
+
+        // (1)
+        sz = "alignas"s.find_first_of("klmn"s);
+        //     └────────────────────────┘
+        assert(sz == 1);
+
+        sz = "alignof"s.find_first_of("wxyz"s);
+        // no match
+        assert(sz == std::string::npos);
+
+        // (2)
+        sz = "consteval"s.find_first_of("xyzabc", 0, 3);
+        // no match (× are not targets)     ×××
+        assert(sz == std::string::npos);
+
+        sz = "consteval"s.find_first_of("xyzabc", 0, 6);
+        //    └───────────────────────────────┘
+        assert(sz == 0);
+
+        // (3)
+        sz = "decltype"s.find_first_of("xyzabc");
+        //      └────────────────────────────┘
+        assert(sz == 2);
+
+        // (4)
+        sz = "co_await"s.find_first_of('a');
+        //       └──────────────────────┘
+        assert(sz == 3);
+
+        // (5)
+        sz = "constinit"s.find_first_of("int"sv);
+        //      └─────────────────────────┘
+        assert(sz == 2);
+
+        std::cout << "All tests passed.\n";
+    }
+    Output:
+
+    All tests passed.
 
 string::find_first_not_of()
 
+    int main()
+    {
+        // Permit uppercase letters, lowercase letters and numbers in macro names
+        const char* pattern = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                              "abcdefghijklmnopqrstuvwxyz"
+                              "0123456789";
+
+        std::string data = "1) %FIX, 2) %HACK, and 3) %TODO";
+        const std::string replacement = "%DONE%";
+
+        std::cout << "Before: " << data << '\n';
+
+        for (std::string::size_type first{}, last{};
+            (first = data.find('%', first)) != std::string::npos;
+            first += replacement.size())
+        {
+            last = data.find_first_not_of(pattern, first + 1);
+            if (last == std::string::npos)
+                last = data.length();
+
+            // Now first at '%' and last is one past end of the found substring
+            data.replace(first, last - first, replacement);
+        }
+
+        std::cout << "After: " << data << '\n';
+    }
+    Output:
+
+    Before: 1) %FIX, 2) %HACK, and 3) %TODO
+    After: 1) %DONE%, 2) %DONE%, and 3) %DONE%
 
 string::find_last_of()
 
+    int main()
+    {
+        const std::string path = "/root/config";
+        auto const pos = path.find_last_of('/');
+        const auto leaf = path.substr(pos + 1);
+
+        std::cout << leaf << '\n';
+    }
+    Output:
+
+    config
 
 string::find_last_not_of()
 
+    void show_pos(const std::string& str, std::string::size_type found)
+    {
+        if (found != std::string::npos)
+            std::cout << '[' << found << "] = \'" << str[found] << "\'\n";
+        else
+            std::cout << "not found\n";
+    }
+
+    int main()
+    {
+        std::string str{"abc_123"};
+        char const* skip_set{"0123456789"};
+        std::string::size_type str_last_pos{std::string::npos};
+
+        show_pos(str, str.find_last_not_of(skip_set)); // [3] = '_'
+
+        str_last_pos = 2;
+        show_pos(str, str.find_last_not_of(skip_set, str_last_pos)); // [2] = 'c'
+
+        str_last_pos = 2;
+        show_pos(str, str.find_last_not_of('c', str_last_pos)); // [1] = 'b'
+
+        const char arr[]{'3', '4', '5'};
+        show_pos(str, str.find_last_not_of(arr)); // [5] = '2'
+
+        str_last_pos = 2;
+        std::string::size_type skip_set_size{4};
+        show_pos(str, str.find_last_not_of(skip_set,
+                                           str_last_pos,
+                                           skip_set_size)); // [2] = 'c'
+
+        show_pos(str, str.find_last_not_of("abc")); // [6] = '3'
+
+        str_last_pos = 2;
+        show_pos(str, str.find_last_not_of("abc", str_last_pos)); // not found
+    }
+    Output:
+
+    [3] = '_'
+    [2] = 'c'
+    [1] = 'b'
+    [5] = '2'
+    [2] = 'c'
+    [6] = '3'
+    not found
 
 string::compare()
 
+    void print_compare_result(std::string_view str1,
+                              std::string_view str2,
+                              int compare_result)
+    {
+        if (compare_result < 0)
+            std::cout << std::quoted(str1) << " comes before "
+                      << std::quoted(str2) << ".\n";
+        else if (compare_result > 0)
+            std::cout << std::quoted(str2) << " comes before "
+                      << std::quoted(str1) << ".\n";
+        else
+            std::cout << std::quoted(str1) << " and "
+                      << std::quoted(str2) << " are the same.\n";
+    }
+
+    int main()
+    {
+        std::string batman{"Batman"};
+        std::string superman{"Superman"};
+        int compare_result{0};
+
+        // 1) Compare with other string
+        compare_result = batman.compare(superman);
+        std::cout << "1) ";
+        print_compare_result("Batman", "Superman", compare_result);
+
+        // 2) Compare substring with other string
+        compare_result = batman.compare(3, 3, superman);
+        std::cout << "2) ";
+        print_compare_result("man", "Superman", compare_result);
+
+        // 3) Compare substring with other substring
+        compare_result = batman.compare(3, 3, superman, 5, 3);
+        std::cout << "3) ";
+        print_compare_result("man", "man", compare_result);
+
+        // Compare substring with other substring
+        // defaulting to end of other string
+        assert(compare_result == batman.compare(3, 3, superman, 5));
+
+        // 4) Compare with char pointer
+        compare_result = batman.compare("Superman");
+        std::cout << "4) ";
+        print_compare_result("Batman", "Superman", compare_result);
+
+        // 5) Compare substring with char pointer
+        compare_result = batman.compare(3, 3, "Superman");
+        std::cout << "5) ";
+        print_compare_result("man", "Superman", compare_result);
+
+        // 6) Compare substring with char pointer substring
+        compare_result = batman.compare(0, 3, "Superman", 5);
+        std::cout << "6) ";
+        print_compare_result("Bat", "Super", compare_result);
+    }
+    Output:
+
+    1) "Batman" comes before "Superman".
+    2) "Superman" comes before "man".
+    3) "man" and "man" are the same.
+    4) "Batman" comes before "Superman".
+    5) "Superman" comes before "man".
+    6) "Bat" comes before "Super".
 
 string::starts_with()
     constexpr bool
@@ -1744,6 +2983,8 @@ string::substr()
     basic_string::substr: __pos (which is 23) > this->size() (which is 20)
 
 string:: std::erase
+    See erase:if
+
 string:: std::erase_if
     template< class CharT, class Traits, class Alloc, class U >
     constexpr std::basic_string<CharT, Traits, Alloc>::size_type
@@ -1933,10 +3174,13 @@ toupper
 
 for_each
     applies a function to a range of elements
+
 ranges::for_each
     applies a function to a range of elements
+
 for_each_n
     applies a function object to the first N elements of a sequence
+
 ranges::for_each_n
     applies a function object to the first N elements of a sequence
 
@@ -2568,7 +3812,23 @@ ranges::set_union
 set_intersection
     computes the intersection of two sets
 ranges::set_intersection
-    computes the intersection of two sets
+    computes the intersection of two sets (or 2 sorted ranges)
+
+          int main()
+          {
+              const auto in1 = {1, 2, 2, 3, 4, 5, 6};
+              const auto in2 = {2, 2, 3, 3, 5, 7};
+              std::vector<int> out {};
+
+              std::ranges::set_intersection(in1, in2, std::back_inserter(out));
+
+              print(in1, " ∩ "), print(in2, " = "), print(out, "\n");
+          }
+      <
+      Output:
+      >c
+          { 1 2 2 3 4 5 6 } ∩ { 2 2 3 3 5 7 } = { 2 2 3 5 }
+
 set_difference
     computes the difference between two sets
 ranges::set_difference

@@ -31,7 +31,7 @@ endif
 if get(g:, 'colors_name', null_string) == null_string
     hi LineNr ctermfg=8
     hi Comment ctermfg=8
-    hi PmenuSel ctermfg=248
+    hi PmenuSel ctermfg=0 ctermbg=4
     hi link FfTtSubtle Ignore
     hi link markdownCodeBlock Constant
     hi link PmenuMatch wildmenu

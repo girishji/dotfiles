@@ -1020,14 +1020,64 @@ For some languages like Go, include search does not work perfectly. The
 fallback is always using 'tags'. Very simple:
 							*giri-tags*
 :!ctags -R
-run ctags at your project root.
+                        run ctags at your project root.
+
+:[count]ta[g][!] {name}
+			Jump to the definition of {name}, using the
+			information in the tags file(s).  Put {name} in the
+			tag stack.  See |tag-!| for [!].
+			{name} can be a regexp pattern, see |tag-regexp|.
+			When there are several matching tags for {name}, jump
+			to the [count] one.  When [count] is omitted the
+			first one is jumped to. See |tag-matchlist| for
+			jumping to other matching tags.
+
+CTRL-]			(Use g Ctrl-] instead) Jump to the definition of the keyword under the
+			cursor.  Same as ":tag {name}", where {name} is the
+			keyword under or after cursor.
+			When there are several matching tags for {name}, jump
+			to the [count] one.  When no [count] is given the
+			first one is jumped to.
+
+{Visual}CTRL-]		Same as ":tag {name}", where {name} is the text that
+			is highlighted.
+
+When there are several matching tags, these commands can be used to jump
+between them.
+
 :tj tag jump
 :ptj foo (preview tag jump)
 go back and forth using:
-:ptp
-:ptn
+:ptp (and :tp)
+:ptn (and :tn)
 <c-w>z will close the preview window
 :ta (navigate tag stack)
+
+:ts[elect][!] [name]	List the tags that match [name], using the
+			information in the tags file(s).
+
+g]			Like CTRL-], but use ":tselect" instead of ":tag".
+
+:sts[elect][!] [name]	Does ":tselect[!] [name]" and splits the window for
+			the selected tag.
+
+{Visual}g]		Same as "g]", but use the highlighted text as the
+			identifier.
+
+:tj[ump][!] [name]	Like ":tselect", but jump to the tag directly when
+			there is only one match. (Can use glob, ex: :tj *usb*send)
+
+:stj[ump][!] [name]	Does ":tjump[!] [name]" and splits the window for the
+			selected tag.
+
+g CTRL-]		Like CTRL-], but use ":tjump" instead of ":tag".
+
+{Visual}g CTRL-]	Same as "g CTRL-]", but use the highlighted text as
+			the identifier.
+
+:lt[ag][!] [name]	Jump to tag [name] and add the matching tags to a new
+			location list for the current window.  [name] can be
+			a regexp pattern, see |tag-regexp|.
 
 ----------------------------------------
 Ex commands line range 

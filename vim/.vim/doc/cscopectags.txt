@@ -1,4 +1,4 @@
-*cscopectags.txt*
+					*giri-cscopectags.txt* *cscopectags.txt*
 
 ------------------------------------------------------------------------------
 

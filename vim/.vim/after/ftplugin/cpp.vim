@@ -18,7 +18,7 @@ nnoremap <buffer> <leader>m :setl makeprg=sh\ -c\ \"g++-14\ -std=c++23\ -Wall\ -
 
 # Parenthesis completion
 def IsLambdaFn(): bool
-    return getline('.')->match('\[.\{-}\](.\{-})') != -1
+    return getline('.')->match('=\s*\[.\{-}\](.\{-})') != -1
 enddef
 # i_CTRL-G_U is for enabling redo
 inoremap <expr> { IsLambdaFn() ? "{};\<c-g>U\<left><left>" : "{}\<c-g>U\<left>"

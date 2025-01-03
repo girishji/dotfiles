@@ -23,6 +23,7 @@ giri-[-keymap	giri-nav.txt	/*giri-[-keymap*
 giri-arglist	giri.txt	/*giri-arglist*
 giri-buflist	giri.txt	/*giri-buflist*
 giri-callstack	giri.txt	/*giri-callstack*
+giri-cscopectags.txt	cscopectags.txt	/*giri-cscopectags.txt*
 giri-debug	giri.txt	/*giri-debug*
 giri-folds	giri-nav.txt	/*giri-folds*
 giri-g-keymap	giri-nav.txt	/*giri-g-keymap*

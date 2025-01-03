@@ -260,6 +260,9 @@ nnoremap <leader>fG :vim /\v/gj **<c-left><left><left><left><left>
 #  - instead of above, use vimgrep
 nnoremap <leader>fg :vim /\v/gj %<left><left><left><left><left>
 
+# tag search
+nnoremap <leader>ft :tj<space>
+
 # grep equivalents (-E is like \v magic in Vim; no need to escape |, (, ), ., ?, etc. Ex. egrep "import|more"
 #   to make it case sensitive, remove '-i'
 #   to search specific directory, and for C files, do <dir>/**/*.c

@@ -30,7 +30,8 @@ map <BS> <Leader>
 autocmd VimEnter,VimResume * silent execute '!echo -ne "\e[2 q"' | redraw!
 
 # Format usin 'gq'. :h fo-table
-set formatoptions=qjl
+set formatoptions=qjln
+# autocmd FileType * setl formatoptions=qjlron
 
 # Defaults
 source $VIMRUNTIME/defaults.vim

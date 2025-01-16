@@ -15,10 +15,10 @@ nnoremap gm gM
 nnoremap j gj
 nnoremap k gk
 # Jump lines faster (use with H, M, L)
-nnoremap <leader>j 5j
-vnoremap <leader>j 5j
-nnoremap <leader>k 5k
-vnoremap <leader>k 5k
+nnoremap <leader>j 6j
+vnoremap <leader>j 6j
+nnoremap <leader>k 6k
+vnoremap <leader>k 6k
 # g* selects foo in foobar while * selects <foo>, <> is word boundary. make * behave like g*
 # nnoremap * g*
 # nnoremap # g#
@@ -37,13 +37,16 @@ nnoremap <silent> <esc> :nohls<cr><esc>
 # Replace [[ ]] mappings that get redefined by ftplugin/vim.vim
 # autocmd FileType * nnoremap <silent><buffer> [[ :bprevious<CR>
 # autocmd FileType * nnoremap <silent><buffer> ]] :bnext<CR>
+
 # Note:  ]" [" may hop comments (:verbose nmap ][)
 #   See /opt/homebrew/Cellar/vim/9.0.1550/share/vim/vim90/ftplugin/vim.vim
+
 # Buffer navigation
 nnoremap <silent> [b :bprevious<CR>
 nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [B :bfirst<CR>
 nnoremap <silent> ]B :blast<CR>
+
 # quickfix list
 nnoremap <silent> [c :cprevious<CR>
 nnoremap <silent> ]c :cnext<CR>
@@ -51,16 +54,22 @@ nnoremap <silent> ]c :cnext<CR>
 # nnoremap <silent> ]C :clast<CR>
 nnoremap <silent> [C :colder<CR>
 nnoremap <silent> ]C :cnewer<CR>
+
 # location list (buffer local quickfix list)
 nnoremap <silent> [l :lprevious<CR>
 nnoremap <silent> ]l :lnext<CR>
 nnoremap <silent> [L :lfirst<CR>
 nnoremap <silent> ]L :llast<CR>
-# file list -> load buffers using :args * :args **/*.js **/*.css
-nnoremap <silent> [f :previous<CR>
-nnoremap <silent> ]f :next<CR>
-nnoremap <silent> [F :first<CR>
-nnoremap <silent> ]F :last<CR>
+
+# arg (file) list -> load buffers using :args * :args **/*.js **/*.css
+# nnoremap <silent> [f :previous<CR>
+# nnoremap <silent> ]f :next<CR>
+# nnoremap <silent> [F :first<CR>
+# nnoremap <silent> ]F :last<CR>
+nnoremap <silent> [a :previous<CR>
+nnoremap <silent> ]a :next<CR>
+nnoremap <silent> [A :first<CR>
+nnoremap <silent> ]A :last<CR>
 
 # Map C-/ to do search within visually selected text
 # (C-_ produces the same hex code as C-/)
@@ -82,7 +91,6 @@ enddef
 # NOTE: Use gp and gP for default purpose
 # gp	Just like "p", but leave the cursor just after the new text.
 # gP	Just like "P", but leave the cursor just after the new text.
-# [p    To paste with correct indentation
 
 # visually select recent pasted (or typed) text
 #   remember `] takes you to end of pasted buffer, or use 'gp' to paste
@@ -137,6 +145,7 @@ nnoremap <leader>ve <cmd>e $MYVIMRC<cr>
 nnoremap <leader>vi <cmd>ShowImage<cr>
 # open netrw file browser
 nnoremap <leader>vf <cmd>35Lex<cr>
+nnoremap <leader>vn <cmd>35Lex<cr>
 
 # ----------------------------------------
 # Make <C-PageUp/Down> work in tab with terminal

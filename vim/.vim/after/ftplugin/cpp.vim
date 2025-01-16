@@ -219,7 +219,7 @@ iabbr <buffer> conv_int_string2; stringstream ss; ss << num; string str = ss.str
 iabbr <buffer> conv_str_int; stoi(str)<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> conv_str_int2; istringstream(str) >> num;<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> conv_str_ull; stoull(str)<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> conv_str_int2; istringstream(str) >> ulongnum;<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer> conv_str_ull2; istringstream(str) >> ulongnum;<c-r>=abbr#Eatchar()<cr>
 iabbr <buffer> conv_str_chars; while (auto ch : str) OR vector<char>(s.begin(), s.end())<c-r>=abbr#Eatchar()<cr>
 # convert a view to a container
 iabbr <buffer> conv_view_container; auto squared = numbers // a vector

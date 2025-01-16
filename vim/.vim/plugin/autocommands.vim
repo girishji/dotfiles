@@ -12,8 +12,6 @@ augroup augrp_misc | autocmd!
     autocmd FileType netrw nnoremap <buffer><silent> qq :close<CR>
     # create directories when needed, when saving a file
     autocmd BufWritePre * mkdir(expand('<afile>:p:h'), 'p')
-    # Format using 'gq'. :h fo-table
-    autocmd FileType * setl formatoptions=qjlron
     # Tell vim to automatically open the quickfix and location window after :make,
     # :grep, :lvimgrep and friends if there are valid locations/errors:
     # NOTE: Does not work with caddexpr (:g/pat/caddexpr ...) since it just adds entries.
@@ -54,18 +52,19 @@ augroup augrp_misc | autocmd!
     # autocmd FileType cpp,c setlocal makeprg=g++\ -std=c++11\ -O2\ -Wall\ %\ -o\ %<
 augroup END
 
-augroup augrp_save_yanked_in_reg | autocmd!
-    # Save yank'ed text into numbered registers and rotate. By default vim
-    # stores yank into "0 (does not rotate) and stores deleted and changed text
-    # into "1 and rotates (:h #1). If deleted text is less than a line it is also
-    # stored in "- register (aka small delete register).
-    def SaveLastReg()
-        if v:event['regname'] == "" && v:event['operator'] == 'y'
-            for i in range(8, 1, -1)
-                setreg(string(i + 1), getreg(string(i)))
-            endfor
-            @1 = v:event['regcontents'][0]
-        endif
-    enddef
-    autocmd TextYankPost * SaveLastReg()
-augroup END
+# Note: Never used the following, comment out.
+# augroup augrp_save_yanked_in_reg | autocmd!
+#     # Save yank'ed text into numbered registers and rotate. By default vim
+#     # stores yank into "0 (does not rotate) and stores deleted and changed text
+#     # into "1 and rotates (:h #1). If deleted text is less than a line it is also
+#     # stored in "- register (aka small delete register).
+#     def SaveLastReg()
+#         if v:event['regname'] == "" && v:event['operator'] == 'y'
+#             for i in range(8, 1, -1)
+#                 setreg(string(i + 1), getreg(string(i)))
+#             endfor
+#             @1 = v:event['regcontents'][0]
+#         endif
+#     enddef
+#     autocmd TextYankPost * SaveLastReg()
+# augroup END

@@ -26,12 +26,13 @@ cabbr <expr> vw  abbr#CmdAbbr('vw', $'vim /\v{expand("<cword>")}/gj **<left><lef
 cabbr <expr> vimw  abbr#CmdAbbr('vimw', $'vim /\v{expand("<cword>")}/gj **<left><left><left><left><left><left><c-r>=abbr#Eatchar()<cr>')
 # grep: 1) to exclude dirs use ':gr "foo" **/*~*/bar/*' (dot dirs are automatically excluded)
 #   2) -E (in grepprg) is extended grep, which is like '\v' in Vim. Escapes +, |, ., and ?. ex. grep -E "mp4|avi"
-cabbr <expr> gr  abbr#CmdAbbr('gr', 'gr ""<left><c-r>=abbr#Eatchar()<cr>')
+#   3) gr[ep]! will not automatically visit first file
+cabbr <expr> gr  abbr#CmdAbbr('gr', 'gr! ""<left><c-r>=abbr#Eatchar()<cr>')
 
 # :g search file for pattern and put resulting lines in quickfix list
 # <leader>tc or :cw to open the quickfix window
 #   alternative to g:// is :il /pattern (searches current file and #include'd files)
-# cabbr <expr> gg  abbr#CmdAbbr('gg') ? "g//caddexpr $'{expand(\"%\")}:{line(\".\")}:{getline(\".\")}'<c-left><c-left><right><right><c-r>=abbr#Eatchar()<cr>" : gg
+cabbr <expr> gg  abbr#CmdAbbr('gg', "g//caddexpr $'{expand(\"%\")}:{line(\".\")}:{getline(\".\")}'<c-left><c-left><right><right><c-r>=abbr#Eatchar()<cr>")
 
 # cabbr <expr> zz  abbr#CmdAbbr('zz') ? 'e ~/.zsh/.zshrc<cr>' : 'zz'
 # cabbr <expr> ze  abbr#CmdAbbr('ze') ? 'e ~/.zshenv<cr>' : 'ze'
@@ -60,14 +61,3 @@ inorea fixme: FIXME:
 inorea xxx: XXX:
 # inorea note: NOTE:
 # inorea task: TASK:
-
-# For C/C++:
-# # In insert mode type 'FF e 10<cr>' and it will insert 'for (int e = 0; e < 10; ++e) {<cr>.'
-# iab FF <c-o>:FF
-# command -nargs=* FF call FF(<f-args>)
-# def FF(i: string, x: string)
-#     var t = $'for (int {i} = 0; {i} < {x}; ++{i}) {{'
-#     exe 'normal! a' .. t
-#     exe "normal o\<space>\<BS>\e"
-#     exe "normal o}\ekA"
-# enddef

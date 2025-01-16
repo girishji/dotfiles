@@ -410,6 +410,18 @@ endfunction
 " create a map for INC
 cab viminc :let I=223 \| 'a,'bs/$/\=INC(5)/
 
+----------------------------------------
+# Registers                                 *giri-register*
+
+## Yank and delete Registers
+
+The 0 register always contains the last yank, so even if you delete stuff you
+can use “0p to paste the last yank.
+
+By default vim stores yank into "0 (does not rotate) and stores deleted and
+changed text into "1 and rotates (:h #1). If deleted text is less than a line
+it is also stored in "- (minus) register (aka small delete register).
+
 ## Expression register '='
 
 It can evaluate a piece of Vim script code and return the result. It is
@@ -420,6 +432,31 @@ addressed by the = symbol. From Insert mode we can access it by typing <C-r>=
 <C-r>=6*35<CR>  from insert mode
 
 <C-r>= will open a prompt
+
+##
+1. The unnamed register ""
+2. 10 numbered registers "0 to "9
+3. The small delete register "-
+4. 26 named registers "a to "z or "A to "Z
+5. Three read-only registers ":, "., "%
+6. Alternate buffer register "#
+7. The expression register "=
+8. The selection and drop registers "*, "+ and "~ 
+9. The black hole register "_
+10. Last search pattern register "/
+
+1. Unnamed register ""
+Vim fills this register with text deleted with the "d", "c", "s", "x" commands
+or copied with the yank "y" command, regardless of whether or not a specific
+register was used (e.g.  "xdd).  This is like the unnamed register is pointing
+to the last used register.
+
+4. Named registers "a to "z or "A to "Z			*quote_alpha* *quotea*
+Vim fills these registers only when you say so.  Specify them as lowercase
+letters to replace their previous contents or as uppercase letters to append
+to their previous contents.
+
+----------------------------------------
 
 ## rectangular selection and replace:
 1. Use C-v (visual block mode) to yank text; Use $ for ragged block

@@ -363,16 +363,16 @@ if exists("g:loaded_bufline")
         # - `User2`: Alternate buffer
         # - `User3`: Other buffers
         # - `User4`: Emphasis characters if specified (see Options)
-        # highlight user1 ctermfg=252 cterm=underline,bold
-        # highlight user2 ctermfg=252 cterm=bold,italic
-        # highlight user3 ctermfg=252 cterm=none
-        # highlight user4 ctermfg=252 cterm=bold
+        # highlight user1 cterm=bold,reverse
+        # highlight user2 cterm=reverse
+        # highlight user3 cterm=reverse
+        # highlight user4 cterm=reverse
         # g:BuflineSetup({ highlight: true, showbufnr: false, emphasize: '' })
     else
         # keep defaults
     endif
     # g:BuflineSetup({ highlight: false, showbufnr: false, emphasize: '<%#' })
-    g:BuflineSetup({ highlight: true, emphasize: '#' })
+    g:BuflineSetup({ highlight: true, emphasize: '#|' })
 endif
 
 # another way

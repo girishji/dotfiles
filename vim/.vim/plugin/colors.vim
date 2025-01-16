@@ -31,13 +31,21 @@ endif
 if get(g:, 'colors_name', null_string) == null_string
     hi LineNr ctermfg=8
     hi Comment ctermfg=8
-    hi PmenuSel ctermfg=0 ctermbg=4
     hi link FfTtSubtle Ignore
     hi link markdownCodeBlock Constant
     hi link PmenuMatch wildmenu
     hi MatchParen ctermbg=none cterm=underline
     if &bg == 'light'
-        hi Type ctermfg=None |# Type is set to green which can be too light
+        hi Type ctermfg=None |# 'Type' is set to green which can be too light
+        hi PmenuSel ctermfg=15 ctermbg=4
+        var bg = hlget('SignColumn')->get(0, {})->get('ctermbg', null_string)
+        if (bg != null_string)
+            exec $'hi GitGutterAdd ctermbg={bg}'
+            exec $'hi GitGutterChange ctermbg={bg}'
+            exec $'hi GitGutterDelete ctermbg={bg}'
+        endif
+    else
+        hi PmenuSel ctermfg=0 ctermbg=4
     endif
 endif
 

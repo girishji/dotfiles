@@ -32,6 +32,7 @@ giri-nav.txt	giri-nav.txt	/*giri-nav.txt*
 giri-netrw	giri.txt	/*giri-netrw*
 giri-pattern	giri.txt	/*giri-pattern*
 giri-quickfix	giri.txt	/*giri-quickfix*
+giri-register	giri.txt	/*giri-register*
 giri-stacktrace	giri.txt	/*giri-stacktrace*
 giri-substitute	giri.txt	/*giri-substitute*
 giri-tabs	giri.txt	/*giri-tabs*
@@ -51,4 +52,6 @@ i_<C-PageDown>	giri.txt	/*i_<C-PageDown>*
 i_CTRL-<PageDown>	giri.txt	/*i_CTRL-<PageDown>*
 leetcode-cpp.txt	leetcode-cpp.txt	/*leetcode-cpp.txt*
 leetcode-py.txt	leetcode-py.txt	/*leetcode-py.txt*
+quote_alpha	giri.txt	/*quote_alpha*
+quotea	giri.txt	/*quotea*
 vim-wiki	giri.txt	/*vim-wiki*

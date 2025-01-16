@@ -14,12 +14,13 @@ vim9script
 #   black background; However, they work fine on white background ('Basic'
 #   profile of terminal app).
 
-g:colors_name = "defaultplus"
 highlight clear
 if exists("syntax_on")
   syntax reset  # Set colors to Vim default
 endif
 set notermguicolors
+
+g:colors_name = "defaultplus"  # Should be after 'sytax reset' and 'highlight clear'
 
 # var colors = {
 #     black: 0,
@@ -170,6 +171,30 @@ set notermguicolors
 #     HiLight  helpCommand ctermbg=lightgray ctermfg=darkgray
 # endif
 
+hi LineNr ctermfg=8
+hi Comment ctermfg=8
+hi link FfTtSubtle Ignore
+hi link markdownCodeBlock Constant
+hi link PmenuMatch wildmenu
+hi MatchParen ctermbg=none cterm=underline
+if &bg == 'light'
+    hi Type ctermfg=None |# 'Type' is set to green which can be too light
+    hi PmenuSel ctermfg=15 ctermbg=4
+    var bg = hlget('SignColumn')->get(0, {})->get('ctermbg', null_string)
+    if (bg != null_string)
+        exec $'hi GitGutterAdd ctermbg={bg}'
+        exec $'hi GitGutterChange ctermbg={bg}'
+        exec $'hi GitGutterDelete ctermbg={bg}'
+    endif
+else
+    hi ErrorMsg ctermfg=0
+    # Less bright menu
+    hi Pmenu ctermfg=15 ctermbg=8
+    hi PmenuSel ctermfg=0 ctermbg=4
+    hi PmenuMatch ctermfg=15 ctermbg=0
+    hi VimSuggestMute ctermfg=6
+endif
+
 # Apply monochrome colors if options is set, but exclude help files from
 # monochrome treatment.
 const syntax_groups = [
@@ -206,7 +231,9 @@ const syntax_groups = [
 ]
 
 def ApplyMonochrome()
-    if &ft !~ 'help\|markdown\|devdoc\|man'
+    # All autocommands are applied before reading modelines (where &ft may be
+    # set).
+    if &ft != null_string && &ft !~ 'conf\|help\|markdown\|devdoc\|man'
         if !monochrome_applied
             for grp in syntax_groups
                 var props = saved_hi[saved_hi->match($'^{grp}\s.*')]
@@ -217,6 +244,11 @@ def ApplyMonochrome()
             hi Operator ctermfg=1
             hi VimdefBody ctermfg=1
             exec 'hi String' $'ctermfg={&background == "dark" ? 10 : 1}'
+            hi! link TabLineFill TabLine
+            ## Following works well with 'maple mono' font (https://github.com/comfysage/evergarden)
+            hi Statement ctermfg=5 cterm=italic
+            hi Type ctermfg=5 cterm=italic
+            ##
             monochrome_applied = true
         endif
     elseif monochrome_applied
@@ -237,7 +269,7 @@ if exists("$VIM_MONOCHROME") || get(g:, 'defaut_plus_monochrome', false)
     saved_hi = 'hi'->execute()->split("\n")
     ApplyMonochrome()
     augroup DefaultPlusMonochrome | autocmd!
-        autocmd WinEnter,BufEnter * ApplyMonochrome()
+        autocmd WinEnter,BufReadPost * ApplyMonochrome()
     augroup END
 endif
 

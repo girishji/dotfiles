@@ -1838,7 +1838,7 @@ string::
     assign_range() -> assign a range of characters to a string
     get_allocator() -> returns the associated allocator
     at() -> accesses the specified character with bounds checking
-    operator[]() -> accesses the specified character
+    operator[] -> accesses the specified character
     front() -> accesses the first character
     back() -> accesses the last character
     data() -> returns a pointer to the first character of a string
@@ -2052,7 +2052,14 @@ string::insert_range()
     target.insert_range(iter, source); // same as target.insert(iter, source.begin(), source.end());
 
 string::erase()
+      ============ == ====================================
+      index        -  first character to remove
+      count        -  number of characters to remove
+      position     -  iterator to the character to remove
+      first, last  -  range of the characters to remove
+      ============ == ====================================
     std::string s = "This Is An Example"; s.erase(7, 3); // erases " An"
+    s.erase(index, 1) -> remove 1 char at index
     s.erase(std::find(s.begin(), s.end(), ' ')); // erases first ' ';
     s.erase(s.find(' ')); // trims from ' ' to the end of the string;
     auto it = std::next(s.begin(), s.find('s')); // obtains iterator to the first 's'
@@ -3172,14 +3179,35 @@ toupper
     ranges::for_each_n
         applies a function object to the first N elements of a sequence
 
-for_each
+..a.for_each
     applies a function to a range of elements
+
+    std::for_each(v.begin(), v.end(), [](int &n) { n++; });
+    struct Sum
+    {
+        void operator()(int n) { sum += n; }
+        int sum {0};
+    };
+    // invoke Sum::operator() for each element
+    Sum s = std::for_each(v.cbegin(), v.cend(), Sum());
 
 ranges::for_each
     applies a function to a range of elements
 
-for_each_n
+..a.for_each_n
     applies a function object to the first N elements of a sequence
+
+    InputIt for_each_n( InputIt first, Size n, UnaryFunc f );
+    {
+        std::vector<int> vi{1, 2, 3, 4, 5};
+        println(vi);
+        std::for_each_n(vi.begin(), 3, [](auto& n) { n *= 2; });
+        println(vi);
+    }
+    Output:
+
+    1, 2, 3, 4, 5
+    2, 4, 6, 4, 5
 
 ranges::for_each_n
     applies a function object to the first N elements of a sequence
@@ -3260,12 +3288,48 @@ ranges::for_each_n
     ranges::ends_with
         checks whether a range ends with another range
 
-all_of
+..a.all_of
     checks if a predicate is true for all, any or none of the elements in a range
-any_of
+
+    {
+        std::vector<int> v(10, 2);
+        std::partial_sum(v.cbegin(), v.cend(), v.begin());
+        std::cout << "Among the numbers: ";
+        std::copy(v.cbegin(), v.cend(), std::ostream_iterator<int>(std::cout, " "));
+        std::cout << '\n';
+
+        if (std::all_of(v.cbegin(), v.cend(), [](int i) { return i % 2 == 0; }))
+            std::cout << "All numbers are even\n";
+
+        if (std::none_of(v.cbegin(), v.cend(), std::bind(std::modulus<>(),
+                                                         std::placeholders::_1, 2)))
+            std::cout << "None of them are odd\n";
+
+        struct DivisibleBy
+        {
+            const int d;
+            DivisibleBy(int n) : d(n) {}
+            bool operator()(int n) const { return n % d == 0; }
+        };
+
+        if (std::any_of(v.cbegin(), v.cend(), DivisibleBy(7)))
+            std::cout << "At least one number is divisible by 7\n";
+    }
+    Output:
+
+    Among the numbers: 2 4 6 8 10 12 14 16 18 20
+    All numbers are even
+    None of them are odd
+    At least one number is divisible by 7
+
+..a.any_of
     checks if a predicate is true for all, any or none of the elements in a range
-none_of
+    see ..a.all_of
+
+..a.none_of
     checks if a predicate is true for all, any or none of the elements in a range
+    see ..a.all_of
+
 ranges::all_of
     checks if a predicate is true for all, any or none of the elements in a range
 ranges::any_of
@@ -3276,12 +3340,68 @@ ranges::contains
     checks if the range contains the given element or subrange
 ranges::contains_subrange
     checks if the range contains the given element or subrange
-find
+..a.find
     finds the first element satisfying specific criteria
-find_if
+
+    bool is_even(int i)
+    {
+        return i % 2 == 0;
+    }
+
+    void example_contains()
+    {
+        const auto haystack = {1, 2, 3, 4};
+
+        for (const int needle : {3, 5})
+            if (std::find(haystack.begin(), haystack.end(), needle) == haystack.end())
+                std::cout << "haystack does not contain " << needle << '\n';
+            else
+                std::cout << "haystack contains " << needle << '\n';
+    }
+
+    void example_predicate()
+    {
+        for (const auto& haystack : {std::array{3, 1, 4}, {1, 3, 5}})
+        {
+            const auto it = std::find_if(haystack.begin(), haystack.end(), is_even);
+            if (it != haystack.end())
+                std::cout << "haystack contains an even number " << *it << '\n';
+            else
+                std::cout << "haystack does not contain even numbers\n";
+        }
+    }
+
+    void example_list_init()
+    {
+        std::vector<std::complex<double>> haystack{{4.0, 2.0}};
+    #ifdef __cpp_lib_algorithm_default_value_type
+        // T gets deduced making list-initialization possible
+        const auto it = std::find(haystack.begin(), haystack.end(), {4.0, 2.0});
+    #else
+        const auto it = std::find(haystack.begin(), haystack.end(), std::complex{4.0, 2.0});
+    #endif
+        assert(it == haystack.begin());
+    }
+
+    int main()
+    {
+        example_contains();
+        example_predicate();
+        example_list_init();
+    }
+    Output:
+
+    haystack contains 3
+    haystack does not contain 5
+    haystack contains an even number 4
+    haystack does not contain even numbers
+
+..a.find_if
     finds the first element satisfying specific criteria
-find_if_not
+    see ..a.find
+..a.find_if_not
     finds the first element satisfying specific criteria
+    see ..a.find
 ranges::find
     finds the first element satisfying specific criteria
 ranges::find_if
@@ -3810,7 +3930,10 @@ set_union
 ranges::set_union
     computes the union of two sets
 set_intersection
-    computes the intersection of two sets
+    computes the intersection of two sets (sorted vectors)
+    vector<int> res;
+    set_intersection(vec1sorted.begin(), vec1sorted.end(), vec2sorted.begin(), vec2sorted.end(), back_inserter(res));
+
 ranges::set_intersection
     computes the intersection of two sets (or 2 sorted ranges)
 

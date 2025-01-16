@@ -167,9 +167,17 @@ alias gd='git diff'
 #
 # CAUTION: Avoid **/* and ***/* as shell complains 'too many paths to expand' when searching a large directory.
 
-# NOTEa: ggrep is broken since it always lists .git/* even when told not to.
-alias gr="grep -REIins --exclude={'*.swp','*.git*'} \"\""
-cursor_offset["gr"]=2
+# NOTEa:
+# - ggrep is broken since it always lists .git/* even when told not to.
+# - 'gr' is not a good alias, as 'foo |gr' will not grep the output of foo. Use 'grr' (recursive grep) instead.
+alias grr="grep -REIins --exclude={'*.swp','*.git*'} \"\""
+cursor_offset["grr"]=2
+alias gg="grep -REIins --exclude={'*.swp','*.git*'} \"\""
+cursor_offset["gg"]=2
+
+alias -g g="ggrep --color -iEI"
+alias -g gr="ggrep --color -iEI"
+alias -g G='| ggrep --color -iEI'
 
 # alternative:
 #
@@ -199,7 +207,6 @@ cursor_offset["gr"]=2
 # grep "Fred\(eric\)\? Smith" file   # grep fred or frederic
 # alias gr='ggrep -EIins "" ***/*'  # no need for '-R' since '***' takes care of recursion (and symlink following)
 # cursor_offset["gr"]=8
-alias -g G='| ggrep --color -iEI'
 
 # alias pipi='pip install --user '
 alias pipi='pip install'
@@ -267,7 +274,7 @@ if is_mac; then
         #
         if [[ ${bg_color} != "0;15" ]]; then # dark background
             # export LS_COLORS='di=1:ln=3:ex=3'  # 1=bold, 3=italic, see ~/help/ls
-            export LS_COLORS='di=1;36:ln=1;35:ex=1;33'  # see help/ls
+            export LS_COLORS='di=1;34:ln=0;35:ex=0;33'  # see help/ls
         fi
         alias ls='gls --color=always -F' # auto/always/never
     else

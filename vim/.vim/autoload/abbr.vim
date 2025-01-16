@@ -22,12 +22,14 @@ export def EOL(): bool
     return col('.') == col('$') || getline('.')->strpart(col('.')) =~ '^\s\+$'
 enddef
 
-export def CmdAbbr(abbr: string, expn: string): string
+export def CmdAbbr(abbr: string, expn: string, range = false): string
     if getcmdtype() == ':'
         var ctx = getcmdline()->strpart(0, getcmdpos() - 1)
-        # :h :range and :h :range-pattern (can be very complicated)
-        # \?, \=, \{0,1} do the same thing
-        if ctx =~ '^\(''<,''>\|''\a,''\a\|%\|\d\+\|\d\+,\d\+\)\=' .. abbr
+        if range
+            var pat = '^\(''<,''>\|''\a,''\a\|%\|\d\+\|\d\+,\d\+\)\=' # \?, \=, \{0,1} are equivalent
+            ctx->substitute(pat, '', '')
+        endif
+        if ctx =~ $'^\({abbr}\|vim9\s\+{abbr}\)$'
             return expn
         endif
     endif

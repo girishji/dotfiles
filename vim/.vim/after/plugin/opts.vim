@@ -17,7 +17,7 @@ if exists("g:loaded_vimcomplete")
     g:VimCompleteOptionsSet({
         completor: { triggerWordLen: 0, shuffleEqualPriority: true, alwaysOn: true, postfixClobber: false, postfixHighlight: true, showKind: false, debug: false },
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
-        dictionary: { enable: true, priority: 10, maxCount: 100, filetypes: ['python', 'cpp'], matcher: 'ignorecase', properties: dictproperties },
+        dictionary: { enable: true, priority: 10, maxCount: 10, filetypes: ['python', 'cpp', 'text'], matcher: 'ignorecase', properties: dictproperties },
         abbrev: { enable: true, maxCount: 30 },
         lsp: { enable: true, maxCount: 10, priority: 8 },
         omnifunc: { enable: false, priority: 10, filetypes: ['tex', 'python'] },
@@ -42,7 +42,7 @@ if exists("g:loaded_vimcomplete")
                 \ (feedkeys("\<Plug>(vimcomplete-info-window-pagedown)", 'ni') ? "" : "") : "\<End>"
 
     # Remove border from info window (doc window)
-    autocmd VimEnter * set completepopup+=border:on,highlight:Normal
+    autocmd VimEnter * set completepopup+=highlight:Normal
     # Set more options (not settable through completepopup)
     g:VimCompleteInfoWindowOptionsSet({
         # borderhighlight: ['Comment'],
@@ -64,10 +64,10 @@ if exists("g:loaded_vimsuggest")
         # fuzzy: false,
         # prefixlen: 3,
         popupattrs: {
-            borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
-            # borderhighlight: ['Normal'],
+            # borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+            # borderhighlight: ['LineNr'],
             # highlight: 'Normal',
-            # border: [0, 1, 0, 1],
+            # border: [1, 1, 1, 1],
             # padding: [1, 1, 1, 1],
             maxheight: 10,
         },
@@ -82,14 +82,15 @@ if exists("g:loaded_vimsuggest")
         onspace: '.*',
         # trigger: 'tn',
         # reverse: true,
-        # auto_first: true,  # :hi will not call ':highlight' but calls ':HighlightGroupUnderCursor'
+        # auto_first: true,  # XXX: :hi will not call ':highlight' but calls ':HighlightGroupUnderCursor'
         # complete_sg: false,
         # prefixlen: 3,
+        # bindkeys: false,
         popupattrs: {
-            borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
-            # borderhighlight: ['Normal'],
+            # borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+            # borderhighlight: ['LineNr'],
             # highlight: 'Normal',
-            # border: [0, 1, 0, 1],
+            # border: [1, 1, 1, 1],
             # padding: [1, 1, 1, 1],
             # maxheight: 20,
         },
@@ -100,6 +101,12 @@ if exists("g:loaded_vimsuggest")
         autocmd!
         autocmd QuickFixCmdPost clist cwindow
     augroup END
+
+    # cnoremap <expr> <PageUp> g:VimSuggestMenuVisible() ? "\<Plug>(vimsuggest-pageup)" : "\<PageUp>"
+    # cnoremap <expr> <PageDown> g:VimSuggestMenuVisible() ? "\<Plug>(vimsuggest-pagedown)" : "\<PageDown>"
+    # cnoremap <Plug>(vimsuggest-dismiss) <Nop>
+    # cnoremap <C-e> <Plug>(vimsuggest-dismiss)
+    # cnoremap <C-e> <Plug>VimsuggestDismiss;
 
     # find
     # g:vimsuggest_fzfindprg = 'fd --type f .'
@@ -227,16 +234,16 @@ if exists("g:loaded_lsp")
     g:LspOptionsSet({
         autoHighlightDiags: true,
         showDiagWithVirtualText: false, # when you set this false, set showDiagOnStatusLine true
-        highlightDiagInline: true,
+        highlightDiagInline: false,
         showDiagOnStatusLine: true,
         diagVirtualTextAlign: 'after',
         autoPopulateDiags: false, # add diags to location list automatically <- :lopen [l ]l
         # completionMatcher: 'fuzzy', # case/fuzzy/icase
         completionMatcher: 'case', # case/fuzzy/icase
-        diagSignErrorText: '●',
-        diagSignHintText: '●',
-        diagSignInfoText: '●',
-        diagSignWarningText: '●',
+        # diagSignErrorText: '●',
+        # diagSignHintText: '●',
+        # diagSignInfoText: '●',
+        # diagSignWarningText: '●',
         # outlineWinSize: 30,
         showSignature: true,
         echoSignature: false,
@@ -268,6 +275,15 @@ if exists("g:loaded_lsp")
             path: 'typescript-language-server',
             args: ['--stdio'],
             rootSearch: ['tsconfig.json', 'package.json', 'jsconfig.json', '.git'],
+        }])
+    endif
+    if executable('rust-analyzer')
+        g:LspAddServer([{
+            name: 'rust-analyzer',
+            filetype: ['rust'],
+            args: [],
+            syncInit: v:true,
+            path: exepath('rust-analyzer'),
         }])
     endif
     # if executable('gopls')
@@ -306,27 +322,27 @@ if exists("g:loaded_lsp")
             },
         }])
     endif
-    def LSPUserSetup()
-        nnoremap <buffer> [e :LspDiagPrev<CR>| # think as 'error' message
-        nnoremap <buffer> ]e :LspDiagNext<CR>
-        if &background == 'dark'
-            highlight  LspDiagVirtualTextError    ctermbg=none  ctermfg=1
-            highlight  LspDiagVirtualTextWarning  ctermbg=none  ctermfg=3
-            highlight  LspDiagVirtualTextHint     ctermbg=none  ctermfg=2
-            highlight  LspDiagVirtualTextInfo     ctermbg=none  ctermfg=5
-        endif
-        highlight  link  LspDiagSignErrorText    LspDiagVirtualTextError
-        highlight  link  LspDiagSignWarningText  LspDiagVirtualTextWarning
-        highlight  link  LspDiagSignHintText     LspDiagVirtualTextHint
-        highlight  link  LspDiagSignInfoText     LspDiagVirtualTextInfo
-        highlight LspDiagInlineWarning ctermfg=none
-        highlight LspDiagInlineHint ctermfg=none
-        highlight LspDiagInlineInfo ctermfg=none
-        highlight LspDiagInlineError ctermfg=none cterm=undercurl
-        highlight LspDiagVirtualText ctermfg=1
-        highlight LspDiagLine ctermbg=none
-    enddef
-    autocmd User LspAttached LSPUserSetup()
+    # def LSPUserSetup()
+    #     nnoremap <buffer> [e :LspDiagPrev<CR>| # think as 'error' message
+    #     nnoremap <buffer> ]e :LspDiagNext<CR>
+    #     if &background == 'dark'
+    #         highlight  LspDiagVirtualTextError    ctermbg=none  ctermfg=1
+    #         highlight  LspDiagVirtualTextWarning  ctermbg=none  ctermfg=3
+    #         highlight  LspDiagVirtualTextHint     ctermbg=none  ctermfg=2
+    #         highlight  LspDiagVirtualTextInfo     ctermbg=none  ctermfg=5
+    #     endif
+    #     highlight  link  LspDiagSignErrorText    LspDiagVirtualTextError
+    #     highlight  link  LspDiagSignWarningText  LspDiagVirtualTextWarning
+    #     highlight  link  LspDiagSignHintText     LspDiagVirtualTextHint
+    #     highlight  link  LspDiagSignInfoText     LspDiagVirtualTextInfo
+    #     highlight LspDiagInlineWarning ctermfg=none
+    #     highlight LspDiagInlineHint ctermfg=none
+    #     highlight LspDiagInlineInfo ctermfg=none
+    #     highlight LspDiagInlineError ctermfg=none cterm=undercurl
+    #     highlight LspDiagVirtualText ctermfg=1
+    #     highlight LspDiagLine ctermbg=none
+    # enddef
+    # autocmd User LspAttached LSPUserSetup()
 endif
 
 if exists("g:loaded_swap")
@@ -339,8 +355,10 @@ if exists("g:loaded_gitgutter")
     g:gitgutter_map_keys = 0
     nmap ]h <Plug>(GitGutterNextHunk)
     nmap [h <Plug>(GitGutterPrevHunk)
-    hi GitGutterAdd ctermfg=5 | hi GitGutterChange ctermfg=5 | hi GitGutterDelete ctermfg=5
     # Disable these problematic autocmds, otherwise :vimgrep gives error when opening quickfix
+    hi GitGutterAdd ctermfg=5
+    hi GitGutterChange ctermfg=5
+    hi GitGutterDelete ctermfg=5
     if exists("#gitgutter")
         autocmd! gitgutter QuickFixCmdPre *vimgrep*
         autocmd! gitgutter QuickFixCmdPost *vimgrep*
@@ -372,7 +390,8 @@ if exists("g:loaded_bufline")
         # keep defaults
     endif
     # g:BuflineSetup({ highlight: false, showbufnr: false, emphasize: '<%#' })
-    g:BuflineSetup({ highlight: true, emphasize: '#|' })
+    # g:BuflineSetup({ highlight: true, emphasize: '#|' })
+    g:BuflineSetup({ highlight: false, emphasize: '#|' })
 endif
 
 # another way

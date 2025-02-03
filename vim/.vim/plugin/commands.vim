@@ -9,7 +9,7 @@ command HighlightGroupUnderCursor {
             while true
                 var linksto = $'hi {g}'->execute()->matchstr('links to \zs\S\+')
                 if linksto == null_string
-                    exec 'hi' g
+                    exec 'verbose hi' g
                     break
                 else
                     echo '->' linksto

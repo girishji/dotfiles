@@ -133,8 +133,8 @@ nnoremap <leader>vs :set spell!<CR><Bar>:echo "Spell Check: " .. strpart("OffOn"
 # nnoremap <expr> <leader>vl empty(filter(getwininfo(), 'v:val.loclist')) ? ':lopen<CR>' : ':lclose<CR>'
 
 # Vim group
-nnoremap <leader>vr :new \| exec "nn <buffer> q :bd!\<cr\>" \| r ! | # redirect shell command, use :il /foo to filter lines
-nnoremap <leader>vR :enew \| exec "nn <buffer> q :bd!\<cr\>" \| put = execute('map')<left><left>| # redirect vim cmd, use <leader>fi to filter
+nnoremap <leader>vR :new \| exec "nn <buffer> q :bd!\<cr\>" \| r ! | # redirect shell command, use :il /foo to filter lines
+nnoremap <leader>vr :enew \| exec "nn <buffer> q :bd!\<cr\>" \| put = execute('')<left><left>| # redirect vim cmd, use <leader>fi to filter
 # nnoremap <leader>vl <cmd>set buflisted!<cr>
 nnoremap <leader>vm <cmd>messages<cr>
 # nnoremap <leader>vd <cmd>GitDiffThisFile<cr>
@@ -289,3 +289,9 @@ nnoremap <leader>fk :<c-r>=setqflist([], ' ', #{title: 'keymap', items: execute(
 nnoremap <leader>fm :<c-r>=setqflist([], ' ', #{title: 'marks', items: execute("marks")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
 nnoremap <leader>fr :<c-r>=setqflist([], ' ', #{title: 'registers', items: execute("registers")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
 nnoremap <leader>fq <cmd>chistory<cr>
+
+# :h collapse
+# These two mappings reduce a sequence of empty (;b) or blank (;n) lines
+# into a single line
+# :map ;b   GoZ<Esc>:g/^$/.,/./-j<CR>Gdd
+# :map ;n   GoZ<Esc>:g/^[ <Tab>]*$/.,/[^ <Tab>]/-j<CR>Gdd

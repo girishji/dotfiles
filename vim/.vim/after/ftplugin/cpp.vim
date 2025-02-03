@@ -22,7 +22,8 @@ def IsLambdaFn(): bool
 enddef
 # i_CTRL-G_U is for enabling redo
 inoremap <expr> { IsLambdaFn() ? "{};\<c-g>U\<left><left>" : "{}\<c-g>U\<left>"
-inoremap <expr> <cr> getline(".")->slice(col(".") - 2, col(".")) == "{}" ? "\<cr>\<esc>O" : "\<cr>"
+# NOTE: Accommodate vimcomplete <cr> keymap
+inoremap <buffer><expr> <cr> pumvisible() ? "\<c-y>\<cr>" : getline(".")->slice(col(".") - 2, col(".")) == "{}" ? "\<cr>\<esc>O" : "\<cr>"
 
 # Abbreviations:
 # - When naming, ignore vowels inless they indicate type (ex. vi; -> vector<int>)

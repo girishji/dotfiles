@@ -1066,6 +1066,16 @@ fallback is always using 'tags'. Very simple:
 :!ctags -R
                         run ctags at your project root.
 
+CTRL-]			Jump to definition of keyword under cursor (like 
+			'gd' except gd works for locally within file).
+			(Use g Ctrl-] instead). Same as ":tag {name}", where {name} is the
+			keyword under or after cursor.
+			When there are several matching tags for {name}, jump
+			to the [count] one.  When no [count] is given the
+			first one is jumped to.
+
+g CTRL-]		Like CTRL-], but use ":tjump" instead of ":tag".
+
 :[count]ta[g][!] {name}
 			Jump to the definition of {name}, using the
 			information in the tags file(s).  Put {name} in the
@@ -1075,13 +1085,6 @@ fallback is always using 'tags'. Very simple:
 			to the [count] one.  When [count] is omitted the
 			first one is jumped to. See |tag-matchlist| for
 			jumping to other matching tags.
-
-CTRL-]			(Use g Ctrl-] instead) Jump to the definition of the keyword under the
-			cursor.  Same as ":tag {name}", where {name} is the
-			keyword under or after cursor.
-			When there are several matching tags for {name}, jump
-			to the [count] one.  When no [count] is given the
-			first one is jumped to.
 
 {Visual}CTRL-]		Same as ":tag {name}", where {name} is the text that
 			is highlighted.
@@ -1113,8 +1116,6 @@ g]			Like CTRL-], but use ":tselect" instead of ":tag".
 
 :stj[ump][!] [name]	Does ":tjump[!] [name]" and splits the window for the
 			selected tag.
-
-g CTRL-]		Like CTRL-], but use ":tjump" instead of ":tag".
 
 {Visual}g CTRL-]	Same as "g CTRL-]", but use the highlighted text as
 			the identifier.

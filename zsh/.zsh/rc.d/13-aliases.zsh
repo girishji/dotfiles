@@ -274,7 +274,7 @@ if is_mac; then
         #
         if [[ ${bg_color} != "0;15" ]]; then # dark background
             # export LS_COLORS='di=1:ln=3:ex=3'  # 1=bold, 3=italic, see ~/help/ls
-            export LS_COLORS='di=1;34:ln=0;35:ex=0;33'  # see help/ls
+            export LS_COLORS='di=0;34:ln=0;35:ex=0;33'  # see help/ls
         fi
         alias ls='gls --color=always -F' # auto/always/never
     else

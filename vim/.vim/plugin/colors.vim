@@ -60,21 +60,28 @@ def ColorCorrect()
             hi LineNr ctermfg=14 ctermbg=7
             hi StatusLine ctermfg=10 ctermbg=7 cterm=bold
             hi Pmenu ctermfg=none ctermbg=7
+            hi PmenuMatch ctermfg=3 ctermbg=7
             hi PmenuSel ctermfg=7 ctermbg=0
+            hi PmenuMatchSel ctermfg=3 ctermbg=0
             hi SpecialKey ctermfg=14 |# 'tab', 'nbsp', 'space', etc.
             hi NonText ctermfg=14 |# 'eol', etc.
-            hi Search ctermfg=7
+            hi Search ctermfg=7 ctermbg=12
         else  # dark
-            hi Comment ctermfg=10
+            hi Comment ctermfg=11
             hi SignColumn ctermfg=None ctermbg=0
-            hi LineNr ctermfg=11 ctermbg=0
+            hi LineNr ctermfg=12 ctermbg=0
             hi StatusLine ctermfg=14 ctermbg=0 cterm=bold
             hi Pmenu ctermfg=none ctermbg=0
-            hi PmenuSel ctermfg=0 ctermbg=4
+            hi PmenuMatch ctermfg=3 ctermbg=0
+            hi PmenuSel ctermfg=8 ctermbg=4
+            hi PmenuMatchSel ctermfg=3 ctermbg=4
+            hi PmenuSbar ctermbg=11
+            hi PmenuThumb ctermbg=7
             hi SpecialKey ctermfg=10 |# 'tab', 'nbsp', 'space', etc.
             hi NonText ctermfg=10 |# 'eol', etc.
-            hi Search ctermfg=0
+            hi Search ctermfg=8 ctermbg=12
         endif
+        hi link StatusLineNC StatusLine
         hi Constant ctermfg=4
         hi String ctermfg=6
         hi Statement ctermfg=2
@@ -82,8 +89,6 @@ def ColorCorrect()
         hi PreProc ctermfg=1
         hi Special ctermfg=1
         hi Type ctermfg=3
-        hi PmenuMatch ctermfg=3
-        hi PmenuMatchSel ctermfg=3
         hi MatchParen ctermfg=1 ctermbg=none cterm=underline
 
         # from: https://www.youtube.com/watch?v=I8DaJbSbenE

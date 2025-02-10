@@ -62,7 +62,7 @@ set nojoinspaces # suppress inserting two spaces between sentences
 set shortmess+=I # disable startup message
 set report=0 # show yank confirmation even if 1 or 2 lines yanked
 set showmatch # show matching braces when text indicator is over them
-set ignorecase # case-sensitive search
+set ignorecase # case-insensitive search
 set smartcase # smart search
 set infercase # when doing <c-n/p> completion, respect case
 set splitbelow # open new split panes to right
@@ -123,7 +123,7 @@ if has('syntax') && has('eval')
 endif
 
 # Suppress netrw banner
-g:netrw_banner = 0
+# g:netrw_banner = 0
 
 if v:version >= 901 && !getcompletion('comment', 'packadd')->empty()
     packadd comment

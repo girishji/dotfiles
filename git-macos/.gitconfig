@@ -37,21 +37,21 @@
 	error = 1 normal italic
 [color "diff"]
 	commit = 3 normal
-	newMoved = 11 normal
+	newMoved = 3 normal
 	oldMovedAlternativeDimmed = 4 normal dim
 	frag = normal italic
 	oldMovedAlternative = 4 normal
 	contextBold = normal bold
-	newBold = 10 normal bold
+	newBold = 2 normal bold
 	context = normal dim
 	oldMoved = 3 normal
 	oldBold = 1 normal bold
-	newMovedDimmed = 11 normal dim
+	newMovedDimmed = 3 normal dim
 	func = normal italic
 	meta = normal
-	newDimmed = 10 normal dim
+	newDimmed = 2 normal dim
 	newMovedAlternative = 12 normal
-	new = 10 normal
+	new = 2 normal
 	newMovedAlternativeDimmed = 12 normal dim
 	whitespace = normal 9
 	oldMovedDimmed = 3 normal dim

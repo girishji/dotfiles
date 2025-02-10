@@ -19,8 +19,8 @@ if exists("g:loaded_vimcomplete")
         buffer: { enable: true, maxCount: 10, priority: 11, urlComplete: true, envComplete: true, completionMatcher: 'icase' },
         dictionary: { enable: true, priority: 10, maxCount: 10, filetypes: ['python', 'cpp', 'text'], matcher: 'ignorecase', properties: dictproperties },
         abbrev: { enable: true, maxCount: 30 },
-        lsp: { enable: true, maxCount: 10, priority: 8 },
-        omnifunc: { enable: false, priority: 10, filetypes: ['tex', 'python'] },
+        lsp: { enable: false, maxCount: 10, priority: 8 },
+        omnifunc: { enable: true, priority: 10, filetypes: ['c', 'tex', 'python'] },
         vsnip: { enable: false, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },
         vimscript: { enable: true, priority: 10 },
         tmux: { enable: false },
@@ -129,7 +129,7 @@ if exists("g:loaded_vimsuggest")
     g:vimsuggest_findprg = 'find -EL $* \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name $*'
     nnoremap <leader>ff :VSFindL "*"<left><left>
 
-    nnoremap <leader>fF :VSExec fd --type f<space>
+    # nnoremap <leader>fF :VSExec fd --type f<space>
     # nnoremap <leader>fF find -EL . \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name "*"<left><left>
 
     # XXX: If you use 'find ~/.zsh', it shows nothing since -path matches whole path and dot dirs (including .zsh) are excluded.
@@ -147,6 +147,10 @@ if exists("g:loaded_vimsuggest")
     # g:vimsuggest_grepprg = 'ag --vimgrep'
     nnoremap <leader>g :VSGrep ""<left>
     nnoremap <leader>G :VSGrep "<c-r>=expand('<cword>')<cr>"<left>
+    g:vimsuggest_shell = true  # Needed for '**', {}, etc. shell expansion in VSExec ggrep
+    # NOTE: 'x' inside {} below is just a placeholder ({foo} does not work)
+    #       VSGrep does not do highlight by default (call AddHighlightHook for highlight)
+    nnoremap <leader>vg :VSExec ggrep -REIHns "" --exclude-dir={.git,x} --exclude=".*"<c-left><c-left><left><left>
 
     nnoremap <leader><bs> :VSBuffer<space>
 
@@ -210,25 +214,6 @@ if exists("g:loaded_vimsuggest")
     # ls lists directories when file glob fails. (N) removes (.) when (.) fails.
     # nnoremap <leader><space> :VSCmd e ls -1 **/*(.N)<left><left><left><left><left>
 endif
-
-# if exists("g:loaded_autosuggest")
-#     g:AutoSuggestSetup({
-#         search: {
-#             enable: true,
-#             pum: false,
-#             fuzzy: false,
-#             alwayson: true,
-#         },
-#         cmd: {
-#             enable: true,
-#             pum: true,
-#             fuzzy: false,
-#             exclude: ['^b$', '^e$', '^v$'],
-#             # exclude: ['^buffer ', '^Find', '^Buffer'],
-#             editcmdworkaround: true,
-#         }
-#     })
-# endif
 
 if exists("g:loaded_lsp")
     g:LspOptionsSet({

@@ -125,6 +125,9 @@ endif
 # Suppress netrw banner
 # g:netrw_banner = 0
 
+# Disable this when not debugging Vim (:h :Termdebug)
+packadd! termdebug
+
 if v:version >= 901 && !getcompletion('comment', 'packadd')->empty()
     packadd comment
 endif

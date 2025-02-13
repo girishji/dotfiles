@@ -27,7 +27,7 @@ setopt GLOB_STAR_SHORT
 # Sort numbers numerically, not lexicographically.
 setopt NUMERIC_GLOB_SORT
 
-# girish
+# Use vi keys
 setopt vi
 
 # Enable additional glob operators. (Globbing = pattern matching)

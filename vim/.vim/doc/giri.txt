@@ -44,6 +44,11 @@ also, use this plugin:
 https://github.com/lacygoill/vim9asm
 
 ----------------------------------------
+How to get type of a variable in vim9script?
+
+typename(var)
+
+----------------------------------------
 Compile vim9 ~
 
 To check that the code compiles in a given script, write :defcompile at the end, and source it. For example:
@@ -1535,5 +1540,71 @@ or a file.
 
 Call LogFunctionCall from other functions
 
+------------------------------------------------------------------------------
+Windows  						*giri-window*
+
+
+CTRL-W w
+CTRL-W CTRL-W	Without count: move cursor to window below/right of the
+		current one.  If there is no window below or right, go to
+		top-left window.
+		With count: go to Nth window (windows are numbered from
+		top-left to bottom-right).  To obtain the window number see
+		|bufwinnr()| and |winnr()|.  When N is larger than the number
+		of windows go to the last window.
+
+CTRL-W <	Decrease current window width by N (default 1).
+
+CTRL-W >	Increase current window width by N (default 1).
+
+:res[ize] -N
+CTRL-W -	Decrease current window height by N (default 1).
+		If used after |:vertical|: decrease width by N.
+
+:res[ize] +N
+CTRL-W +	Increase current window height by N (default 1).
+		If used after |:vertical|: increase width by N.
+CTRL-W =	Make all windows (almost) equally high and wide, but use
+		'winheight' and 'winwidth' for the current window.
+
+CTRL-W <Down>
+CTRL-W CTRL-J
+CTRL-W j	Move cursor to Nth window below current one.  Uses the cursor
+		position to select between alternatives.
+
+CTRL-W <Up>
+CTRL-W CTRL-K
+CTRL-W k	Move cursor to Nth window above current one.  Uses the cursor
+		position to select between alternatives.
+
+CTRL-W <Left>
+CTRL-W CTRL-H
+CTRL-W <BS>
+CTRL-W h	Move cursor to Nth window left of current one.  Uses the
+		cursor position to select between alternatives.
+
+CTRL-W <Right>
+CTRL-W CTRL-L
+CTRL-W l	Move cursor to Nth window right of current one.  Uses the
+		cursor position to select between alternatives.
+
+:on[ly][!]
+:{count}on[ly][!]
+CTRL-W o	
+CTRL-W CTRL-O
+		Make the current window the only one on the screen.  All other
+		windows are closed.  For {count} see the `:quit` command
+		above |:count_quit|.
+
+:clo[se][!]
+:{count}clo[se][!]
+CTRL-W c
+		Without {count}: Close the current window.  If {count} is
+		given close the {count} window.
+
+:hid[e]
+:{count}hid[e]
+		Without {count}: Quit the current window, unless it is the
+		last window on the screen.
 ------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

@@ -31,7 +31,8 @@ endif
 if get(g:, 'colors_name', null_string) == null_string
     augroup ColorMonochrome | autocmd!
         autocmd WinEnter,BufEnter,BufReadPost * {
-            if expand('%') == '' || expand('%:e') =~ 'py\|cpp\|c\|vim\|java\|make\|sh'
+            if expand('%') == '' || expand('%:e') =~ 'py\|cpp\|c\|vim\|java\|make\|sh' ||
+                        \ expand('%:t') =~ 'vimrc\|zshrc'
                 ColorCorrect()
             else
                 syntax reset
@@ -55,17 +56,18 @@ def ColorCorrect()
         # https://ethanschoonover.com/solarized/ (16 colors are same b/w
         #   light/dark, except 4 colors are swapped)
         if &bg == 'light'
-            hi Comment ctermfg=14
+            hi Comment ctermfg=11
             hi SignColumn ctermfg=None ctermbg=7
             hi LineNr ctermfg=14 ctermbg=7
             hi StatusLine ctermfg=10 ctermbg=7 cterm=bold
             hi Pmenu ctermfg=none ctermbg=7
-            hi PmenuMatch ctermfg=3 ctermbg=7
+            hi PmenuMatch ctermfg=5 ctermbg=7
             hi PmenuSel ctermfg=7 ctermbg=0
-            hi PmenuMatchSel ctermfg=3 ctermbg=0
-            hi SpecialKey ctermfg=14 |# 'tab', 'nbsp', 'space', etc.
-            hi NonText ctermfg=14 |# 'eol', etc.
+            hi PmenuMatchSel ctermfg=7 ctermbg=0 cterm=underline
+            hi SpecialKey ctermfg=7 |# 'tab', 'nbsp', 'space', etc.
+            hi NonText ctermfg=7 |# 'eol', etc.
             hi Search ctermfg=7 ctermbg=12
+            hi DiffText ctermfg=15
         else  # dark
             hi Comment ctermfg=11
             hi SignColumn ctermfg=None ctermbg=0
@@ -73,12 +75,12 @@ def ColorCorrect()
             hi StatusLine ctermfg=14 ctermbg=0 cterm=bold
             hi Pmenu ctermfg=none ctermbg=0
             hi PmenuMatch ctermfg=3 ctermbg=0
-            hi PmenuSel ctermfg=8 ctermbg=4
-            hi PmenuMatchSel ctermfg=3 ctermbg=4
+            hi PmenuSel ctermfg=8 ctermbg=7
+            hi PmenuMatchSel ctermfg=8 ctermbg=7 cterm=underline
             hi PmenuSbar ctermbg=11
             hi PmenuThumb ctermbg=7
-            hi SpecialKey ctermfg=10 |# 'tab', 'nbsp', 'space', etc.
-            hi NonText ctermfg=10 |# 'eol', etc.
+            hi SpecialKey ctermfg=0 |# 'tab', 'nbsp', 'space', etc.
+            hi NonText ctermfg=0 |# 'eol', etc.
             hi Search ctermfg=8 ctermbg=12
         endif
         hi link StatusLineNC StatusLine

@@ -40,6 +40,7 @@ giri-tags	giri.txt	/*giri-tags*
 giri-term	giri.txt	/*giri-term*
 giri-tips	giri.txt	/*giri-tips*
 giri-vim-file-org	giri.txt	/*giri-vim-file-org*
+giri-window	giri.txt	/*giri-window*
 giri.txt	giri.txt	/*giri.txt*
 gkeymap-sq-brkt	giri-nav.txt	/*gkeymap-sq-brkt*
 gkeymap-window-mgmt	giri-nav.txt	/*gkeymap-window-mgmt*

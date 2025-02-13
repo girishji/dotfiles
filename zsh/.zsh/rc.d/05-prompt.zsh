@@ -6,6 +6,7 @@
 
 # Reduce startup time by making the left side of the primary prompt visible
 # *immediately.*
+#
 # giri: following will source prompt_launchpad_setup
 # znap prompt launchpad
 #

@@ -4,16 +4,6 @@
 # Commands and funtions
 #
 
-# This lets you change to any dir without having to type `cd`, that is, by just
-# typing its name. Be warned, though: This can misfire if there exists an alias,
-# function, builtin or command with the same name.
-# In general, I would recommend you use only the following without `cd`:
-#   ..  to go one dir up
-#   ~   to go to your home dir
-#   ~-2 to go to the 2nd mostly recently visited dir
-#   /   to go to the root dir
-setopt AUTO_CD
-
 # Load zprof so that shell startup can be profiled.
 # See https://www.bigbinary.com/blog/zsh-profiling
 # zmodload zsh/zprof

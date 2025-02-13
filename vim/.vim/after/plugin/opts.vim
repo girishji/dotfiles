@@ -20,7 +20,7 @@ if exists("g:loaded_vimcomplete")
         dictionary: { enable: true, priority: 10, maxCount: 10, filetypes: ['python', 'cpp', 'text'], matcher: 'ignorecase', properties: dictproperties },
         abbrev: { enable: true, maxCount: 30 },
         lsp: { enable: false, maxCount: 10, priority: 8 },
-        omnifunc: { enable: true, priority: 10, filetypes: ['c', 'tex', 'python'] },
+        omnifunc: { enable: false, priority: 10, filetypes: ['c', 'tex', 'python'] },
         vsnip: { enable: false, adaptNonKeyword: true, filetypes: ['python', 'java', 'cpp'] },
         vimscript: { enable: true, priority: 10 },
         tmux: { enable: false },
@@ -142,7 +142,7 @@ if exists("g:loaded_vimsuggest")
     # nnoremap <leader>g :VSExec grep -IHins "" . **/*\~node_modules/*<c-left><left><left><left><left>
 
     # Live grep
-    g:vimsuggest_grepprg = 'ggrep -REIHns $* --exclude-dir=.git --exclude=".*"'
+    g:vimsuggest_grepprg = 'ggrep -REIHns $* --exclude-dir=.git --exclude=".*" --exclude="tags"'
     # g:vimsuggest_grepprg = 'rg --vimgrep --smart-case $* .'
     # g:vimsuggest_grepprg = 'ag --vimgrep'
     nnoremap <leader>g :VSGrep ""<left>

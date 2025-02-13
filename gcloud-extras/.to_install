@@ -2,10 +2,7 @@
 
 sudo apt-get update
 sudo apt-get -y install stow
-sudo apt-get -y install fd-find
 sudo apt-get -y install zoxide
-sudo apt-get -y install silversearcher-ag
-sudo apt-get -y install ripgrep
 sudo apt-get -y install tree
 sudo apt-get -y install zsh
 sudo apt-get -y install zsh-autosuggestions

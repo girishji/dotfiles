@@ -1,0 +1,700 @@
+##
+# Put things that can be ported to gcp shell as well.
+# Source this file through .zshrc:
+# if [ -f "$HOME/.zsh.common" ]; then . $HOME/.zsh.common; fi
+#
+
+##
+# Change cursor to beam for insert mode
+#
+() {
+    # See https://ttssh2.osdn.jp/manual/4/en/usage/tips/vim.html for cursor shapes
+    cursor_block='\e[2 q'
+    cursor_beam='\e[6 q'
+    cursor_underline='\e[4 q'
+
+    function zle-keymap-select {
+        if [[ ${KEYMAP} == vicmd ]] ||
+            [[ $1 = 'block' ]]; then
+            echo -ne $cursor_block
+        elif [[ ${KEYMAP} == main ]] ||
+            [[ ${KEYMAP} == viins ]] ||
+            [[ ${KEYMAP} = '' ]] ||
+            [[ $1 = 'beam' ]]; then
+            echo -ne $cursor_beam
+        fi
+    }
+    zle-line-init() {
+        echo -ne $cursor_beam
+    }
+    zle -N zle-keymap-select
+    zle -N zle-line-init
+}
+
+##
+# Options
+#
+() {
+    # Don't let > silently overwrite files. To overwrite, use >! instead.
+    setopt NO_CLOBBER
+
+    # Treat comments pasted into the command line as comments, not code.
+    setopt INTERACTIVE_COMMENTS
+
+    # Don't treat non-executable files in your $path as commands. This makes sure
+    # they don't show up as command completions.
+    setopt HASH_EXECUTABLES_ONLY
+
+    # Enable additional glob operators. (Globbing = pattern matching)
+    # https://zsh.sourceforge.io/Doc/Release/Expansion.html#Filename-Generation
+    # see :h zshtips.md (make '~' in **/*~foo' work)
+    setopt EXTENDED_GLOB
+
+    # Enable ** and *** as shortcuts for **/* and ***/*, respectively.
+    # https://zsh.sourceforge.io/Doc/Release/Expansion.html#Recursive-Globbing
+    # If no / immediately follows a ** or *** they are treated as if both a / plus
+    # a further * are present. Hence:
+    # 'ls -ld -- **.c' is equivalent to 'ls -ld -- **/*.c'
+    setopt GLOB_STAR_SHORT
+
+    # Sort numbers numerically, not lexicographically.
+    setopt NUMERIC_GLOB_SORT
+
+    # Use vi keys
+    setopt vi
+}
+
+##
+# Env Vars
+#
+() {
+    # $PATH and $path (and also $FPATH and $fpath, etc.) are "tied" to each other.
+    # Modifying one will also modify the other.
+    path=(
+        /home/linuxbrew/.linuxbrew/bin(N)   # (N): null if file doesn't exist
+        $path
+        ~/.local/bin
+    )
+
+    # Set $PAGER if not already set.
+    # `:` is a builtin command that does nothing and returns 0 as exit status.
+    # ex:
+    # > : foobar; echo hello
+    # > hello
+    # We use ':' here to stop Zsh from
+    # evaluating the value of our $expansion as a command.
+    # for ':=' see 'conditional substitutions' (https://zsh.sourceforge.io/Guide/zshguide05.html)
+    # `${param:=value}' is similar to the previous type. but in this case the shell
+    # will not only substitute value into the line, it will assign it to param if
+    # (and only if) it does so. This leads to the following common idiom in scripts
+    # and functions:
+    #  : ${MYPARAM:=default}  ${OTHERPARAM:=otherdefault}
+    # If the user has already set $MYPARAM, nothing happens, otherwise it will be
+    # set to `default', and similarly for ${OTHERPARAM}.
+    : ${PAGER:=less}
+
+    # Use `< file` to quickly view the contents of any text file.
+    READNULLCMD=$PAGER  # Set the program to use for this.
+}
+
+##
+# Dirs
+#
+() {
+    ##
+    # Named directories
+    #
+    # `hash -d <name>=<path>` makes ~<name> a shortcut for <path>.
+    # NOTE: ~/.zsh shows up as ~zsh
+    hash -d zsh=$HOME/.zsh
+    hash -d vim=$HOME/.vim
+
+    # Change directories simply by typing the directory name, without needing to
+    # use the cd command.
+    #  dir   to go to /foo/bar/dir
+    #   ..   to go one dir up
+    #   ~    to go to your home dir
+    #   ~-2  to go to the 2nd mostly recently visited dir
+    #   /    to go to the root dir
+    setopt AUTO_CD
+
+    # If you want cd to behave like pushd (storing directories automatically):
+    # setopt AUTO_PUSHD
+}
+
+##
+# Key Bindings
+#
+() {
+    # Edit line in vim with ctrl-e:
+    # https://zsh.sourceforge.io/Doc/Release/User-Contributions.html#ZLE-Functions
+    autoload edit-command-line
+    zle -N edit-command-line
+    bindkey -M viins '^e' edit-command-line
+    bindkey -M vicmd '^e' edit-command-line
+
+    # Show history menu on ctrl-R/S
+    bindkey '^R' history-incremental-search-backward
+    bindkey '^S' history-incremental-search-forward
+}
+
+##
+# Plugins
+#
+() {
+    # Prompt
+    # autoload -U promptinit; promptinit
+    # prompt pure
+    # zstyle ':prompt:pure:*' color -1
+    # zstyle ':prompt:pure:git:*' color 248
+    # zstyle :prompt:pure:virtualenv color 248
+
+    # Configure zoxide completion
+    eval "$(zoxide init zsh)"
+
+    # zsh-autosuggestions: offers suggestions as you type
+    local zas='/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh'
+    if [ -f "$zas" ]; then source $zas; fi
+    # Make PgDn accept suggestion; by default right-arrow accepts suggestion
+    bindkey -v '^[[6~' autosuggest-accept
+    # XXX: Setting fg color does not work properly. It does not repaint the screen
+    # after right-arrow completion.
+    bg_color="${COLORFGBG:-0;-1}" # if not set, use default value of 0;-1 (fg;bg)
+    if [[ ${bg_color} == "0;15" ]]; then # light background
+      # typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
+    else
+      typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
+    fi
+}
+
+##
+# Completion System
+#
+() {
+    # 1) When you’re not sure why you end up with some matches and not others, you can
+    # hit CTRL+x h (for help) before completing your command. It will display some
+    # information about what the completion system will do to complete your
+    # context.
+    # 2) You can run 'zstyle' in your shell to display the styles set in your current
+    # session as well as their patterns.
+
+    # Even though zsh-autocomplete plugin initializes the completion system (no
+    # need for 'compinit'), call it explicitly so that cache file can be located
+    # outside ~/.zsh
+
+    ZCACHEFILE=${XDG_DATA_HOME:=~/.local/share}/zsh/zcompdump
+    # Just in case: If the parent directory doesn't exist, create it.
+    [[ -d $ZCACHEFILE:h ]] ||
+        mkdir -p $ZCACHEFILE:h
+
+    autoload -U compinit
+    compinit -d $ZCACHEFILE
+
+    # zsh by default does not include aliases in autocompletion. Call
+    # _expand_alias function through completion mechanism. It needs to appear
+    # before _complete. This will cause TAB to expand alias.
+    # defaults: https://github.com/marlonrichert/zsh-autocomplete/blob/main/Functions/Init/.autocomplete__config
+    # see https://thevaluable.dev/zsh-completion-guide-examples/
+    # 'completer': this is the zstyle you want to configure
+    # _foo, _bar are actual completors. The order matter: the completion system will
+    # try each of these completer one after the other. The completion stop when
+    # some matches are found or when the completer stop it by itself.
+    # builtin zstyle ':completion:*' completer \
+    #     _expand _expand_alias _complete _correct _approximate _complete:-fuzzy _prefix _ignored
+    builtin zstyle ':completion:*' completer \
+        _expand _complete _correct _approximate _complete:-fuzzy _prefix _ignored
+
+    # This line will complete dotfiles.
+    _comp_options+=(globdots) # With hidden files
+}
+
+##
+# History
+#
+() {
+    HISTFILE=${XDG_DATA_HOME:=~/.local/share}/zsh/history
+
+    # Just in case: If the parent directory doesn't exist, create it.
+    [[ -d $HISTFILE:h ]] ||
+        mkdir -p $HISTFILE:h
+
+    # Max number of entries to keep in history file.
+    SAVEHIST=$(( 10 * 1000 ))       # Use multiplication for readability.
+
+    # Max number of history entries to keep in memory.
+    HISTSIZE=$(( 1.2 * SAVEHIST ))  # Zsh recommended value
+
+    # Use modern file-locking mechanisms, for better safety & performance.
+    setopt HIST_FCNTL_LOCK
+
+    # Keep only the most recent copy of each duplicate entry in history.
+    setopt HIST_IGNORE_ALL_DUPS
+
+    # Auto-sync history between concurrent sessions.
+    setopt SHARE_HISTORY
+}
+
+##
+# Functions
+#
+() {
+    # Upgrade top level pip packages (their dependencies will also get updated to appropriate versions)
+    pipupdate() {
+        pipdeptree -f --warn silence | grep -E '^[a-zA-Z0-9\-]+' | grep -v '@' | sed 's/=.*//' | xargs -n1 pip install --user -U
+        pip check
+    }
+
+    venvcreate() {
+        (($#1)) && python -m venv $1/.venv || python -m venv ./.venv
+    }
+
+    venvactivate() {
+        (($#1)) && source $1/.venv/bin/activate || source ./.venv/bin/activate
+    }
+
+    venvdeactivate() {
+        deactivate
+    }
+
+    venv() {
+        venvactivate
+    }
+}
+
+##
+# Prompt - vcs setup
+#
+prompt_vcs_setup() {
+    # Fetch version control info before each new command line.
+    autoload -Uz vcs_info   # Import the vcs_info function.
+
+    # This pattern, of redefining the function being called and then calling it
+    # again (at the bottom of this function), lets you perform setup tasks the first
+    # time the function is called and ensures they are performed only once.
+    # $0 evaluates to the name of the current function.
+    $0() {
+      local -i fd=-1  # `fd` stands for "file descriptor"
+
+      # Start an asynchronous process, to avoid slowdown in large repos.
+      # <( ... ) starts a process that can be read from.
+      # exec {fd}< opens a new file descriptor, stores its number in $fd and
+      # connects the process to it, then returns control immediately, letting the
+      # process run asynchronously and non-blocking.
+      exec {fd}< <(
+        vcs_info
+        print -r -- $vcs_info_msg_0_
+      )
+
+      # Hook a callback widget to the fd.
+      zle -Fw "$fd" prompt_vcs-info
+    }
+
+    # Create a widget that calls the function below.
+    zle -N prompt_vcs-info
+    prompt_vcs-info() {
+      local -i fd=$1  # -i sets the type to integer.
+      local REPLY
+      {
+        zle -F "$fd"  # Unhook the callback from the fd.
+        read -ru$fd   # Read from the file descriptor into $REPLY.
+
+        [[ $RPS1 == $REPLY ]] &&
+            return   # Don't repaint if there's no change.
+
+        # RPS1=$REPLY
+        RPS1="[$REPLY]"
+
+        [[ $CONTEXT == start ]] &&
+            zle .reset-prompt   # Repaint only if $RPS1 is actually visible.
+      } always {
+        exec {fd}<&-  # Close the file descriptor.
+      }
+    }
+
+    # Format the output of vcs_info, which our precmd uses to set $RPS1.
+    #     %a: current action (for example, rebase)
+    #     %c:   staged changes
+    #     %u: unstaged changes
+    #     %b: branch
+    # https://zsh.sourceforge.io/Doc/Release/User-Contributions.html#vcs_005finfo-Configuration
+    () {
+      "$@"           formats          "%c%u%F{14}%b%f"  # 14 is bright cyan.
+      "$@"     actionformats  "%F{9}%a %c%u%F{14}%b%f"  #  9 is bright red.
+      "$@"         stagedstr  "%F{10}+"   # Set %c.       10 is bright green.
+      "$@"       unstagedstr  "%F{11}*"   # Set %u.       11 is bright yellow.
+      "$@"  check-for-changes yes         # Enable %c and %u.
+    } zstyle ':vcs_info:*'
+
+    $0 "$@"  # $@ contains arguments to function or script
+}
+
+###
+# Prompt - setup
+#
+() {
+    # Prompt escape codes
+    #      %F{<x>}:  Set foreground color. <x> can be one of the 8 standard color
+    #                names, a number from 0 to 255 or a hex value (if your terminal
+    #                supports it). See also
+    #                https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
+    #           %f:  Reset foreground color to default.
+    #           %~:  Current directory, in ~abbreviated form
+    #           %#:  If user is root, then '#', else '%'
+    # %(?,<a>,<b>):  If last exit status was 0, then <a>, else <b>
+    # https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
+    # PS1="%F{%(?,10,9)}%#%f "  # 10 is bright green; 9 is bright red.
+    # %(x,true-text,false-text) is a ternary expression. ? means true if the exit
+    # status of the last command was n.
+    # https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
+    #
+    PS1="%F{11}────────────────────────────────%f"$'\n'"%F{2}%40<..<%~%<<%f"$'\n'"%K{%(?,10,9)}%k❯ "
+    # PS1="%F{244}%40<..<%~%<<%f"$'\n'"%K{%(?,10,9)}%F{0}%#%f%k "  # 10 is bright green; 9 is bright red.
+
+    # Install precmd hook function.
+    # https://zsh.sourceforge.io/Doc/Release/Functions.html#Hook-Functions
+    # https://github.com/rothgar/mastering-zsh/blob/master/docs/config/hooks.md
+    # -U tells autoload not to expand aliases inside the function.
+    # -z tells autoload that the function file is written in the default Zsh style.
+    # The latter is normally not necessary, but better safe than sorry.
+    autoload -Uz add-zsh-hook
+    add-zsh-hook precmd prompt_vcs_setup
+
+    ##
+    # Continuation prompt
+    #
+    # This prompt is shown if, after pressing enter, you have left unclosed shell
+    # constructs in your command line, for example, a string without a terminating
+    # quote or a `for` loop without the final `done`.
+    #
+    PS2=  # Empty the left side, to make it easier to copy code from our terminal.
+    RPS2="%F{11}%^%f"  # %^ shows which shell constructs are still open.
+    # 11 is bright yellow.
+
+    # Auto-remove the right side of each prompt when you press enter. This way,
+    # we'll have less clutter on screen. This also makes it easier to copy code from
+    # our terminal.
+    setopt TRANSIENT_RPROMPT
+}
+
+##
+# Aliases
+# Always set aliases _last,_ so they don't get used in function definitions.
+#
+() {
+
+    typeset -Ag cursor_offset
+
+    # Type '-' to return to your previous dir.
+    alias -- -='cd -'
+    # '--' signifies the end of options. Otherwise, '-=...' would be interpreted as
+    # a flag.
+
+    # These aliases enable us to paste example code into the terminal without the
+    # shell complaining about the pasted prompt symbol.
+    alias %= \$=
+
+    # zmv lets you batch rename (or copy or link) files by using pattern matching.
+    # https://zsh.sourceforge.io/Doc/Release/User-Contributions.html#index-zmv
+    # Type 'zmv' to see uage.
+    autoload -Uz zmv
+    alias zmv='zmv -v'   # Move files
+    alias zcp='zmv -Cv'  # Copy files
+    alias zln='zmv -Lv'  # Link files
+    alias zmmv='noglob zmv -Wv'  # Type 'zsh' for explanation
+    # Note that, unlike with Bash, you do not need to inform Zsh's completion system
+    # of your aliases. It will figure them out automatically.
+
+    # Associate file name .extensions with programs to open them.
+    # This lets you open a file just by typing its name and pressing enter.
+    # Note that the dot is implicit; `gz` below stands for files ending in .gz
+    alias -s {css,gradle,html,js,json,md,patch,properties,txt,xml,yml}=$PAGER
+    alias -s gz='gzip -l'
+    alias -s git='git clone'
+
+    # note: global aliases work even in the middle of command line. non-global ones work
+    # only at the beginning of line.
+    alias -g H='| head'
+    alias -g L='| less -R'
+    alias -g SED=$'| sed \'/pat/ s///g\''
+    cursor_offset["SED"]=12
+    alias -g X=$'| xargs -I {} echo {}'
+    cursor_offset["X"]=8
+    alias -g T='2>&1 | tee .txt'
+    cursor_offset["T"]=5
+    alias -g @noerr="2> /dev/null"
+    alias -g W="| while read x; do ;done"
+    cursor_offset["W"]=6
+    alias F="for x (**/*(.));do ;done"  # use *** to follow symlink
+    cursor_offset["F"]=6
+
+    # find
+    # note:
+    #  - -name refers to last componenet of path
+    #  - when using glob chars like *, ?, use single quotes to escape shell interpretation
+    #  - cannot alias 'fi' since it is a reserved keyword, 'fg' is foreground cmd
+    # alias fF='find -E . ! \( -regex ".*\.(swp|git|zsh_.*)" -prune \) -type f -follow -name "*"'
+    # cursor_offset["fF"]=3
+    # alias ffg="find . -name '*.c' -print -follow -exec grep --color -EHni xxx {} \;"
+    #
+    # alternative:
+    # A very useful feature (of zsh) is the wildcard globbing.
+    #
+    # from :h zshtips.md
+    # ls **/*       # list everything in the tree
+    # ls **/*foo*   # list files <*foo*> wherever in the heirarchy
+    # foo*~*.bak = all matches for foo* except those matching *.bak (think as 'foo*' AND '~*.bak')
+    # ls -lt **/*.{js,php,css}~(libs|temp|tmp|test)/* # exclude directories from grep, EXTENDED_GLOB required
+    # ls **/*~*/.git/*  # ignore all git subdirectories
+    # ls -lt **/*~*vssver.scc  # excluding vssver.scc (see next)
+    # ls -lt **/^vssver.scc    #  excluding vssver.scc (simpler)
+    # ls -lt **/^(vssver.scc|*.ini) # excluding vssver and any *.ini
+    # extra:
+    # ls *(.)              # list just regular files
+    # ls -d *(/)           # list just directories
+    # ls ^*.(css|php)(.)   # list all but css & php
+    # vi **/main.php       # where ever it is in hierarchy
+    # foo*~*.bak = all matches for foo* except those matching *.bak
+    # also:
+    # foo*(.) = only regular files matching foo*
+    # foo*(/) = only directories matching foo*
+    # dir/**/foo* = foo* in the directory dir and all its subdirectories, recursively
+    #
+    # Add your pattern as in 'ls **/*<pat>...'. excludes files *.swp and dir plugged.
+    alias ff='ls **/*~(*.swp|build/*)'
+    cursor_offset["ff"]=24
+
+    # git
+    alias ga='git add .; gitcommit'
+    alias gs='git status '
+    alias gc='git clone '
+    alias gp='git push'
+    alias gu='git pull --no-rebase'
+    alias gd='git diff'
+
+    # grep
+    #
+    # Note: ERE (extended regex) vs BRE (basic): ERE escapes +, ., ?, |, etc. like vim's 'magic'
+    # egrep/ERE is like '\v' magic in Vim.
+    #   grep    '\(hello\|goodbye) cruel world+'
+    #   egrep   '(hello|goodbye) cruel world\+'
+    #
+    # Note: Do not put "" around {} when using with --exclude. {} will bypass the
+    # shell, and passed to grep command. There should be at least 2 entries inside
+    # {}. Escape '*' and '.' using backslash, or enclose them in quotes.
+    # Also, pattern should be inside "" or ''. Otherwise special characters needs
+    # to be escaped.
+    #    Ex: ggrep -REIHSins --exclude-dir={.git,zsh_\*} --exclude={\.\*,tags} "" .
+    #        ggrep -REIHSins --exclude-dir={.git,"zsh_*"} --exclude={".*",tags} "" .
+    #
+    #  Difference b/w --exclude and --exclude-dir:
+    #   --exclude is used to ignore files that match a certain pattern. It
+    #   operates only on files, not directories. For instance:
+    #            grep --exclude="*.log" "pattern" -r .
+    #      This command excludes all foo.log files from the search, but it does not
+    #      prevent grep from searching inside directories (including hidden
+    #      directories) that might contain those files.
+    #    --exclude-dir specifically excludes directories. --exclude-dir is
+    #    specifically designed to prevent grep from descending into directories
+    #    whose names match the given pattern. For example:
+    #            grep --exclude-dir="node_modules" "pattern" -r .
+    #    This command will skip the entire node_modules directory and all of its
+    #    contents during the recursive search. This is particularly useful if you
+    #    have directories with numerous files or heavy content that you want to skip
+    #    entirely.
+    #
+    #    Why use --exclude-dir when --exclude could suffice?
+    #    Efficiency:
+    #    --exclude-dir is more efficient when you want to skip entire directories
+    #    rather than just filtering individual files. grep will not even try to
+    #    enter those directories, saving time and resources.
+    #    Granularity:
+    #    --exclude allows for fine-grained control over individual files, whereas
+    #    --exclude-dir skips directories as a whole. If your goal is to skip entire
+    #    directories, --exclude-dir is the more straightforward and performant
+    #    option.
+    #    Example:
+    #    If you want to exclude all .log files and also prevent grep from
+    #    searching in the node_modules directory, you would use:
+    #            grep --exclude="*.log" --exclude-dir="node_modules" "pattern" -r .
+    #    In this case, both options work together: --exclude ensures individual .log
+    #    files are not searched, while --exclude-dir skips the entire node_modules
+    #    directory.
+    #
+    #    --color is --color=auto. It does not use color codes when pipe is used.
+    #    To see colors use grep --color=always foo | less -R
+    #    https://stackoverflow.com/questions/6565471/how-can-i-exclude-directories-from-grep-r
+    #    --include pattern
+    #    --include-dir pattern
+    #    -F, --fixed-strings -> Interpret pattern as a set of fixed strings.
+    #
+    # 'sh -c' (POSIX) does not include {} expansion.
+    # cannot use --exclude-dir={foo,bar} using /bin/sh
+    #
+    # from :h zshtips.md
+    # grep -i "$1" **/*.{js,php,css}~(libs|temp|tmp|test)/* # exclude directories from grep *N* EXTENDED_GLOB required
+    #
+    # CAUTION: Avoid **/* and ***/* as shell complains 'too many paths to expand' when searching a large directory.
+
+    alias gg="grep -REIins --exclude='*.swp' --exclude-dir='.git' \"\""
+    cursor_offset["gg"]=2
+
+    alias -g g="grep --color -iEI"
+    alias -g gr="grep --color -iEI"
+    alias -g G='| grep --color -iEI'
+
+    # alternative:
+    #
+    # See comments under 'find' above, and also :h zshtips.md
+    # grep -i "$1" */*.php~libs/*~temp/*~test/* # exclude directories lib,temp,test from grep 'setopt EXTENDED_GLOB' required
+    # grep -i "$1" **/*.{js,php,css}~(libs|temp|tmp|test)/* # exclude directories from grep, EXTENDED_GLOB required
+    # grep excluding certain directories
+    # grep -i somestr **/*.(js|php|css) | grep -Ev 'libs/|temp/|test/'
+    # grep -i somestr **/*.(js|php|css)~libs/*~temp/*~test/*
+    # grep -i somestr **/*.(js|php|css)~(libs|temp|test)/*
+    # grep, dont use egrep, grep -E is better
+    # single quotes stop the shell, " quotes allow shell interaction
+    # grep 'host' **/(*.cfm~(ctpigeonbot|env).cfm)
+    # grep -i 'host' **/(*.cfm~(ctpigeonbot|env).cfm)~*((#s)|/)junk*/*(.)
+    # egrep -i "^ *mail\(" **/*.php
+    # grep "^ *mail\(" **/*.php~*junk*/*  #find all calls to mail, ignoring junk directories
+    # # grep '.' dot matches one character
+    # grep b.g file    # match bag big bog but not boog
+    # # grep * matches 0 , 1 or many of previous character
+    # grep "b*g" file # matches g or bg or bbbbg
+    # # grep '.*' matches a string
+    # grep "b.*g" file # matches bg bag bhhg bqqqqqg etc
+    # # grep break character is \
+    # grep 'hello\.gif' file
+    # grep "cat\|dog" file matches lines containing the word "cat" or the word "dog"
+    # grep "I am a \(cat\|dog\)" matches lines containing the string "I am a cat" or the string "I am a dog"
+    # grep "Fred\(eric\)\? Smith" file   # grep fred or frederic
+    # alias gr='ggrep -EIins "" ***/*'  # no need for '-R' since '***' takes care of recursion (and symlink following)
+    # cursor_offset["gr"]=8
+
+    # alias pipi='pip install --user '
+    alias pipi='pip install'
+
+    alias vim_='vim -Nu NONE -S <(cat <<EOF
+        vim9script
+    EOF
+    )'
+
+    alias c='z'
+    alias ca='cat'
+    alias cl='clear'
+    alias le='less'
+    alias p3='python3'
+    alias rm='rm -i'
+    alias diffw='diff -w'  # ignore white spaces
+    alias less='command less -R' # -R for interpreting Ansi color codes
+    alias targ='tar -c --exclude-from=.gitignore -vzf'
+    alias t='python3 ~/git/t/t.py --task-dir ~/.local/share/todo --list tasks'
+    alias formatjson='python3 -m json.tool'
+    alias jsonformat='python3 -m json.tool'
+    alias vimdiff='vimdiff -o'
+
+    # TIP: could use 'py' which is ipython+pyflyby (if installed through pipx, and ipython injected into it)
+    alias ip='ipython'
+
+    alias v='vim'
+    alias vd='vi -d'  # diff mode - pass 2 files
+    # alias vr='vim -c "normal '\''0"'  # restore last opened buffer
+    alias viclean='vim --clean'
+    alias vimclean='vim --clean'
+    alias nv='nvim'
+    alias nvi='nvim'
+
+    alias makedebug="make SHELL='sh -x'"
+
+    # There is also a venvactivate()
+    # Use 'deactivate' to undo
+    alias activate='source .venv/bin/activate'
+
+    # gcc for competitive programming
+    alias gcc_='g++-14 -std=c++23 -Wall -Wextra -Wconversion -DONLINE_JUDGE -O2 -lstdc++exp -o /tmp/a.out  && /tmp/a.out'
+    cursor_offset["gcc_"]=15
+    alias g++-14_='g++-14 -std=c++23 -Wall -Wextra -Wconversion -DONLINE_JUDGE -O2 -lstdc++exp -o /tmp/a.out  && /tmp/a.out'
+    cursor_offset["g++-14_"]=15
+    # clang with c++23
+    alias clang++_='clang++ -include"$HOME/.clang-repl-incl.h" -std=c++23 -stdlib=libc++ -fexperimental-library -o /tmp/a.out  && /tmp/a.out'
+    cursor_offset["clang++_"]=15
+
+    export LS_COLORS='di=1:ln=3'
+    alias ls='ls --color=always' # auto/always/never
+    alias l='ls'
+    alias ll='ls -l'
+    if [[ ! -d "$HOME/.config" ]]; then
+        mkdir -p $HOME/.config
+    fi
+    # if is_cloud_shell; then
+    #     if [[ -f ~/bin/vim.appimage ]]; then
+    #         alias vi='~/bin/vim.appimage'
+    #         alias vim='~/bin/vim.appimage'
+    #     fi
+    # fi
+
+    alias u='cd ..'
+    alias uu='cd ../..'
+    alias uuu='cd ../../..'
+    alias uuuu='cd ../../../..'
+    alias uuuuu='cd ../../../../..'
+    alias uuuuuu='cd ../../../../../..'
+    alias uuuuuuu='cd ../../../../../../..'
+    alias uuuuuuuu='cd ../../../../../../../..'
+    alias uuuuuuuuu='cd ../../../../../../../../..'
+
+    # XXX: Aliases should not be expanded when autocomplete has completed a word. 'zle
+    # _expand_alias' has a bug(?) where it another item from autocomplete menu is
+    # used for replacement.
+
+    # Do not expand following aliases (create an array of them)
+    # NOTE: there are 3 types of variables: local to script/function (use 'local'
+    # keyword), those visible in terminal (do not use 'local') but not available to
+    # other tools, and environment variables (use 'export' keyword, and these
+    # variables are available in terminal as well as accessible from other tools)
+    MY_ALIAS_EXPAND_BLACKLIST=(t ls rm)
+
+    # Make <space> expand alias (other option is to use completion mechanism (Tab))
+    my_expand_alias() {
+        # for (#m) see backreferences in https://zsh.sourceforge.io/Guide/zshguide05.html
+        # for '%%' see 'conditional substitutions' in https://zsh.sourceforge.io/Guide/zshguide05.html
+        # https://github.com/willghatch/zsh-snippets/blob/master/snippets.plugin.zsh
+        # https://scriptingosx.com/2019/11/associative-arrays-in-zsh/
+        local MATCH
+        : ${LBUFFER%%(#m)[.\-+:|_a-zA-Z0-9]#}
+        local blacklist_pattern="^(${(j:|:)MY_ALIAS_EXPAND_BLACKLIST})$"
+        if ! [[ $MATCH =~ $blacklist_pattern ]]; then
+            local word_before_cursor=${LBUFFER##* }
+            if [[ -n "$word_before_cursor" ]] && alias "$word_before_cursor" &>/dev/null; then
+                zle _expand_alias
+                zle self-insert
+                zle backward-char -n ${cursor_offset["$MATCH"]:-0}
+                return
+            fi
+        fi
+        # LBUFFER+=" "  # alternative: self-insert widget inserts typed char into cmdline
+        zle self-insert
+    }
+
+    # Set up the widget
+    zle -N my_expand_alias
+
+    # Bind the widget to run after completion
+    # 'main' defaults of viins or emacs (https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html)
+    # bindkey -M main ' ' my_expand_alias
+    bindkey -M main ' ' my_expand_alias
+
+    # Store the history number before completion
+    HISTNO_BEFORE_COMPLETION=$HISTNO
+
+    # To avoid alias expansion press <control-space> or <alt-space>
+    # https://github.com/MenkeTechnologies/zsh-expand/blob/master/zsh-expand.plugin.zsh
+    my_do_not_expand_alias() {
+        LBUFFER+=" "
+    }
+    zle -N my_do_not_expand_alias
+    bindkey -M main "^@" my_do_not_expand_alias
+    bindkey -M main "^[ " my_do_not_expand_alias
+}
+
+# vim:tw=80:ts=4:ft=zsh:ai:

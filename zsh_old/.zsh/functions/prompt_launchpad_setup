@@ -66,6 +66,7 @@ fi
 
 # Install our chpwd and precmd hook functions.
 # https://zsh.sourceforge.io/Doc/Release/Functions.html#Hook-Functions
+# https://github.com/rothgar/mastering-zsh/blob/master/docs/config/hooks.md
 # -U tells autoload not to expand aliases inside the function.
 # -z tells autoload that the function file is written in the default Zsh style.
 # The latter is normally not necessary, but better safe than sorry.

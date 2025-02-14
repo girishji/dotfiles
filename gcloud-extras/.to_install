@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Run this file to install packages.
+
 sudo apt-get update
 sudo apt-get -y install stow
 sudo apt-get -y install zoxide

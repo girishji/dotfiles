@@ -26,21 +26,6 @@ if expandcmd($VIM_COLORSCHEME) != null_string
     exec $'colorscheme {expandcmd($VIM_COLORSCHEME)}'
 endif
 
-# Not having any colorscheme is good enough for many terminal profiles
-# Adjust colors for source files and leave as is for help/markdown/etc.
-if get(g:, 'colors_name', null_string) == null_string
-    augroup ColorMonochrome | autocmd!
-        autocmd WinEnter,BufEnter,BufReadPost * {
-            if expand('%') == '' || expand('%:e') =~ 'py\|cpp\|c\|vim\|java\|make\|sh' ||
-                        \ expand('%:t') =~ 'vimrc\|zshrc'
-                ColorCorrect()
-            else
-                syntax reset
-            endif
-        }
-    augroup END
-endif
-
 def ColorCorrect()
     var monochrome = false
     if monochrome
@@ -119,6 +104,25 @@ def ColorCorrect()
         exec $'hi GitGutterDelete ctermbg={bg}'
     endif
 enddef
+
+def ApplyColors()
+    if &filetype !~ 'help\|markdown'
+        ColorCorrect()
+    else
+        syntax reset
+    endif
+enddef
+
+# Not having any colorscheme is good enough for many terminal profiles
+# Adjust colors for source files and leave as is for help/markdown/etc.
+if get(g:, 'colors_name', null_string) == null_string
+    augroup ColorMonochrome | autocmd!
+        # FileType event is not called every time buffer is switched.
+        # BufReadPost will not have &filetype. So defer until filetype
+        # is detected.
+        autocmd WinEnter,BufEnter,BufReadPost * call timer_start(10, (_) => ApplyColors())
+    augroup END
+endif
 
 # Following should occur after setting colorscheme.
 highlight! TrailingWhitespace ctermbg=196

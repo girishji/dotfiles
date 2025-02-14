@@ -301,8 +301,7 @@ prompt_vcs_setup() {
         [[ $RPS1 == $REPLY ]] &&
             return   # Don't repaint if there's no change.
 
-        # RPS1=$REPLY
-        RPS1="[$REPLY]"
+        RPS1=$REPLY
 
         [[ $CONTEXT == start ]] &&
             zle .reset-prompt   # Repaint only if $RPS1 is actually visible.
@@ -347,7 +346,7 @@ prompt_vcs_setup() {
     # status of the last command was n.
     # https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
     #
-    PS1="%F{11}────────────────────────────────%f"$'\n'"%F{2}%40<..<%~%<<%f"$'\n'"%K{%(?,10,9)}%k❯ "
+    PS1="%F{11}────────────────────────────────%f"$'\n'"%F{4}%40<..<%~%<<%f"$'\n'"%K{%(?,10,9)}%k❯ "
     # PS1="%F{244}%40<..<%~%<<%f"$'\n'"%K{%(?,10,9)}%F{0}%#%f%k "  # 10 is bright green; 9 is bright red.
 
     # Install precmd hook function.
@@ -367,7 +366,7 @@ prompt_vcs_setup() {
     # quote or a `for` loop without the final `done`.
     #
     PS2=  # Empty the left side, to make it easier to copy code from our terminal.
-    RPS2="%F{11}%^%f"  # %^ shows which shell constructs are still open.
+    RPS2="%^"  # %^ shows which shell constructs are still open.
     # 11 is bright yellow.
 
     # Auto-remove the right side of each prompt when you press enter. This way,

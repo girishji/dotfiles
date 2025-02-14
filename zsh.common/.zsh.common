@@ -358,6 +358,10 @@ prompt_vcs_setup() {
 
     typeset -Ag cursor_offset
 
+    if [ -f "$HOME/git/vim/dist/bin/vim" ]; then
+        alias vim=$HOME/git/vim/dist/bin/vim
+    fi
+
     # Type '-' to return to your previous dir.
     alias -- -='cd -'
     # '--' signifies the end of options. Otherwise, '-=...' would be interpreted as

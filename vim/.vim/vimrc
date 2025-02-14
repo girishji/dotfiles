@@ -1,5 +1,4 @@
 if !has('vim9script') ||  v:version < 901
-    " Needs Vim version 9.0 and above
     finish
 endif
 

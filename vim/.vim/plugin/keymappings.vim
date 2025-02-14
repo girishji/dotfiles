@@ -114,11 +114,11 @@ nnoremap <silent> <leader>vt <cmd>tab term<CR>
 nnoremap <leader>w <cmd>update<cr>
 nnoremap <leader>q <cmd>qa<cr>
 nnoremap <leader>Q <cmd>qa!<cr>
-nnoremap <leader>n <cmd>only<cr>
 nnoremap <leader>- <c-w>s| # horizontal split
 # nnoremap <leader>\| <c-w>v| # vertical split
 nnoremap <leader>\ <c-w>v| # vertical split
-nnoremap <leader>o <c-w>w| # next window in CCW direction
+nnoremap <leader>n <c-w>w| # next window in CCW direction
+nnoremap <leader>o <cmd>only<cr>
 nnoremap <leader>r <cmd>registers<cr>
 nnoremap <leader>m <cmd>marks<cr>
 

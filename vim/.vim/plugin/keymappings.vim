@@ -116,12 +116,12 @@ nnoremap <leader>q <cmd>qa<cr>
 nnoremap <leader>Q <cmd>qa!<cr>
 nnoremap <leader>r <cmd>registers<cr>
 nnoremap <leader>m <cmd>marks<cr>
-# Windows
-nnoremap <leader>- <c-w>s| # horizontal split
+# Windows (<C-W> is a key on qmk keyboard)
+# nnoremap <leader>- <c-w>s| # horizontal split
 # nnoremap <leader>\| <c-w>v| # vertical split
-nnoremap <leader>\ <c-w>v| # vertical split
+# nnoremap <leader>\ <c-w>v| # vertical split
 # nnoremap <leader>n <c-w>w| # next window in CCW direction
-nnoremap <leader>o <cmd>only<cr>
+# nnoremap <leader>o <cmd>only<cr>
 
 # align
 vnoremap <leader>A :!column -t<cr>| # align columns

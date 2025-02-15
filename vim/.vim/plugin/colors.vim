@@ -44,7 +44,6 @@ def ColorCorrect()
             hi Comment ctermfg=11
             hi SignColumn ctermfg=None ctermbg=7
             hi LineNr ctermfg=14 ctermbg=7
-            hi StatusLine ctermfg=10 ctermbg=7 cterm=bold
             hi Pmenu ctermfg=none ctermbg=7
             hi PmenuMatch ctermfg=5 ctermbg=7
             hi PmenuSel ctermfg=7 ctermbg=0
@@ -53,11 +52,11 @@ def ColorCorrect()
             hi NonText ctermfg=7 |# 'eol', etc.
             hi Search ctermfg=7 ctermbg=12
             hi DiffText ctermfg=15
+            hi StatusLine ctermfg=10 ctermbg=7 cterm=bold
         else  # dark
             hi Comment ctermfg=11
             hi SignColumn ctermfg=None ctermbg=0
             hi LineNr ctermfg=12 ctermbg=0
-            hi StatusLine ctermfg=14 ctermbg=0 cterm=bold
             hi Pmenu ctermfg=none ctermbg=0
             hi PmenuMatch ctermfg=3 ctermbg=0
             hi PmenuSel ctermfg=8 ctermbg=7
@@ -67,6 +66,10 @@ def ColorCorrect()
             hi SpecialKey ctermfg=0 |# 'tab', 'nbsp', 'space', etc.
             hi NonText ctermfg=0 |# 'eol', etc.
             hi Search ctermfg=8 ctermbg=12
+            hi StatusLine ctermfg=none ctermbg=0 cterm=none
+            hi StatusLineNC ctermfg=7 ctermbg=0 cterm=italic
+            hi StatusLineTerm ctermfg=3 ctermbg=0 cterm=none
+            hi StatusLineTermNC ctermfg=14 ctermbg=0 cterm=italic
         endif
         hi link StatusLineNC StatusLine
         hi Constant ctermfg=4

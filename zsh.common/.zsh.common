@@ -358,7 +358,7 @@ prompt_vcs_setup() {
 
     typeset -Ag cursor_offset
 
-    if [ -f "$HOME/git/vim/dist/bin/vim" ]; then
+    if [ "$OSTYPE" = linux-gnu -a -f "$HOME/git/vim/dist/bin/vim" ]; then
         alias vim=$HOME/git/vim/dist/bin/vim
     fi
 

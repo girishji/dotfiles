@@ -51,7 +51,7 @@ if &background == 'dark'
     set fillchars=vert:│,fold:۰,diff:·,stl:─,stlnc:═
 endif
 set clipboard=unnamed # Always use the system clipboard
-set mouse= # XXX: Disable mouse (set by defaults.vim). Needed by macos terminal app.
+# set mouse= # XXX: Disable mouse (set by defaults.vim). Needed by macos terminal app.
 set number # line numbering
 # set relativenumber
 set hls # highlight search
@@ -124,8 +124,9 @@ endif
 # Suppress netrw banner
 # g:netrw_banner = 0
 
-# Disable this when not debugging Vim (:h :Termdebug)
-packadd! termdebug
+## Debug Vim (:h :Termdebug)
+# packadd! termdebug
+# set mouse=a # Needed for Winbar menu
 
 if v:version >= 901 && !getcompletion('comment', 'packadd')->empty()
     packadd comment

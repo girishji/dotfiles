@@ -26,6 +26,49 @@ if expandcmd($VIM_COLORSCHEME) != null_string
     exec $'colorscheme {expandcmd($VIM_COLORSCHEME)}'
 endif
 
+def SaneColors()
+    if &bg == 'light'
+        hi SignColumn ctermfg=None ctermbg=7
+        hi LineNr ctermfg=14 ctermbg=7
+        hi Pmenu ctermfg=none ctermbg=7
+        hi PmenuMatch ctermfg=5 ctermbg=7
+        hi PmenuSel ctermfg=7 ctermbg=0
+        hi PmenuMatchSel ctermfg=7 ctermbg=0 cterm=underline
+        hi SpecialKey ctermfg=7 |# 'tab', 'nbsp', 'space', etc.
+        hi NonText ctermfg=7 |# 'eol', etc.
+        hi Search ctermfg=7 ctermbg=12
+        hi DiffText ctermfg=15
+        hi StatusLine ctermfg=10 ctermbg=7 cterm=bold
+        hi StatusLineNC ctermfg=7 ctermbg=0 cterm=italic
+        hi StatusLineTerm ctermfg=3 ctermbg=0 cterm=none
+        hi StatusLineTermNC ctermfg=14 ctermbg=0 cterm=italic
+    else  # dark
+        hi SignColumn ctermfg=None ctermbg=0
+        hi LineNr ctermfg=12 ctermbg=0
+        hi Pmenu ctermfg=none ctermbg=0
+        hi PmenuMatch ctermfg=3 ctermbg=0
+        hi PmenuSel ctermfg=8 ctermbg=7
+        hi PmenuMatchSel ctermfg=8 ctermbg=7 cterm=underline
+        hi PmenuSbar ctermbg=11
+        hi PmenuThumb ctermbg=7
+        hi SpecialKey ctermfg=0 |# 'tab', 'nbsp', 'space', etc.
+        hi NonText ctermfg=0 |# 'eol', etc.
+        hi Search ctermfg=8 ctermbg=12
+        hi StatusLine ctermfg=none ctermbg=0 cterm=none
+        hi StatusLineNC ctermfg=7 ctermbg=0 cterm=italic
+        hi StatusLineTerm ctermfg=3 ctermbg=0 cterm=none
+        hi StatusLineTermNC ctermfg=14 ctermbg=0 cterm=italic
+    endif
+    hi MatchParen ctermfg=1 ctermbg=none cterm=underline
+
+    var bg = hlget('SignColumn')->get(0, {})->get('ctermbg', null_string)
+    if (bg != null_string)
+        exec $'hi GitGutterAdd ctermbg={bg}'
+        exec $'hi GitGutterChange ctermbg={bg}'
+        exec $'hi GitGutterDelete ctermbg={bg}'
+    endif
+enddef
+
 def ColorCorrect()
     var monochrome = false
     if monochrome
@@ -38,39 +81,7 @@ def ColorCorrect()
         hi Constant ctermfg=None
         hi PreProc ctermfg=None cterm=italic
     else
-        # https://ethanschoonover.com/solarized/ (16 colors are same b/w
-        #   light/dark, except 4 colors are swapped)
-        if &bg == 'light'
-            hi Comment ctermfg=11
-            hi SignColumn ctermfg=None ctermbg=7
-            hi LineNr ctermfg=14 ctermbg=7
-            hi Pmenu ctermfg=none ctermbg=7
-            hi PmenuMatch ctermfg=5 ctermbg=7
-            hi PmenuSel ctermfg=7 ctermbg=0
-            hi PmenuMatchSel ctermfg=7 ctermbg=0 cterm=underline
-            hi SpecialKey ctermfg=7 |# 'tab', 'nbsp', 'space', etc.
-            hi NonText ctermfg=7 |# 'eol', etc.
-            hi Search ctermfg=7 ctermbg=12
-            hi DiffText ctermfg=15
-            hi StatusLine ctermfg=10 ctermbg=7 cterm=bold
-        else  # dark
-            hi Comment ctermfg=11
-            hi SignColumn ctermfg=None ctermbg=0
-            hi LineNr ctermfg=12 ctermbg=0
-            hi Pmenu ctermfg=none ctermbg=0
-            hi PmenuMatch ctermfg=3 ctermbg=0
-            hi PmenuSel ctermfg=8 ctermbg=7
-            hi PmenuMatchSel ctermfg=8 ctermbg=7 cterm=underline
-            hi PmenuSbar ctermbg=11
-            hi PmenuThumb ctermbg=7
-            hi SpecialKey ctermfg=0 |# 'tab', 'nbsp', 'space', etc.
-            hi NonText ctermfg=0 |# 'eol', etc.
-            hi Search ctermfg=8 ctermbg=12
-            hi StatusLine ctermfg=none ctermbg=0 cterm=none
-            hi StatusLineNC ctermfg=7 ctermbg=0 cterm=italic
-            hi StatusLineTerm ctermfg=3 ctermbg=0 cterm=none
-            hi StatusLineTermNC ctermfg=14 ctermbg=0 cterm=italic
-        endif
+        hi Comment ctermfg=11
         hi link StatusLineNC StatusLine
         hi Constant ctermfg=4
         hi String ctermfg=6
@@ -79,32 +90,6 @@ def ColorCorrect()
         hi PreProc ctermfg=1
         hi Special ctermfg=1
         hi Type ctermfg=3
-        hi MatchParen ctermfg=1 ctermbg=none cterm=underline
-
-        # from: https://www.youtube.com/watch?v=I8DaJbSbenE
-        # if &bg == 'light'
-        #     hi Type ctermfg=4 cterm=bold |# 'Type' is set to green which can be too light
-        #     hi Statement ctermfg=4 cterm=bold
-        #     hi String ctermfg=2 cterm=bold
-        #     hi Constant ctermfg=5
-        #     hi PreProc ctermfg=5 cterm=bold
-        #     hi Identifier ctermfg=5 cterm=bold
-        # else  # dark
-        # endif
-        # hi LineNr ctermfg=8
-        # hi Comment ctermfg=8
-        # hi link FfTtSubtle Ignore
-        # hi link markdownCodeBlock Constant
-        # hi link PmenuMatch wildmenu
-        # hi MatchParen ctermbg=none cterm=underline
-        # hi SpecialKey ctermfg=8 |# 'tab', 'nbsp', 'space', etc.
-        # hi NonText ctermfg=8 |# 'eol', etc.
-    endif
-    var bg = hlget('SignColumn')->get(0, {})->get('ctermbg', null_string)
-    if (bg != null_string)
-        exec $'hi GitGutterAdd ctermbg={bg}'
-        exec $'hi GitGutterChange ctermbg={bg}'
-        exec $'hi GitGutterDelete ctermbg={bg}'
     endif
 enddef
 
@@ -114,6 +99,7 @@ def ApplyColors()
     else
         syntax reset
     endif
+    SaneColors()
 enddef
 
 # Not having any colorscheme is good enough for many terminal profiles

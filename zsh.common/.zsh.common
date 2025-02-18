@@ -106,8 +106,9 @@
     #
     # `hash -d <name>=<path>` makes ~<name> a shortcut for <path>.
     # NOTE: ~/.zsh shows up as ~zsh
-    hash -d zsh=$HOME/.zsh
     hash -d vim=$HOME/.vim
+    hash -d help=$HOME/help
+    hash -d git=$HOME/git
 
     # Change directories simply by typing the directory name, without needing to
     # use the cd command.
@@ -142,13 +143,6 @@
 # Plugins
 #
 () {
-    # Prompt
-    # autoload -U promptinit; promptinit
-    # prompt pure
-    # zstyle ':prompt:pure:*' color -1
-    # zstyle ':prompt:pure:git:*' color 248
-    # zstyle :prompt:pure:virtualenv color 248
-
     # Configure zoxide completion
     eval "$(zoxide init zsh)"
 
@@ -275,7 +269,7 @@ prompt_vcs_setup() {
         [[ $RPS1 == $REPLY ]] &&
             return   # Don't repaint if there's no change.
 
-        RPS1=$REPLY
+        RPS1="⎇  $REPLY"
 
         [[ $CONTEXT == start ]] &&
             zle .reset-prompt   # Repaint only if $RPS1 is actually visible.

@@ -116,12 +116,13 @@ nnoremap <leader>q <cmd>qa<cr>
 nnoremap <leader>Q <cmd>qa!<cr>
 nnoremap <leader>r <cmd>registers<cr>
 nnoremap <leader>m <cmd>marks<cr>
+#
 # Windows (<C-W> is a key on qmk keyboard)
-# nnoremap <leader>- <c-w>s| # horizontal split
+nnoremap <leader>- <c-w>s| # horizontal split
 # nnoremap <leader>\| <c-w>v| # vertical split
-# nnoremap <leader>\ <c-w>v| # vertical split
-# nnoremap <leader>n <c-w>w| # next window in CCW direction
-# nnoremap <leader>o <cmd>only<cr>
+nnoremap <leader>\ <c-w>v| # vertical split
+# nnoremap <c-w>m <c-w>w| # next window in CCW direction
+# nnoremap <leader>o <cmd>only<cr> | # anyting with <leader> will not work for terminal windows
 
 # align
 vnoremap <leader>A :!column -t<cr>| # align columns
@@ -140,6 +141,7 @@ nnoremap <leader>vr :enew \| exec "nn <buffer> q :bd!\<cr\>" \| put = execute(''
 nnoremap <leader>vm <cmd>messages<cr>
 # nnoremap <leader>vd <cmd>GitDiffThisFile<cr>
 nnoremap <leader>ve <cmd>e $MYVIMRC<cr>
+nnoremap <leader>vz <cmd>e ~/.zsh.common<cr>
 # nnoremap <leader>vz <cmd>FoldingToggle<cr>
 # Following not needed: use 1<c-g> for absolute path, or <c-g> for relative path
 # nnoremap <leader>vp <cmd>echo expand('%')<cr>

@@ -16,5 +16,6 @@ sudo apt-get -y install vim
 sudo apt-get -y install gh
 sudo apt-get -y install gdb
 sudo apt-get -y install libncurses-dev # For compiling Vim
+sudo apt-get -y install universal-ctags
 
 sudo chsh -s /bin/zsh "$USER"

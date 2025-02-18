@@ -1564,13 +1564,14 @@ CTRL-W -	Decrease current window height by N (default 1).
 :res[ize] +N
 CTRL-W +	Increase current window height by N (default 1).
 		If used after |:vertical|: increase width by N.
+
 CTRL-W =	Make all windows (almost) equally high and wide, but use
 		'winheight' and 'winwidth' for the current window.
 
 CTRL-W <Down>
 CTRL-W CTRL-J
 CTRL-W j	Move cursor to Nth window below current one.  Uses the cursor
-		position to select between alternatives.
+		position to select between alternativesq
 
 CTRL-W <Up>
 CTRL-W CTRL-K

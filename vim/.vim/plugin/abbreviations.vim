@@ -42,7 +42,7 @@ cabbr <expr> gg  abbr#CmdAbbr('gg', "g//caddexpr $'{expand(\"%\")}:{line(\".\")}
 iabbr vim_help_modeline vim:tw=78:ts=4:ft=help:norl:ma:noro:ai:lcs=tab\:\ \ ,trail\:~:<c-r>=abbr#Eatchar()<cr>
 iabbr vim_txt_modeline vim:ft=txt:<c-r>=abbr#Eatchar()<cr>
 iabbr vim_markdown_modeline vim:tw=80:ts=4:ft=markdown:ai:<c-r>=abbr#Eatchar()<cr>
-iabbr vim_modeline vim:ts=4:sts=4:et:ai:<c-r>=abbr#Eatchar()<cr>
+iabbr vim_modeline vim:ts=4:sw=4:sts=4:et:ai:<c-r>=abbr#Eatchar()<cr>
 
 # dashes to match previous line length (there are also key maps in keymappings.vim)
 iabbr  --* <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=abbr#Eatchar()<cr>

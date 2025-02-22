@@ -22,11 +22,6 @@ vnoremap <leader>k 6k
 # g* selects foo in foobar while * selects <foo>, <> is word boundary. make * behave like g*
 # nnoremap * g*
 # nnoremap # g#
-# Resize window using <ctrl> arrow keys
-nnoremap <silent> <C-Up> :resize +2<cr>
-nnoremap <silent> <C-Down> :resize -2<cr>
-nnoremap <silent> <C-Right> :vertical resize -2<cr>
-nnoremap <silent> <C-Left> :vertical resize +2<cr>
 
 # alternative to 'packadd nohlsearch'
 nnoremap <silent> <esc> :nohls<cr><esc>
@@ -102,9 +97,8 @@ nnoremap gs `[v`]
 # <leader> mappings
 nnoremap <leader>b <cmd>b#<cr>| # alternate buffer
 nnoremap <leader>d <cmd>bw<cr>| # :bwipeout to purge, :bdelete still leaves buffer in unlisted state (:ls!)
-nnoremap <leader>h <cmd>hide<cr>| # hide window
 # nnoremap <leader>u <cmd>unhide<cr><c-w>w| # unhide = one window for each loaded buffer (splits horizontally, not useful)
-tnoremap <c-w>h <c-w>:hide<cr>| # hide window (when terminal window is active)
+
 # nnoremap <leader>t <cmd>!tree <bar> more<cr>
 # nnoremap <leader>t <cmd>term<cr>
 nnoremap <leader>t <cmd>tabnew<cr>
@@ -121,8 +115,17 @@ nnoremap <leader>m <cmd>marks<cr>
 nnoremap <leader>- <c-w>s| # horizontal split
 # nnoremap <leader>\| <c-w>v| # vertical split
 nnoremap <leader>\ <c-w>v| # vertical split
-# nnoremap <c-w>m <c-w>w| # next window in CCW direction
 # nnoremap <leader>o <cmd>only<cr> | # anyting with <leader> will not work for terminal windows
+# Resize window using <ctrl> arrow keys
+nnoremap <silent> <C-Up> :resize +2<cr>
+nnoremap <silent> <C-Down> :resize -2<cr>
+nnoremap <silent> <C-Right> :vertical resize -2<cr>
+nnoremap <silent> <C-Left> :vertical resize +2<cr>
+# Conveninece
+tnoremap <c-w>H <c-w>:hide<cr>| # hide window (when terminal window is active)
+nnoremap <c-w>H <cmd>hide<cr>| # hide window
+tnoremap <c-w><pagedown> <c-w>w| # easier to press (can also use <c-w><c-w> but terminal mode has delay)
+nnoremap <c-w><pagedown> <c-w>w
 
 # align
 vnoremap <leader>A :!column -t<cr>| # align columns

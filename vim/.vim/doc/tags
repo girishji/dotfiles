@@ -37,7 +37,7 @@ giri-stacktrace	giri.txt	/*giri-stacktrace*
 giri-substitute	giri.txt	/*giri-substitute*
 giri-tabs	giri.txt	/*giri-tabs*
 giri-tags	giri.txt	/*giri-tags*
-giri-term	giri.txt	/*giri-term*
+giri-terminal	giri.txt	/*giri-terminal*
 giri-tips	giri.txt	/*giri-tips*
 giri-vim-file-org	giri.txt	/*giri-vim-file-org*
 giri-window	giri.txt	/*giri-window*

@@ -233,6 +233,158 @@ vector::
 
     8 4 -1 9 6 9
 
+    The elements are stored contiguously.
+
+    operator= -> assigns values to the container
+    assign -> assigns values to the container
+    assign_range -> assigns a range of values to the container
+    get_allocator -> returns the associated allocator
+    at -> access specified element with bounds checking
+    operator[] -> access specified element
+    front -> access the first element
+    back -> access the last element
+    data -> direct access to the underlying contiguous storage
+    begin
+    cbegin -> returns an iterator to the beginning
+    end
+    cend -> returns an iterator to the end
+    rbegin
+    crbegin -> returns a reverse iterator to the beginning
+    rend
+    crend -> returns a reverse iterator to the end
+
+    Capacity
+    empty -> checks whether the container is empty
+    size -> returns the number of elements
+    max_size -> returns the maximum possible number of elements
+    reserve -> reserves storage
+    capacity -> returns the number of elements that can be held in currently allocated storage
+    shrink_to_fit -> reduces memory usage by freeing unused memory
+
+    Modifiers
+    clear -> clears the contents insert
+    insert -> inserts elements
+    insert_range -> inserts a range of elements
+    emplace -> constructs element in-place
+    erase -> erases elements
+    push_back -> adds an element to the end
+    emplace_back -> constructs an element in-place at the end
+    append_range -> adds a range of elements to the end
+    pop_back -> removes the last element
+    resize -> changes the number of elements stored
+    swap -> swaps the contents
+
+    Non-member functions
+    operator==
+    operator!=
+    operator<
+    operator<=
+    operator>
+    operator>=
+    operator<=> -> lexicographically compares the values of two vectors
+    std::swap(std::vector) -> specializes the std::swap algorithm
+    erase(std::vector)
+    erase_if(std::vector) -> erases all elements satisfying specific criteria
+
+    Example
+
+    int main()
+    {
+        // Create a vector containing integers
+        std::vector<int> v = {8, 4, 5, 9};
+
+        // Add two more integers to vector
+        v.push_back(6);
+        v.push_back(9);
+
+        // Overwrite element at position 2
+        v[2] = -1;
+
+        // Print out the vector
+        for (int n : v)
+            std::cout << n << ' ';
+        std::cout << '\n';
+    }
+    Output:
+
+    8 4 -1 9 6 9
+
+    The elements are stored contiguously.
+
+    operator= -> assigns values to the container
+    assign -> assigns values to the container
+    assign_range -> assigns a range of values to the container
+    get_allocator -> returns the associated allocator
+    at -> access specified element with bounds checking
+    operator[] -> access specified element
+    front -> access the first element
+    back -> access the last element
+    data -> direct access to the underlying contiguous storage
+    begin
+    cbegin -> returns an iterator to the beginning
+    end
+    cend -> returns an iterator to the end
+    rbegin
+    crbegin -> returns a reverse iterator to the beginning
+    rend
+    crend -> returns a reverse iterator to the end
+
+    Capacity
+    empty -> checks whether the container is empty
+    size -> returns the number of elements
+    max_size -> returns the maximum possible number of elements
+    reserve -> reserves storage
+    capacity -> returns the number of elements that can be held in currently allocated storage
+    shrink_to_fit -> reduces memory usage by freeing unused memory
+
+    Modifiers
+    clear -> clears the contents insert
+    insert -> inserts elements
+    insert_range -> inserts a range of elements
+    emplace -> constructs element in-place
+    erase -> erases elements
+    push_back -> adds an element to the end
+    emplace_back -> constructs an element in-place at the end
+    append_range -> adds a range of elements to the end
+    pop_back -> removes the last element
+    resize -> changes the number of elements stored
+    swap -> swaps the contents
+
+    Non-member functions
+    operator==
+    operator!=
+    operator<
+    operator<=
+    operator>
+    operator>=
+    operator<=> -> lexicographically compares the values of two vectors
+    std::swap(std::vector) -> specializes the std::swap algorithm
+    erase(std::vector)
+    erase_if(std::vector) -> erases all elements satisfying specific criteria
+
+    Example
+
+    int main()
+    {
+        // Create a vector containing integers
+        std::vector<int> v = {8, 4, 5, 9};
+
+        // Add two more integers to vector
+        v.push_back(6);
+        v.push_back(9);
+
+        // Overwrite element at position 2
+        v[2] = -1;
+
+        // Print out the vector
+        for (int n : v)
+            std::cout << n << ' ';
+        std::cout << '\n';
+    }
+    Output:
+
+    8 4 -1 9 6 9
+
 vector::vector
     template<typename T>
     std::ostream& operator<<(std::ostream& s, const std::vector<T>& v)

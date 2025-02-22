@@ -1,7 +1,13 @@
 *giri.txt*
-----------------------------------------
 See |tips.txt|
+----------------------------------------
 
+Convert dictionary to a string in Vimscript
+use string(dict)
+Ex: In insert mode, <C-r>=string(complete_info())<cr> will print the output of
+the function at cursor.
+
+----------------------------------------
 Example: Renaming files
 
 Say I have a directory with the following files in them (directory picked at
@@ -645,7 +651,7 @@ timeout vs ttimeout
 https://vi.stackexchange.com/questions/24925/usage-of-timeoutlen-and-ttimeoutlen
 
 ----------------------------------------
-terminal mode                                        *giri-term* 
+terminal mode                                        *giri-terminal* 
 - 2 modes: terminal-job mode (keys go to running job) and terminal-normal mode
 - to change from former to latter do <c-w>N 
 - to change otherwise do 'i' or 'a' (insert commands)
@@ -1500,6 +1506,8 @@ a log file.
 >
     vim -V20 2>&1 | tee logfile 
 
+To debug Vim source see :h :Termdebug
+
 ------------------------------------------------------------------------------
 Call stack                          *giri-callstack* *giri-stacktrace*
 
@@ -1543,8 +1551,19 @@ Call LogFunctionCall from other functions
 ------------------------------------------------------------------------------
 Windows  						*giri-window*
 
+CTRL-W T	Move the current window to a new tab page.  This fails if
+		there is only one window in the current tab page.
 
-CTRL-W w
+The following commands can be used to change the window layout/position.
+CTRL-W K	Move the current window to be at the very top, using the full
+		width of the screen.
+CTRL-W J	Move the current window to be at the very bottom, using the
+		full width of the screen.
+CTRL-W H	Move the current window to be at the far left.
+CTRL-W L	Move the current window to be at the far right.
+
+Navigate.
+CTRL-W w (mapped to 'CTRL-W PageDown' since in term mode it waits after c-w c-w)
 CTRL-W CTRL-W	Without count: move cursor to window below/right of the
 		current one.  If there is no window below or right, go to
 		top-left window.
@@ -1552,42 +1571,17 @@ CTRL-W CTRL-W	Without count: move cursor to window below/right of the
 		top-left to bottom-right).  To obtain the window number see
 		|bufwinnr()| and |winnr()|.  When N is larger than the number
 		of windows go to the last window.
+CTRL-W h,j,k,l	Move cursor to another window.
 
+Resize:
 CTRL-W <	Decrease current window width by N (default 1).
-
 CTRL-W >	Increase current window width by N (default 1).
-
 :res[ize] -N
 CTRL-W -	Decrease current window height by N (default 1).
-		If used after |:vertical|: decrease width by N.
-
 :res[ize] +N
 CTRL-W +	Increase current window height by N (default 1).
-		If used after |:vertical|: increase width by N.
-
 CTRL-W =	Make all windows (almost) equally high and wide, but use
 		'winheight' and 'winwidth' for the current window.
-
-CTRL-W <Down>
-CTRL-W CTRL-J
-CTRL-W j	Move cursor to Nth window below current one.  Uses the cursor
-		position to select between alternativesq
-
-CTRL-W <Up>
-CTRL-W CTRL-K
-CTRL-W k	Move cursor to Nth window above current one.  Uses the cursor
-		position to select between alternatives.
-
-CTRL-W <Left>
-CTRL-W CTRL-H
-CTRL-W <BS>
-CTRL-W h	Move cursor to Nth window left of current one.  Uses the
-		cursor position to select between alternatives.
-
-CTRL-W <Right>
-CTRL-W CTRL-L
-CTRL-W l	Move cursor to Nth window right of current one.  Uses the
-		cursor position to select between alternatives.
 
 :on[ly][!]
 :{count}on[ly][!]
@@ -1604,8 +1598,9 @@ CTRL-W c
 		given close the {count} window.
 
 :hid[e]
-:{count}hid[e]
+:{count}hid[e] (I mapped it to <C-W>H)
 		Without {count}: Quit the current window, unless it is the
 		last window on the screen.
+
 ------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

@@ -47,6 +47,7 @@ autocmd BufEnter * if &ft == null_string | setlocal listchars=tab:\ \ ,trail:\  
 set list
 
 # set fillchars=vert:│,fold:۰,diff:·
+set fillchars=stlnc:┴
 if &background == 'dark'
     set fillchars=vert:│,fold:۰,diff:·,stl:─,stlnc:═
 endif
@@ -124,9 +125,12 @@ endif
 # Suppress netrw banner
 # g:netrw_banner = 0
 
-## Debug Vim (:h :Termdebug)
+## Debug Vim (:h :Termdebug), needs gdb
 # packadd! termdebug
 # set mouse=a # Needed for Winbar menu
+# g:termdebug_config = {}
+# g:termdebug_config['wide'] = 1 # Force vertical split
+# g:termdebug_config['evaluate_in_popup'] = v:true
 
 if v:version >= 901 && !getcompletion('comment', 'packadd')->empty()
     packadd comment

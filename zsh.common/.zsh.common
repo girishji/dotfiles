@@ -439,6 +439,7 @@ prompt_vcs_setup() {
     alias ga='git add .; gitcommit'
     alias gs='git status '
     alias gc='git clone '
+    alias gc2='git clone --depth 1 '
     alias gp='git push'
     alias gu='git pull --no-rebase'
     alias gd='git diff'

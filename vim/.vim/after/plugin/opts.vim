@@ -64,10 +64,10 @@ if exists("g:loaded_vimsuggest")
         # fuzzy: false,
         # prefixlen: 3,
         popupattrs: {
-            # borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
-            # borderhighlight: ['LineNr'],
-            # highlight: 'Normal',
-            # border: [1, 1, 1, 1],
+            borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+            borderhighlight: ['Comment'],
+            highlight: 'Normal',
+            border: [1, 1, 1, 1],
             # padding: [1, 1, 1, 1],
             maxheight: 10,
         },
@@ -87,10 +87,10 @@ if exists("g:loaded_vimsuggest")
         # prefixlen: 3,
         # bindkeys: false,
         popupattrs: {
-            # borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
-            # borderhighlight: ['LineNr'],
-            # highlight: 'Normal',
-            # border: [1, 1, 1, 1],
+            borderchars: ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+            borderhighlight: ['Comment'],
+            highlight: 'Normal',
+            border: [1, 1, 1, 1],
             # padding: [1, 1, 1, 1],
             # maxheight: 20,
         },
@@ -142,7 +142,11 @@ if exists("g:loaded_vimsuggest")
     # nnoremap <leader>g :VSExec grep -IHins "" . **/*\~node_modules/*<c-left><left><left><left><left>
 
     # Live grep
-    g:vimsuggest_grepprg = 'ggrep -REIHns $* --exclude-dir=.git --exclude=".*" --exclude="tags"'
+    if has('mac') || has('macunix')
+        g:vimsuggest_grepprg = 'ggrep -REIHns $* --exclude-dir=.git --exclude=".*" --exclude="tags"'
+    else
+        g:vimsuggest_grepprg = 'grep -REIHns $* --exclude-dir=.git --exclude=".*" --exclude="tags"'
+    endif
     # g:vimsuggest_grepprg = 'rg --vimgrep --smart-case $* .'
     # g:vimsuggest_grepprg = 'ag --vimgrep'
     nnoremap <leader>g :VSGrep ""<left>

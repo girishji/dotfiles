@@ -54,10 +54,10 @@ def SaneColors()
         hi SpecialKey ctermfg=0 |# 'tab', 'nbsp', 'space', etc.
         hi NonText ctermfg=0 |# 'eol', etc.
         hi Search ctermfg=8 ctermbg=12
-        hi StatusLine ctermfg=none ctermbg=0 cterm=none
-        hi StatusLineNC ctermfg=7 ctermbg=0 cterm=italic
+        hi StatusLine ctermfg=none ctermbg=0 cterm=bold
+        hi StatusLineNC ctermfg=12 ctermbg=none cterm=italic
         hi StatusLineTerm ctermfg=3 ctermbg=0 cterm=none
-        hi StatusLineTermNC ctermfg=14 ctermbg=0 cterm=italic
+        hi StatusLineTermNC ctermfg=14 ctermbg=none cterm=italic
     endif
     hi MatchParen ctermfg=1 ctermbg=none cterm=underline
 

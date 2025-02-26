@@ -111,6 +111,33 @@ syntax on # turn on syntax highlighting
 #     set grepformat=%f:%l:%c:%m
 # endif
 
+#------------------------------
+# QfList to store important lines in files (like bookmarks)
+#------------------------------
+
+var quickfix_file = expand('~/.vim_quickfix_list.txt')
+# Add current line to quickfix list
+#   example: :g/mypattern/caddexpr expand("%") .. ":" .. line(".") ..  ":" .. getline(".")
+nnoremap <leader>a <cmd>caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<cr>
+# Clear the current quickfix list
+nnoremap <leader>C <cmd>cex []<cr>
+# Open qflist
+nnoremap <leader>c <cmd>cw<cr>
+# Command to save/Load quickfix list to a file
+command SaveQuickfixList {
+    writefile(getqflist()->mapnew((_, v) => $'{bufname(v.bufnr)}:{v.lnum}:{v.col}:{v.text}'),
+        quickfix_file)
+}
+command LoadQuickfixList {
+    if (quickfix_file->filereadable())
+        :exe 'cgetfile' quickfix_file
+    endif
+}
+augroup BookmarksQfList | autocmd!
+    autocmd VimEnter * LoadQuickfixList
+    autocmd VimLeavePre * SaveQuickfixList
+augroup END
+
 #--------------------
 # Plugins
 #--------------------
@@ -208,5 +235,11 @@ autocmd FileType * {
         exe $'setlocal dictionary={dict}'
     endif
 }
+
+# Cmdline auto-completion
+# set nowildmenu wildmode=list:lastused,full wildoptions=tagfile
+# autocmd CmdlineChanged : feedkeys("\<tab>", "ti")
+#
+# set wildmenu wildmode=lastused,full wildoptions=tagfile
 
 # vim: ts=8 sts=4 sw=4 et fdm=marker

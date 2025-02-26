@@ -124,8 +124,6 @@ nnoremap <silent> <C-Left> :vertical resize +2<cr>
 # Conveninece
 tnoremap <c-w>H <c-w>:hide<cr>| # hide window (when terminal window is active)
 nnoremap <c-w>H <cmd>hide<cr>| # hide window
-tnoremap <c-w><pagedown> <c-w>w| # easier to press (can also use <c-w><c-w> but terminal mode has delay)
-nnoremap <c-w><pagedown> <c-w>w
 
 # align
 vnoremap <leader>A :!column -t<cr>| # align columns

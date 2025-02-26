@@ -126,7 +126,7 @@ if exists("g:loaded_vimsuggest")
     # g:vimsuggest_shell = true
     # g:vimsuggest_findprg = 'fd --type f --glob'
     # g:vimsuggest_findprg = 'fd --type f'
-    g:vimsuggest_findprg = 'find -EL $* \! \( -regex ".*\.(zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name $*'
+    g:vimsuggest_findprg = 'find -EL $* \! \( -regex ".*\.(o\|zwc\|swp\|git\|zsh_.*)" -prune \) -type f -name $*'
     nnoremap <leader>ff :VSFindL "*"<left><left>
 
     # nnoremap <leader>fF :VSExec fd --type f<space>
@@ -143,9 +143,10 @@ if exists("g:loaded_vimsuggest")
 
     # Live grep
     if has('mac') || has('macunix')
-        g:vimsuggest_grepprg = 'ggrep -REIHns $* --exclude-dir=.git --exclude=".*" --exclude="tags"'
+        g:vimsuggest_grepprg = 'ggrep -REIHins $* --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.swp"'
+        # g:vimsuggest_grepprg = 'ggrep -REIHns $* --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.swp"'
     else
-        g:vimsuggest_grepprg = 'grep -REIHns $* --exclude-dir=.git --exclude=".*" --exclude="tags"'
+        g:vimsuggest_grepprg = 'grep -REIHins $* --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.swp"'
     endif
     # g:vimsuggest_grepprg = 'rg --vimgrep --smart-case $* .'
     # g:vimsuggest_grepprg = 'ag --vimgrep'

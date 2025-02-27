@@ -248,13 +248,26 @@ tnoremap <silent> <C-PageDown> <scriptcmd>SwitchTab('down')<cr>
 #     autocmd CmdlineLeave : SelectFirstChoice()
 # augroup END
 
-nnoremap <leader><space> :fin **/
-# ':e' automatically closes popup and selects if only one option is present; not ideal
-# nnoremap <leader><space> :e **/
+# def FindFunc(pat: string, dir: string): list<string>
+#     return systemlist('find')
+# enddef
+# def! g:FindFuncHere(carg: string, addstar: bool): list<string>
+#     var pat = addstar ? $'{carg}*' : carg
+#     return FindFunc(pat, '.')
+# enddef
+# set findfunc=FindFuncHere
 
+
+# NOTE: 'find' respects 'path' and 'suffixesadd' while 'edit' does not
+set path=.,,
+set wildignore=.gitignore,*.swp,*.zwc,tags
+set wildignore+=*/ # prevents listing of directories
+nnoremap <leader><space> :fin **/
+# nnoremap <leader><space> :e **/
+#
 # find file in the parent git root directory
 nnoremap <leader>ff :fin <c-r>=system("git rev-parse --show-toplevel 2>/dev/null \|\| true")->trim()<cr>/**/
-
+#
 nnoremap <leader>fv :fin $HOME/.vim/**/
 nnoremap <leader>fV :fin $VIMRUNTIME/**/
 # zsh files start with a number (01-foo.zsh), so the extra '*' at the end

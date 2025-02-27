@@ -569,6 +569,9 @@ prompt_vcs_setup() {
     # TIP: could use 'py' which is ipython+pyflyby (if installed through pipx, and ipython injected into it)
     alias ip='ipython'
 
+    alias vim=/Users/gp/git/vim/dist/bin/vim
+    alias vi=/Users/gp/git/vim/dist/bin/vim
+
     alias v='vim'
     alias vd='vi -d'  # diff mode - pass 2 files
     # alias vr='vim -c "normal '\''0"'  # restore last opened buffer

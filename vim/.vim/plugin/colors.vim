@@ -110,6 +110,7 @@ if get(g:, 'colors_name', null_string) == null_string
         # BufReadPost will not have &filetype. So defer until filetype
         # is detected.
         autocmd WinEnter,BufEnter,BufReadPost * call timer_start(10, (_) => ApplyColors())
+        autocmd OptionSet background ApplyColors()
     augroup END
 endif
 

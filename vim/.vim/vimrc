@@ -79,8 +79,6 @@ set dictionary+=/usr/share/dict/words
 set whichwrap+=<,>,h,l # make arrows and h, l, push cursor to next line
 # set pumheight=7 # max number of items in popup menu (pmenu)
 set virtualedit=block # allows selection of rectangular text in visual block mode
-set wildignore+=.gitignore,*.swp,*.zwc,tags
-set path=.,,
 set laststatus=2 # always show statusline
 # set laststatus=0
 # set rulerformat=%80(%=%f\ %h%m%r\ %-6y\ %-5.(%l,%c%V%)\ %P%)
@@ -115,12 +113,12 @@ syntax on # turn on syntax highlighting
 # QfList to store important lines in files (like bookmarks)
 #------------------------------
 
-var quickfix_file = expand('~/.vim_quickfix_list.txt')
+var quickfix_file = expand('~/.vim_bookmarks.txt')
 # Add current line to quickfix list
 #   example: :g/mypattern/caddexpr expand("%") .. ":" .. line(".") ..  ":" .. getline(".")
 nnoremap <leader>a <cmd>caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<cr>
 # Clear the current quickfix list
-nnoremap <leader>C <cmd>cex []<cr>
+nnoremap <leader>X <cmd>cex []<cr>
 # Open qflist
 nnoremap <leader>c <cmd>cw<cr>
 # Command to save/Load quickfix list to a file
@@ -206,7 +204,7 @@ else
     Plug '~/git/bufline.vim'
     # Plug 'girishji/bufline.vim'
     # Plug '~/git/scope.vim'
-    Plug '~/git/vimsuggest'
+    # Plug '~/git/vimsuggest'
     Plug '~/git/vimcomplete'
     # Plug 'girishji/vimcomplete'
     Plug '~/git/ngram-complete.vim'
@@ -236,10 +234,31 @@ autocmd FileType * {
     endif
 }
 
+# --------------------------
 # Cmdline auto-completion
-# set nowildmenu wildmode=list:lastused,full wildoptions=tagfile
-# autocmd CmdlineChanged : feedkeys("\<tab>", "ti")
-#
-# set wildmenu wildmode=lastused,full wildoptions=tagfile
+# # --------------------------
+set wim=noselect:lastused,full wop=pum,tagfile wc=<tab> wmnu
+autocmd CmdlineChanged : timer_start(5, function(CmdComplete, [getcmdline()]))
+var active_cmdline: string
+def CmdComplete(cur_cmdline: string, timer: number)
+    var cmdline = getcmdline()
+    if cur_cmdline ==# cmdline # Not completing keymap and pasted text
+        && !pumvisible() && cmdline[getcmdpos() - 2] =~ '\w\|[*/:]'
+        && active_cmdline !=# cmdline # Avoid multiple futile attempts
+        feedkeys("\<tab>", "ti")
+        active_cmdline = cmdline
+    endif
+    # var attempted = savecmdline ==# cmdline
+    # if !pumvisible() && cmdline[getcmdpos() - 2] =~ '\w\|\*\|/'
+    #     if attempted
+    #         savecmdline = null_string
+    #     else
+    #        feedkeys("\<tab>", "ti")
+    #        savecmdline = cmdline
+    #     endif
+    # elseif pumvisible() && attempted
+    #     savecmdline = null_string
+    # endif
+enddef
 
 # vim: ts=8 sts=4 sw=4 et fdm=marker

@@ -138,7 +138,7 @@ if exists("g:loaded_vimsuggest")
     # nnoremap <leader>g :VSExec ggrep -REIHins "" . --exclude-dir={.git,"node_*"} --exclude=".*"<c-left><c-left><c-left><left><left>
     # NOTE: '**' automatically excludes hidden dirs and files, but it is much slower.
     # nnoremap <leader>g :VSExec grep -IHSins "" **/*<c-left><left><left>
-    # XXX '~' does not work with Vim
+    # XXX '~' does not work as negation in Vim
     # nnoremap <leader>g :VSExec grep -IHins "" . **/*\~node_modules/*<c-left><left><left><left><left>
 
     # Live grep

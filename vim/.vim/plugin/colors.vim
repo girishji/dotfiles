@@ -2,20 +2,6 @@ vim9script
 
 # NOTE: 'background' is not set correctly until window is opened (after VimEnter). So,
 # set the background explicitly so that colorscheme can choose appropriate colors.
-# Ex:
-#   set background=dark
-#   colorscheme blue
-# Preview here: https://vimcolorschemes.com/vim/colorschemes (ubunto mono font)
-
-augroup ModifyColorscheme | autocmd!
-    autocmd ColorScheme darkblue {
-        hi Pmenu ctermfg=253 ctermbg=20
-        hi PmenuMatch ctermbg=18
-        hi PmenuSel ctermbg=253
-        hi PmenuMatchSel ctermbg=253
-        hi MoreMsg ctermfg=34
-    }
-augroup END
 
 # If env var is set, use it.
 if expandcmd($VIM_BG) != null_string
@@ -26,6 +12,18 @@ if expandcmd($VIM_COLORSCHEME) != null_string
     exec $'colorscheme {expandcmd($VIM_COLORSCHEME)}'
 endif
 
+# colorscheme is not needed. Adjust terminal colors.
+# Modify colors for source files and leave defaults for help/markdown files.
+if get(g:, 'colors_name', null_string) == null_string
+    augroup ColorMonochrome | autocmd!
+        # FileType event is not called every time buffer is switched.
+        # BufReadPost will not have &filetype. So defer until filetype
+        # is detected.
+        autocmd WinEnter,BufEnter,BufReadPost * call timer_start(10, (_) => ApplyColors())
+        autocmd OptionSet background ApplyColors()
+    augroup END
+endif
+
 def SaneColors()
     if &bg == 'light'
         hi SignColumn ctermfg=None ctermbg=7
@@ -34,7 +32,6 @@ def SaneColors()
         hi PmenuMatch ctermfg=5 ctermbg=7
         hi PmenuSel ctermfg=7 ctermbg=0
         hi PmenuMatchSel ctermfg=7 ctermbg=0 cterm=underline
-        hi SpecialKey ctermfg=7 |# 'tab', 'nbsp', 'space', etc.
         hi NonText ctermfg=7 |# 'eol', etc.
         hi Search ctermfg=7 ctermbg=12
         hi DiffText ctermfg=15
@@ -51,7 +48,6 @@ def SaneColors()
         hi PmenuMatchSel ctermfg=8 ctermbg=7 cterm=underline
         hi PmenuSbar ctermbg=0
         hi PmenuThumb ctermbg=7
-        hi SpecialKey ctermfg=0 |# 'tab', 'nbsp', 'space', etc.
         hi NonText ctermfg=0 |# 'eol', etc.
         hi Search ctermfg=8 ctermbg=12
         hi StatusLine ctermfg=none ctermbg=0 cterm=bold
@@ -61,6 +57,8 @@ def SaneColors()
     endif
     hi MatchParen ctermfg=1 ctermbg=none cterm=underline
     hi Todo ctermfg=7 ctermbg=1
+    hi SpecialKey ctermfg=2 |# 
+    hi SpecialKey ctermfg=10 |# 'tab', 'nbsp', 'space', ctrl chars (^a, ^b, etc.)
 
     var bg = hlget('SignColumn')->get(0, {})->get('ctermbg', null_string)
     if (bg != null_string)
@@ -101,18 +99,6 @@ def ApplyColors()
     endif
     SaneColors()
 enddef
-
-# Not having any colorscheme is good enough for many terminal profiles
-# Adjust colors for source files and leave as is for help/markdown/etc.
-if get(g:, 'colors_name', null_string) == null_string
-    augroup ColorMonochrome | autocmd!
-        # FileType event is not called every time buffer is switched.
-        # BufReadPost will not have &filetype. So defer until filetype
-        # is detected.
-        autocmd WinEnter,BufEnter,BufReadPost * call timer_start(10, (_) => ApplyColors())
-        autocmd OptionSet background ApplyColors()
-    augroup END
-endif
 
 # Following should occur after setting colorscheme.
 highlight! TrailingWhitespace ctermbg=196

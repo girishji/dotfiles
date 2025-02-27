@@ -52,7 +52,7 @@ if &background == 'dark'
     set fillchars=vert:│,fold:۰,diff:·,stl:─,stlnc:═
 endif
 set clipboard=unnamed # Always use the system clipboard
-# set mouse= # XXX: Disable mouse (set by defaults.vim). Needed by macos terminal app.
+set mouse= # XXX: Disable mouse (set by defaults.vim). Needed by macos terminal app.
 set number # line numbering
 # set relativenumber
 set hls # highlight search
@@ -236,29 +236,25 @@ autocmd FileType * {
 
 # --------------------------
 # Cmdline auto-completion
-# # --------------------------
-set wim=noselect:lastused,full wop=pum,tagfile wc=<tab> wmnu
-autocmd CmdlineChanged : timer_start(5, function(CmdComplete, [getcmdline()]))
+# --------------------------
+# set wim=noselect:lastused,full wop=pum,tagfile wcm=<C-@> wmnu
+set wim=noselect:lastused,full wop=pum wcm=<C-@> wmnu
+autocmd CmdlineChanged : timer_start(0, function(CmdComplete, [getcmdline()]))
+autocmd CmdlineEnter : active_cmdline = null_string
 var active_cmdline: string
 def CmdComplete(cur_cmdline: string, timer: number)
     var cmdline = getcmdline()
-    if cur_cmdline ==# cmdline # Not completing keymap and pasted text
-        && !pumvisible() && cmdline[getcmdpos() - 2] =~ '\w\|[*/:]'
-        && active_cmdline !=# cmdline # Avoid multiple futile attempts
-        feedkeys("\<tab>", "ti")
-        active_cmdline = cmdline
+    if cur_cmdline ==# cmdline # Avoid completing keymaps and pasted text
+        && !pumvisible() && active_cmdline !=# cmdline # Prevent redundant attempts
+        if cmdline[getcmdpos() - 2] =~ '\w\|[*/:]'
+            feedkeys("\<C-@>", "ti")
+            active_cmdline = cmdline
+        elseif cmdline =~ '\%x00$' # Trim <C-@> from the end if no completion items are available
+            set eventignore+=CmdlineChanged
+            setcmdline(cmdline[: -2])
+            timer_start(0, (_) => execute('set eventignore-=CmdlineChanged'))
+        endif
     endif
-    # var attempted = savecmdline ==# cmdline
-    # if !pumvisible() && cmdline[getcmdpos() - 2] =~ '\w\|\*\|/'
-    #     if attempted
-    #         savecmdline = null_string
-    #     else
-    #        feedkeys("\<tab>", "ti")
-    #        savecmdline = cmdline
-    #     endif
-    # elseif pumvisible() && attempted
-    #     savecmdline = null_string
-    # endif
 enddef
 
 # vim: ts=8 sts=4 sw=4 et fdm=marker

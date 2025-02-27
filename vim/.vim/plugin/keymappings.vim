@@ -1,11 +1,11 @@
 vim9script
 
 # autocomplete with <c-n> and <c-p> when plugins are not available
-def OnWhitespace(): bool
-    return col('.') == 1 || getline('.')->strpart(0, col('.') - 1) =~ '\s$'
-enddef
-inoremap <expr> <Tab>   OnWhitespace() ? "\<tab>" : "\<c-n>"
-inoremap <expr> <s-Tab> OnWhitespace() ? "\<s-tab>" : "\<c-p>"
+# def OnWhitespace(): bool
+#     return col('.') == 1 || getline('.')->strpart(0, col('.') - 1) =~ '\s$'
+# enddef
+# inoremap <expr> <Tab>   OnWhitespace() ? "\<tab>" : "\<c-n>"
+# inoremap <expr> <s-Tab> OnWhitespace() ? "\<s-tab>" : "\<c-p>"
 
 # Y mapping, more natural but not vi compatible
 map Y y$
@@ -153,6 +153,7 @@ nnoremap <leader>vn <cmd>35Lex<cr>
 
 # ----------------------------------------
 # Make <C-PageUp/Down> work in tab with terminal
+# ----------------------------------------
 def SwitchTab(dir: string)
     if &buftype == 'terminal'
         :exec "normal! \<C-\>\<C-n>"
@@ -261,7 +262,6 @@ tnoremap <silent> <C-PageDown> <scriptcmd>SwitchTab('down')<cr>
 # NOTE: 'find' respects 'path' and 'suffixesadd' while 'edit' does not
 set path=.,,
 set wildignore=.gitignore,*.swp,*.zwc,tags
-set wildignore+=*/ # prevents listing of directories
 nnoremap <leader><space> :fin **/
 # nnoremap <leader><space> :e **/
 #

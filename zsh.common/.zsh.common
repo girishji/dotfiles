@@ -547,11 +547,6 @@ prompt_vcs_setup() {
     # alias pipi='pip install --user '
     alias pipi='pip install'
 
-    alias vim_='vim -Nu NONE -S <(cat <<EOF
-        vim9script
-    EOF
-    )'
-
     alias c='z'
     alias ca='cat'
     alias cl='clear'
@@ -579,6 +574,10 @@ prompt_vcs_setup() {
     alias vimclean='vim --clean'
     alias nv='nvim'
     alias nvi='nvim'
+    alias vim_='vim -Nu NONE -S <(cat <<EOF
+        vim9script
+    EOF
+    )'
 
     alias makedebug="make SHELL='sh -x'"
 

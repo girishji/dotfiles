@@ -259,19 +259,21 @@ tnoremap <silent> <C-PageDown> <scriptcmd>SwitchTab('down')<cr>
 # set findfunc=FindFuncHere
 
 
-# NOTE: 'find' respects 'path' and 'suffixesadd' while 'edit' does not
-set path=.,,
-set wildignore=.gitignore,*.swp,*.zwc,tags
-nnoremap <leader><space> :fin **/
-# nnoremap <leader><space> :e **/
-#
-# find file in the parent git root directory
-nnoremap <leader>ff :fin <c-r>=system("git rev-parse --show-toplevel 2>/dev/null \|\| true")->trim()<cr>/**/
-#
-nnoremap <leader>fv :fin $HOME/.vim/**/
-nnoremap <leader>fV :fin $VIMRUNTIME/**/
-# zsh files start with a number (01-foo.zsh), so the extra '*' at the end
-nnoremap <leader>fz :fin $HOME/.zsh/**/**<left>
+if &findfunc == null_string
+    # NOTE: 'find' respects 'path' and 'suffixesadd' while 'edit' does not
+    set path=.,,
+    set wildignore=.gitignore,*.swp,*.zwc,tags
+    nnoremap <leader><space> :fin **/*
+    # nnoremap <leader><space> :e **/
+    # find file in the parent git root directory
+    nnoremap <leader>ff :fin <c-r>=system("git rev-parse --show-toplevel 2>/dev/null \|\| true")->trim()<cr>/**/
+    nnoremap <leader>fv :fin $HOME/.vim/**/
+    nnoremap <leader>fV :fin $VIMRUNTIME/**/
+else
+    nnoremap <leader>ff :e <c-r>=system("git rev-parse --show-toplevel 2>/dev/null \|\| true")->trim()<cr>/**/
+    nnoremap <leader>fv :e $HOME/.vim/**/
+    nnoremap <leader>fV :e $VIMRUNTIME/**/
+endif
 
 # note: <home>, <c-left>, <left> etc. move the cursor
 nnoremap <leader>fG :vim /\v/gj **<c-left><left><left><left><left>
@@ -294,8 +296,8 @@ nnoremap <leader>ft :tj<space>
 #   to search specific directory, and for C files, do <dir>/**/*.c
 #   you can exclude directories or files using '~' (see zsh config file)
 #   ':cw[indow]' opens (toggles) quickfix list only when it is non-empty
-nnoremap <leader>g :cgetexpr system('grep -EInsi "" **/*')\|cw<c-left><left><left>
-nnoremap <leader>G :cgetexpr system('grep -EInsi <c-r>=expand("<cword>")<cr> **/*')\|cw<c-left><left>
+# nnoremap <leader>g :cgetexpr system('grep -EInsi "" **/*')\|cw<c-left><left><left>
+# nnoremap <leader>G :cgetexpr system('grep -EInsi <c-r>=expand("<cword>")<cr> **/*')\|cw<c-left><left>
 
 nnoremap <leader><bs> :b **/
 

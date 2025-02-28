@@ -240,21 +240,85 @@ autocmd FileType * {
 # set wim=noselect:lastused,full wop=pum,tagfile wcm=<C-@> wmnu
 set wim=noselect:lastused,full wop=pum wcm=<C-@> wmnu
 autocmd CmdlineChanged : timer_start(0, function(CmdComplete, [getcmdline()]))
-autocmd CmdlineEnter : active_cmdline = null_string
-var active_cmdline: string
 def CmdComplete(cur_cmdline: string, timer: number)
-    var cmdline = getcmdline()
-    if cur_cmdline ==# cmdline # Avoid completing keymaps and pasted text
-        && !pumvisible() && active_cmdline !=# cmdline # Prevent redundant attempts
-        if cmdline[getcmdpos() - 2] =~ '\w\|[*/:]'
+    var [cmdline, curpos] = [getcmdline(), getcmdpos()]
+    if cur_cmdline ==# cmdline # Avoid completing each char of keymaps and pasted text
+        && !pumvisible() && curpos == cmdline->len() + 1
+        if cmdline[curpos - 2] =~ '\w\|[*/:]'
             feedkeys("\<C-@>", "ti")
-            active_cmdline = cmdline
-        elseif cmdline =~ '\%x00$' # Trim <C-@> from the end if no completion items are available
-            set eventignore+=CmdlineChanged
-            setcmdline(cmdline[: -2])
-            timer_start(0, (_) => execute('set eventignore-=CmdlineChanged'))
+            set eventignore+=CmdlineChanged  # Suppress redundant completion attempts
+            timer_start(0, (_) => {
+                getcmdline()->substitute('\%x00$', '', '')->setcmdline()  # Vim inserts <C-@> when no completion items exist
+                set eventignore-=CmdlineChanged
+            })
         endif
     endif
 enddef
+
+# does not complete if not at end of line
+# say there are space chars at end, if you make substitute replace all (not just
+#  end) and use cmdline->trim(' ', 2)->len() + 1, then cursor will jump to end
+#  after removing ^@ (past the trailing spaces), not desirable. so, better to
+#  not support spaces at end
+# can use substitute('\%x00', ...) to replace inside line, but cursor jumps to
+#   end. may fix this using timer_start with setcmdpos or feedkeys
+# no highlighting for fuzzyfind or live grep
+# beeps and prints ... -> fix this
+#
+                # cmdline = getcmdline()
+                # # curpos = getcmdpos()
+                # echom "here" cmdline curpos "#"
+                # if cmdline[curpos - 1] =~ '\%x00'
+                #     echom "herematch" cmdline curpos "$"
+                #     setcmdline(cmdline->slice(0, curpos - 1) .. cmdline->slice(curpos))
+                #     echom "2erematch" cmdline getcmdpos() "$"
+                #     setcmdpos(8)
+                #     echom "3herematch" cmdline getcmdpos() "$"
+                #     # setcmdpos(curpos - 1)
+                # endif
+
+# --------------------------
+# Fuzzy Find
+# --------------------------
+set findfunc=FuzzyFind
+def FuzzyFind(cmdarg: string, _: bool): list<string>
+    files = files ?? systemlist('find . \! \( -path "*/.*" -prune \) -type f -follow')
+    return cmdarg == '' ? files : files->matchfuzzy(cmdarg, {matchseq: 1, limit: 100})
+enddef
+var files: list<string>
+autocmd CmdlineEnter : files = null_list
+nnoremap <leader><space> :find<space><c-@>
+
+# --------------------------
+# Live/Interactive grep
+# --------------------------
+command! -nargs=+ -complete=customlist,GrepComplete Grep VisitFile(<q-args>)
+def GrepComplete(arglead: string, cmdline: string, cursorpos: number): list<any>
+    return arglead != null_string ? systemlist($'ggrep -REIHns "{arglead}"' ..
+       ' --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.swp"') : []
+enddef
+export def VisitFile(line: string)
+    var qfitem = getqflist({lines: [line]}).items[0]
+    if qfitem->has_key('bufnr')
+        var pos = qfitem.vcol > 0 ? 'setcharpos' : 'setpos'
+        exec $':b +call\ {pos}(".",\ [0,\ {qfitem.lnum},\ {qfitem.col},\ 0]) {qfitem.bufnr}'
+        setbufvar(qfitem.bufnr, '&buflisted', 1)
+    endif
+enddef
+nnoremap <leader>g :Grep<space>
+
+# complete_info does not return anything
+# also, make it select first item
+# cnoremap <expr> <c-q> pumvisible() ? PopulateQuickfix() : "\<c-q>"
+# def PopulateQuickfix(): string
+#     echom complete_info(['items'])
+#     return ''
+# enddef
+
+    # if arglead != null_string
+    #     var cmdstr = (has('mac') ? 'ggrep' : 'grep')
+    #         .. $' -REIHns "{arglead}" --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.swp"'
+    #     return systemlist(cmdstr)
+    # endif
 
 # vim: ts=8 sts=4 sw=4 et fdm=marker

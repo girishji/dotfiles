@@ -28,7 +28,7 @@ def SaneColors()
     if &bg == 'light'
         hi SignColumn ctermfg=None ctermbg=7
         hi LineNr ctermfg=12 ctermbg=7
-        hi Pmenu ctermfg=none ctermbg=7
+        hi Pmenu ctermfg=2 ctermbg=7
         hi PmenuMatch ctermfg=5 ctermbg=7
         hi PmenuSel ctermfg=7 ctermbg=0
         hi PmenuMatchSel ctermfg=7 ctermbg=0 cterm=underline
@@ -42,7 +42,7 @@ def SaneColors()
     else  # dark
         hi SignColumn ctermfg=None ctermbg=0
         hi LineNr ctermfg=12 ctermbg=0
-        hi Pmenu ctermfg=none ctermbg=0
+        hi Pmenu ctermfg=2 ctermbg=0
         hi PmenuMatch ctermfg=3
         hi PmenuSel ctermfg=8 ctermbg=7
         hi PmenuMatchSel ctermfg=8 ctermbg=7 cterm=underline
@@ -56,8 +56,7 @@ def SaneColors()
         hi StatusLineTermNC ctermfg=14 ctermbg=none cterm=italic
     endif
     hi MatchParen ctermfg=1 ctermbg=none cterm=underline
-    hi Todo ctermfg=7 ctermbg=1
-    hi SpecialKey ctermfg=2 |# 
+    hi Todo ctermfg=0 ctermbg=1
     hi SpecialKey ctermfg=10 |# 'tab', 'nbsp', 'space', ctrl chars (^a, ^b, etc.)
 
     var bg = hlget('SignColumn')->get(0, {})->get('ctermbg', null_string)

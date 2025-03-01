@@ -443,6 +443,8 @@ prompt_vcs_setup() {
     alias gp='git push'
     alias gu='git pull --no-rebase'
     alias gd='git diff'
+    alias gb='git branch'
+    alias gch='git checkout'
 
     # grep
     #

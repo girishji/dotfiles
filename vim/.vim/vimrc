@@ -244,7 +244,7 @@ def CmdComplete(cur_cmdline: string, timer: number)
     var [cmdline, curpos] = [getcmdline(), getcmdpos()]
     if cur_cmdline ==# cmdline # Avoid completing each char of keymaps and pasted text
         && !pumvisible() && curpos == cmdline->len() + 1
-        if cmdline[curpos - 2] =~ '\w\|[*/:]'
+        if cmdline[curpos - 2] =~ '\w\|[*/:]' && cmdline->split()[-1] !~ '^\%(\d\|[/:*]\)'
             feedkeys("\<C-@>", "ti")
             set eventignore+=CmdlineChanged  # Suppress redundant completion attempts
             timer_start(0, (_) => {
@@ -254,6 +254,8 @@ def CmdComplete(cur_cmdline: string, timer: number)
         endif
     endif
 enddef
+
+nnoremap <leader><bs> :b <c-@>
 
 # does not complete if not at end of line
 # say there are space chars at end, if you make substitute replace all (not just
@@ -282,12 +284,16 @@ enddef
 # --------------------------
 set findfunc=FuzzyFind
 def FuzzyFind(cmdarg: string, _: bool): list<string>
-    files = files ?? systemlist('find . \! \( -path "*/.*" -prune \) -type f -follow')
-    return cmdarg == '' ? files : files->matchfuzzy(cmdarg, {matchseq: 1, limit: 100})
+    if allfiles == null_list
+        allfiles = systemlist($'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune \) -type f -follow')
+    endif
+    return cmdarg == '' ? allfiles : allfiles->matchfuzzy(cmdarg)
 enddef
-var files: list<string>
-autocmd CmdlineEnter : files = null_list
+var allfiles: list<string>
+autocmd CmdlineEnter : allfiles = null_list
 nnoremap <leader><space> :find<space><c-@>
+nnoremap <leader>fv :<c-r>=execute('let fzfind_root="$HOME/.vim"')\|''<cr>find<space><c-@>
+nnoremap <leader>fV :<c-r>=execute('let fzfind_root="$VIMRUNTIME"')\|''<cr>find<space><c-@>
 
 # --------------------------
 # Live/Interactive grep
@@ -297,7 +303,7 @@ def GrepComplete(arglead: string, cmdline: string, cursorpos: number): list<any>
     return arglead != null_string ? systemlist($'ggrep -REIHns "{arglead}"' ..
        ' --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.swp"') : []
 enddef
-export def VisitFile(line: string)
+def VisitFile(line: string)
     var qfitem = getqflist({lines: [line]}).items[0]
     if qfitem->has_key('bufnr')
         var pos = qfitem.vcol > 0 ? 'setcharpos' : 'setpos'
@@ -306,6 +312,7 @@ export def VisitFile(line: string)
     endif
 enddef
 nnoremap <leader>g :Grep<space>
+nnoremap <leader>G :Grep <c-r>=expand("<cword>")<cr>
 
 # complete_info does not return anything
 # also, make it select first item

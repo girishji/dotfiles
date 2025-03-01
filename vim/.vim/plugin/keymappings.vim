@@ -271,12 +271,10 @@ if &findfunc == null_string
     nnoremap <leader>fV :fin $VIMRUNTIME/**/
 else
     nnoremap <leader>ff :e <c-r>=system("git rev-parse --show-toplevel 2>/dev/null \|\| true")->trim()<cr>/**/
-    nnoremap <leader>fv :e $HOME/.vim/**/
-    nnoremap <leader>fV :e $VIMRUNTIME/**/
 endif
 
 # note: <home>, <c-left>, <left> etc. move the cursor
-nnoremap <leader>fG :vim /\v/gj **<c-left><left><left><left><left>
+# nnoremap <leader>fG :vim /\v/gj **<c-left><left><left><left><left>
 # <cword>
 # nnoremap <leader>vG :vim /\<<c-r>=expand("<cword>")<cr>\>/gj **
 # case sensitive grep
@@ -286,7 +284,7 @@ nnoremap <leader>fG :vim /\v/gj **<c-left><left><left><left><left>
 #  - following solution does not open qf automatically
 #    g/<pattern>/caddexpr expand("%") . ":" . line(".") . ":" . getline(".")
 #  - instead of above, use vimgrep
-nnoremap <leader>fg :vim /\v/gj %<left><left><left><left><left>
+# nnoremap <leader>fg :vim /\v/gj %<left><left><left><left><left>
 
 # tag search
 nnoremap <leader>ft :tj<space>
@@ -298,8 +296,6 @@ nnoremap <leader>ft :tj<space>
 #   ':cw[indow]' opens (toggles) quickfix list only when it is non-empty
 # nnoremap <leader>g :cgetexpr system('grep -EInsi "" **/*')\|cw<c-left><left><left>
 # nnoremap <leader>G :cgetexpr system('grep -EInsi <c-r>=expand("<cword>")<cr> **/*')\|cw<c-left><left>
-
-nnoremap <leader><bs> :b **/
 
 # highlight groups ([-1] forces empty string as return value of setqflist())
 nnoremap <leader>fh :<c-r>=setqflist([], ' ', #{title: 'highlight', items: execute("hi")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>

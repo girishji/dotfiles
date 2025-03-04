@@ -188,22 +188,23 @@ tnoremap <silent> <C-PageDown> <scriptcmd>SwitchTab('down')<cr>
 # endfor
 
 
-# (:h emacs-keys) For Emacs-style editing on the command-line:
-# Default keys are in :h cmdline-editing
-# start of line
-:cnoremap <C-A> <Home>
-# back one character
-:cnoremap <C-B> <Left>
-# delete character under cursor (Fn-Backspace is Del in MacOs)
-# :cnoremap <C-D> <Del>
-# end of line
-:cnoremap <C-E> <End>
-# forward one character
-:cnoremap <C-F> <Right>
-# recall newer command-line
-:cnoremap <C-N> <Down>
-# recall previous (older) command-line
-:cnoremap <C-P> <Up>
+# # (:h emacs-keys) For Emacs-style editing on the command-line:
+# # Default keys are in :h cmdline-editing
+# # start of line
+# :cnoremap <C-A> <Home>
+# # back one character
+# :cnoremap <C-B> <Left>
+# # delete character under cursor (Fn-Backspace is Del in MacOs)
+# # :cnoremap <C-D> <Del>
+# # end of line
+# :cnoremap <C-E> <End>
+# # forward one character
+# :cnoremap <C-F> <Right>
+# # recall newer command-line
+# :cnoremap <C-N> <Down>
+# # recall previous (older) command-line
+# :cnoremap <C-P> <Up>
+#
 # XXX: <esc> key combination causes delay in dismissing ':' command
 # # esc-b is backward-one-word
 # :cnoremap <Esc>b <S-Left>
@@ -217,8 +218,8 @@ tnoremap <silent> <C-PageDown> <scriptcmd>SwitchTab('down')<cr>
 # :cnoremap æ		<S-Right>
 # :cnoremap ƒ		<S-Right>
 # :cnoremap ń		<S-Right>
-:cnoremap <C-h> <S-Left>
-:cnoremap <C-l> <S-Right>
+# :cnoremap <C-h> <S-Left>
+# :cnoremap <C-l> <S-Right>
 
 ##
 ## Following keybindings are useful when not using scope.vim
@@ -304,6 +305,9 @@ nnoremap <leader>fk :<c-r>=setqflist([], ' ', #{title: 'keymap', items: execute(
 nnoremap <leader>fm :<c-r>=setqflist([], ' ', #{title: 'marks', items: execute("marks")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
 nnoremap <leader>fr :<c-r>=setqflist([], ' ', #{title: 'registers', items: execute("registers")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
 nnoremap <leader>fq <cmd>chistory<cr>
+
+# Search lines within file
+nnoremap <leader>/ :vimgrep /\v/gj %<left><left><left><left><left>
 
 # :h collapse
 # These two mappings reduce a sequence of empty (;b) or blank (;n) lines

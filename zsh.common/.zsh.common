@@ -352,7 +352,7 @@ prompt_vcs_setup() {
 
     typeset -Ag cursor_offset
 
-    if [ "$OSTYPE" = linux-gnu -a -f "$HOME/git/vim/dist/bin/vim" ]; then
+    if [ -f "$HOME/git/vim/dist/bin/vim" ]; then
         alias vim=$HOME/git/vim/dist/bin/vim
     fi
 
@@ -566,9 +566,6 @@ prompt_vcs_setup() {
     # TIP: could use 'py' which is ipython+pyflyby (if installed through pipx, and ipython injected into it)
     alias ip='ipython'
 
-    alias vim=/Users/gp/git/vim/dist/bin/vim
-    alias vi=/Users/gp/git/vim/dist/bin/vim
-
     alias v='vim'
     alias vd='vi -d'  # diff mode - pass 2 files
     # alias vr='vim -c "normal '\''0"'  # restore last opened buffer
@@ -603,12 +600,6 @@ prompt_vcs_setup() {
     if [[ ! -d "$HOME/.config" ]]; then
         mkdir -p $HOME/.config
     fi
-    # if is_cloud_shell; then
-    #     if [[ -f ~/bin/vim.appimage ]]; then
-    #         alias vi='~/bin/vim.appimage'
-    #         alias vim='~/bin/vim.appimage'
-    #     fi
-    # fi
 
     alias u='cd ..'
     alias uu='cd ../..'

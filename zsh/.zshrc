@@ -165,6 +165,7 @@
     alias gscp='gcloud compute scp --recurse vimfix:~/foo ~/bar'
     alias gstop='gcloud compute instances stop vimfix'
     # alias gcsh='gcloud cloud-shell ssh --authorize-session'
+    alias vi=vim
 }
 
 ## Source customizations.

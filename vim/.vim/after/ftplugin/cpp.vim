@@ -16,14 +16,14 @@ nnoremap <buffer> <leader>F gggqG<cr>
 nnoremap <buffer> <leader>M :setl makeprg=sh\ -c\ \"g++-14\ -std=c++23\ -Wall\ -Wextra\ -Wconversion\ -DONLINE_JUDGE\ -O2\ -lstdc++exp\ -o\ /tmp/a.out\ %\ \&\&\ /tmp/a.out\"<cr>:make %<cr>
 nnoremap <buffer> <leader>m :setl makeprg=sh\ -c\ \"g++-14\ -std=c++23\ -Wall\ -Wextra\ -Wconversion\ -DONLINE_JUDGE\ -O2\ -lstdc++exp\ -o\ /tmp/a.out\ %\"<cr>:make %<cr>
 
-# Parenthesis completion
-def IsLambdaFn(): bool
-    return getline('.')->match('=\s*\[.\{-}\](.\{-})') != -1
-enddef
-# i_CTRL-G_U is for enabling redo
-inoremap <expr> { IsLambdaFn() ? "{};\<c-g>U\<left><left>" : "{}\<c-g>U\<left>"
-# NOTE: Accommodate vimcomplete <cr> keymap
-inoremap <buffer><expr> <cr> pumvisible() ? "\<c-y>\<cr>" : getline(".")->slice(col(".") - 2, col(".")) == "{}" ? "\<cr>\<esc>O" : "\<cr>"
+# # Parenthesis completion
+# def IsLambdaFn(): bool
+#     return getline('.')->match('=\s*\[.\{-}\](.\{-})') != -1
+# enddef
+# # i_CTRL-G_U is for enabling redo
+# inoremap <expr> { IsLambdaFn() ? "{};\<c-g>U\<left><left>" : "{}\<c-g>U\<left>"
+# # NOTE: Accommodate vimcomplete <cr> keymap
+# inoremap <buffer><expr> <cr> pumvisible() ? "\<c-y>\<cr>" : getline(".")->slice(col(".") - 2, col(".")) == "{}" ? "\<cr>\<esc>O" : "\<cr>"
 
 # Abbreviations:
 # - When naming, ignore vowels inless they indicate type (ex. vi; -> vector<int>)

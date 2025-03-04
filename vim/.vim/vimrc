@@ -116,11 +116,13 @@ syntax on # turn on syntax highlighting
 var quickfix_file = expand('~/.vim_bookmarks.txt')
 # Add current line to quickfix list
 #   example: :g/mypattern/caddexpr expand("%") .. ":" .. line(".") ..  ":" .. getline(".")
-nnoremap <leader>a <cmd>caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<cr>
+nnoremap <leader>ca :exe 'LoadQuickfixList'\|caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<cr>:SaveQuickfixList<cr>:echo 'saved:' getline(".")<cr>
 # Clear the current quickfix list
-nnoremap <leader>X <cmd>cex []<cr>
+nnoremap <leader>cx <cmd>cex []<cr>
 # Open qflist
-nnoremap <leader>c <cmd>cw<cr>
+nnoremap <leader>cc <cmd>cw<cr>
+nnoremap <leader>cs <cmd>SaveQuickfixList<cr>
+nnoremap <leader>cl <cmd>LoadQuickfixList<cr>
 # Command to save/Load quickfix list to a file
 command SaveQuickfixList {
     writefile(getqflist()->mapnew((_, v) => $'{bufname(v.bufnr)}:{v.lnum}:{v.col}:{v.text}'),
@@ -131,10 +133,11 @@ command LoadQuickfixList {
         :exe 'cgetfile' quickfix_file
     endif
 }
-augroup BookmarksQfList | autocmd!
-    autocmd VimEnter * LoadQuickfixList
-    autocmd VimLeavePre * SaveQuickfixList
-augroup END
+# XXX Followikng does not work when many vim instances are open
+# augroup BookmarksQfList | autocmd!
+#     autocmd VimEnter * LoadQuickfixList
+#     autocmd VimLeavePre * SaveQuickfixList
+# augroup END
 
 #--------------------
 # Plugins
@@ -237,23 +240,27 @@ autocmd FileType * {
 # --------------------------
 # Cmdline auto-completion
 # --------------------------
-# set wim=noselect:lastused,full wop=pum,tagfile wcm=<C-@> wmnu
-set wim=noselect:lastused,full wop=pum wcm=<C-@> wmnu
+set wim=noselect:lastused,full wop=pum,tagfile wcm=<C-@> wmnu
 autocmd CmdlineChanged : timer_start(0, function(CmdComplete, [getcmdline()]))
 def CmdComplete(cur_cmdline: string, timer: number)
     var [cmdline, curpos] = [getcmdline(), getcmdpos()]
     if cur_cmdline ==# cmdline # Avoid completing each char of keymaps and pasted text
-        && !pumvisible() && curpos == cmdline->len() + 1
-        if cmdline[curpos - 2] =~ '\w\|[*/:]' && cmdline->split()[-1] !~ '^\%(\d\|[/:*]\)'
-            feedkeys("\<C-@>", "ti")
-            set eventignore+=CmdlineChanged  # Suppress redundant completion attempts
-            timer_start(0, (_) => {
-                getcmdline()->substitute('\%x00$', '', '')->setcmdline()  # Vim inserts <C-@> when no completion items exist
-                set eventignore-=CmdlineChanged
-            })
-        endif
+      && !pumvisible() && curpos == cmdline->len() + 1
+      && cmdline =~ '\%(\w\|[*/:.-]\)$' && cmdline !~ '^\d\+$'  # Reduce noise
+        feedkeys("\<C-@>", "ti")
+        set eventignore+=CmdlineChanged  # Suppress redundant completion attempts
+        timer_start(0, (_) => {
+            # using 'g' in substitute() fixes problem where ^@ gets inserted
+            # when typing really fast
+            getcmdline()->substitute('\%x00', '', 'g')->setcmdline()  # Vim inserts <C-@> when no completion items exist
+            set eventignore-=CmdlineChanged
+        })
     endif
 enddef
+autocmd CmdlineEnter : set bo+=error
+autocmd CmdlineLeave : set bo-=error
+cnoremap <Up> <End><C-U><Up>
+cnoremap <Down> <End><C-U><Down>
 
 nnoremap <leader><bs> :b <c-@>
 
@@ -292,6 +299,7 @@ enddef
 var allfiles: list<string>
 autocmd CmdlineEnter : allfiles = null_list
 nnoremap <leader><space> :find<space><c-@>
+nnoremap <leader><space> :<c-r>=execute('let fzfind_root="."')\|''<cr>find<space><c-@>
 nnoremap <leader>fv :<c-r>=execute('let fzfind_root="$HOME/.vim"')\|''<cr>find<space><c-@>
 nnoremap <leader>fV :<c-r>=execute('let fzfind_root="$VIMRUNTIME"')\|''<cr>find<space><c-@>
 
@@ -300,7 +308,7 @@ nnoremap <leader>fV :<c-r>=execute('let fzfind_root="$VIMRUNTIME"')\|''<cr>find<
 # --------------------------
 command! -nargs=+ -complete=customlist,GrepComplete Grep VisitFile(<q-args>)
 def GrepComplete(arglead: string, cmdline: string, cursorpos: number): list<any>
-    return arglead != null_string ? systemlist($'ggrep -REIHns "{arglead}"' ..
+    return arglead->len() > 1 ? systemlist($'ggrep -REIHns "{arglead}"' ..
        ' --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.swp"') : []
 enddef
 def VisitFile(line: string)

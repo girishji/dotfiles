@@ -20,6 +20,7 @@ sudo apt-get -y install universal-ctags
 sudo apt-get -y install libncurses-dev
 sudo apt-get -y install libtool
 sudo apt-get -y install libtool-bin
+sudo apt-get -y install neovim
 #
 
 sudo chsh -s /bin/zsh "$USER"

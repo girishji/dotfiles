@@ -71,7 +71,7 @@ set breakindent # wrapped line will continue visually indented
 set smarttab
 set spellsuggest=best,10 # set maximum number of suggestions listed top 10 items:
 set foldmethod=indent
-set foldnestmax=1
+# set foldnestmax=1
 set nofoldenable # do not do folding when you open file
 set complete-=i # disable completing keywords from included files (e.g., #include in C)
 set signcolumn=yes # always show column for lsp diagnostics etc
@@ -179,10 +179,10 @@ if has('gui')  # MacVim
     plug#begin("~/.local/share/vim-plug/")
     # plug#begin()
     # Plug '~/git/scope.vim'
-    Plug '~/git/devdocs.vim'
+    # Plug '~/git/devdocs.vim'
     Plug '~/git/vimbits'
     Plug '~/git/bufline.vim'
-    Plug '~/git/vimsuggest'
+    # Plug '~/git/vimsuggest'
     # Plug '~/git/vimcomplete'
     plug#end()
 else
@@ -208,16 +208,16 @@ else
     # Plug 'girishji/bufline.vim'
     # Plug '~/git/scope.vim'
     # Plug '~/git/vimsuggest'
-    Plug '~/git/vimcomplete'
+    # Plug '~/git/vimcomplete'
     # Plug 'girishji/vimcomplete'
-    Plug '~/git/ngram-complete.vim'
+    # Plug '~/git/ngram-complete.vim'
     # Plug 'girishji/ngram-complete.vim'
     Plug '~/git/vimbits'
     # Plug 'girishji/vimbits'
     # Plug 'girishji/pythondoc.vim', {'for': 'python'}
     # Plug '~/git/pythondoc.vim', {'for': 'python'}
-    Plug '~/git/pythondoc.vim'
-    Plug '~/git/devdocs.vim'
+    # Plug '~/git/pythondoc.vim'
+    # Plug '~/git/devdocs.vim'
     # Plug 'girishji/devdocs.vim'
     plug#end()
 endif
@@ -271,20 +271,6 @@ nnoremap <leader><bs> :b <c-@>
 #  not support spaces at end
 # can use substitute('\%x00', ...) to replace inside line, but cursor jumps to
 #   end. may fix this using timer_start with setcmdpos or feedkeys
-# no highlighting for fuzzyfind or live grep
-# beeps and prints ... -> fix this
-#
-                # cmdline = getcmdline()
-                # # curpos = getcmdpos()
-                # echom "here" cmdline curpos "#"
-                # if cmdline[curpos - 1] =~ '\%x00'
-                #     echom "herematch" cmdline curpos "$"
-                #     setcmdline(cmdline->slice(0, curpos - 1) .. cmdline->slice(curpos))
-                #     echom "2erematch" cmdline getcmdpos() "$"
-                #     setcmdpos(8)
-                #     echom "3herematch" cmdline getcmdpos() "$"
-                #     # setcmdpos(curpos - 1)
-                # endif
 
 # --------------------------
 # Fuzzy Find
@@ -322,18 +308,73 @@ enddef
 nnoremap <leader>g :Grep<space>
 nnoremap <leader>G :Grep <c-r>=expand("<cword>")<cr>
 
-# complete_info does not return anything
-# also, make it select first item
-# cnoremap <expr> <c-q> pumvisible() ? PopulateQuickfix() : "\<c-q>"
-# def PopulateQuickfix(): string
-#     echom complete_info(['items'])
-#     return ''
+# ---------------------------
+# Insert Mode Auto-completion
+# ---------------------------
+set cot=menuone,noselect,popup inf
+autocmd TextChangedI * InsComplete()
+autocmd TextChangedP * InsComplete(true)
+var skip_next_complete = false
+var prevline: string
+def InsComplete(pumvisible = false)
+    var curline = getline('.')
+    if prevline !=# curline
+        prevline = curline
+        if !pumvisible
+            if !skip_next_complete && curline->strpart(0, col('.') - 1) =~ '\S\{2}$'
+                feedkeys("\<c-n>", "ni")
+            endif
+        elseif complete_info(['selected']).selected == -1
+            feedkeys("\<c-e>\<c-n>", "ni")
+        endif
+    endif
+    skip_next_complete = false
+enddef
+def SkipNextComplete(): string
+    skip_next_complete = true
+    return "\<c-e>"
+enddef
+inoremap <silent> <c-e> <c-r>=<SID>SkipNextComplete()<cr>
+inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+
+# inoremap <expr> <tab> <SID>CanComplete() && pumvisible() ? "\<c-n>" : "\<tab>"
+# inoremap <expr> <s-tab> <SID>CanComplete() && pumvisible() ? "\<c-p>" : "\<s-tab>"
+
+# Note:
+# - feedkeys even when pumvisible. otherwise it won't refresh the list and
+# completion goes missing. try 'nextw' (nextwild from tags).
+# - when there are lots of files to scan (vim *.c), TextChangedP keeps getting
+#   triggered forever. so, check getline() and see if line has changed.
+
+
+# def InsCompletePV()
+#     echom 'InsCompletePV' getline('.')
+#     if getline('.') !=# curline
+#         curline = getline('.')
+#         if complete_info(['selected']).selected == -1
+#             feedkeys("\<c-e>\<c-n>", "ni")
+#         endif
+#     endif
+# enddef
+# inoremap <silent><expr> <cr> pumvisible()? "\<c-y>" : "\<cr>"
+# inoremap <silent><expr> <cr> pumvisible() ? "\<c-y>\<cr>" : "\<cr>"
+# autocmd BufWinEnter * timer_start(10, (_) => InsCompleteEnable())
+# def InsCompleteEnable()
+#     if &ft =~ get(g:, 'ins_complete_ft_pat', '\%(vim\|c\|cpp\|py\)\?$')
+#         augroup InsAutoCompl | autocmd!
+#             autocmd TextChangedI <buffer> InsComplete()
+#             autocmd TextChangedP <buffer> pumvisible() ? pumvisible() : ''
+#             # autocmd TextChangedP <buffer> InsComplete()
+#         augroup END
+#         echom 'ft' &ft
+#     endif
+# enddef
+# def InsCompletePV()
+#     if !pumvisible() && complete_info(['selected']).selected == -1
+#         InsComplete()
+#     endif
 # enddef
 
-    # if arglead != null_string
-    #     var cmdstr = (has('mac') ? 'ggrep' : 'grep')
-    #         .. $' -REIHns "{arglead}" --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.swp"'
-    #     return systemlist(cmdstr)
-    # endif
-
+#------------------------------------------------------------
 # vim: ts=8 sts=4 sw=4 et fdm=marker

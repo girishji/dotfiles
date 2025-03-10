@@ -84,7 +84,7 @@ def ApplyColors()
         hi PreProc ctermfg=1 cterm=none
     else
         syntax reset
-        hi Comment ctermfg=11
+        hi Comment ctermfg=10
         hi link StatusLineNC StatusLine
         hi Constant ctermfg=4
         hi String ctermfg=6

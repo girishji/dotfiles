@@ -249,7 +249,7 @@ autocmd FileType * {
 # Cmdline auto-completion
 # --------------------------
 set wim=noselect:lastused,full wop=pum,tagfile wcm=<C-@> wmnu
-# autocmd CmdlineChanged : timer_start(0, function(CmdComplete, [getcmdline()]))
+autocmd CmdlineChanged : timer_start(0, function(CmdComplete, [getcmdline()]))
 def CmdComplete(cur_cmdline: string, timer: number)
     var [cmdline, curpos] = [getcmdline(), getcmdpos()]
     if cur_cmdline ==# cmdline # Avoid completing each char of keymaps and pasted text

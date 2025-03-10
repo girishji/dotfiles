@@ -123,6 +123,7 @@ nnoremap <leader>cx <cmd>cex []<cr>
 nnoremap <leader>cc <cmd>cw<cr>
 nnoremap <leader>cs <cmd>SaveQuickfixList<cr>
 nnoremap <leader>cl <cmd>LoadQuickfixList<cr>
+nnoremap <leader>cd <cmd>DeleteQuickfixEntry<cr>
 # Command to save/Load quickfix list to a file
 command SaveQuickfixList {
     writefile(getqflist()->mapnew((_, v) => $'{bufname(v.bufnr)}:{v.lnum}:{v.col}:{v.text}'),
@@ -133,11 +134,18 @@ command LoadQuickfixList {
         :exe 'cgetfile' quickfix_file
     endif
 }
+command DeleteQuickfixEntry {
+    var qflist = getqflist()
+    qflist->remove(line('.') - 1) # Remove entry (1-based index)
+    setqflist(qflist, 'r') # Replace quickfix list
+    SaveQuickfixList
+    LoadQuickfixList
+}
 # XXX Followikng does not work when many vim instances are open
-# augroup BookmarksQfList | autocmd!
-#     autocmd VimEnter * LoadQuickfixList
+augroup BookmarksQfList | autocmd!
+    autocmd VimEnter * LoadQuickfixList
 #     autocmd VimLeavePre * SaveQuickfixList
-# augroup END
+augroup END
 
 #--------------------
 # Plugins
@@ -241,7 +249,7 @@ autocmd FileType * {
 # Cmdline auto-completion
 # --------------------------
 set wim=noselect:lastused,full wop=pum,tagfile wcm=<C-@> wmnu
-autocmd CmdlineChanged : timer_start(0, function(CmdComplete, [getcmdline()]))
+# autocmd CmdlineChanged : timer_start(0, function(CmdComplete, [getcmdline()]))
 def CmdComplete(cur_cmdline: string, timer: number)
     var [cmdline, curpos] = [getcmdline(), getcmdpos()]
     if cur_cmdline ==# cmdline # Avoid completing each char of keymaps and pasted text
@@ -259,8 +267,13 @@ def CmdComplete(cur_cmdline: string, timer: number)
 enddef
 autocmd CmdlineEnter : set bo+=error
 autocmd CmdlineLeave : set bo-=error
-cnoremap <Up> <End><C-U><Up>
-cnoremap <Down> <End><C-U><Down>
+def MuteEventAndSend(key: string): string
+    set ei+=CmdlineChanged
+    timer_start(0, (_) => execute('set ei-=CmdlineChanged'))
+    return (pumvisible() ? "\<c-e>" : "") .. key
+enddef
+cnoremap <expr> <up> MuteEventAndSend("\<up>")
+cnoremap <expr> <down> MuteEventAndSend("\<down>")
 
 nnoremap <leader><bs> :b <c-@>
 
@@ -312,24 +325,13 @@ nnoremap <leader>G :Grep <c-r>=expand("<cword>")<cr>
 # Insert Mode Auto-completion
 # ---------------------------
 set cot=menuone,noselect,popup inf
-autocmd TextChangedI * InsComplete()
-autocmd TextChangedP * InsComplete(true)
 var skip_next_complete = false
-var prevline: string
-def InsComplete(pumvisible = false)
-    var curline = getline('.')
-    if prevline !=# curline
-        prevline = curline
-        if !pumvisible
-            if !skip_next_complete && curline->strpart(0, col('.') - 1) =~ '\S\{2}$'
-                feedkeys("\<c-n>", "ni")
-            endif
-        elseif complete_info(['selected']).selected == -1
-            feedkeys("\<c-e>\<c-n>", "ni")
-        endif
+autocmd TextChangedI * {
+    if !skip_next_complete && getline('.')->strpart(0, col('.') - 1) =~ '\S$'
+        feedkeys("\<c-p>", "ni")
     endif
     skip_next_complete = false
-enddef
+}
 def SkipNextComplete(): string
     skip_next_complete = true
     return "\<c-e>"
@@ -337,6 +339,27 @@ enddef
 inoremap <silent> <c-e> <c-r>=<SID>SkipNextComplete()<cr>
 inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
 inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+
+
+
+# autocmd TextChangedI * InsComplete()
+# autocmd TextChangedP * InsComplete(true)
+# var skip_next_complete = false
+# var prevline: string
+# def InsComplete(pumvisible = false)
+#     var curline = getline('.')
+#     if prevline !=# curline
+#         prevline = curline
+#         if !pumvisible
+#             if !skip_next_complete && curline->strpart(0, col('.') - 1) =~ '\S\{2}$'
+#                 feedkeys("\<c-n>", "ni")
+#             endif
+#         elseif complete_info(['selected']).selected == -1
+#             feedkeys("\<c-e>\<c-n>", "ni")
+#         endif
+#     endif
+#     skip_next_complete = false
+# enddef
 
 # inoremap <expr> <tab> <SID>CanComplete() && pumvisible() ? "\<c-n>" : "\<tab>"
 # inoremap <expr> <s-tab> <SID>CanComplete() && pumvisible() ? "\<c-p>" : "\<s-tab>"

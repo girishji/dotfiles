@@ -28,6 +28,8 @@ def SaneColors()
     if &bg == 'light'
         hi SignColumn ctermfg=None ctermbg=7
         hi LineNr ctermfg=12 ctermbg=7
+        hi TabLine ctermbg=7 ctermfg=11
+        hi TabLineFill cterm=none ctermbg=7
         hi Pmenu ctermfg=2 ctermbg=7
         hi PmenuMatch ctermfg=5 ctermbg=7
         hi PmenuSel ctermfg=7 ctermbg=0
@@ -42,6 +44,8 @@ def SaneColors()
     else  # dark
         hi SignColumn ctermfg=None ctermbg=0
         hi LineNr ctermfg=12 ctermbg=0
+        hi TabLine ctermbg=0 ctermfg=11
+        hi TabLineFill cterm=none ctermbg=0
         hi Pmenu ctermfg=2 ctermbg=0
         hi PmenuMatch ctermfg=3
         hi PmenuSel ctermfg=8 ctermbg=7
@@ -49,12 +53,13 @@ def SaneColors()
         hi PmenuSbar ctermbg=0
         hi PmenuThumb ctermbg=7
         hi NonText ctermfg=0 |# 'eol', etc.
-        hi Search ctermfg=8 ctermbg=12
+        hi Search ctermfg=0 ctermbg=12
         hi StatusLine ctermfg=none ctermbg=0 cterm=bold
         hi StatusLineNC ctermfg=12 ctermbg=none cterm=italic
         hi StatusLineTerm ctermfg=3 ctermbg=0 cterm=none
         hi StatusLineTermNC ctermfg=14 ctermbg=none cterm=italic
     endif
+    hi TabLineSel ctermbg=none ctermfg=none cterm=bold,underline
     hi MatchParen ctermfg=1 ctermbg=none cterm=underline
     hi Todo ctermfg=0 ctermbg=1
     hi SpecialKey ctermfg=10 |# 'tab', 'nbsp', 'space', ctrl chars (^a, ^b, etc.)
@@ -67,8 +72,8 @@ def SaneColors()
     endif
 enddef
 
-def ColorCorrect()
-    if expandcmd($VIM_MONOCHROME) != null_string
+def ApplyColors()
+    if &filetype !~ 'help\|markdown' && expandcmd($VIM_MONOCHROME) != null_string
         hi Type ctermfg=None cterm=italic
         hi Statement ctermfg=None cterm=italic
         hi String ctermfg=1 cterm=none
@@ -78,6 +83,7 @@ def ColorCorrect()
         hi Constant ctermfg=1 cterm=none
         hi PreProc ctermfg=1 cterm=none
     else
+        syntax reset
         hi Comment ctermfg=11
         hi link StatusLineNC StatusLine
         hi Constant ctermfg=4
@@ -88,16 +94,18 @@ def ColorCorrect()
         hi Special ctermfg=1
         hi Type ctermfg=3
     endif
-enddef
-
-def ApplyColors()
-    if &filetype !~ 'help\|markdown'
-        ColorCorrect()
-    else
-        syntax reset
-    endif
     SaneColors()
 enddef
+
+# def ApplyColors()
+#     # if &filetype !~ 'help\|markdown'
+#     #     ColorCorrect()
+#     # else
+#     #     syntax reset
+#     # endif
+#     ColorCorrect()
+#     SaneColors()
+# enddef
 
 # Following should occur after setting colorscheme.
 highlight! TrailingWhitespace ctermbg=196

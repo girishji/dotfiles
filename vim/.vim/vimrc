@@ -73,7 +73,6 @@ set spellsuggest=best,10 # set maximum number of suggestions listed top 10 items
 set foldmethod=indent
 # set foldnestmax=1
 set nofoldenable # do not do folding when you open file
-set complete-=i # disable completing keywords from included files (e.g., #include in C)
 set signcolumn=yes # always show column for lsp diagnostics etc
 set dictionary+=/usr/share/dict/words
 set whichwrap+=<,>,h,l # make arrows and h, l, push cursor to next line
@@ -118,7 +117,7 @@ var quickfix_file = expand('~/.vim_bookmarks.txt')
 #   example: :g/mypattern/caddexpr expand("%") .. ":" .. line(".") ..  ":" .. getline(".")
 nnoremap <leader>ca :exe 'LoadQuickfixList'\|caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<cr>:SaveQuickfixList<cr>:echo 'saved:' getline(".")<cr>
 # Clear the current quickfix list
-nnoremap <leader>cx <cmd>cex []<cr>
+nnoremap <leader>cX <cmd>cex []<cr>
 # Open qflist
 nnoremap <leader>cc <cmd>cw<cr>
 nnoremap <leader>cs <cmd>SaveQuickfixList<cr>
@@ -236,14 +235,14 @@ g:pythondoc_h_expand = 1
 g:vimcomplete_tab_enable = 1
 
 # Add custom dictionaries (ex. ~/.vim/dicts/python for python dict)
-g:vimfiles_dir = &runtimepath->split(',')[0]
-autocmd FileType * {
-    var dict = $'{g:vimfiles_dir}/dicts/{expand("<amatch>")}'->resolve()->fnamemodify(':p')
-    if dict->filereadable()
-        exe $'setlocal complete+=k{dict}'
-        exe $'setlocal dictionary={dict}'
-    endif
-}
+# g:vimfiles_dir = &runtimepath->split(',')[0]
+# autocmd FileType * {
+#     var dict = $'{g:vimfiles_dir}/dicts/{expand("<amatch>")}'->resolve()->fnamemodify(':p')
+#     if dict->filereadable()
+#         exe $'setlocal complete+=k{dict}'
+#         exe $'setlocal dictionary={dict}'
+#     endif
+# }
 
 # --------------------------
 # Cmdline auto-completion
@@ -324,22 +323,58 @@ nnoremap <leader>G :Grep <c-r>=expand("<cword>")<cr>
 # ---------------------------
 # Insert Mode Auto-completion
 # ---------------------------
+set cpt-=i
 set cot=menuone,noselect,popup inf
 var skip_next_complete = false
+var processed: string
 autocmd TextChangedI * {
-    if !skip_next_complete && getline('.')->strpart(0, col('.') - 1) =~ '\S$'
-        feedkeys("\<c-p>", "ni")
+    var curline = getline('.')
+    if processed !=# curline
+        processed = curline
+        if !skip_next_complete && curline->strpart(0, col('.') - 1) =~ '\S$'
+            feedkeys("\<c-n>", "ni")
+            # feedkeys("\<c-p>", "ni")
+        endif
     endif
     skip_next_complete = false
 }
 def SkipNextComplete(): string
     skip_next_complete = true
-    return "\<c-e>"
+    return ''
 enddef
-inoremap <silent> <c-e> <c-r>=<SID>SkipNextComplete()<cr>
+inoremap <silent> <c-e> <c-r>=<SID>SkipNextComplete()<cr><c-e>
 inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
 inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 
+# --------------------------
+# Abbrev Completor
+# --------------------------
+
+# set cfu=AbbrevCompletor
+
+# set cpt+=fAbbrevCompletor
+
+def! g:AbbrevCompletor(findstart: number, base: string): any
+    if findstart > 0
+        var prefix = getline('.')->strpart(0, col('.') - 1)->matchstr('\S\+$')
+        return col('.') - prefix->len() - 1
+    endif
+
+    echom findstart "findstart" base "base"
+    var lines = execute('ia', 'silent!')
+    if lines =~? gettext('No abbreviation found')
+        return v:none  # Suppresses warning message
+    endif
+    var items = []
+    for line in lines->split("\n")
+        var m = line->matchlist('\v^i\s+\zs(\S+)\s+(.*)$')
+        if m->len() > 2 && m[1]->stridx(base) == 0
+            items->add({ word: m[1], info: m[2], dup: 1 })
+        endif
+    endfor
+    return items->empty() ? v:none :
+        items->sort((v1, v2) => v1.word < v2.word ? -1 : v1.word ==# v2.word ? 0 : 1)
+enddef
 
 
 # autocmd TextChangedI * InsComplete()

@@ -8,6 +8,16 @@ if expandcmd($VIM_BG) != null_string
     exec $'set background={expandcmd($VIM_BG)}'
 endif
 
+autocmd ColorScheme quiet {
+    hi Comment ctermfg=246 cterm=none
+    hi Type cterm=bold ctermfg=146
+    hi Statement cterm=bold ctermfg=146
+    hi Identifier cterm=bold ctermfg=146
+    hi String ctermfg=146
+    hi Special ctermfg=146
+    hi Constant ctermfg=146
+    hi PreProc ctermfg=146
+}
 if expandcmd($VIM_COLORSCHEME) != null_string
     exec $'colorscheme {expandcmd($VIM_COLORSCHEME)}'
 endif
@@ -28,7 +38,7 @@ def SaneColors()
     if &bg == 'light'
         hi SignColumn ctermfg=None ctermbg=7
         hi LineNr ctermfg=12 ctermbg=7
-        hi TabLine ctermbg=7 ctermfg=11
+        hi TabLine ctermfg=12 ctermbg=7
         hi TabLineFill cterm=none ctermbg=7
         hi Pmenu ctermfg=2 ctermbg=7
         hi PmenuMatch ctermfg=5 ctermbg=7
@@ -44,7 +54,7 @@ def SaneColors()
     else  # dark
         hi SignColumn ctermfg=None ctermbg=0
         hi LineNr ctermfg=12 ctermbg=0
-        hi TabLine ctermbg=0 ctermfg=11
+        hi TabLine ctermfg=12 ctermbg=0
         hi TabLineFill cterm=none ctermbg=0
         hi Pmenu ctermfg=2 ctermbg=0
         hi PmenuMatch ctermfg=3
@@ -58,6 +68,13 @@ def SaneColors()
         hi StatusLineNC ctermfg=12 ctermbg=none cterm=italic
         hi StatusLineTerm ctermfg=3 ctermbg=0 cterm=none
         hi StatusLineTermNC ctermfg=14 ctermbg=none cterm=italic
+        hi ErrorMsg ctermbg=9
+        hi ColorColumn ctermbg=9
+        hi DiffChange ctermbg=9
+        hi DiffAdd ctermfg=8
+        hi DiffDelete ctermfg=8
+        hi Folded ctermfg=15
+        hi FoldColumn ctermfg=15
     endif
     hi TabLineSel ctermbg=none ctermfg=none cterm=bold,underline
     hi MatchParen ctermfg=1 ctermbg=none cterm=underline
@@ -84,7 +101,6 @@ def ApplyColors()
         hi PreProc ctermfg=1 cterm=none
     else
         syntax reset
-        hi Comment ctermfg=10
         hi link StatusLineNC StatusLine
         hi Constant ctermfg=4
         hi String ctermfg=6
@@ -96,16 +112,6 @@ def ApplyColors()
     endif
     SaneColors()
 enddef
-
-# def ApplyColors()
-#     # if &filetype !~ 'help\|markdown'
-#     #     ColorCorrect()
-#     # else
-#     #     syntax reset
-#     # endif
-#     ColorCorrect()
-#     SaneColors()
-# enddef
 
 # Following should occur after setting colorscheme.
 highlight! TrailingWhitespace ctermbg=196

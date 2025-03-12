@@ -101,9 +101,12 @@ nnoremap <leader>d <cmd>bw<cr>| # :bwipeout to purge, :bdelete still leaves buff
 
 # nnoremap <leader>t <cmd>!tree <bar> more<cr>
 # nnoremap <leader>t <cmd>term<cr>
-nnoremap <leader>t <cmd>tabnew<cr>
-nnoremap <leader>T <cmd>tabclose<cr>
-nnoremap <silent> <leader>vt <cmd>tab term<CR>
+
+nnoremap <leader>tn <cmd>tabnew %<cr>
+nnoremap <leader>te <cmd>tabe %<cr>
+nnoremap <leader>tc <cmd>tabclose<cr>
+nnoremap <silent> <leader>tt <cmd>tab term<CR>
+
 # nnoremap <leader>w <cmd>w<cr>
 nnoremap <leader>w <cmd>update<cr>
 nnoremap <leader>q <cmd>qa<cr>

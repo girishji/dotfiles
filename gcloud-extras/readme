@@ -1,0 +1,13 @@
+# Just use bash. They removed zsh. It has to be installed, and then .zshrc is
+not there, and 'apt-get install' does not work, etc.
+# note: it takes a few minutes for zsh to appear in /etc/shells (list of valid shells)
+# https://zsh.sourceforge.io/FAQ/zshfaq01.html#l7
+
+- Install zsh
+	sudo apt-get install zsh
+
+- Change to zsh
+	sudo chsh -s /usr/bin/zsh "$USER"
+
+- ".to_install" file only works if you do the above (chsh to zsh)
+  copy .to_install file to VM.

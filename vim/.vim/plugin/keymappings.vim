@@ -15,16 +15,16 @@ nnoremap gm gM
 nnoremap j gj
 nnoremap k gk
 # Jump lines faster (use with H, M, L)
-nnoremap <leader>j 6j
-vnoremap <leader>j 6j
-nnoremap <leader>k 6k
-vnoremap <leader>k 6k
+nnoremap <leader>j 8j
+vnoremap <leader>j 8j
+nnoremap <leader>k 8k
+vnoremap <leader>k 8k
 # g* selects foo in foobar while * selects <foo>, <> is word boundary. make * behave like g*
 # nnoremap * g*
 # nnoremap # g#
 
-# alternative to 'packadd nohlsearch'
-nnoremap <silent> <esc> :nohls<cr><esc>
+# alternative to 'packadd nohlsearch'. use <cmd> to avoid triggering CmdlineEnter.
+nnoremap <silent> <esc> <cmd>nohls<cr><esc>
 
 # nnoremap <silent> <leader>h :bprevious<CR>
 # nnoremap <silent> <leader>l :bnext<CR>
@@ -43,12 +43,14 @@ nnoremap <silent> [B :bfirst<CR>
 nnoremap <silent> ]B :blast<CR>
 
 # quickfix list
-nnoremap <silent> [c :cprevious<CR>
-nnoremap <silent> ]c :cnext<CR>
-# nnoremap <silent> [C :cfirst<CR>
-# nnoremap <silent> ]C :clast<CR>
-nnoremap <silent> [C :colder<CR>
-nnoremap <silent> ]C :cnewer<CR>
+if !&diff  # vimdiff uses [c and ]c
+    nnoremap <silent> [c :cprevious<CR>
+    nnoremap <silent> ]c :cnext<CR>
+    # nnoremap <silent> [C :cfirst<CR>
+    # nnoremap <silent> ]C :clast<CR>
+    nnoremap <silent> [C :colder<CR>
+    nnoremap <silent> ]C :cnewer<CR>
+endif
 
 # location list (buffer local quickfix list)
 nnoremap <silent> [l :lprevious<CR>
@@ -263,7 +265,7 @@ tnoremap <silent> <C-PageDown> <scriptcmd>SwitchTab('down')<cr>
 # set findfunc=FindFuncHere
 
 
-if &findfunc == null_string
+if &findfunc == null_string && exists(':Find') != 2
     # NOTE: 'find' respects 'path' and 'suffixesadd' while 'edit' does not
     set path=.,,
     set wildignore=.gitignore,*.swp,*.zwc,tags
@@ -304,13 +306,13 @@ nnoremap <leader>ft :tj<space>
 # highlight groups ([-1] forces empty string as return value of setqflist())
 nnoremap <leader>fh :<c-r>=setqflist([], ' ', #{title: 'highlight', items: execute("hi")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
 # others
-nnoremap <leader>fk :<c-r>=setqflist([], ' ', #{title: 'keymap', items: execute("map")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
+nnoremap <leader>fk :<c-r>=setqflist([], ' ', #{title: 'keymap', items: execute("verbose map")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
 nnoremap <leader>fm :<c-r>=setqflist([], ' ', #{title: 'marks', items: execute("marks")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
 nnoremap <leader>fr :<c-r>=setqflist([], ' ', #{title: 'registers', items: execute("registers")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
 nnoremap <leader>fq <cmd>chistory<cr>
 
 # Search lines within file
-nnoremap <leader>/ :vimgrep /\v/gj %<left><left><left><left><left>
+nnoremap <leader>? :vimgrep /\v/gj %<left><left><left><left><left>
 
 # :h collapse
 # These two mappings reduce a sequence of empty (;b) or blank (;n) lines

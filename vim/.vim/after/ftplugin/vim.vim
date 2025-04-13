@@ -70,36 +70,9 @@ elseif exists('g:loaded_vimsuggest')
     nnoremap <buffer> <leader>/ :VSGlobal \v\c(^<bar>\s)(def<bar>fun%[ction]<bar>com%[mand]<bar>:?hi%[ghlight])!?\s.{-}
     nnoremap <buffer> <leader>? :VSGlobal<space>
 else
-    def Definitions(): list<any>
-        var items = []
-        var patterns = [
-            '\(^\|\s\)def\s\+\zs\k\+\ze(',
-            '\(^\|\s\)fu\%[nction]!\?\s\+\([sgl]:\)\?\zs\k\+\ze(',
-            '^\s*com\%[mand]!\?\s\+\zs\S\+\ze'
-        ]
-        for nr in range(1, line('$'))
-            var line = getline(nr)
-            for pat in patterns
-                var name = line->matchstr(pat)
-                if name != null_string
-                    items->add({text: name, lnum: nr})
-                    break
-                endif
-            endfor
-        endfor
-        return items->copy()->filter((_, v) => v !~ '^\s*#')
-    enddef
-    command -buffer -nargs=* -complete=customlist,Completor VimGoTo DoCommand(<f-args>)
-    nnoremap <buffer> <leader>/ :VimGoTo<space>
-    def DoCommand(arg: string = null_string)
-        var items = (arg == null_string) ? Definitions() : Definitions()->matchfuzzy(arg, {matchseq: 1, key: 'text'})
-        if !items->empty()
-            exe $":{items[0].lnum}"
-            normal! zz
-        endif
-    enddef
-    def Completor(arg: string, cmdline: string, cursorpos: number): list<any>
-        var items = (arg == null_string) ? Definitions() : Definitions()->matchfuzzy(arg, {matchseq: 1, key: 'text'})
-        return items->mapnew((_, v) => v.text)
-    enddef
+    g:symbol_patterns = [
+        '\(^\|\s\)def\s\+\zs\k\+\ze(',
+        '\(^\|\s\)fu\%[nction]!\?\s\+\([sgl]:\)\?\zs\k\+\ze(',
+        '^\s*com\%[mand]!\?\s\+\zs\S\+\ze'
+    ]
 endif

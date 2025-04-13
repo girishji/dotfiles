@@ -162,7 +162,7 @@
     alias clang_repl='clang-repl --Xcc=-include"$HOME/.clang-repl-incl.h" --Xcc=-std=c++23 --Xcc=-stdlib=libc++ --Xcc=-fexperimental-library'
 
     alias gsh='gcloud compute ssh --zone "us-central1-c" "vimfix" --project "sandbox-403316" --ssh-flag="-ServerAliveInterval=30"'
-    alias gscp='gcloud compute scp --recurse vimfix:~/foo ~/bar'
+    alias gscp='gcloud compute scp --zone "us-central1-c" --project "sandbox-403316" from vimfix:~/to'
     alias gstop='gcloud compute instances stop vimfix'
     # alias gcsh='gcloud cloud-shell ssh --authorize-session'
     alias vi=vim

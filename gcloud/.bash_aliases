@@ -4,11 +4,15 @@ alias ga='git add .; gitcommit '
 alias gs='git status '
 alias gc='git clone '
 alias gp='git push'
-alias gitpull='git pull --no-rebase'
+alias gu='git pull --no-rebase'
 alias gd='git diff'
-alias pipuser='pip install --user '
-alias lc='leetcode '
-alias rgi='rg -i ' # case insensitive
+alias gb='git branch'
+alias gch='git checkout'
+alias gl='git log --oneline --decorate --graph --no-merges origin/master..HEAD'
+alias gl2='git log --oneline --decorate --graph --all'
+alias gd='git diff'
+alias gd2='git diff origin/master '
+alias gdv='git difftool -t vimdiff'
 
 alias b='bat'
 alias ba='bat --style=plain' # without line numbers
@@ -19,14 +23,7 @@ alias ci='zi' # interactive z: list the directories by fzf and cd
 alias cl='clear'
 alias diffw='diff -w'  # ignore white spaces
 alias em='emacs'
-alias f='builtin fg'
-# alias fd='fd -c never'
-alias fdf='fd -tf -tl' # search file, ex: fdf foo
-alias fdd='fd -td' # search dir, ex: fdd foo
-alias fdx='fd -tx' # search executable
-alias fde='fd -te' # search for empty dirs and files
 alias gcsh='gcloud cloud-shell ssh'
-# NOTE: use "ag" or "rg" command instead of grep
 alias gr='grep -Ei'  # extended regex and case insensitive
 alias grc='grep -E'  # extended regex and case sensitive
 alias grep='command grep --color' # aliases /usr/bin/grep

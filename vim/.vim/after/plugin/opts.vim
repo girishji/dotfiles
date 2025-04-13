@@ -221,26 +221,26 @@ if exists("g:loaded_vimsuggest")
 endif
 
 if exists("g:loaded_lsp")
-    g:LspOptionsSet({
-        autoHighlightDiags: true,
-        showDiagWithVirtualText: false, # when you set this false, set showDiagOnStatusLine true
-        highlightDiagInline: false,
-        showDiagOnStatusLine: true,
-        diagVirtualTextAlign: 'after',
-        autoPopulateDiags: false, # add diags to location list automatically <- :lopen [l ]l
-        # completionMatcher: 'fuzzy', # case/fuzzy/icase
-        completionMatcher: 'case', # case/fuzzy/icase
-        # diagSignErrorText: '●',
-        # diagSignHintText: '●',
-        # diagSignInfoText: '●',
-        # diagSignWarningText: '●',
-        # outlineWinSize: 30,
-        showSignature: true,
-        echoSignature: false,
-        # vsnipSupport: false,
-        ignoreMissingServer: true,
-        # autoComplete: false,  # when false, it sets omnifunc (use <c-x><c-o>)
-    })
+    # g:LspOptionsSet({
+    #     autoHighlightDiags: true,
+    #     showDiagWithVirtualText: false, # when you set this false, set showDiagOnStatusLine true
+    #     highlightDiagInline: false,
+    #     showDiagOnStatusLine: true,
+    #     diagVirtualTextAlign: 'after',
+    #     autoPopulateDiags: false, # add diags to location list automatically <- :lopen [l ]l
+    #     # completionMatcher: 'fuzzy', # case/fuzzy/icase
+    #     completionMatcher: 'case', # case/fuzzy/icase
+    #     # diagSignErrorText: '●',
+    #     # diagSignHintText: '●',
+    #     # diagSignInfoText: '●',
+    #     # diagSignWarningText: '●',
+    #     # outlineWinSize: 30,
+    #     showSignature: true,
+    #     echoSignature: false,
+    #     # vsnipSupport: false,
+    #     ignoreMissingServer: true,
+    #     # autoComplete: false,  # when false, it sets omnifunc (use <c-x><c-o>)
+    # })
     if executable('clangd')
         g:LspAddServer([{
             name: 'clangd',

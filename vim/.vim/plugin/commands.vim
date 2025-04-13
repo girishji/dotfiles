@@ -125,3 +125,37 @@ def SetupCscope()
         cscope add ~/cscope/cscope.out
     endif
 enddef
+
+# Find symbols in code
+nnoremap <leader>/ :FindSymbol<space>
+def Symbols(): list<any>
+    var patterns = get(g:, 'symbol_patterns', '')
+    if patterns->empty()
+        # Consider first word in un-indented line a symbol
+        patterns = ['^\k\+']
+    endif
+    var items = []
+    for nr in range(1, line('$'))
+        var line = getline(nr)
+        for pat in patterns
+            var name = line->matchstr(pat)
+            if name != null_string
+                items->add({text: name, lnum: nr})
+                break
+            endif
+        endfor
+    endfor
+    return items->copy()->filter((_, v) => v.text !~ '^\s*#')
+enddef
+command -nargs=* -complete=customlist,SymCompletor FindSymbol SymDo(<f-args>)
+def SymDo(arg: string = null_string)
+    var items = (arg == null_string) ? Symbols() : Symbols()->matchfuzzy(arg, {matchseq: 1, key: 'text'})
+    if !items->empty()
+        exe $":{items[0].lnum}"
+        normal! zz
+    endif
+enddef
+def SymCompletor(arg: string, cmdline: string, cursorpos: number): list<any>
+    var items = (arg == null_string) ? Symbols() : Symbols()->matchfuzzy(arg, {matchseq: 1, key: 'text'})
+    return items->mapnew((_, v) => v.text)
+enddef

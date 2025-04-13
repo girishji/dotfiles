@@ -433,7 +433,7 @@ prompt_vcs_setup() {
     #
     # Add your pattern as in 'ls **/*<pat>...'. excludes files *.swp and dir plugged.
     alias ff='ls **/*~(*.swp|build/*)'
-    cursor_offset["ff"]=24
+    cursor_offset["ff"]=17
 
     # git
     alias ga='git add .; gitcommit'
@@ -442,9 +442,13 @@ prompt_vcs_setup() {
     alias gc2='git clone --depth 1 '
     alias gp='git push'
     alias gu='git pull --no-rebase'
-    alias gd='git diff'
     alias gb='git branch'
     alias gch='git checkout'
+    alias gl='git log --oneline --decorate --graph --no-merges origin/master..HEAD'
+    alias gl2='git log --oneline --decorate --graph --all'
+    alias gd='git diff'
+    alias gd2='git diff origin/master '
+    alias gdv='git difftool -t vimdiff'
 
     # grep
     #
@@ -510,7 +514,7 @@ prompt_vcs_setup() {
     #
     # CAUTION: Avoid **/* and ***/* as shell complains 'too many paths to expand' when searching a large directory.
 
-    alias gg="grep -REIins --exclude='*.swp' --exclude-dir='.git' \"\""
+    alias gg="grep -REIins --exclude={'*.swp',tags} --exclude-dir='.git' \"\""
     cursor_offset["gg"]=2
 
     alias -g g="grep --color -iEI"
@@ -561,13 +565,14 @@ prompt_vcs_setup() {
     alias t='python3 ~/git/t/t.py --task-dir ~/.local/share/todo --list tasks'
     alias formatjson='python3 -m json.tool'
     alias jsonformat='python3 -m json.tool'
-    alias vimdiff='vimdiff -o'
 
     # TIP: could use 'py' which is ipython+pyflyby (if installed through pipx, and ipython injected into it)
     alias ip='ipython'
 
     alias v='vim'
-    alias vd='vi -d'  # diff mode - pass 2 files
+    alias vd2='vi -d'  # diff mode - pass 2 files
+    alias vimdiff='vimdiff -c "set autoread" -c "au FocusGained,BufEnter * checktime"'
+    alias vd='vimdiff -c "set autoread" -c "au FocusGained,BufEnter * checktime"'
     # alias vr='vim -c "normal '\''0"'  # restore last opened buffer
     alias viclean='vim --clean'
     alias vimclean='vim --clean'

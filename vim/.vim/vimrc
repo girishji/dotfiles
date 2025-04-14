@@ -282,17 +282,16 @@ set wim=noselect:lastused,full wop=pum,tagfile wcm=<C-@> wmnu
 # def CmdComplete(cur_cmdline: string, timer: number)
 autocmd CmdlineChanged : CmdComplete()
 def CmdComplete()
+    var [cmdline, curpos] = [getcmdline(), getcmdpos()]
     if getchar(1, {number: true}) == 0  # Typehead is empty (no more pasted input)
-        var [cmdline, curpos] = [getcmdline(), getcmdpos()]
-        if !pumvisible() && curpos == cmdline->len() + 1
-                && cmdline =~ '\%(\w\|[*/:.-]\)$' && cmdline !~ '^\d\+$'  # Reduce noise
-            feedkeys("\<C-@>", "ti")
-            SkipCmdlineChanged()  # Suppress redundant completion attempts
-            # NOTE: Using the 'g' flag in substitute() prevents Vim from inserting
-            #   <C-@> when typing quickly with no completion items available.
-            # Remove <C-@> that get inserted when no items are available
-            timer_start(0, (_) => getcmdline()->substitute('\%x00', '', 'g')->setcmdline())
-        endif
+            && !pumvisible() && curpos == cmdline->len() + 1
+            && cmdline =~ '\%(\w\|[*/:.-]\)$' && cmdline !~ '^\d\+$'  # Reduce noise
+        feedkeys("\<C-@>", "ti")
+        SkipCmdlineChanged()  # Suppress redundant completion attempts
+        # NOTE: Using the 'g' flag in substitute() prevents Vim from inserting
+        #   <C-@> when typing quickly with no completion items available.
+        # Remove <C-@> that get inserted when no items are available
+        timer_start(0, (_) => getcmdline()->substitute('\%x00', '', 'g')->setcmdline())
     endif
 enddef
 cnoremap <expr> <up> SkipCmdlineChanged("\<up>")
@@ -342,7 +341,6 @@ nnoremap <leader>fV :<c-r>=execute('let fzfind_root="$VIMRUNTIME"')\|''<cr>Find<
 # --------------------------
 command! -nargs=+ -complete=customlist,GrepComplete Grep VisitFile()
 def GrepComplete(arglead: string, cmdline: string, cursorpos: number): list<any>
-    selected_match = null_string
     return arglead->len() > 1 ? systemlist($'ggrep -REIHns "{arglead}"' ..
        ' --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.swp"') : []
 enddef
@@ -374,7 +372,7 @@ nnoremap <leader><bs> :Buffer <c-@>
 # --------------------------
 # Utilities
 # --------------------------
-var selected_match: string
+var selected_match = null_string
 autocmd CmdlineLeavePre : SelectItem()
 def SelectItem()
     if getcmdline() =~ '^\s*\%(Grep\|Find\|Buffer\)\s'
@@ -400,13 +398,6 @@ enddef
 set cot=menuone,popup,noselect inf cpt-=t,i
 # set cot=menuone,popup,noselect,nearest inf cpt=.^5,w,b,u
 # set cot=menuone,popup,noselect inf cpt=.^5,w,b,u
-def SkipTextChangedI(): string
-    set eventignore+=TextChangedI  # Suppress next event caused by <c-e> (or <c-n> when no matches found)
-    timer_start(1, (_) => {
-        set eventignore-=TextChangedI
-    })
-    return ''
-enddef
 # var skip_next_complete = false
 # var processed: string
 var count = 1
@@ -449,11 +440,13 @@ def InsComplete()
     # skip_next_complete = false
 enddef
 inoremap <silent> <c-e> <c-r>=<SID>SkipTextChangedI()<cr><c-e>
-# inoremap <silent> <c-e> <c-r>=<SID>SkipNextComplete()<cr><c-e>
-# def SkipNextComplete(): string
-#     skip_next_complete = true
-#     return ''
-# enddef
+def SkipTextChangedI(): string
+    set eventignore+=TextChangedI  # Suppress next event caused by <c-e> (or <c-n> when no matches found)
+    timer_start(1, (_) => {
+        set eventignore-=TextChangedI
+    })
+    return ''
+enddef
 inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
 inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 # inoremap <silent> <tab> <c-r>=<SID>SmartTab()<cr>

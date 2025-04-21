@@ -1397,6 +1397,8 @@ qf - will show information about the file or directory (and also the path).
 ------------------------------------------------------------------------------
 Tabs                                            *giri-tabs*
 
+see |tabpage.txt|
+
 :tabnew
 :[count]tabnew [++opt] [+cmd] {file}
 :[count]tabe[dit] [++opt] [+cmd] {file}

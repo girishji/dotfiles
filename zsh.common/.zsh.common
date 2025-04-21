@@ -447,7 +447,7 @@ prompt_vcs_setup() {
     alias gl='git log --oneline --decorate --graph --no-merges origin/master..HEAD'
     alias gl2='git log --oneline --decorate --graph --all'
     alias gd='git diff'
-    alias gd2='git diff origin/master '
+    alias gd2='git diff master..your_branch'
     alias gdv='git difftool -t vimdiff'
 
     # grep

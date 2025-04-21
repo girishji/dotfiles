@@ -1,5 +1,9 @@
 vim9script
 
+if has('gui')  # MacVim
+    finish
+endif
+
 # NOTE: 'background' is not set correctly until window is opened (after VimEnter). So,
 # set the background explicitly so that colorscheme can choose appropriate colors.
 
@@ -67,6 +71,9 @@ def SaneColors()
         # hi StatusLineNC ctermfg=12 ctermbg=none cterm=italic
         # hi StatusLineTerm ctermfg=3 ctermbg=7 cterm=none
         # hi StatusLineTermNC ctermfg=14 ctermbg=0 cterm=italic
+        hi Cursorline ctermbg=7 cterm=none
+        hi! link CursorlineNr Cursorline
+        set cursorline
     else  # dark
         hi SignColumn ctermfg=None ctermbg=0
         hi LineNr ctermfg=11 ctermbg=0

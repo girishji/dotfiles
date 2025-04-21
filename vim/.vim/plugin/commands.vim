@@ -127,7 +127,7 @@ def SetupCscope()
 enddef
 
 # Find symbols in code
-nnoremap <leader>/ :FindSymbol<space>
+nnoremap <leader>? :FindSymbol<space>
 def Symbols(): list<any>
     var patterns = get(g:, 'symbol_patterns', '')
     if patterns->empty()

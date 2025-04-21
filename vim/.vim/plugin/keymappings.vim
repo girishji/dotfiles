@@ -148,6 +148,7 @@ nnoremap <leader>vm <cmd>messages<cr>
 # nnoremap <leader>vd <cmd>GitDiffThisFile<cr>
 nnoremap <leader>ve <cmd>e $MYVIMRC<cr>
 nnoremap <leader>vz <cmd>e ~/.zsh.common<cr>
+nnoremap <leader>vg <cmd>e ~/.gvimrc<cr>
 # nnoremap <leader>vz <cmd>FoldingToggle<cr>
 # Following not needed: use 1<c-g> for absolute path, or <c-g> for relative path
 # nnoremap <leader>vp <cmd>echo expand('%')<cr>
@@ -291,6 +292,9 @@ endif
 #    g/<pattern>/caddexpr expand("%") . ":" . line(".") . ":" . getline(".")
 #  - instead of above, use vimgrep
 # nnoremap <leader>fg :vim /\v/gj %<left><left><left><left><left>
+# Search lines within file
+nnoremap <leader>/ :vimgrep /\v/gj %<left><left><left><left><left>
+
 
 # tag search
 nnoremap <leader>ft :tj<space>
@@ -310,9 +314,6 @@ nnoremap <leader>fk :<c-r>=setqflist([], ' ', #{title: 'keymap', items: execute(
 nnoremap <leader>fm :<c-r>=setqflist([], ' ', #{title: 'marks', items: execute("marks")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
 nnoremap <leader>fr :<c-r>=setqflist([], ' ', #{title: 'registers', items: execute("registers")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
 nnoremap <leader>fq <cmd>chistory<cr>
-
-# Search lines within file
-nnoremap <leader>? :vimgrep /\v/gj %<left><left><left><left><left>
 
 # :h collapse
 # These two mappings reduce a sequence of empty (;b) or blank (;n) lines

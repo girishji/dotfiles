@@ -41,6 +41,10 @@ nnoremap <silent> [b :bprevious<CR>
 nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [B :bfirst<CR>
 nnoremap <silent> ]B :blast<CR>
+nnoremap <silent> <leader>[ :bprevious<CR>
+nnoremap <silent> <leader>] :bnext<CR>
+nnoremap <silent> [<space> :bprevious<CR>
+nnoremap <silent> ]<space> :bnext<CR>
 
 # quickfix list
 if !&diff  # vimdiff uses [c and ]c

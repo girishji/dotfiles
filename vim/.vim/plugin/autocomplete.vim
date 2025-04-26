@@ -134,6 +134,8 @@ nnoremap <leader><bs> :Buffer <c-@>
 # --------------------------
 var selected_match = null_string
 autocmd CmdlineLeavePre : SelectItem()
+autocmd CmdlineLeave : echom "CmdlineLeave"
+autocmd CmdlineLeavePre : echom "CmdlineLeavePre"
 def SelectItem()
     selected_match = ''
     if getcmdline() =~ '^\s*\%(Grep\|Find\|Buffer\)\s'
@@ -166,6 +168,7 @@ def InsComplete()
     endif
 enddef
 inoremap <silent> <c-e> <c-r>=<SID>SkipTextChangedI()<cr><c-e>
+inoremap <silent> <c-y> <c-r>=<SID>SkipTextChangedI()<cr><c-y>
 def SkipTextChangedI(): string
     set eventignore+=TextChangedI  # Suppress next event caused by <c-e> (or <c-n> when no matches found)
     timer_start(1, (_) => {

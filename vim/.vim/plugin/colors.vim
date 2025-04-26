@@ -1,7 +1,8 @@
 vim9script
 
-if has('gui')  # MacVim
-    finish
+if has('gui_running')
+    # See :h term_setansicolors() (press 'K')
+    g:terminal_ansi_colors = ['#282923', '#c61e5c', '#81af24', '#fd971f', '#51aebe', '#ae81ff', '#80beb5', '#bababa', '#74705d', '#f92672', '#a6e22e', '#e6db74', '#66d9ef', '#fd5ff0', '#a1efe4', '#f8f8f2']
 endif
 
 # NOTE: 'background' is not set correctly until window is opened (after VimEnter). So,
@@ -175,7 +176,7 @@ def ApplyColors()
         hi Statement ctermfg=None cterm=bold
         hi Identifier ctermfg=None cterm=bold
         hi Operator ctermfg=None
-        hi Comment ctermfg=14 cterm=none
+        hi Comment ctermfg=14 cterm=italic  # "recursive duotone" font has casual italic
         hi String ctermfg=13 cterm=none
         hi Special ctermfg=13
         hi Constant ctermfg=13 cterm=none

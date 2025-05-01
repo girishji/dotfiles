@@ -156,12 +156,13 @@ augroup END
 # avoid commented brackets through. and this plugin avoids that.
 if has('syntax') && has('eval')
     packadd! matchit
+    packadd! hlyank
 endif
 
 # Suppress netrw banner
 # g:netrw_banner = 0
 
-## Debug Vim (:h :Termdebug), needs gdb
+## Debug Vim in Linux (:h :Termdebug), needs gdb
 # packadd! termdebug
 # set mouse=a # Needed for Winbar menu
 # g:termdebug_config = {}
@@ -202,7 +203,7 @@ else
     Plug 'airblade/vim-gitgutter'
     # Plug 'lacygoill/vim9asm'
     # Plug 'yegappan/lsp'
-    Plug '~/git/lsp'
+    # Plug '~/git/lsp'
     # Plug 'rafamadriz/friendly-snippets'
     # Plug 'hrsh7th/vim-vsnip'
     # Plug 'hrsh7th/vim-vsnip-integ'
@@ -231,8 +232,8 @@ else
     plug#end()
 endif
 
-g:python_highlight_all = 1
-g:pythondoc_h_expand = 1
+# g:python_highlight_all = 1
+# g:pythondoc_h_expand = 1
 # g:vimbits_vim9cmdline = true
 # g:vimcomplete_tab_enable = 1
 

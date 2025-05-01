@@ -20,7 +20,6 @@ cabbr <expr> maek  abbr#CmdAbbr('maek', 'make')
 
 # vimgrep opens quickfix immediately, while 'grep' needs an additional <CR>
 # 'vim' same as 'vimgrep' (can use Vim style regex)
-cabbr <expr> v  abbr#CmdAbbr('v', $'vim /\v/gj **<left><left><left><left><left><left><c-r>=abbr#Eatchar()<cr>')
 cabbr <expr> vim  abbr#CmdAbbr('vim', $'vim /\v/gj **<left><left><left><left><left><left><c-r>=abbr#Eatchar()<cr>')
 cabbr <expr> vw  abbr#CmdAbbr('vw', $'vim /\v{expand("<cword>")}/gj **<left><left><left><left><left><left><c-r>=abbr#Eatchar()<cr>')
 cabbr <expr> vimw  abbr#CmdAbbr('vimw', $'vim /\v{expand("<cword>")}/gj **<left><left><left><left><left><left><c-r>=abbr#Eatchar()<cr>')
@@ -59,5 +58,6 @@ inorea teh the
 # inorea todo: TODO:
 inorea fixme: FIXME:
 inorea xxx: XXX:
+inorea xxx XXX:
 # inorea note: NOTE:
 # inorea task: TASK:

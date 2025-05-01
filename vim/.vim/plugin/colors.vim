@@ -61,6 +61,7 @@ def SaneColors()
         hi PmenuMatch ctermfg=5 ctermbg=7
         hi PmenuSel ctermfg=7 ctermbg=8
         hi PmenuMatchSel ctermfg=7 ctermbg=8 cterm=underline
+        hi PmenuSbar ctermbg=7
         hi NonText ctermfg=7 |# 'eol', etc.
         hi Search ctermfg=7 ctermbg=12
         hi DiffText ctermfg=15
@@ -74,7 +75,8 @@ def SaneColors()
         # hi StatusLineTermNC ctermfg=14 ctermbg=0 cterm=italic
         hi Cursorline ctermbg=7 cterm=none
         hi! link CursorlineNr Cursorline
-        set cursorline
+        # 'cursorline' makes line unreadable in lldb
+        # set cursorline
     else  # dark
         hi SignColumn ctermfg=None ctermbg=0
         hi LineNr ctermfg=11 ctermbg=0
@@ -172,15 +174,19 @@ def ApplyColors()
     # endif
     if &filetype !~ 'help\|markdown' && monochrome
         # Change color of 'bold' fonts throug terminal.
-        hi Type ctermfg=None cterm=bold
-        hi Statement ctermfg=None cterm=bold
-        hi Identifier ctermfg=None cterm=bold
+        if &bg == 'dark'
+            hi Type ctermfg=15 cterm=bold
+        else
+            hi Type ctermfg=0 cterm=bold
+        endif
+        hi! link Statement Type
+        hi! link Identifier Type
         hi Operator ctermfg=None
-        hi Comment ctermfg=14 cterm=italic  # "recursive duotone" font has casual italic
+        hi Comment ctermfg=14 cterm=italic
         hi String ctermfg=13 cterm=none
         hi Special ctermfg=13
         hi Constant ctermfg=13 cterm=none
-        hi PreProc ctermfg=13 cterm=none
+        hi PreProc ctermfg=13 cterm=bold
     else
         syntax reset
         hi link StatusLineNC StatusLine

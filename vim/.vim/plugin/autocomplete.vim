@@ -5,42 +5,14 @@ endif
 vim9script
 
 # --------------------------
-# Highlight On Yank
-# --------------------------
-autocmd TextYankPost * HighlightOnYank()
-export def HighlightOnYank(hlgroup = 'IncSearch', duration = 300, in_visual = true)
-    if v:event.operator ==? 'y'
-        if !in_visual && visualmode() != null_string
-            visualmode(1)
-            return
-        endif
-        var [beg, end] = [getpos("'["), getpos("']")]
-        var type = v:event.regtype ?? 'v'
-        var pos = getregionpos(beg, end, {type: type, exclusive: false})
-        var m = matchaddpos(hlgroup, pos->mapnew((_, v) => {
-            var col_beg = v[0][2] + v[0][3]
-            var col_end = v[1][2] + v[1][3] + 1
-            return [v[0][1], col_beg, col_end - col_beg]
-        }))
-        var winid = win_getid()
-        timer_start(duration, (_) => {
-            # keymap like `:vmap // y/<C-R>"<CR>` (search for visually selected text) throws E803
-            try
-                m->matchdelete(winid)
-            catch
-            endtry
-        })
-    endif
-enddef
-
-# --------------------------
 # Cmdline auto-completion
 # --------------------------
 set wim=noselect:lastused,full wop=pum,tagfile wcm=<C-@> wmnu
 # NOTE: Using timer_start causes 'cmdheight' to jump +1 on first ':' attempt (vim bug)
 # autocmd CmdlineChanged : timer_start(0, function(CmdComplete, [getcmdline()]))
 # def CmdComplete(cur_cmdline: string, timer: number)
-autocmd CmdlineChanged : CmdComplete()
+# autocmd CmdlineChanged : CmdComplete()
+autocmd CmdlineChanged :,/,\? CmdComplete()
 def CmdComplete()
     var [cmdline, curpos] = [getcmdline(), getcmdpos()]
     if getchar(1, {number: true}) == 0  # Typehead is empty (no more pasted input)
@@ -56,13 +28,19 @@ def CmdComplete()
 enddef
 cnoremap <expr> <up> SkipCmdlineChanged("\<up>")
 cnoremap <expr> <down> SkipCmdlineChanged("\<down>")
+# cnoremap <silent> <c-e> <c-r>=<SID>SkipCmdlineChanged()<cr><c-e>
+# cnoremap <silent> <c-y> <c-r>=<SID>SkipCmdlineChanged()<cr><c-y>
 autocmd CmdlineEnter : set bo+=error
 autocmd CmdlineLeave : set bo-=error
 def SkipCmdlineChanged(key = ''): string
     set ei+=CmdlineChanged
     timer_start(0, (_) => execute('set ei-=CmdlineChanged'))
-    return key != '' ? ((pumvisible() ? "\<c-e>" : '') .. key) : ''
+    return key == '' ? '' : ((pumvisible() ? "\<c-e>" : '') .. key)
 enddef
+autocmd CmdlineEnter /,\? setcmdline('\<')
+# autocmd CmdlineEnter /,\? setcmdline('\<') | set ph=8
+# autocmd CmdlineEnter /,\? setcmdline('\<') | set wop-=pum
+autocmd CmdlineLeave /,\? set wop+=pum
 
 # does not complete if not at end of line
 # say there are space chars at end, if you make substitute replace all (not just
@@ -134,8 +112,6 @@ nnoremap <leader><bs> :Buffer <c-@>
 # --------------------------
 var selected_match = null_string
 autocmd CmdlineLeavePre : SelectItem()
-autocmd CmdlineLeave : echom "CmdlineLeave"
-autocmd CmdlineLeavePre : echom "CmdlineLeavePre"
 def SelectItem()
     selected_match = ''
     if getcmdline() =~ '^\s*\%(Grep\|Find\|Buffer\)\s'
@@ -146,6 +122,7 @@ def SelectItem()
         endif
     endif
 enddef
+
 # ---------------------------
 # Insert Mode Auto-completion
 # ---------------------------
@@ -229,14 +206,13 @@ enddef
 # set cpt+=fLspCompletor
 # set cpt+=fLspCompletor^5
 # set cpt=fLspCompletor,.,w,b,u,t,fAbbrevCompletor
-def! g:LspCompletor(findstart: number, base: string): any
-    if findstart == 1
-        return g:LspOmniFunc(findstart, base)
-    endif
-    return {words: g:LspOmniFunc(findstart, base), refresh: 'always'}
-enddef
-# autocmd VimEnter * g:LspOptionsSet({ autoComplete: false, omniComplete: true })
-autocmd VimEnter * g:LspOptionsSet({ autoComplete: false, omniComplete: true, autoHighlightDiags: false })
+# def! g:LspCompletor(findstart: number, base: string): any
+#     if findstart == 1
+#         return g:LspOmniFunc(findstart, base)
+#     endif
+#     return {words: g:LspOmniFunc(findstart, base), refresh: 'always'}
+# enddef
+# autocmd VimEnter * g:LspOptionsSet({ autoComplete: false, omniComplete: true, autoHighlightDiags: false })
 
 #------------------------------------------------------------
 # vim: ts=8 sts=4 sw=4 et fdm=marker

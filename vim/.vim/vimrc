@@ -89,12 +89,12 @@ set laststatus=2 # always show statusline
 # set grepprg=grep\ --color=never\ -RESIHin\ --exclude="*.git*"\ --exclude="*.swp"\ --exclude="*.zwc"\ --exclude-dir=plugged
 # dot directories like .git are automatically excluded
 # '$*' is a placeholder to replace typed pattern
-set grepprg=grep\ --color=never\ -RESIHin\ $*
+# set grepprg=grep\ --color=never\ -RESIHin\ $*
 # make grep behave like vimgrep
 # set grepprg=internal
 
 # enable folding at headers in markdown
-g:markdown_folding = 1
+# g:markdown_folding = 1
 
 syntax on # turn on syntax highlighting
 
@@ -109,53 +109,55 @@ syntax on # turn on syntax highlighting
 #     set grepformat=%f:%l:%c:%m
 # endif
 
-#------------------------------
-# QfList to store important lines in files (like bookmarks)
-#------------------------------
+# #------------------------------
+# # QfList to store important lines in files (like bookmarks)
+# #------------------------------
 
-var quickfix_file = expand('~/.vim_bookmarks.txt')
-# Add current line to quickfix list
-#   example: :g/mypattern/caddexpr expand("%") .. ":" .. line(".") ..  ":" .. getline(".")
-nnoremap <leader>ca :exe 'LoadQuickfixList'\|caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<cr>:SaveQuickfixList<cr>:echo 'saved:' getline(".")<cr>
-# Clear the current quickfix list
-nnoremap <leader>cx :cex []\|SaveQuickfixList<cr>
-# Open qflist
-nnoremap <leader>cc <cmd>cw<cr>
-nnoremap <leader>cs <cmd>SaveQuickfixList<cr>
-nnoremap <leader>cl <cmd>LoadQuickfixList<cr>
-nnoremap <leader>cd <cmd>DeleteQuickfixEntry<cr>
-# Command to save/Load quickfix list to a file
-command SaveQuickfixList {
-    writefile(getqflist()->mapnew((_, v) => $'{bufname(v.bufnr)}:{v.lnum}:{v.col}:{v.text}'),
-        quickfix_file)
-}
-command LoadQuickfixList {
-    if (quickfix_file->filereadable())
-        :exe 'cgetfile' quickfix_file
-    endif
-}
-command DeleteQuickfixEntry {
-    var qflist = getqflist()
-    qflist->remove(line('.') - 1) # Remove entry (1-based index)
-    setqflist(qflist, 'r') # Replace quickfix list
-    SaveQuickfixList
-    LoadQuickfixList
-}
-# XXX Followikng does not work when many vim instances are open
-augroup BookmarksQfList | autocmd!
-    autocmd VimEnter * LoadQuickfixList
-#     autocmd VimLeavePre * SaveQuickfixList
-augroup END
+# var quickfix_file = expand('~/.vim_bookmarks.txt')
+# # Add current line to quickfix list
+# #   example: :g/mypattern/caddexpr expand("%") .. ":" .. line(".") ..  ":" .. getline(".")
+# nnoremap <leader>ca :exe 'LoadQuickfixList'\|caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<cr>:SaveQuickfixList<cr>:echo 'saved:' getline(".")<cr>
+# # Clear the current quickfix list
+# nnoremap <leader>cx :cex []\|SaveQuickfixList<cr>
+# # Open qflist
+# nnoremap <leader>cc <cmd>cw<cr>
+# nnoremap <leader>cs <cmd>SaveQuickfixList<cr>
+# nnoremap <leader>cl <cmd>LoadQuickfixList<cr>
+# nnoremap <leader>cd <cmd>DeleteQuickfixEntry<cr>
+# # Command to save/Load quickfix list to a file
+# command SaveQuickfixList {
+#     writefile(getqflist()->mapnew((_, v) => $'{bufname(v.bufnr)}:{v.lnum}:{v.col}:{v.text}'),
+#         quickfix_file)
+# }
+# command LoadQuickfixList {
+#     if (quickfix_file->filereadable())
+#         :exe 'cgetfile' quickfix_file
+#     endif
+# }
+# command DeleteQuickfixEntry {
+#     var qflist = getqflist()
+#     qflist->remove(line('.') - 1) # Remove entry (1-based index)
+#     setqflist(qflist, 'r') # Replace quickfix list
+#     SaveQuickfixList
+#     LoadQuickfixList
+# }
+# # XXX Followikng does not work when many vim instances are open
+# augroup BookmarksQfList | autocmd!
+#     autocmd VimEnter * LoadQuickfixList
+# #     autocmd VimLeavePre * SaveQuickfixList
+# augroup END
 
 #--------------------
 # Plugins
 #--------------------
 
-# This loads the "matchit" plugin; It makes the % command more powerful, but
-# bracket matching gets much slower. Vim's default bracket matching does not
-# avoid commented brackets through. and this plugin avoids that.
-if has('syntax') && has('eval')
+if has('syntax') && has('eval') && !getcompletion('matchit', 'packadd')->empty()
     packadd! matchit
+endif
+if !getcompletion('comment', 'packadd')->empty()
+    packadd! comment
+endif
+if !getcompletion('hlyank', 'packadd')->empty()
     packadd! hlyank
 endif
 
@@ -169,97 +171,64 @@ endif
 # g:termdebug_config['wide'] = 1 # Force vertical split
 # g:termdebug_config['evaluate_in_popup'] = v:true
 
-if v:version >= 901 && !getcompletion('comment', 'packadd')->empty()
-    packadd comment
-endif
+# # Download plug.vim if it doesn't exist yet
+# if empty(glob('~/.vim/autoload/plug.vim'))
+#     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+#                 \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# endif
 
-# Download plug.vim if it doesn't exist yet
-if empty(glob('~/.vim/autoload/plug.vim'))
-    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-endif
+# # Run PlugInstall if there are missing plugins
+# autocmd VimEnter * if exists('g:plugs') && len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) > 0
+#             \| PlugInstall --sync | source $MYVIMRC
+#             \| endif
 
-# Run PlugInstall if there are missing plugins
-autocmd VimEnter * if exists('g:plugs') && len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) > 0
-            \| PlugInstall --sync | source $MYVIMRC
-            \| endif
-
-if has('gui')  # MacVim
-    plug#begin("~/.local/share/vim-plug/")
-    # plug#begin()
-    # Plug '~/git/scope.vim'
-    # Plug '~/git/devdocs.vim'
-    # Plug '~/git/vimbits'
-    # Plug '~/git/bufline.vim'
-    # Plug '~/git/vimsuggest'
-    # Plug '~/git/vimcomplete'
-    Plug 'airblade/vim-gitgutter'
-    plug#end()
-else
-    plug#begin("~/.local/share/vim-plug/")
-    # Make sure you use single quotes
-    # Plug 'noahfrederick/vim-noctu'
-    # Plug 'letorbi/vim-colors-modern-borland'
-    Plug 'airblade/vim-gitgutter'
-    # Plug 'lacygoill/vim9asm'
-    # Plug 'yegappan/lsp'
-    # Plug '~/git/lsp'
-    # Plug 'rafamadriz/friendly-snippets'
-    # Plug 'hrsh7th/vim-vsnip'
-    # Plug 'hrsh7th/vim-vsnip-integ'
-    # Plug 'vim-python/python-syntax'
-    # colorschemes
-    # Plug 'cocopon/iceberg.vim'
-    # Plug 'dracula/vim'
-    #
-    # Plug '~/git/declutter.vim'
-    # Plug 'girishji/declutter.vim'
-    Plug '~/git/bufline.vim'
-    # Plug 'girishji/bufline.vim'
-    # Plug '~/git/scope.vim'
-    # Plug '~/git/vimsuggest'
-    # Plug '~/git/vimcomplete'
-    # Plug 'girishji/vimcomplete'
-    # Plug '~/git/ngram-complete.vim'
-    # Plug 'girishji/ngram-complete.vim'
-    # Plug '~/git/vimbits'
-    # Plug 'girishji/vimbits'
-    # Plug 'girishji/pythondoc.vim', {'for': 'python'}
-    # Plug '~/git/pythondoc.vim', {'for': 'python'}
-    # Plug '~/git/pythondoc.vim'
-    # Plug '~/git/devdocs.vim'
-    # Plug 'girishji/devdocs.vim'
-    plug#end()
-endif
-
-# ---------------------------
-# Custom tabline without the X at the end
-# ---------------------------
-set tabline=%!g:CustomTabLine()
-
-def! g:CustomTabLine(): string
-  var s = ''
-  for i in range(tabpagenr('$'))
-    var tabnum = i + 1
-    s ..= (tabnum == tabpagenr()) ? '%#TabLineSel#' : '%#TabLine#'
-
-    # Make tab clickable and add tab number
-    s ..= $'%{tabnum}T'
-
-    # Get the name of the buffer in the current window of this tab
-    var winnr = tabpagewinnr(tabnum)
-    var buflist = tabpagebuflist(tabnum)
-    var bufname = bufname(buflist[winnr - 1])
-    var name = fnamemodify(bufname, ':t') ?? '[No Name]'
-
-    # Add space around for padding
-    s ..= $' {tabnum}:{name} '
-  endfor
-
-  # Fill rest of tabline and reset highlight
-  s ..= '%#TabLineFill#%T'
-  return s
-enddef
+# if has('gui')  # MacVim
+#     plug#begin("~/.local/share/vim-plug/")
+#     # plug#begin()
+#     # Plug '~/git/scope.vim'
+#     # Plug '~/git/devdocs.vim'
+#     # Plug '~/git/vimbits'
+#     # Plug '~/git/bufline.vim'
+#     # Plug '~/git/vimsuggest'
+#     # Plug '~/git/vimcomplete'
+#     Plug 'airblade/vim-gitgutter'
+#     plug#end()
+# else
+#     plug#begin("~/.local/share/vim-plug/")
+#     # Make sure you use single quotes
+#     # Plug 'noahfrederick/vim-noctu'
+#     # Plug 'letorbi/vim-colors-modern-borland'
+#     # Plug 'airblade/vim-gitgutter'
+#     # Plug 'lacygoill/vim9asm'
+#     # Plug 'yegappan/lsp'
+#     # Plug '~/git/lsp'
+#     # Plug 'rafamadriz/friendly-snippets'
+#     # Plug 'hrsh7th/vim-vsnip'
+#     # Plug 'hrsh7th/vim-vsnip-integ'
+#     # Plug 'vim-python/python-syntax'
+#     # colorschemes
+#     # Plug 'cocopon/iceberg.vim'
+#     # Plug 'dracula/vim'
+#     #
+#     # Plug '~/git/declutter.vim'
+#     # Plug 'girishji/declutter.vim'
+#     # Plug '~/git/bufline.vim'
+#     # Plug 'girishji/bufline.vim'
+#     # Plug '~/git/scope.vim'
+#     # Plug '~/git/vimsuggest'
+#     # Plug '~/git/vimcomplete'
+#     # Plug 'girishji/vimcomplete'
+#     # Plug '~/git/ngram-complete.vim'
+#     # Plug 'girishji/ngram-complete.vim'
+#     # Plug '~/git/vimbits'
+#     # Plug 'girishji/vimbits'
+#     # Plug 'girishji/pythondoc.vim', {'for': 'python'}
+#     # Plug '~/git/pythondoc.vim', {'for': 'python'}
+#     # Plug '~/git/pythondoc.vim'
+#     # Plug '~/git/devdocs.vim'
+#     # Plug 'girishji/devdocs.vim'
+#     plug#end()
+# endif
 
 # g:python_highlight_all = 1
 # g:pythondoc_h_expand = 1

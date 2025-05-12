@@ -23,6 +23,7 @@ cabbr <expr> maek  abbr#CmdAbbr('maek', 'make')
 cabbr <expr> vim  abbr#CmdAbbr('vim', $'vim /\v/gj **<left><left><left><left><left><left><c-r>=abbr#Eatchar()<cr>')
 cabbr <expr> vw  abbr#CmdAbbr('vw', $'vim /\v{expand("<cword>")}/gj **<left><left><left><left><left><left><c-r>=abbr#Eatchar()<cr>')
 cabbr <expr> vimw  abbr#CmdAbbr('vimw', $'vim /\v{expand("<cword>")}/gj **<left><left><left><left><left><left><c-r>=abbr#Eatchar()<cr>')
+cabbr <expr> lv abbr#CmdAbbr('lv', $'lv // %<left><left><left><c-r>=abbr#Eatchar()<cr>')
 # grep: 1) to exclude dirs use ':gr "foo" **/*~*/bar/*' (dot dirs are automatically excluded)
 #   2) -E (in grepprg) is extended grep, which is like '\v' in Vim. Escapes +, |, ., and ?. ex. grep -E "mp4|avi"
 #   3) gr[ep]! will not automatically visit first file
@@ -41,7 +42,7 @@ cabbr <expr> gg  abbr#CmdAbbr('gg', "g//caddexpr $'{expand(\"%\")}:{line(\".\")}
 iabbr vim_help_modeline vim:tw=78:ts=4:ft=help:norl:ma:noro:ai:lcs=tab\:\ \ ,trail\:~:<c-r>=abbr#Eatchar()<cr>
 iabbr vim_txt_modeline vim:ft=txt:<c-r>=abbr#Eatchar()<cr>
 iabbr vim_markdown_modeline vim:tw=80:ts=4:ft=markdown:ai:<c-r>=abbr#Eatchar()<cr>
-iabbr vim_modeline vim:ts=4:sw=4:sts=4:et:ai:<c-r>=abbr#Eatchar()<cr>
+iabbr vim_modeline " vim: shiftwidth=2 sts=2 expandtab<c-r>=abbr#Eatchar()<cr>
 
 # dashes to match previous line length (there are also key maps in keymappings.vim)
 iabbr  --* <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=abbr#Eatchar()<cr>

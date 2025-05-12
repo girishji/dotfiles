@@ -27,6 +27,7 @@ giri-cscopectags.txt	cscopectags.txt	/*giri-cscopectags.txt*
 giri-debug	giri.txt	/*giri-debug*
 giri-folds	giri-nav.txt	/*giri-folds*
 giri-g-keymap	giri-nav.txt	/*giri-g-keymap*
+giri-legacy-script	giri.txt	/*giri-legacy-script*
 giri-moving-through-program	giri-nav.txt	/*giri-moving-through-program*
 giri-nav.txt	giri-nav.txt	/*giri-nav.txt*
 giri-netrw	giri.txt	/*giri-netrw*
@@ -40,6 +41,7 @@ giri-tags	giri.txt	/*giri-tags*
 giri-terminal	giri.txt	/*giri-terminal*
 giri-tips	giri.txt	/*giri-tips*
 giri-vim-file-org	giri.txt	/*giri-vim-file-org*
+giri-vimscript	giri.txt	/*giri-vimscript*
 giri-window	giri.txt	/*giri-window*
 giri.txt	giri.txt	/*giri.txt*
 gkeymap-sq-brkt	giri-nav.txt	/*gkeymap-sq-brkt*

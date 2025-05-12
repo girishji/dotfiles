@@ -1,12 +1,12 @@
 vim9script
 
-# autocomplete with <c-n> and <c-p> when plugins are not available
-# def OnWhitespace(): bool
-#     return col('.') == 1 || getline('.')->strpart(0, col('.') - 1) =~ '\s$'
-# enddef
-# inoremap <expr> <Tab>   OnWhitespace() ? "\<tab>" : "\<c-n>"
-# inoremap <expr> <s-Tab> OnWhitespace() ? "\<s-tab>" : "\<c-p>"
-
+# General
+# nnoremap <leader>w <cmd>w<cr>
+nnoremap <leader>w <cmd>update<cr>
+nnoremap <leader>q <cmd>qa<cr>
+nnoremap <leader>Q <cmd>qa!<cr>
+nnoremap <leader>r <cmd>registers<cr>
+nnoremap <leader>m <cmd>marks<cr>
 # Y mapping, more natural but not vi compatible
 map Y y$
 # map gm to go to middle of line instead of middle of screen
@@ -19,32 +19,23 @@ nnoremap <leader>j 8j
 vnoremap <leader>j 8j
 nnoremap <leader>k 8k
 vnoremap <leader>k 8k
-# g* selects foo in foobar while * selects <foo>, <> is word boundary. make * behave like g*
-# nnoremap * g*
-# nnoremap # g#
-
 # alternative to 'packadd nohlsearch'. use <cmd> to avoid triggering CmdlineEnter.
 nnoremap <silent> <esc> <cmd>nohls<cr><esc>
 
-# nnoremap <silent> <leader>h :bprevious<CR>
-# nnoremap <silent> <leader>l :bnext<CR>
-
-# Replace [[ ]] mappings that get redefined by ftplugin/vim.vim
-# autocmd FileType * nnoremap <silent><buffer> [[ :bprevious<CR>
-# autocmd FileType * nnoremap <silent><buffer> ]] :bnext<CR>
-
-# Note:  ]" [" may hop comments (:verbose nmap ][)
-#   See /opt/homebrew/Cellar/vim/9.0.1550/share/vim/vim90/ftplugin/vim.vim
-
 # Buffer navigation
+# nnoremap <silent> <leader>[ :bprevious<CR>
+# nnoremap <silent> <leader>] :bnext<CR>
+# nnoremap <silent> [<space> :bprevious<CR>
+# nnoremap <silent> ]<space> :bnext<CR>
+nnoremap <leader><pagedown> <cmd>bprevious<cr>
+nnoremap <leader><pageup> <cmd>bnext<cr>
 nnoremap <silent> [b :bprevious<CR>
 nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [B :bfirst<CR>
 nnoremap <silent> ]B :blast<CR>
-nnoremap <silent> <leader>[ :bprevious<CR>
-nnoremap <silent> <leader>] :bnext<CR>
-nnoremap <silent> [<space> :bprevious<CR>
-nnoremap <silent> ]<space> :bnext<CR>
+nnoremap <leader>b <cmd>b#<cr>| # alternate buffer
+nnoremap <leader>d <cmd>bw<cr>| # :bwipeout to purge, :bdelete still leaves buffer in unlisted state (:ls!)
+
 
 # quickfix list
 if !&diff  # vimdiff uses [c and ]c
@@ -97,44 +88,38 @@ enddef
 #   remember `] takes you to end of pasted buffer, or use 'gp' to paste
 nnoremap gs `[v`]
 
-# Type %% on Vim’s command-line prompt, it expands to the path of the active buffer
-# cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h') .. '/' : '%%'
-
-# <leader> mappings
-nnoremap <leader>b <cmd>b#<cr>| # alternate buffer
-nnoremap <leader>d <cmd>bw<cr>| # :bwipeout to purge, :bdelete still leaves buffer in unlisted state (:ls!)
-# nnoremap <leader>u <cmd>unhide<cr><c-w>w| # unhide = one window for each loaded buffer (splits horizontally, not useful)
-
 # nnoremap <leader>t <cmd>!tree <bar> more<cr>
 # nnoremap <leader>t <cmd>term<cr>
 
+# Tabs
+# NOTE: For tabnext/tabprev use Cmd+top_right/left keys (mapped to
+#   ctrl+pgdn/pgup)
+# nnoremap <c-w><pagedown> <cmd>tabprev<cr>
+# nnoremap <c-w><pageup> <cmd>tabnext<cr>
+nnoremap <silent> <leader>[ <cmd>tabprev<CR>
+nnoremap <silent> <leader>] <cmd>tabnext<CR>
+# nnoremap <silent> [<space> :bprevious<CR>
+# nnoremap <silent> ]<space> :bnext<CR>
+nnoremap <leader>tt <cmd>tabnew %<cr>
 nnoremap <leader>tn <cmd>tabnew %<cr>
 nnoremap <leader>te <cmd>tabe %<cr>
 nnoremap <leader>tc <cmd>tabclose<cr>
-nnoremap <silent> <leader>tt <cmd>tab term<CR>
+nnoremap <leader>T <cmd>tab term<CR>
+nnoremap <leader>tT <cmd>tab term<CR>
 
-# nnoremap <leader>w <cmd>w<cr>
-nnoremap <leader>w <cmd>update<cr>
-nnoremap <leader>q <cmd>qa<cr>
-nnoremap <leader>Q <cmd>qa!<cr>
-nnoremap <leader>r <cmd>registers<cr>
-nnoremap <leader>m <cmd>marks<cr>
-#
-# Windows (<C-W> is a key on qmk keyboard)
+# Windows
+#   (<C-W> is a key on qmk keyboard)
 nnoremap <leader>- <c-w>s| # horizontal split
 # nnoremap <leader>\| <c-w>v| # vertical split
 nnoremap <leader>\ <c-w>v| # vertical split
-# nnoremap <leader>o <cmd>only<cr> | # anyting with <leader> will not work for terminal windows
-# Resize window using <ctrl> arrow keys
 nnoremap <silent> <C-Up> :resize +2<cr>
 nnoremap <silent> <C-Down> :resize -2<cr>
 nnoremap <silent> <C-Right> :vertical resize -2<cr>
 nnoremap <silent> <C-Left> :vertical resize +2<cr>
-# Conveninece
 tnoremap <c-w>H <c-w>:hide<cr>| # hide window (when terminal window is active)
 nnoremap <c-w>H <cmd>hide<cr>| # hide window
 
-# align
+# Align
 vnoremap <leader>A :!column -t<cr>| # align columns
 vnoremap <leader>a :s/\v(.*)=(.*)/\=printf("%-16s %s", submatch(1), submatch(2))
 

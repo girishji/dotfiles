@@ -73,29 +73,7 @@ set whichwrap+=<,>,h,l  " make arrows and h, l, push cursor to next line
 set virtualedit=block  " allows selection of rectangular text in visual block mode
 " set rulerformat=%80(%=%f\ %h%m%r\ %-6y\ %-5.(%l,%c%V%)\ %P%)
 
-" " Note: job_start does not pass --exclude={foo, bar} correctly to shell (because
-" " job_start does not spawn a shell, it executes command directly). single quotes
-" " also don't work, need double quotes. but all of these work for :grep
-" " dot directories like .git are automatically excluded
-" set grepprg=grep\ --color=never\ -RESIHin\ --exclude="*.git*"\ --exclude="*.swp"\ --exclude="*.zwc"\ --exclude-dir=plugged
-" " make grep behave like vimgrep
-" " set grepprg=internal
-
-" enable folding at headers in markdown
-" g:markdown_folding = 1
-
 syntax on
-
-" if executable("ug")
-"     set grepprg=ug\ -HnjR\ --no-heading
-"     set grepformat=%f:%l:%c:%m,%f:%l:%m
-" elseif executable("rg")
-"     set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case\ --follow
-"     set grepformat=%f:%l:%c:%m,%f:%l:%m
-" elseif executable("ag")
-"     set grepprg=ag\ --vimgrep
-"     set grepformat=%f:%l:%c:%m
-" endif
 
 " Plugins
 
@@ -109,9 +87,6 @@ if !getcompletion('hlyank', 'packadd')->empty()
     packadd! hlyank
 endif
 
-" Suppress netrw banner
-" g:netrw_banner = 0
-
 " Debug Vim in Linux (:h :Termdebug), needs gdb
 " packadd! termdebug
 " set mouse=a # Needed for Winbar menu
@@ -119,49 +94,31 @@ endif
 " g:termdebug_config['wide'] = 1 # Force vertical split
 " g:termdebug_config['evaluate_in_popup'] = v:true
 
-" # Download plug.vim if it doesn't exist yet
+" " Download plug.vim if it doesn't exist yet
 " if empty(glob('~/.vim/autoload/plug.vim'))
 "     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
 "                 \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 " endif
-
-" # Run PlugInstall if there are missing plugins
+" " Run PlugInstall if there are missing plugins
 " autocmd VimEnter * if exists('g:plugs') && len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) > 0
 "             \| PlugInstall --sync | source $MYVIMRC
 "             \| endif
 
-" if has('gui')  # MacVim
-"     plug#begin("~/.local/share/vim-plug/")
-"     # plug#begin()
-"     # Plug '~/git/devdocs.vim'
-"     plug#end()
+" if has('gui')  " MacVim
+"     call plug#begin("~/.local/share/vim-plug/")
+"     " Plug '~/git/devdocs.vim'
+"     call plug#end()
 " else
-"     plug#begin("~/.local/share/vim-plug/")
-"     # Make sure you use single quotes
-"     # Plug 'lacygoill/vim9asm'
-"     # Plug 'yegappan/lsp'
-"     # Plug 'rafamadriz/friendly-snippets'
-"     # Plug 'hrsh7th/vim-vsnip'
-"     # Plug 'hrsh7th/vim-vsnip-integ'
-"     # Plug 'vim-python/python-syntax'
-"     # Plug 'girishji/pythondoc.vim', {'for': 'python'}
-"     # Plug '~/git/pythondoc.vim', {'for': 'python'}
-"     # Plug '~/git/devdocs.vim'
-"     # Plug 'girishji/devdocs.vim'
-"     plug#end()
+"     call plug#begin("~/.local/share/vim-plug/")
+"     " Make sure you use single quotes
+"     " Plug 'lacygoill/vim9asm'
+"     " Plug 'yegappan/lsp'
+"     " Plug 'girishji/pythondoc.vim', {'for': 'python'}
+"     " Plug 'girishji/devdocs.vim'
+"     call plug#end()
 " endif
 
-" Add custom dictionaries (ex. ~/.vim/dicts/python for python dict)
-" g:vimfiles_dir = &runtimepath->split(',')[0]
-" autocmd FileType * {
-"     var dict = $'{g:vimfiles_dir}/dicts/{expand("<amatch>")}'->resolve()->fnamemodify(':p')
-"     if dict->filereadable()
-"         exe $'setlocal complete+=k{dict}'
-"         exe $'setlocal dictionary={dict}'
-"     endif
-" }
-
-augroup augrp_misc | autocmd!
+augroup CustomAucmds | autocmd!
     " Macro key mapped to Q for help file
     autocmd FileType help nnoremap <buffer> Q q
     " Windows to close
@@ -183,6 +140,13 @@ augroup augrp_misc | autocmd!
     autocmd FileType help,markdown set spelloptions=camel
     " Remove trailing whitespaces
     autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
+    " Set dictionary from ~/.vim/dicts
+    autocmd FileType *
+          \ let s:dictfile = expand('~/.vim') . '/dicts/' . &filetype |
+          \ if filereadable(s:dictfile) |
+          \   let &l:dictionary = s:dictfile |
+          \   exe $'setl complete+=k{s:dictfile}' |
+          \ endif
 augroup END
 
 " vim: shiftwidth=2 sts=2 expandtab

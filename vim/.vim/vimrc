@@ -75,7 +75,36 @@ set virtualedit=block  " allows selection of rectangular text in visual block mo
 
 syntax on
 
-" Plugins
+augroup CustomAutocmds | autocmd!
+    " Macro key mapped to Q for help file
+    autocmd FileType help nnoremap <buffer> Q q
+    " Windows to close
+    autocmd FileType help,vim-plug,qf nnoremap <buffer><silent> q :close<CR>
+    " netrw: 'q' is already mapped to compound key (ex. 'qf' gets file info).
+    autocmd FileType netrw nnoremap <buffer><silent> qq :close<CR>
+    " Tell vim to automatically open the quickfix and location window.
+    " :grep, :vimgrep and so on are called quickfix commands, they trigger
+    " QuickFixCmdPost.
+    " NOTE: Exclude cadexppr also ([^c]*), otherwise g//caddexpr will open
+    " quickfix after the first match.
+    autocmd QuickFixCmdPost [^lc]* cwindow
+    autocmd QuickFixCmdPost l*    lwindow
+    " Update tags in help file
+    autocmd BufWritePost **/doc/*.txt helptags <afile>:p:h
+    " Make help files writeable
+    autocmd BufEnter **/doc/*.txt set modifiable noreadonly
+    " spell : When a word is CamelCased, assume "Cased" is a separate word
+    autocmd FileType help,markdown set spelloptions=camel
+    " Remove trailing whitespaces
+    autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
+    " Set dictionary from ~/.vim/dicts
+    autocmd FileType *
+          \ let s:dictfile = expand('~/.vim') . '/dicts/' . &filetype |
+          \ if filereadable(s:dictfile) |
+          \   let &l:dictionary = s:dictfile |
+          \   exe $'setl complete+=k{s:dictfile}' |
+          \ endif
+augroup END
 
 if has('syntax') && has('eval') && !getcompletion('matchit', 'packadd')->empty()
     packadd! matchit
@@ -117,36 +146,5 @@ endif
 "     " Plug 'girishji/devdocs.vim'
 "     call plug#end()
 " endif
-
-augroup CustomAucmds | autocmd!
-    " Macro key mapped to Q for help file
-    autocmd FileType help nnoremap <buffer> Q q
-    " Windows to close
-    autocmd FileType help,vim-plug,qf nnoremap <buffer><silent> q :close<CR>
-    " netrw: 'q' is already mapped to compound key (ex. 'qf' gets file info).
-    autocmd FileType netrw nnoremap <buffer><silent> qq :close<CR>
-    " Tell vim to automatically open the quickfix and location window.
-    " :grep, :vimgrep and so on are called quickfix commands, they trigger
-    " QuickFixCmdPost.
-    " NOTE: Exclude cadexppr also ([^c]*), otherwise g//caddexpr will open
-    " quickfix after the first match.
-    autocmd QuickFixCmdPost [^lc]* cwindow
-    autocmd QuickFixCmdPost l*    lwindow
-    " Update tags in help file
-    autocmd BufWritePost **/doc/*.txt helptags <afile>:p:h
-    " Make help files writeable
-    autocmd BufEnter **/doc/*.txt set modifiable noreadonly
-    " spell : When a word is CamelCased, assume "Cased" is a separate word
-    autocmd FileType help,markdown set spelloptions=camel
-    " Remove trailing whitespaces
-    autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
-    " Set dictionary from ~/.vim/dicts
-    autocmd FileType *
-          \ let s:dictfile = expand('~/.vim') . '/dicts/' . &filetype |
-          \ if filereadable(s:dictfile) |
-          \   let &l:dictionary = s:dictfile |
-          \   exe $'setl complete+=k{s:dictfile}' |
-          \ endif
-augroup END
 
 " vim: shiftwidth=2 sts=2 expandtab

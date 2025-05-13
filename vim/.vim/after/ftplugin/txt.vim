@@ -2,9 +2,6 @@ if exists("b:did_ftplugin")
     finish
 endif
 
-" This is pseudo file type
-" https://vimways.org/2018/formatting-lists-with-vim/
-
 let b:undo_ftplugin = "setl ts< fo< tw< cole< cocu< cms< com< flp< lcs< ai<"
 
 " autoindent is needed to wrap list lines (if #lines > 2)

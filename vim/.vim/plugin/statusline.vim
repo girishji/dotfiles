@@ -1,5 +1,7 @@
 " Statusline with buffer list
 
+set laststatus=2  " always show statusline
+
 augroup UpdateStatusline | autocmd!
   autocmd WinEnter,BufEnter * setl statusline=%!BufferListStatusline()
   autocmd WinLeave,BufLeave * setl statusline=%!InactiveStatusline()

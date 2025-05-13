@@ -91,6 +91,7 @@ def SaneColors()
     # hi Todo ctermfg=0 ctermbg=1
     hi Todo ctermfg=none ctermbg=none cterm=reverse,bold
     hi SpecialKey ctermfg=10 |# 'tab', 'nbsp', 'space', ctrl chars (^a, ^b, etc.)
+    hi! link EndOfBuffer SpecialKey |# '~' at the beginning of empty lines
 
     var bg = hlget('SignColumn')->get(0, {})->get('ctermbg', null_string)
     if (bg != null_string)

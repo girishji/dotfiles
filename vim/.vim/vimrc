@@ -1,155 +1,103 @@
-if !has('vim9script') ||  v:version < 901
-" if !has('vim9script') ||  v:version < 901 || has('gui')
-    finish
-endif
-
-vim9script
-
-g:mapleader = "\<Space>"
-g:maplocalleader = "\<Space>" # meant for certain file types
+" 'mapleader' should be in the beginning
+let g:mapleader = "\<Space>"
+let g:maplocalleader = "\<Space>"  "  meant for certain file types
 map <BS> <Leader>
 
-# To make undercurl work in iterm2 (:h E436, :h t_Cs)
-&t_Cs = "\e[4:3m"
-&t_Ce = "\e[4:0m"
+" To make undercurl work in iterm2 (:h E436, :h t_Cs)
+let &t_Cs = "\e[4:3m"
+let &t_Ce = "\e[4:0m"
 
-# Disable bracketed paste (otherwise pasting does not work in popup)
-# https://github.com/vim/vim/issues/11766
-# &t_BE = ""
-# &t_BD = "\e[?2004l"
-# exec "set t_PS=\e[200~"
-# exec "set t_PE=\e[201~"
+" Disable bracketed paste (otherwise pasting does not work in popup)
+" https://github.com/vim/vim/issues/11766
+" &t_BE = ""
+" &t_BD = "\e[?2004l"
+" exec "set t_PS=\e[200~"
+" exec "set t_PE=\e[201~"
 
-# Cursor shape changes to show which mode you are in (:h t_SI)
-# 6=beam, 4=underline, 2=block
-&t_SI = "\e[6 q" #SI = INSERT mode
-&t_SR = "\e[4 q" #SR = REPLACE mode
-&t_EI = "\e[2 q" #EI = NORMAL mode (ALL ELSE)
-# Reset the cursor on start. After suspend-resume, cursor changes to beam even
-# in normal mode. This will prevent that.
+" Cursor shape changes to show which mode you are in (:h t_SI)
+" 6=beam, 4=underline, 2=block
+let &t_SI = "\e[6 q" " SI = INSERT mode
+let &t_SR = "\e[4 q" " SR = REPLACE mode
+let &t_EI = "\e[2 q" " EI = NORMAL mode (ALL ELSE)
+" Reset the cursor on start. After suspend-resume, cursor changes to beam even
+" in normal mode. This will prevent that.
 autocmd VimEnter,VimResume * silent execute '!echo -ne "\e[2 q"' | redraw!
 
-# Format usin 'gq'. :h fo-table
+" Format usin 'gq'. :h fo-table
 set formatoptions=qjln
-# autocmd FileType * setl formatoptions=qjlron
 
-# Defaults
+" Defaults
 source $VIMRUNTIME/defaults.vim
-# disable message from 'defaults.vim' when entering cmdwin
+" disable message from 'defaults.vim' when entering cmdwin
 autocmd! vimHints
 
-# NOTE: $VIMRUNTIME/ftplugin/python.vim sets tabstop, shiftwidth, etc.
+" NOTE: $VIMRUNTIME/ftplugin/python.vim sets tabstop, shiftwidth, etc.
 
-# Turn on listchars for Noname/scratch files and non-help files
-# 'listchars' is not local to buffer, only local to window
+" Turn on listchars for Noname/scratch files and non-help files
+" 'listchars' is not local to buffer, only local to window
 autocmd FileType * if &ft =~ '\v(help|markdown)' | setlocal listchars=tab:\ \ ,trail:\  | else | setlocal listchars=tab:→·,trail:~ | endif
-autocmd BufEnter * if &ft == null_string | setlocal listchars=tab:\ \ ,trail:\  | endif
-# autocmd BufEnter,FileType * :echom &ft expand('<amatch>') expand('<afile>') 'here'
+autocmd BufEnter * if &ft == '' | setlocal listchars=tab:\ \ ,trail:\  | endif
 set list
 
-# set fillchars=vert:│,fold:۰,diff:·
+" set fillchars=vert:│,fold:۰,diff:·
 set fillchars=stlnc:┴
 if &background == 'dark'
     set fillchars=vert:│,fold:۰,diff:·,stl:─,stlnc:═
 endif
-set clipboard=unnamed # Always use the system clipboard
-set mouse= # XXX: Disable mouse (set by defaults.vim). Needed by macos terminal app.
-set number # line numbering
-# set relativenumber
-set hls # highlight search
-set lbr # line break
-set hidden # buffer becomes hidden (not unloaded) when it is abandoned (ex. help buffer)
-set nojoinspaces # suppress inserting two spaces between sentences
-set shortmess+=I # disable startup message
-set report=0 # show yank confirmation even if 1 or 2 lines yanked
-set showmatch # show matching braces when text indicator is over them
-set ignorecase # case-insensitive search
-set smartcase # smart search
-set infercase # when doing <c-n/p> completion, respect case
-set splitbelow # open new split panes to right
-set splitright # open new split panes to bottom
-set breakindent # wrapped line will continue visually indented
+set clipboard=unnamed  " Always use the system clipboard
+set mouse=  " XXX: Disable mouse (set by defaults.vim). Needed by macos terminal app.
+set number  " line numbering
+" set relativenumber
+set hls  " highlight search
+set lbr  " line break
+set hidden  " buffer becomes hidden (not unloaded) when it is abandoned (ex. help buffer)
+set nojoinspaces  " suppress inserting two spaces between sentences
+set shortmess+=I  " disable startup message
+set report=0  " show yank confirmation even if 1 or 2 lines yanked
+set showmatch  " show matching braces when text indicator is over them
+set ignorecase  " case-insensitive search
+set smartcase  " smart search
+set infercase  " when doing <c-n/p> completion, respect case
+set splitbelow  " open new split panes to right
+set splitright  " open new split panes to bottom
+set breakindent  " wrapped line will continue visually indented
 set smarttab
-set spellsuggest=best,10 # set maximum number of suggestions listed top 10 items:
+set spellsuggest=best,10  " set maximum number of suggestions listed top 10 items:
 set foldmethod=indent
-# set foldnestmax=1
-set nofoldenable # do not do folding when you open file
-set signcolumn=yes # always show column for lsp diagnostics etc
+" set foldnestmax=1
+set nofoldenable  " do not do folding when you open file
+set signcolumn=yes  " always show column for lsp diagnostics etc
 set dictionary+=/usr/share/dict/words
-set whichwrap+=<,>,h,l # make arrows and h, l, push cursor to next line
-# set pumheight=7 # max number of items in popup menu (pmenu)
-set virtualedit=block # allows selection of rectangular text in visual block mode
-set laststatus=2 # always show statusline
-# set laststatus=0
-# set rulerformat=%80(%=%f\ %h%m%r\ %-6y\ %-5.(%l,%c%V%)\ %P%)
+set whichwrap+=<,>,h,l  " make arrows and h, l, push cursor to next line
+" set pumheight=7  " max number of items in popup menu (pmenu)
+set virtualedit=block  " allows selection of rectangular text in visual block mode
+" set rulerformat=%80(%=%f\ %h%m%r\ %-6y\ %-5.(%l,%c%V%)\ %P%)
 
-# XXX: job_start does not pass --exclude={foo, bar} correctly to shell (because
-# job_start does not spawn a shell, it executes command directly). single quotes
-# also don't work, need double quotes. but all of these work for :grep
-# set grepprg=grep\ --color=never\ -RESIHin\ --exclude="*.git*"\ --exclude="*.swp"\ --exclude="*.zwc"\ --exclude-dir=plugged
-# dot directories like .git are automatically excluded
-# '$*' is a placeholder to replace typed pattern
-# set grepprg=grep\ --color=never\ -RESIHin\ $*
-# make grep behave like vimgrep
-# set grepprg=internal
+" " Note: job_start does not pass --exclude={foo, bar} correctly to shell (because
+" " job_start does not spawn a shell, it executes command directly). single quotes
+" " also don't work, need double quotes. but all of these work for :grep
+" " dot directories like .git are automatically excluded
+" set grepprg=grep\ --color=never\ -RESIHin\ --exclude="*.git*"\ --exclude="*.swp"\ --exclude="*.zwc"\ --exclude-dir=plugged
+" " make grep behave like vimgrep
+" " set grepprg=internal
 
-# enable folding at headers in markdown
-# g:markdown_folding = 1
+" enable folding at headers in markdown
+" g:markdown_folding = 1
 
-syntax on # turn on syntax highlighting
+syntax on
 
-# if executable("ug")
-#     set grepprg=ug\ -HnjR\ --no-heading
-#     set grepformat=%f:%l:%c:%m,%f:%l:%m
-# elseif executable("rg")
-#     set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case\ --follow
-#     set grepformat=%f:%l:%c:%m,%f:%l:%m
-# elseif executable("ag")
-#     set grepprg=ag\ --vimgrep
-#     set grepformat=%f:%l:%c:%m
-# endif
+" if executable("ug")
+"     set grepprg=ug\ -HnjR\ --no-heading
+"     set grepformat=%f:%l:%c:%m,%f:%l:%m
+" elseif executable("rg")
+"     set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case\ --follow
+"     set grepformat=%f:%l:%c:%m,%f:%l:%m
+" elseif executable("ag")
+"     set grepprg=ag\ --vimgrep
+"     set grepformat=%f:%l:%c:%m
+" endif
 
-# #------------------------------
-# # QfList to store important lines in files (like bookmarks)
-# #------------------------------
-
-# var quickfix_file = expand('~/.vim_bookmarks.txt')
-# # Add current line to quickfix list
-# #   example: :g/mypattern/caddexpr expand("%") .. ":" .. line(".") ..  ":" .. getline(".")
-# nnoremap <leader>ca :exe 'LoadQuickfixList'\|caddexpr $'{expand("%")}:{line(".")}:{getline(".")}'<cr>:SaveQuickfixList<cr>:echo 'saved:' getline(".")<cr>
-# # Clear the current quickfix list
-# nnoremap <leader>cx :cex []\|SaveQuickfixList<cr>
-# # Open qflist
-# nnoremap <leader>cc <cmd>cw<cr>
-# nnoremap <leader>cs <cmd>SaveQuickfixList<cr>
-# nnoremap <leader>cl <cmd>LoadQuickfixList<cr>
-# nnoremap <leader>cd <cmd>DeleteQuickfixEntry<cr>
-# # Command to save/Load quickfix list to a file
-# command SaveQuickfixList {
-#     writefile(getqflist()->mapnew((_, v) => $'{bufname(v.bufnr)}:{v.lnum}:{v.col}:{v.text}'),
-#         quickfix_file)
-# }
-# command LoadQuickfixList {
-#     if (quickfix_file->filereadable())
-#         :exe 'cgetfile' quickfix_file
-#     endif
-# }
-# command DeleteQuickfixEntry {
-#     var qflist = getqflist()
-#     qflist->remove(line('.') - 1) # Remove entry (1-based index)
-#     setqflist(qflist, 'r') # Replace quickfix list
-#     SaveQuickfixList
-#     LoadQuickfixList
-# }
-# # XXX Followikng does not work when many vim instances are open
-# augroup BookmarksQfList | autocmd!
-#     autocmd VimEnter * LoadQuickfixList
-# #     autocmd VimLeavePre * SaveQuickfixList
-# augroup END
-
-#--------------------
-# Plugins
-#--------------------
+" Plugins
 
 if has('syntax') && has('eval') && !getcompletion('matchit', 'packadd')->empty()
     packadd! matchit
@@ -161,299 +109,80 @@ if !getcompletion('hlyank', 'packadd')->empty()
     packadd! hlyank
 endif
 
-# Suppress netrw banner
-# g:netrw_banner = 0
+" Suppress netrw banner
+" g:netrw_banner = 0
 
-## Debug Vim in Linux (:h :Termdebug), needs gdb
-# packadd! termdebug
-# set mouse=a # Needed for Winbar menu
-# g:termdebug_config = {}
-# g:termdebug_config['wide'] = 1 # Force vertical split
-# g:termdebug_config['evaluate_in_popup'] = v:true
+" Debug Vim in Linux (:h :Termdebug), needs gdb
+" packadd! termdebug
+" set mouse=a # Needed for Winbar menu
+" g:termdebug_config = {}
+" g:termdebug_config['wide'] = 1 # Force vertical split
+" g:termdebug_config['evaluate_in_popup'] = v:true
 
-# # Download plug.vim if it doesn't exist yet
-# if empty(glob('~/.vim/autoload/plug.vim'))
-#     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-#                 \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-# endif
+" # Download plug.vim if it doesn't exist yet
+" if empty(glob('~/.vim/autoload/plug.vim'))
+"     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+"                 \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+" endif
 
-# # Run PlugInstall if there are missing plugins
-# autocmd VimEnter * if exists('g:plugs') && len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) > 0
-#             \| PlugInstall --sync | source $MYVIMRC
-#             \| endif
+" # Run PlugInstall if there are missing plugins
+" autocmd VimEnter * if exists('g:plugs') && len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) > 0
+"             \| PlugInstall --sync | source $MYVIMRC
+"             \| endif
 
-# if has('gui')  # MacVim
-#     plug#begin("~/.local/share/vim-plug/")
-#     # plug#begin()
-#     # Plug '~/git/scope.vim'
-#     # Plug '~/git/devdocs.vim'
-#     # Plug '~/git/vimbits'
-#     # Plug '~/git/bufline.vim'
-#     # Plug '~/git/vimsuggest'
-#     # Plug '~/git/vimcomplete'
-#     Plug 'airblade/vim-gitgutter'
-#     plug#end()
-# else
-#     plug#begin("~/.local/share/vim-plug/")
-#     # Make sure you use single quotes
-#     # Plug 'noahfrederick/vim-noctu'
-#     # Plug 'letorbi/vim-colors-modern-borland'
-#     # Plug 'airblade/vim-gitgutter'
-#     # Plug 'lacygoill/vim9asm'
-#     # Plug 'yegappan/lsp'
-#     # Plug '~/git/lsp'
-#     # Plug 'rafamadriz/friendly-snippets'
-#     # Plug 'hrsh7th/vim-vsnip'
-#     # Plug 'hrsh7th/vim-vsnip-integ'
-#     # Plug 'vim-python/python-syntax'
-#     # colorschemes
-#     # Plug 'cocopon/iceberg.vim'
-#     # Plug 'dracula/vim'
-#     #
-#     # Plug '~/git/declutter.vim'
-#     # Plug 'girishji/declutter.vim'
-#     # Plug '~/git/bufline.vim'
-#     # Plug 'girishji/bufline.vim'
-#     # Plug '~/git/scope.vim'
-#     # Plug '~/git/vimsuggest'
-#     # Plug '~/git/vimcomplete'
-#     # Plug 'girishji/vimcomplete'
-#     # Plug '~/git/ngram-complete.vim'
-#     # Plug 'girishji/ngram-complete.vim'
-#     # Plug '~/git/vimbits'
-#     # Plug 'girishji/vimbits'
-#     # Plug 'girishji/pythondoc.vim', {'for': 'python'}
-#     # Plug '~/git/pythondoc.vim', {'for': 'python'}
-#     # Plug '~/git/pythondoc.vim'
-#     # Plug '~/git/devdocs.vim'
-#     # Plug 'girishji/devdocs.vim'
-#     plug#end()
-# endif
+" if has('gui')  # MacVim
+"     plug#begin("~/.local/share/vim-plug/")
+"     # plug#begin()
+"     # Plug '~/git/devdocs.vim'
+"     plug#end()
+" else
+"     plug#begin("~/.local/share/vim-plug/")
+"     # Make sure you use single quotes
+"     # Plug 'lacygoill/vim9asm'
+"     # Plug 'yegappan/lsp'
+"     # Plug 'rafamadriz/friendly-snippets'
+"     # Plug 'hrsh7th/vim-vsnip'
+"     # Plug 'hrsh7th/vim-vsnip-integ'
+"     # Plug 'vim-python/python-syntax'
+"     # Plug 'girishji/pythondoc.vim', {'for': 'python'}
+"     # Plug '~/git/pythondoc.vim', {'for': 'python'}
+"     # Plug '~/git/devdocs.vim'
+"     # Plug 'girishji/devdocs.vim'
+"     plug#end()
+" endif
 
-# g:python_highlight_all = 1
-# g:pythondoc_h_expand = 1
-# g:vimbits_vim9cmdline = true
-# g:vimcomplete_tab_enable = 1
+" Add custom dictionaries (ex. ~/.vim/dicts/python for python dict)
+" g:vimfiles_dir = &runtimepath->split(',')[0]
+" autocmd FileType * {
+"     var dict = $'{g:vimfiles_dir}/dicts/{expand("<amatch>")}'->resolve()->fnamemodify(':p')
+"     if dict->filereadable()
+"         exe $'setlocal complete+=k{dict}'
+"         exe $'setlocal dictionary={dict}'
+"     endif
+" }
 
-# Add custom dictionaries (ex. ~/.vim/dicts/python for python dict)
-# g:vimfiles_dir = &runtimepath->split(',')[0]
-# autocmd FileType * {
-#     var dict = $'{g:vimfiles_dir}/dicts/{expand("<amatch>")}'->resolve()->fnamemodify(':p')
-#     if dict->filereadable()
-#         exe $'setlocal complete+=k{dict}'
-#         exe $'setlocal dictionary={dict}'
-#     endif
-# }
+augroup augrp_misc | autocmd!
+    " Macro key mapped to Q for help file
+    autocmd FileType help nnoremap <buffer> Q q
+    " Windows to close
+    autocmd FileType help,vim-plug,qf nnoremap <buffer><silent> q :close<CR>
+    " netrw: 'q' is already mapped to compound key (ex. 'qf' gets file info).
+    autocmd FileType netrw nnoremap <buffer><silent> qq :close<CR>
+    " Tell vim to automatically open the quickfix and location window.
+    " :grep, :vimgrep and so on are called quickfix commands, they trigger
+    " QuickFixCmdPost.
+    " NOTE: Exclude cadexppr also ([^c]*), otherwise g//caddexpr will open
+    " quickfix after the first match.
+    autocmd QuickFixCmdPost [^lc]* cwindow
+    autocmd QuickFixCmdPost l*    lwindow
+    " Update tags in help file
+    autocmd BufWritePost **/doc/*.txt helptags <afile>:p:h
+    " Make help files writeable
+    autocmd BufEnter **/doc/*.txt set modifiable noreadonly
+    " spell : When a word is CamelCased, assume "Cased" is a separate word
+    autocmd FileType help,markdown set spelloptions=camel
+    " Remove trailing whitespaces
+    autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
+augroup END
 
-# --------------------------
-# Cmdline auto-completion
-# --------------------------
-set wim=noselect:lastused,full wop=pum,tagfile wcm=<C-@> wmnu
-# NOTE: Using timer_start causes 'cmdheight' to jump +1 on first ':' attempt (vim bug)
-# autocmd CmdlineChanged : timer_start(0, function(CmdComplete, [getcmdline()]))
-# def CmdComplete(cur_cmdline: string, timer: number)
-# autocmd CmdlineChanged : CmdComplete()
-autocmd CmdlineChanged :,/,\? CmdComplete()
-def CmdComplete()
-    var [cmdline, curpos] = [getcmdline(), getcmdpos()]
-    if getchar(1, {number: true}) == 0  # Typehead is empty (no more pasted input)
-            && !wildmenumode() && curpos == cmdline->len() + 1
-            && cmdline =~ '\%(\w\|[*/:.-]\)$' && cmdline !~ '^\d\+$'  # Reduce noise
-        SkipCmdlineChanged()  # Suppress redundant completion attempts
-        feedkeys("\<C-@>", "ti")
-        # NOTE: Using the 'g' flag in substitute() prevents Vim from inserting
-        #   <C-@> when typing quickly with no completion items available.
-        # Remove <C-@> that get inserted when no items are available
-        timer_start(0, (_) => getcmdline()->substitute('\%x00', '', 'ge')->setcmdline())
-    endif
-enddef
-cnoremap <expr> <up> SkipCmdlineChanged("\<up>")
-cnoremap <expr> <down> SkipCmdlineChanged("\<down>")
-autocmd CmdlineEnter : set bo+=error
-autocmd CmdlineLeave : set bo-=error
-def SkipCmdlineChanged(key = ''): string
-    set ei+=CmdlineChanged
-    timer_start(0, (_) => execute('set ei-=CmdlineChanged'))
-    return key == '' ? '' : ((pumvisible() ? "\<c-e>" : '') .. key)
-enddef
-autocmd CmdlineEnter /,\? set ph=8
-autocmd CmdlineLeave /,\? set ph&
-# autocmd CmdlineEnter /,\? setcmdline('\<') | set ph=8
-# autocmd CmdlineEnter /,\? setcmdline('\<') | set wop-=pum
-# autocmd CmdlineEnter /,\? set wop-=pum
-# autocmd CmdlineLeave /,\? set wop+=pum
-
-# does not complete if not at end of line
-# say there are space chars at end, if you make substitute replace all (not just
-#  end) and use cmdline->trim(' ', 2)->len() + 1, then cursor will jump to end
-#  after removing ^@ (past the trailing spaces), not desirable. so, better to
-#  not support spaces at end
-# can use substitute('\%x00', ...) to replace inside line, but cursor jumps to
-#   end. may fix this using timer_start with setcmdpos or feedkeys
-
-# set findfunc=FuzzyFind
-# def FuzzyFind(cmdarg: string, _: bool): list<string>
-#     if allfiles == null_list
-#         allfiles = systemlist($'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune -o -name "*.swp" \) -type f -follow')
-#     endif
-#     return cmdarg == '' ? allfiles : allfiles->matchfuzzy(cmdarg)
-# enddef
-
-# --------------------------
-# Fuzzy find file
-# --------------------------
-command! -nargs=* -complete=customlist,FuzzyFind Find execute(selected_match != '' ? $'edit {selected_match}' : '')
-var allfiles: list<string>
-autocmd CmdlineEnter : allfiles = null_list
-def FuzzyFind(arglead: string, _: string, _: number): list<string>
-    if allfiles == null_list
-        allfiles = systemlist($'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune -o -name "*.swp" \) -type f -follow')
-    endif
-    return arglead == '' ? allfiles : allfiles->matchfuzzy(arglead)
-enddef
-# nnoremap <leader><space> :Find<space><c-@>
-nnoremap <leader><space> :<c-r>=execute('let fzfind_root="."')\|''<cr>Find<space><c-@>
-nnoremap <leader>fv :<c-r>=execute('let fzfind_root="$HOME/.vim"')\|''<cr>Find<space><c-@>
-nnoremap <leader>fV :<c-r>=execute('let fzfind_root="$VIMRUNTIME"')\|''<cr>Find<space><c-@>
-# --------------------------
-# Live grep
-# --------------------------
-command! -nargs=+ -complete=customlist,GrepComplete Grep VisitFile()
-def GrepComplete(arglead: string, cmdline: string, cursorpos: number): list<any>
-    return arglead->len() > 1 ? systemlist($'ggrep -REIHns "{arglead}"' ..
-       ' --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.swp"') : []
-enddef
-def VisitFile()
-    if (selected_match != null_string)
-        var qfitem = getqflist({lines: [selected_match]}).items[0]
-        if qfitem->has_key('bufnr') && qfitem.lnum > 0
-            var pos = qfitem.vcol > 0 ? 'setcharpos' : 'setpos'
-            exec $':b +call\ {pos}(".",\ [0,\ {qfitem.lnum},\ {qfitem.col},\ 0]) {qfitem.bufnr}'
-            setbufvar(qfitem.bufnr, '&buflisted', 1)
-        endif
-    endif
-enddef
-nnoremap <leader>g :Grep<space>
-nnoremap <leader>G :Grep <c-r>=expand("<cword>")<cr>
-# --------------------------
-# Fuzzy find buffer
-# --------------------------
-command! -nargs=* -complete=customlist,FuzzyBuffer Buffer execute('b ' .. selected_match->matchstr('\d\+'))
-def FuzzyBuffer(arglead: string, _: string, _: number): list<string>
-    var bufs = execute('buffers', 'silent!')->split("\n")
-    var altbuf = bufs->indexof((_, v) => v =~ '^\s*\d\+\s\+#')
-    if altbuf != -1
-        [bufs[0], bufs[altbuf]] = [bufs[altbuf], bufs[0]]
-    endif
-    return arglead == '' ? bufs : bufs->matchfuzzy(arglead)
-enddef
-nnoremap <leader><bs> :Buffer <c-@>
-# --------------------------
-# Utilities
-# --------------------------
-var selected_match = null_string
-autocmd CmdlineLeavePre : SelectItem()
-def SelectItem()
-    selected_match = ''
-    if getcmdline() =~ '^\s*\%(Grep\|Find\|Buffer\)\s'
-        var info = cmdcomplete_info()
-        if info != {} && info.pum_visible && !info.matches->empty()
-            selected_match = info.selected != -1 ? info.matches[info.selected] : info.matches[0]
-            setcmdline(info.cmdline_orig)
-        endif
-    endif
-enddef
-
-# ---------------------------
-# Insert Mode Auto-completion
-# ---------------------------
-# XXX 'menu' has a problem: if only 1 candidate, it completes on <c-n>, then
-# <c-n> gets sent again due to event, and it reverts (the completion list in Vim
-# has 2 items, one is typed text and another is candidate). these two alternate
-# in a loop. Use 'menuone'.
-# can do: if !skip_next_complete && curline->strpart(0, col('.') - 1) =~ '\%(\k\|\.\)$'
-# set cot=menuone,popup,preinsert inf cpt-=t,i
-# hi ComplMatchIns ctermfg=1
-#
-# set cot=menuone,popup,noselect,nearest cpt-=t,i
-set cot=menuone,popup,noselect,nearest cpt=.^6,w,b,u^5
-autocmd TextChangedI * InsComplete()
-def InsComplete()
-    if getcharstr(1) == '' && getline('.')->strpart(0, col('.') - 1) =~ '\k$'
-        # Suppress event caused by <c-n> if completion candidates not found
-        SkipTextChangedI()
-        feedkeys("\<c-n>", "n")
-    endif
-enddef
-inoremap <silent> <c-e> <c-r>=<SID>SkipTextChangedI()<cr><c-e>
-inoremap <silent> <c-y> <c-r>=<SID>SkipTextChangedI()<cr><c-y>
-def SkipTextChangedI(): string
-    set eventignore+=TextChangedI  # Suppress next event caused by <c-e> (or <c-n> when no matches found)
-    timer_start(1, (_) => {
-        set eventignore-=TextChangedI
-    })
-    return ''
-enddef
-inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
-inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
-# inoremap <silent> <tab> <c-r>=<SID>SmartTab()<cr>
-# NOTE: <c-y> dismisses pum but keeps inserted item, use <c-e> to cancel.
-# def SmartTab(): string
-#     var info = complete_info(['pum_visible', 'matches', 'selected'])
-#     var base = getline('.')->strpart(0, col('.') - 1)->matchstr('\k\+$')
-#     if !info.pum_visible || (info.matches->len() == 1
-#             && (info.matches[0].word ==# base || info.selected != -1))
-#         return "\<tab>"
-#     endif
-#     return "\<c-n>"
-# enddef
-
-# --------------------------
-# Abbrev Completor
-# --------------------------
-set cpt+=fAbbrevCompletor
-# set cpt+=ffunction("g:AbbrevCompletor"\\,\ [5])^5
-def! g:AbbrevCompletor(findstart: number, base: string): any
-# def! g:AbbrevCompletor(maxitems: number, findstart: number, base: string): any
-    if findstart > 0
-        var prefix = getline('.')->strpart(0, col('.') - 1)->matchstr('\S\+$')
-        if prefix->empty()
-            return -2
-        endif
-        return col('.') - prefix->len() - 1
-    endif
-    var lines = execute('ia', 'silent!')
-    if lines =~? gettext('No abbreviation found')
-        return v:none  # Suppresses warning message
-    endif
-    var items = []
-    for line in lines->split("\n")
-        var m = line->matchlist('\v^i\s+\zs(\S+)\s+(.*)$')
-        if m->len() > 2 && m[1]->stridx(base) == 0
-            items->add({ word: m[1], info: m[2], dup: 1 })
-        endif
-    endfor
-    return items->empty() ? v:none :
-        items->sort((v1, v2) => v1.word < v2.word ? -1 : v1.word ==# v2.word ? 0 : 1)
-    # var T = items->empty() ? v:none :
-    #     items->sort((v1, v2) => v1.word < v2.word ? -1 : v1.word ==# v2.word ? 0 : 1)->slice(0, maxitems)
-    # return {words: T, refresh: 'always'}
-enddef
-
-
-# --------------------------
-# LSP Completor
-# --------------------------
-# set cpt+=fLspCompletor
-# set cpt+=fLspCompletor^5
-# set cpt=fLspCompletor,.,w,b,u,t,fAbbrevCompletor
-# def! g:LspCompletor(findstart: number, base: string): any
-#     if findstart == 1
-#         return g:LspOmniFunc(findstart, base)
-#     endif
-#     return {words: g:LspOmniFunc(findstart, base), refresh: 'always'}
-# enddef
-# autocmd VimEnter * g:LspOptionsSet({ autoComplete: false, omniComplete: true, autoHighlightDiags: false })
-
-#------------------------------------------------------------
-# vim: ts=8 sts=4 sw=4 et fdm=marker
+" vim: shiftwidth=2 sts=2 expandtab

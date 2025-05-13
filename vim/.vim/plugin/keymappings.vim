@@ -138,10 +138,6 @@ nnoremap <leader>vm <cmd>messages<cr>
 nnoremap <leader>ve <cmd>e $MYVIMRC<cr>
 nnoremap <leader>vz <cmd>e ~/.zsh.common<cr>
 nnoremap <leader>vg <cmd>e ~/.gvimrc<cr>
-# nnoremap <leader>vz <cmd>FoldingToggle<cr>
-# Following not needed: use 1<c-g> for absolute path, or <c-g> for relative path
-# nnoremap <leader>vp <cmd>echo expand('%')<cr>
-nnoremap <leader>vi <cmd>ShowImage<cr>
 # open netrw file browser
 nnoremap <leader>vf <cmd>35Lex<cr>
 nnoremap <leader>vn <cmd>35Lex<cr>

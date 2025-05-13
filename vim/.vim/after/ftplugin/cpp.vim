@@ -16,15 +16,6 @@ nnoremap <buffer> <leader>F gggqG<cr>
 nnoremap <buffer> <leader>M :setl makeprg=sh\ -c\ \"g++-14\ -std=c++23\ -Wall\ -Wextra\ -Wconversion\ -DONLINE_JUDGE\ -O2\ -lstdc++exp\ -o\ /tmp/a.out\ %\ \&\&\ /tmp/a.out\"<cr>:make %<cr>
 nnoremap <buffer> <leader>m :setl makeprg=sh\ -c\ \"g++-14\ -std=c++23\ -Wall\ -Wextra\ -Wconversion\ -DONLINE_JUDGE\ -O2\ -lstdc++exp\ -o\ /tmp/a.out\ %\"<cr>:make %<cr>
 
-# # Parenthesis completion
-# def IsLambdaFn(): bool
-#     return getline('.')->match('=\s*\[.\{-}\](.\{-})') != -1
-# enddef
-# # i_CTRL-G_U is for enabling redo
-# inoremap <expr> { IsLambdaFn() ? "{};\<c-g>U\<left><left>" : "{}\<c-g>U\<left>"
-# # NOTE: Accommodate vimcomplete <cr> keymap
-# inoremap <buffer><expr> <cr> pumvisible() ? "\<c-y>\<cr>" : getline(".")->slice(col(".") - 2, col(".")) == "{}" ? "\<cr>\<esc>O" : "\<cr>"
-
 # Abbreviations:
 # - When naming, ignore vowels inless they indicate type (ex. vi; -> vector<int>)
 # - Appending a ';' is problematic, since it is not a keyword. abbrev will not
@@ -319,22 +310,6 @@ iabbr <buffer> pget; auto it = map.find(key);
 iabbr <buffer> map_get; auto it = map.find(key);
             \<cr>if (it != map.end()) { return it->second; }
             \<cr>return default_value;
-
-# for: break from nested loops (alternative: use a function and "return" from deeply nested loop)
-iabbr <buffer> for_break; for (auto [i, stopOuter] = tuple{0, false}; i < 10 && !stopOuter; ++i) {
-            \<cr>for (auto [j, stopMiddle] = tuple{0, false}; j < 10 && !stopMiddle; ++j) {
-            \<cr>for (int k = 0; k < 10; ++k) {
-            \<cr>if (i == 2 && j == 3 && k == 4) {
-            \<cr>stopMiddle = true; // Break middle loop
-            \<cr>stopOuter = true;  // Break outer loop
-            \<cr>break;
-            \<cr>}<c-r>=abbr#Eatchar()<cr>
-
-# for loops with mixed type variable initialization
-# iabbr <buffer> for_mixed; for (auto v = make_pair(0, 'c'); v.first < 10; ++v.first) {<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> for_mixed; for (auto v = pair{0, 'c'}; v.first < 10; ++v.first) {<c-r>=abbr#Eatchar()<cr>
-# iabbr <buffer> for_mixed2; for (auto v = make_tuple(0, false, 'c'); get<0>(v) < 10; ++get<0>(v)) {<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer> for_mixed2; for (auto v = tuple{0, false, 'c'}; get<0>(v) < 10; ++get<0>(v)) {<c-r>=abbr#Eatchar()<cr>
 
 # swap
 # Swaps the values of the elements the given iterators are pointing to.

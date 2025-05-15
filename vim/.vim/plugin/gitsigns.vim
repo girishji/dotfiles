@@ -1,5 +1,8 @@
 " Insert signs in the sign column to indicate 'git diff'
 
+nnoremap ]h <cmd>call NextGitHunk()<CR>
+nnoremap [h <cmd>call PrevGitHunk()<CR>
+
 augroup GitSignsAuto | autocmd!
   autocmd BufReadPost,BufWritePost * if &buftype ==# '' | call GitSigns() | endif
   " Checking buftype ensures it’s a real file buffer (not help, quickfix, etc.)
@@ -70,11 +73,6 @@ function! GitSigns()
   endfor
 endfunction
 
-" Keymaps
-
-nnoremap ]h <cmd>call NextGitHunk()<CR>
-nnoremap [h <cmd>call PrevGitHunk()<CR>
-
 function! s:GitHunks()
   if !s:IsGitFile()
     return []
@@ -82,7 +80,6 @@ function! s:GitHunks()
 
   let l:signs = sign_getplaced(bufnr('%'), {'group': '*', 'lnum': 0})[0].signs
   if empty(l:signs)
-    echo "No Git signs"
     return []
   endif
 

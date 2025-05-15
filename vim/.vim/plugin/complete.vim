@@ -157,10 +157,7 @@ enddef
 # Fuzzy find file
 # --------------------------
 # nnoremap <leader><space> :Find<space><c-@>
-nnoremap <leader><space> :<c-r>=execute('let fzfind_root="."')\|''<cr>Find<space><c-@>
-nnoremap <leader>fv :<c-r>=execute('let fzfind_root="$HOME/.vim"')\|''<cr>Find<space><c-@>
-nnoremap <leader>fV :<c-r>=execute('let fzfind_root="$VIMRUNTIME"')\|''<cr>Find<space><c-@>
-command! -nargs=* -complete=customlist,FuzzyFind Find execute(selected_match != '' ? $'edit {selected_match}' : '')
+command! -nargs=* -complete=customlist,FuzzyFind Find execute(selected_match != '' ? $'edit {selected_match}' : '', 'silent')
 var allfiles: list<string>
 autocmd CmdlineEnter : allfiles = null_list
 def FuzzyFind(arglead: string, _: string, _: number): list<string>
@@ -169,6 +166,9 @@ def FuzzyFind(arglead: string, _: string, _: number): list<string>
   endif
   return arglead == '' ? allfiles : allfiles->matchfuzzy(arglead)
 enddef
+nnoremap <leader><space> :<c-r>=execute('let fzfind_root="."')\|''<cr>Find<space><c-@>
+nnoremap <leader>fv :<c-r>=execute('let fzfind_root="$HOME/.vim"')\|''<cr>Find<space><c-@>
+nnoremap <leader>fV :<c-r>=execute('let fzfind_root="$VIMRUNTIME"')\|''<cr>Find<space><c-@>
 
 # --------------------------
 # Live grep
@@ -185,7 +185,7 @@ def VisitFile()
     var qfitem = getqflist({lines: [selected_match]}).items[0]
     if qfitem->has_key('bufnr') && qfitem.lnum > 0
       var pos = qfitem.vcol > 0 ? 'setcharpos' : 'setpos'
-      exec $':b +call\ {pos}(".",\ [0,\ {qfitem.lnum},\ {qfitem.col},\ 0]) {qfitem.bufnr}'
+      silent exec $':b +call\ {pos}(".",\ [0,\ {qfitem.lnum},\ {qfitem.col},\ 0]) {qfitem.bufnr}'
       setbufvar(qfitem.bufnr, '&buflisted', 1)
     endif
   endif

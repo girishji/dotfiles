@@ -22,6 +22,10 @@ vnoremap <leader>k 8k
 # alternative to 'packadd nohlsearch'. use <cmd> to avoid triggering CmdlineEnter.
 nnoremap <silent> <esc> <cmd>nohls<cr><esc>
 
+# Word search
+nnoremap <leader>/ /\<
+nnoremap <leader>? ?\<
+
 # Buffer navigation
 # nnoremap <silent> <leader>[ :bprevious<CR>
 # nnoremap <silent> <leader>] :bnext<CR>

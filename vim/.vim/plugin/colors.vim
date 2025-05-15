@@ -9,10 +9,10 @@ vim9script
 # NOTE: 'background' is not set correctly until window is opened (after VimEnter). So,
 # set the background explicitly so that colorscheme can choose appropriate colors.
 
-# # If env var is set, use it.
-# if expandcmd($VIM_BG) != null_string
-#     exec $'set background={expandcmd($VIM_BG)}'
-# endif
+# If env var is set, use it.
+if expandcmd($VIM_BG) != null_string
+    exec $'set background={expandcmd($VIM_BG)}'
+endif
 
 # color 146 -> slightly blue but gray
 # color 249 -> gray replacement for 146
@@ -93,16 +93,21 @@ def SaneColors()
     hi SpecialKey ctermfg=10 |# 'tab', 'nbsp', 'space', ctrl chars (^a, ^b, etc.)
     hi! link EndOfBuffer SpecialKey |# '~' at the beginning of empty lines
 
-    var bg = hlget('SignColumn')->get(0, {})->get('ctermbg', null_string)
-    if (bg != null_string)
-        exec $'hi GitGutterAdd ctermbg={bg}'
-        exec $'hi GitGutterChange ctermbg={bg}'
-        exec $'hi GitGutterDelete ctermbg={bg}'
+    if expandcmd($VIM_CS) == 'mc'  # midnight commander
+        hi StatusLine     ctermfg=8 ctermbg=7 cterm=bold
+	hi! link StatusLineNC StatusLine
+	hi! link StatusLineTerm StatusLine
+	hi Pmenu 	  ctermfg=8 ctermbg=7 cterm=bold
+	hi PmenuSel       ctermfg=15 ctermbg=8
+	hi PmenuMatch     ctermfg=3 ctermbg=7
+	hi PmenuMatchSel  cterm=underline ctermfg=3 ctermbg=8
+	hi PmenuSbar      ctermbg=14
+	hi PmenuThumb     ctermbg=8
     endif
 enddef
 
 def ApplyColors()
-    var monochrome = expandcmd($VIM_MONOCHROME) != null_string
+    var monochrome = expandcmd($VIM_CS) == 'mono' || expandcmd($VIM_CS) == 'mc'
     if &filetype !~ 'help\|markdown' && monochrome
         # XXX: When --clean both error and errormsg have ctermfg=15. Leave them
         # unchanged, otherwise errors are not visible. Do not use 15.

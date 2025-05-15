@@ -149,15 +149,15 @@
     # zsh-autosuggestions: offers suggestions as you type
     local zas='/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh'
     if [ -f "$zas" ]; then source $zas; fi
-    # Make PgDn accept suggestion; by default right-arrow accepts suggestion
-    bindkey -v '^[[6~' autosuggest-accept
+    # bindkey -v '^[[6~' autosuggest-accept # PgDn accept suggestion
+    bindkey -v '^[[6;5~' autosuggest-accept # Ctrl-PgDn accept suggestion
     # XXX: Setting fg color does not work properly. It does not repaint the screen
     # after right-arrow completion.
     bg_color="${COLORFGBG:-0;-1}" # if not set, use default value of 0;-1 (fg;bg)
     if [[ ${bg_color} == "0;15" ]]; then # light background
       # typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
     else
-      typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
+      typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=14'
     fi
 }
 

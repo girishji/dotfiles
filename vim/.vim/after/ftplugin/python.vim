@@ -46,59 +46,59 @@ g:pyindent_open_paren = 'shiftwidth()' # https://github.com/vim/vim/blob/v8.2.0/
 iabbr <buffer>       case_ match myval:
             \<cr>case 10:
             \<cr>pass
-            \<cr>case _:<esc>3k_fm;i<c-r>=abbr#Eatchar()<cr>
+            \<cr>case _:<esc>3k_fm;i<c-r>=Eatchar()<cr>
 iabbr <buffer>       match_case_ match myval:
             \<cr>case 10:
             \<cr>pass
-            \<cr>case _:<esc>3k_fm;i<c-r>=abbr#Eatchar()<cr>
+            \<cr>case _:<esc>3k_fm;i<c-r>=Eatchar()<cr>
 
 # print
-iabbr <buffer>       prerr;            print(, file=stderr)<esc>F,i<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       p;             print()<c-o>i<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       pr;            print(, end="\n")<c-o>F,<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       pr_;           print(, end="")<c-o>F,<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       prerr;            print(, file=stderr)<esc>F,i<c-r>=Eatchar()<cr>
+iabbr <buffer>       p;             print()<c-o>i<c-r>=Eatchar()<cr>
+iabbr <buffer>       pr;            print(, end="\n")<c-o>F,<c-r>=Eatchar()<cr>
+iabbr <buffer>       pr_;           print(, end="")<c-o>F,<c-r>=Eatchar()<cr>
 
-iabbr <buffer>       enum;          Color = Enum('Color', ['RED', 'GRN'])<esc>_fC<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       tuple_         Point = namedtuple('Point', 'x y')<esc>_<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       tuple__        Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       namedtuple_    Point = namedtuple('Point', 'x y')<esc>_<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       namedtuple__   Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>       enum;          Color = Enum('Color', ['RED', 'GRN'])<esc>_fC<c-r>=Eatchar()<cr>
+iabbr <buffer>       tuple_         Point = namedtuple('Point', 'x y')<esc>_<c-r>=Eatchar()<cr>
+iabbr <buffer>       tuple__        Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=Eatchar()<cr>
+iabbr <buffer>       namedtuple_    Point = namedtuple('Point', 'x y')<esc>_<c-r>=Eatchar()<cr>
+iabbr <buffer>       namedtuple__   Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=Eatchar()<cr>
 
 # Misc
-iabbr <buffer><expr> def      abbr#NotCtx('def') ? 'def' : 'def ):<cr><esc>-f)i<c-r>=abbr#Eatchar()<cr>'
-iabbr <buffer>       def_     def ():<cr>"""."""<esc>-f(i<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       def__    def ():<c-o>o'''<cr>>>> print()<cr><cr>'''<esc>4k_f(i<c-r>=abbr#Eatchar()<cr>
+iabbr <buffer><expr> def      NotCtx('def') ? 'def' : 'def ):<cr><esc>-f)i<c-r>=Eatchar()<cr>'
+iabbr <buffer>       def_     def ():<cr>"""."""<esc>-f(i<c-r>=Eatchar()<cr>
+iabbr <buffer>       def__    def ():<c-o>o'''<cr>>>> print()<cr><cr>'''<esc>4k_f(i<c-r>=Eatchar()<cr>
 iabbr <buffer>       try_ try:
             \<cr>pass
             \<cr>except Exception as err:
             \<cr>print(f"Unexpected {err=}, {type(err)=}")
             \<cr>raise<cr>else:
-            \<cr>pass<esc>5kcw<c-r>=abbr#Eatchar()<cr>
+            \<cr>pass<esc>5kcw<c-r>=Eatchar()<cr>
 iabbr <buffer>       main__2
             \ if __name__ == "__main__":
             \<cr>import doctest
-            \<cr>doctest.testmod()<esc><c-r>=abbr#Eatchar()<cr>
+            \<cr>doctest.testmod()<esc><c-r>=Eatchar()<cr>
 iabbr <buffer>       main__
             \ if __name__ == "__main__":
-            \<cr>main()<esc><c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       python3#    #!/usr/bin/env python3<esc><c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       memo;       @functools.cache<cr><esc>-f)i<c-r>=abbr#Eatchar()<cr>'
+            \<cr>main()<esc><c-r>=Eatchar()<cr>
+iabbr <buffer>       python3#    #!/usr/bin/env python3<esc><c-r>=Eatchar()<cr>
+iabbr <buffer>       memo;       @functools.cache<cr><esc>-f)i<c-r>=Eatchar()<cr>'
 
 # collections
-iabbr  <buffer>  defaultdict_     defaultdict(int)<c-r>=abbr#Eatchar()<cr>
-iabbr  <buffer>  defaultdict__    defaultdict(set)<c-r>=abbr#Eatchar()<cr>
-iabbr  <buffer>  defaultdict___   defaultdict(lambda: '[default  value]')<c-r>=abbr#Eatchar()<cr>
-iabbr  <buffer>  dict_default_    defaultdict(int)<c-r>=abbr#Eatchar()<cr>
-iabbr  <buffer>  dict_default__   defaultdict(set)<c-r>=abbr#Eatchar()<cr>
-iabbr  <buffer>  dict_default___  defaultdict(lambda: '[default  value]')<c-r>=abbr#Eatchar()<cr>
+iabbr  <buffer>  defaultdict_     defaultdict(int)<c-r>=Eatchar()<cr>
+iabbr  <buffer>  defaultdict__    defaultdict(set)<c-r>=Eatchar()<cr>
+iabbr  <buffer>  defaultdict___   defaultdict(lambda: '[default  value]')<c-r>=Eatchar()<cr>
+iabbr  <buffer>  dict_default_    defaultdict(int)<c-r>=Eatchar()<cr>
+iabbr  <buffer>  dict_default__   defaultdict(set)<c-r>=Eatchar()<cr>
+iabbr  <buffer>  dict_default___  defaultdict(lambda: '[default  value]')<c-r>=Eatchar()<cr>
 #
-iabbr <buffer>   cache_          @functools.cache<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>   __init__        def __init__(self):<esc>hi<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>   __add__         def __add__(self, other):<cr><c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>   __sub__         def __sub__(self, other):<cr><c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>   __mul__         def __mul__(self, other):<cr><c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>   __truediv__     def __truediv__(self, other):<cr><c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>   __floordiv__    def __floordiv__(self, other):<cr><c-r>=abbr#Eatchar()<cr>
+iabbr <buffer>   cache_          @functools.cache<c-r>=Eatchar()<cr>
+iabbr <buffer>   __init__        def __init__(self):<esc>hi<c-r>=Eatchar()<cr>
+iabbr <buffer>   __add__         def __add__(self, other):<cr><c-r>=Eatchar()<cr>
+iabbr <buffer>   __sub__         def __sub__(self, other):<cr><c-r>=Eatchar()<cr>
+iabbr <buffer>   __mul__         def __mul__(self, other):<cr><c-r>=Eatchar()<cr>
+iabbr <buffer>   __truediv__     def __truediv__(self, other):<cr><c-r>=Eatchar()<cr>
+iabbr <buffer>   __floordiv__    def __floordiv__(self, other):<cr><c-r>=Eatchar()<cr>
 
 # Leetcode
 def GetSurroundingFn(): string
@@ -120,8 +120,8 @@ iabbr <buffer>       '''_ '''
             \<cr>>>> print(<c-r>=<SID>GetSurroundingFn()<cr>)
             \<cr>'''<esc>ggOfrom sys import stderr<esc>Go<c-u><esc>o<esc>
             \:normal imain__2<cr>
-            \?>>> print<cr>:nohl<cr>g_hi<c-r>=abbr#Eatchar()<cr>
-iabbr <buffer>       """            """."""<c-o>3h<c-r>=abbr#Eatchar()<cr>
+            \?>>> print<cr>:nohl<cr>g_hi<c-r>=Eatchar()<cr>
+iabbr <buffer>       """            """."""<c-o>3h<c-r>=Eatchar()<cr>
 
 # commands
 

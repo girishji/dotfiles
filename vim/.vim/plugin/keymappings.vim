@@ -282,7 +282,7 @@ endif
 #  - instead of above, use vimgrep
 # nnoremap <leader>fg :vim /\v/gj %<left><left><left><left><left>
 # Search lines within file
-nnoremap <leader>/ :vimgrep /\v/gj %<left><left><left><left><left>
+# nnoremap <leader>/ :vimgrep /\v/gj %<left><left><left><left><left>
 
 
 # tag search

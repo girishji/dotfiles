@@ -12,7 +12,7 @@ vim9script
 # hi ComplMatchIns ctermfg=1
 #
 # set cot=menuone,popup,noselect,nearest cpt-=t,i
-set cot=menuone,popup,noselect,nearest cpt=.^6,w,b,u^5
+set cot=menuone,popup,noselect,nearest cpt=.^10,w^5,b^5,u^5
 autocmd TextChangedI * InsComplete()
 def InsComplete()
   if getcharstr(1) == '' && getline('.')->strpart(0, col('.') - 1) =~ '\k$'

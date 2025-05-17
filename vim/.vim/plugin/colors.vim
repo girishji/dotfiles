@@ -35,7 +35,41 @@ if get(g:, 'colors_name', null_string) == null_string
     augroup END
 endif
 
+def ApplyColors()
+    var monochrome = expandcmd($VIM_CS) == 'mono'
+        || expandcmd($VIM_CS) == 'mc'
+        || expandcmd($VIM_CS) == 'borland'
+    if &filetype !~ 'help\|markdown' && monochrome
+        # XXX: Do not use 15. When --clean both error and errormsg have
+        # ctermfg=15. Leave them unchanged, otherwise errors are not visible.
+        # XXX: Changing color of 'bold' fonts through terminal messess up
+        # color of statusline.
+        hi Type ctermfg=12 cterm=bold
+        hi! link Statement Type
+        hi! link Identifier Type
+        hi Operator ctermfg=None
+        hi Comment ctermfg=14 cterm=italic
+        hi String ctermfg=13 cterm=none
+        hi Special ctermfg=13
+        hi Constant ctermfg=13 cterm=none
+        hi PreProc ctermfg=13 cterm=bold
+    else
+        syntax reset
+        hi link StatusLineNC StatusLine
+        hi Constant ctermfg=4
+        hi String ctermfg=6
+        hi Statement ctermfg=2
+        hi Identifier ctermfg=4 cterm=none
+        hi PreProc ctermfg=1
+        hi Special ctermfg=1
+        hi Type ctermfg=3
+    endif
+    SaneColors()
+enddef
+
 def SaneColors()
+    # XXX: Do not use 15. When --clean both error and errormsg have
+    # ctermfg=15. Leave them unchanged, otherwise errors are not visible.
     if &bg == 'light'
         hi SignColumn ctermfg=None ctermbg=7
         hi LineNr ctermfg=11 ctermbg=7
@@ -57,7 +91,7 @@ def SaneColors()
         hi Cursorline ctermbg=7 cterm=none
         hi! link CursorlineNr Cursorline
         hi Wildmenu ctermfg=0 ctermbg=7
-        # 'cursorline' makes line unreadable in lldb
+        # XXX: 'cursorline' makes line unreadable in lldb
         # set cursorline
     else  # dark
         hi SignColumn ctermfg=None ctermbg=0
@@ -83,59 +117,58 @@ def SaneColors()
         hi DiffDelete ctermfg=8
         hi Folded ctermbg=0
         hi FoldColumn ctermbg=0
-        # XXX: When --clean both error and errormsg have ctermfg=15. Leave them
-        # unchanged, otherwise errors are not visible. Do not use 15.
-        # hi ErrorMsg ctermbg=9 ctermfg=8
+        if expandcmd($VIM_CS) == 'mc'
+            MCColors()
+        endif
+        if expandcmd($VIM_CS) == 'borland'
+            BorlandColors()
+        endif
     endif
     hi MatchParen ctermfg=1 ctermbg=none cterm=underline
     # hi Todo ctermfg=0 ctermbg=1
     hi Todo ctermfg=none ctermbg=none cterm=reverse,bold
     hi SpecialKey ctermfg=10 |# 'tab', 'nbsp', 'space', ctrl chars (^a, ^b, etc.)
     hi! link EndOfBuffer SpecialKey |# '~' at the beginning of empty lines
-
-    if expandcmd($VIM_CS) == 'mc'  # midnight commander
-        hi StatusLine     ctermfg=8 ctermbg=7 cterm=bold
-	hi! link StatusLineNC StatusLine
-	hi! link StatusLineTerm StatusLine
-	hi Pmenu 	  ctermfg=8 ctermbg=7 cterm=bold
-	hi PmenuSel       ctermfg=15 ctermbg=8
-	hi PmenuMatch     ctermfg=3 ctermbg=7
-	hi PmenuMatchSel  cterm=underline ctermfg=3 ctermbg=8
-	hi PmenuSbar      ctermbg=14
-	hi PmenuThumb     ctermbg=8
-    endif
 enddef
 
-def ApplyColors()
-    var monochrome = expandcmd($VIM_CS) == 'mono' || expandcmd($VIM_CS) == 'mc'
-    if &filetype !~ 'help\|markdown' && monochrome
-        # XXX: When --clean both error and errormsg have ctermfg=15. Leave them
-        # unchanged, otherwise errors are not visible. Do not use 15.
-        # Changing color of 'bold' fonts through terminal messess up color of
-        # statusline.
-        hi Type ctermfg=12 cterm=bold
-        hi! link Statement Type
-        hi! link Identifier Type
-        hi Operator ctermfg=None
-        hi Comment ctermfg=14 cterm=italic
-        hi String ctermfg=13 cterm=none
-        hi Special ctermfg=13
-        hi Constant ctermfg=13 cterm=none
-        hi PreProc ctermfg=13 cterm=bold
-    else
-        syntax reset
-        hi link StatusLineNC StatusLine
-        hi Constant ctermfg=4
-        hi String ctermfg=6
-        hi Statement ctermfg=2
-        hi Identifier ctermfg=4 cterm=none
-        hi PreProc ctermfg=1
-        hi Special ctermfg=1
-        hi Type ctermfg=3
-    endif
-    SaneColors()
+def MCColors()
+    hi StatusLine     ctermfg=8 ctermbg=7 cterm=bold
+    hi! link StatusLineNC StatusLine
+    hi! link StatusLineTerm StatusLine
+    hi Pmenu          ctermfg=8 ctermbg=7
+    hi PmenuSel       ctermfg=15 ctermbg=8
+    hi PmenuMatch     ctermfg=3 ctermbg=6
+    hi PmenuMatchSel  cterm=underline ctermfg=3 ctermbg=8
+    hi PmenuSbar      ctermbg=14
+    hi PmenuThumb     ctermbg=8
+    hi PmenuExtra     ctermfg=14 ctermbg=7
+    hi PmenuExtraSel  ctermfg=15 ctermbg=8
+    hi Added          ctermfg=4
+enddef
+
+def BorlandColors()
+    hi StatusLine     ctermfg=8 ctermbg=6 cterm=bold
+    hi Pmenu          ctermfg=8 ctermbg=2 cterm=bold
+    hi PmenuMatch     ctermfg=3 ctermbg=2
+    hi PmenuExtra     ctermfg=7 ctermbg=2 cterm=bold
+    hi PmenuExtraSel  ctermfg=7 ctermbg=8
+    hi PmenuMatchSel  ctermfg=3 ctermbg=8
+    # hi StatusLine     ctermfg=8 ctermbg=2 cterm=bold
+    # hi Pmenu          ctermfg=8 ctermbg=6 cterm=bold
+    # hi PmenuMatch     ctermfg=1 ctermbg=6
+    # hi PmenuExtra     ctermfg=7 ctermbg=6 cterm=bold
+    # hi PmenuExtraSel  ctermfg=15 ctermbg=7
+    # hi PmenuMatchSel  ctermfg=4 ctermbg=8
+    hi PmenuSel       ctermfg=15 ctermbg=8
+    hi PmenuSbar      ctermbg=7
+    hi PmenuThumb     ctermbg=8
+    hi Added          ctermfg=4
+    hi! link StatusLineNC StatusLine
+    hi! link StatusLineTerm StatusLine
 enddef
 
 # Following should occur after setting colorscheme.
 highlight! TrailingWhitespace ctermbg=196
 match TrailingWhitespace /\s\+\%#\@<!$/
+
+# vim: ts=4 shiftwidth=4 sts=4 expandtab

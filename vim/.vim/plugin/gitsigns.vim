@@ -14,30 +14,24 @@ sign define GitRemoved  text=- texthl=LineNr
 sign define GitChanged  text=~ texthl=LineNr
 
 function s:IsGitFile()
-
   " Skip if buffer is not associated with a file (ex. [No Name])
   if expand('%') ==# '' || !filereadable(expand('%:p'))
     return 0
   endif
-
   " Check if file is in a Git repo
   call system('git rev-parse --is-inside-work-tree 2> /dev/null')
   if v:shell_error != 0
     return 0
   endif
-
   " Check if the file is tracked
   call system('git ls-files --error-unmatch ' . shellescape(expand('%:p')) . ' 2> /dev/null')
   if v:shell_error != 0
     return 0
   endif
-
   return 1
-
 endfunction
 
 function! GitSigns()
-
   if !s:IsGitFile()
     return
   endif
@@ -47,9 +41,9 @@ function! GitSigns()
 
   " Run git diff
   let l:diff = systemlist('git diff --no-color -- ' . shellescape(expand('%:p')))
-
   let l:lnum = 0
   let l:id = 1000
+  let l:removals = []
 
   " Parse unified diff hunks like @@ -a,b +c,d @@
   for l:line in l:diff
@@ -61,16 +55,38 @@ function! GitSigns()
         let l:count = len(l:m[2]) ? str2nr(l:m[2]) : 1
         let l:lnum = l:start - 1
       endif
+      let l:removals = []
+    elseif l:line =~ '^-' " track removed lines
+      call add(l:removals, 1)
     elseif l:line =~ '^+'
       let l:lnum += 1
-      execute 'sign place ' . l:id . ' line=' . l:lnum . ' name=GitAdded buffer=' . bufnr('%')
-      let l:id += 1
-    elseif l:line =~ '^-'  " Removal is not shown in the new file, we skip placing
-      " Could track separately if desired
+      if !empty(l:removals)
+        " Consider this a change, since a - was followed by a +
+        execute 'sign place ' . l:id . ' line=' . l:lnum . ' name=GitChanged buffer=' . bufnr('%')
+        let l:id += 1
+        call remove(l:removals, 0)
+      else
+        execute 'sign place ' . l:id . ' line=' . l:lnum . ' name=GitAdded buffer=' . bufnr('%')
+        let l:id += 1
+      endif
     elseif l:line =~ '^ '
-      let l:lnum += 1
+      " Add removed signs on next available real line
+      for _ in l:removals
+        let l:lnum += 1
+        execute 'sign place ' . l:id . ' line=' . l:lnum . ' name=GitRemoved buffer=' . bufnr('%')
+        let l:id += 1
+      endfor
+      if l:removals->len() == 0
+        let l:lnum += 1
+      endif
+      let l:removals = []
     endif
   endfor
+
+  " Handle any trailing removals at EOF
+  if l:removals->len() > 0
+    execute 'sign place ' . l:id . ' line=' . l:lnum . ' name=GitRemoved buffer=' . bufnr('%')
+  endif
 endfunction
 
 function! s:GitHunks()

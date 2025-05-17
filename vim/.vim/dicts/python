@@ -1,4 +1,3 @@
---- manually added ---
 self
 object
 __add__
@@ -19,7 +18,7 @@ __setitem__(
 __str__(
 __unicode__(
 __version__
---- String type attributes and methods. (manually entered). Only works with quotes, not objects. e.g. 'foo'.startswith(  ---
+
 .capitalize(
 .center(
 .count(
@@ -58,7 +57,7 @@ __version__
 .translate(
 .upper(
 .zfill(
---- str builtin attributes and methods. (Manually entered). e.g. str.startswith(  ---
+
 str.capitalize(
 str.center(
 str.count(
@@ -97,7 +96,7 @@ str.title(
 str.translate(
 str.upper(
 str.zfill(
---- exception heirarchy (:Help exceptions) ---
+
 BaseException
 SystemExit
 KeyboardInterrupt
@@ -162,7 +161,7 @@ ImportWarning
 UnicodeWarning
 BytesWarning
 ResourceWarning
---- reserved words (py3.11.7) ---
+
 False
 None
 True
@@ -198,7 +197,7 @@ try
 while
 with
 yield
---- from builtins import * ---
+
 abs(
 aiter(
 all(
@@ -348,7 +347,7 @@ UserWarning
 ValueError
 Warning
 ZeroDivisionError
---- import collections (py3.11.7/darwin/root module) ---
+
 collections
 collections.abc
 collections.defaultdict(
@@ -360,7 +359,7 @@ collections.OrderedDict(
 collections.UserDict(
 collections.UserList(
 collections.UserString(
---- from collections import * ---
+
 abc
 defaultdict(
 deque(
@@ -371,7 +370,7 @@ OrderedDict(
 UserDict(
 UserList(
 UserString(
---- import collections.abc ---
+
 collections.abc
 collections.abc.AsyncGenerator(
 collections.abc.AsyncIterable(
@@ -398,7 +397,7 @@ collections.abc.Sequence(
 collections.abc.Set(
 collections.abc.Sized(
 collections.abc.ValuesView(
---- from collections import abc ---
+
 abc
 abc.AsyncGenerator(
 abc.AsyncIterable(
@@ -425,7 +424,7 @@ abc.Sequence(
 abc.Set(
 abc.Sized(
 abc.ValuesView(
---- from collections.abc import * ---
+
 AsyncGenerator(
 AsyncIterable(
 AsyncIterator(
@@ -451,7 +450,7 @@ Sequence(
 Set(
 Sized(
 ValuesView(
---- import functools (py3.11.7/darwin/root module) ---
+
 functools
 functools.cache(
 functools.cached_property(
@@ -472,7 +471,7 @@ functools.GenericAlias(
 functools.RLock(
 functools.WRAPPER_ASSIGNMENTS
 functools.WRAPPER_UPDATES
---- from functools import * ---
+
 cache(
 cached_property(
 cmp_to_key(
@@ -492,7 +491,7 @@ GenericAlias(
 RLock(
 WRAPPER_ASSIGNMENTS
 WRAPPER_UPDATES
---- import itertools (py3.11.7/darwin/root module) ---
+
 itertools
 itertools.accumulate(
 itertools.chain(
@@ -513,7 +512,7 @@ itertools.starmap(
 itertools.takewhile(
 itertools.tee(
 itertools.zip_longest(
---- from itertools import * ---
+
 accumulate(
 chain(
 combinations(
@@ -534,7 +533,7 @@ takewhile(
 tee(
 zip_longest(
 Couldn't import: md5. No module named 'md5'
---- import bisect (py3.11.7/darwin/root module) ---
+
 bisect
 bisect.bisect(
 bisect.bisect_left(
@@ -542,14 +541,14 @@ bisect.bisect_right(
 bisect.insort(
 bisect.insort_left(
 bisect.insort_right(
---- import copy (py3.11.7/darwin/root module) ---
+
 copy
 copy.copy(
 copy.deepcopy(
 copy.dispatch_table
 copy.error
 copy.Error
---- import doctest (py3.11.7/darwin/root module) ---
+
 doctest
 doctest.debug(
 doctest.debug_script(
@@ -606,7 +605,7 @@ doctest.SkipDocTestCase(
 doctest.StringIO(
 doctest.TestResults(
 doctest.UnexpectedException
---- import heapq (py3.11.7/darwin/root module) ---
+
 heapq
 heapq.heapify(
 heapq.heappop(
@@ -616,7 +615,7 @@ heapq.heapreplace(
 heapq.merge(
 heapq.nlargest(
 heapq.nsmallest(
---- import inspect (py3.11.7/darwin/root module) ---
+
 inspect
 inspect.abc
 inspect.ast
@@ -735,13 +734,13 @@ inspect.Parameter(
 inspect.Signature(
 inspect.TPFLAGS_IS_ABSTRACT
 inspect.Traceback(
---- import keyword (py3.11.7/darwin/root module) ---
+
 keyword
 keyword.iskeyword(
 keyword.issoftkeyword(
 keyword.kwlist
 keyword.softkwlist
---- import math (py3.11.7/darwin/root module) ---
+
 math
 math.acos(
 math.acosh(
@@ -803,7 +802,7 @@ math.tanh(
 math.tau
 math.trunc(
 math.ulp(
---- import operator (py3.11.7/darwin/root module) ---
+
 operator
 operator.abs(
 operator.add(
@@ -860,7 +859,7 @@ operator.sub(
 operator.truediv(
 operator.truth(
 operator.xor(
---- import os (py3.11.7/darwin/root module) ---
+
 os
 os.abc
 os.abort(
@@ -1151,7 +1150,7 @@ os.WTERMSIG(
 os.WUNTRACED
 os.W_OK
 os.X_OK
---- import os.path ---
+
 os.path
 os.path.abspath(
 os.path.altsep
@@ -1195,7 +1194,7 @@ os.path.splitext(
 os.path.stat
 os.path.supports_unicode_filenames
 os.path.sys
---- from os import path ---
+
 path
 path.abspath(
 path.altsep
@@ -1239,7 +1238,7 @@ path.splitext(
 path.stat
 path.supports_unicode_filenames
 path.sys
---- import pprint (py3.11.7/darwin/root module) ---
+
 pprint
 pprint.isreadable(
 pprint.isrecursive(
@@ -1249,7 +1248,7 @@ pprint.pprint(
 pprint.re
 pprint.saferepr(
 pprint.PrettyPrinter(
---- import random (py3.11.7/darwin/root module) ---
+
 random
 random.betavariate(
 random.choice(
@@ -1282,7 +1281,7 @@ random.Random(
 random.SG_MAGICCONST
 random.SystemRandom(
 random.TWOPI
---- import re (2.2.1/py3.11.7/darwin/root module) ---
+
 re
 re.compile(
 re.copyreg
@@ -1322,7 +1321,7 @@ re.U
 re.UNICODE
 re.VERBOSE
 re.X
---- import string (py3.11.7/darwin/root module) ---
+
 string
 string.ascii_letters
 string.ascii_lowercase
@@ -1336,7 +1335,7 @@ string.punctuation
 string.whitespace
 string.Formatter(
 string.Template(
---- import sys (py3.11.7/darwin/root module) ---
+
 sys
 sys.abiflags
 sys.addaudithook(
@@ -1410,7 +1409,7 @@ sys.unraisablehook(
 sys.version
 sys.version_info
 sys.warnoptions
---- import time (py3.11.7/darwin/root module) ---
+
 time
 time.altzone
 time.asctime(
@@ -1448,7 +1447,7 @@ time.CLOCK_PROCESS_CPUTIME_ID
 time.CLOCK_REALTIME
 time.CLOCK_THREAD_CPUTIME_ID
 time.CLOCK_UPTIME_RAW
---- import traceback (py3.11.7/darwin/root module) ---
+
 traceback
 traceback.clear_frames(
 traceback.collections

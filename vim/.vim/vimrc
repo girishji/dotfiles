@@ -35,7 +35,7 @@ autocmd! vimHints
 
 " Turn on listchars for Noname/scratch files and non-help files
 " 'listchars' is not local to buffer, only local to window
-autocmd FileType * if &ft =~ '\v(help|markdown)' | setlocal listchars=tab:\ \ ,trail:\  | else | setlocal listchars=tab:→·,trail:~ | endif
+autocmd FileType * if &ft =~ '\v(help|markdown)' | setlocal listchars=tab:\ \ ,trail:\  | else | setlocal listchars=tab:→.,trail:~ | endif
 autocmd BufEnter * if &ft == '' | setlocal listchars=tab:\ \ ,trail:\  | endif
 set list
 
@@ -67,7 +67,7 @@ set foldmethod=indent
 " set foldnestmax=1
 set nofoldenable  " do not do folding when you open file
 set signcolumn=yes  " always show column for lsp diagnostics etc
-set dictionary+=/usr/share/dict/words
+" set dictionary+=/usr/share/dict/words
 set whichwrap+=<,>,h,l  " make arrows and h, l, push cursor to next line
 " set pumheight=7  " max number of items in popup menu (pmenu)
 set virtualedit=block  " allows selection of rectangular text in visual block mode
@@ -102,7 +102,7 @@ augroup CustomAutocmds | autocmd!
           \ let s:dictfile = expand('~/.vim') . '/dicts/' . &filetype |
           \ if filereadable(s:dictfile) |
           \   let &l:dictionary = s:dictfile |
-          \   exe $'setl complete+=k{s:dictfile}' |
+          \   exe $'setl complete+=k{s:dictfile}^10' |
           \ endif
 augroup END
 

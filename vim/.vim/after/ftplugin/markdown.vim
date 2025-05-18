@@ -4,9 +4,6 @@ def InCode(s: string): bool
     return synID(line('.'), col('.') - 1, 1)->synIDattr('name') =~? 'markdownCodeBlock'
 enddef
 
-iab <buffer> --> ------------------------------------------------------------------------------<c-r>=Eatchar()<cr>
-iab <buffer> ==> ==============================================================================<c-r>=Eatchar()<cr>
-
 iab <buffer><expr> nn <SID>InCode('nn') ? 'NOTE:' : 'nn'
 
 # Insert '\' in front of <foo> when not in code block.

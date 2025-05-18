@@ -21,7 +21,8 @@ def! g:CustomTabLine(): string
     var name = fnamemodify(bufname, ':t') ?? '[No Name]'
 
     # Add space around for padding
-    s ..= $' {tabnum}:{name} '
+    s ..= $' {name}{getbufvar(buflist[winnr - 1], "&mod") ? "[+] " : " "}'
+    # s ..= $' {tabnum}:{name} '
   endfor
 
   # Fill rest of tabline and reset highlight

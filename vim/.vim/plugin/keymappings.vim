@@ -6,7 +6,7 @@ nnoremap <leader>w <cmd>update<cr>
 nnoremap <leader>q <cmd>qa<cr>
 nnoremap <leader>Q <cmd>qa!<cr>
 nnoremap <leader>r <cmd>registers<cr>
-nnoremap <leader>m <cmd>marks<cr>
+# nnoremap <leader>m <cmd>marks<cr>
 # Y mapping, more natural but not vi compatible
 map Y y$
 # map gm to go to middle of line instead of middle of screen
@@ -100,10 +100,6 @@ nnoremap gs `[v`]
 #   ctrl+pgdn/pgup)
 # nnoremap <c-w><pagedown> <cmd>tabprev<cr>
 # nnoremap <c-w><pageup> <cmd>tabnext<cr>
-nnoremap <silent> <leader>[ <cmd>tabprev<CR>
-nnoremap <silent> <leader>] <cmd>tabnext<CR>
-# nnoremap <silent> [<space> :bprevious<CR>
-# nnoremap <silent> ]<space> :bnext<CR>
 nnoremap <leader>tt <cmd>tabnew %<cr>
 nnoremap <leader>tn <cmd>tabnew %<cr>
 nnoremap <leader>te <cmd>tabe %<cr>

@@ -4,8 +4,9 @@
 
 nnoremap <leader>m <cmd>call SaveBookmark()<CR>
 nnoremap <leader>M <cmd>call ShowBookmarks()<CR>
-nnoremap <silent> ]m <cmd>call NextBookmark()<CR>
-nnoremap <silent> [m <cmd>call PrevBookmark()<CR>
+nnoremap <leader>R <cmd>call RemoveCurrentBookmark()<CR>
+" nnoremap <silent> ]m <cmd>call NextBookmark()<CR>
+" nnoremap <silent> [m <cmd>call PrevBookmark()<CR>
 nnoremap <silent> <leader>] <cmd>call NextBookmark()<CR>
 nnoremap <silent> <leader>[ <cmd>call PrevBookmark()<CR>
 
@@ -28,8 +29,7 @@ function! SaveBookmark()
         \ }
 
   " Remove existing identical entry
-  call filter(g:bookmarks, {_, v -> !(v.filename ==# l:entry.filename
-    && v.lnum == l:entry.lnum)})
+  call filter(g:bookmarks, {_, v -> !(v.filename ==# l:entry.filename && v.lnum == l:entry.lnum)})
 
   " Insert new entry at the top
   call insert(g:bookmarks, l:entry, 0)
@@ -79,7 +79,7 @@ endfunction
 
 " ======================================================================
 function! NextBookmark()
-  if empty(g:bookmarks)
+  if !exists('g:bookmarks') || empty(g:bookmarks)
     echo "No bookmarks"
     return
   endif
@@ -91,7 +91,7 @@ endfunction
 
 " ======================================================================
 function! PrevBookmark()
-  if empty(g:bookmarks)
+  if !exists('g:bookmarks') || empty(g:bookmarks)
     echo "No bookmarks"
     return
   endif
@@ -99,6 +99,38 @@ function! PrevBookmark()
   call s:EnsureLoclistUpdated()
   let l:list = getloclist(0, {'all': 1})
   if l:list.idx <= 1 | llast | else | lprev | endif
+endfunction
+
+" ======================================================================
+function! RemoveCurrentBookmark()
+  if !exists('g:bookmarks') || empty(g:bookmarks)
+    echo "No bookmarks set"
+    return
+  endif
+
+  let l:cur_bufname = fnamemodify(bufname('%'), ':p')
+  let l:cur_lnum = line('.')
+  let l:cur_col = col('.')
+
+  let l:newlist = []
+  let l:removed = 0
+
+  for l:item in g:bookmarks
+    let l:item_fname = fnamemodify(l:item.filename, ':p')
+    if l:item_fname ==# l:cur_bufname && l:item.lnum == l:cur_lnum
+      let l:removed = 1
+      continue
+    endif
+    call add(l:newlist, l:item)
+  endfor
+
+  if l:removed
+    let g:bookmarks = l:newlist
+    call s:EnsureLoclistUpdated()
+    echo "Bookmark removed"
+  else
+    echo "No matching bookmark found"
+  endif
 endfunction
 
 " ======================================================================

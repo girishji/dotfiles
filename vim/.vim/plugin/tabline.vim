@@ -29,4 +29,3 @@ def! g:CustomTabLine(): string
   s ..= '%#TabLineFill#%T'
   return s
 enddef
-

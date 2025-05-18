@@ -12,6 +12,7 @@ nnoremap <silent> <leader>[ <cmd>call PrevBookmark()<CR>
 let g:bookmark_file = expand('~/.vim-bookmarks.vim')
 let g:bookmarks = []
 
+" ======================================================================
 function! SaveBookmark()
   let l:fname = expand('%:p')
   if empty(l:fname) || !filereadable(l:fname)
@@ -27,7 +28,8 @@ function! SaveBookmark()
         \ }
 
   " Remove existing identical entry
-  call filter(g:bookmarks, {_, v -> !(v.filename ==# l:entry.filename && v.lnum == l:entry.lnum)})
+  call filter(g:bookmarks, {_, v -> !(v.filename ==# l:entry.filename
+    && v.lnum == l:entry.lnum)})
 
   " Insert new entry at the top
   call insert(g:bookmarks, l:entry, 0)
@@ -46,6 +48,7 @@ function! SaveBookmark()
   echo "Bookmark saved"
 endfunction
 
+" ======================================================================
 function! s:EnsureLoclistUpdated()
   let l:curr = getloclist(0, {'items': 1}).items
   if len(l:curr) != len(g:bookmarks)
@@ -68,11 +71,13 @@ function! s:EnsureLoclistUpdated()
   endfor
 endfunction
 
+" ======================================================================
 function! ShowBookmarks()
   call s:EnsureLoclistUpdated()
   lopen
 endfunction
 
+" ======================================================================
 function! NextBookmark()
   if empty(g:bookmarks)
     echo "No bookmarks"
@@ -84,6 +89,7 @@ function! NextBookmark()
   if l:list.idx >= l:list.size | lfirst | else | lnext | endif
 endfunction
 
+" ======================================================================
 function! PrevBookmark()
   if empty(g:bookmarks)
     echo "No bookmarks"
@@ -95,6 +101,7 @@ function! PrevBookmark()
   if l:list.idx <= 1 | llast | else | lprev | endif
 endfunction
 
+" ======================================================================
 function! LoadBookmarksFromFile()
   if filereadable(g:bookmark_file)
     let l:lines = readfile(g:bookmark_file)

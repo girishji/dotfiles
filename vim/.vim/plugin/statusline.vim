@@ -8,6 +8,7 @@ augroup UpdateStatusline | autocmd!
   autocmd BufEnter,BufAdd,BufDelete,BufUnload,BufWritePost,WinEnter,WinLeave * redrawstatus
 augroup END
 
+" ======================================================================
 " Return statusline string
 function! BufferListStatusline()
   let maxwidth = winwidth(0) - s:StatuslineTailWidth() - 6 " chars: ' < ' + ' > '
@@ -94,6 +95,7 @@ function! BufferListStatusline()
   return $'{output} %= %y ≡ %l,%c%V %P '
 endfunction
 
+" ======================================================================
 " Get width of all other artifacts
 function s:StatuslineTailWidth()
   let filetype = &filetype != '' ? &filetype : (&readonly ? 'RO' : 'RW')
@@ -106,6 +108,7 @@ function s:StatuslineTailWidth()
   return strwidth(text)
 endfunction
 
+" ======================================================================
 function! InactiveStatusline()
   return ' %t '
 endfunction

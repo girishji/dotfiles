@@ -50,11 +50,11 @@ iabbr vim_modeline_vim " vim: shiftwidth=2 sts=2 expandtab<c-r>=Eatchar()<cr>
 iabbr vim_modeline_vim9 " vim: ts=4 shiftwidth=4 sts=4 expandtab<c-r>=Eatchar()<cr>
 
 " dashes to match previous line length (there are also key maps in keymappings.vim)
-iab  v--> <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=Eatchar()<cr>
-iab  v==> <esc>d^a<c-r>=repeat('=', getline(line('.') - 1)->trim()->len())<cr><c-r>=Eatchar()<cr>
-iab  v~~> <esc>d^a<c-r>=repeat('~', getline(line('.') - 1)->trim()->len())<cr><c-r>=Eatchar()<cr>
-iab  v--* ----------------------------------------------------------------------<c-r>=Eatchar()<cr>
-iab  v==* ======================================================================<c-r>=Eatchar()<cr>
+iab  vv-> <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=Eatchar()<cr>
+iab  vv=> <esc>d^a<c-r>=repeat('=', getline(line('.') - 1)->trim()->len())<cr><c-r>=Eatchar()<cr>
+iab  vv~> <esc>d^a<c-r>=repeat('~', getline(line('.') - 1)->trim()->len())<cr><c-r>=Eatchar()<cr>
+iab  vv-* ----------------------------------------------------------------------<c-r>=Eatchar()<cr>
+iab  vv=* ======================================================================<c-r>=Eatchar()<cr>
 
 " insert date, and time
 " inorea dd <C-r>=strftime("%Y-%m-%d")<CR><C-R>=Eatchar()<CR>

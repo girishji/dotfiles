@@ -124,7 +124,7 @@ def SaneColors()
             BorlandColors()
         endif
     endif
-    hi MatchParen ctermfg=1 ctermbg=none cterm=underline
+    hi MatchParen ctermfg=5 ctermbg=none cterm=underline
     # hi Todo ctermfg=0 ctermbg=1
     hi Todo ctermfg=none ctermbg=none cterm=reverse,bold
     hi SpecialKey ctermfg=10 |# 'tab', 'nbsp', 'space', ctrl chars (^a, ^b, etc.)

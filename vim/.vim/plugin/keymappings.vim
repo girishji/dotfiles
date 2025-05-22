@@ -1,8 +1,8 @@
 vim9script
 
 # General
-# nnoremap <leader>w <cmd>w<cr>
-nnoremap <leader>w <cmd>update<cr>
+nnoremap <leader>w <cmd>w<cr>
+# nnoremap <leader>w <cmd>update<cr>  |# BufWrite (not posted) is needed by plugins
 nnoremap <leader>q <cmd>qa<cr>
 nnoremap <leader>Q <cmd>qa!<cr>
 nnoremap <leader>r <cmd>registers<cr>

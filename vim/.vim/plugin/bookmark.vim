@@ -1,12 +1,12 @@
 " vim: shiftwidth=2 sts=2 expandtab
 "
-" Use location list to bookmark lines. Max 10 bookmarks.
+" Use quickfix or location list to store bookmarks. Max 10 bookmarks.
+
+let s:qflist = 1  " 1 for qflist and 0 for loclist
 
 nnoremap <leader>m <cmd>call SaveBookmark()<CR>
 nnoremap <leader>M <cmd>call ShowBookmarks()<CR>
 nnoremap <leader>R <cmd>call RemoveCurrentBookmark()<CR>
-" nnoremap <silent> ]m <cmd>call NextBookmark()<CR>
-" nnoremap <silent> [m <cmd>call PrevBookmark()<CR>
 nnoremap <silent> <leader>] <cmd>call NextBookmark()<CR>
 nnoremap <silent> <leader>[ <cmd>call PrevBookmark()<CR>
 
@@ -49,10 +49,28 @@ function! SaveBookmark()
 endfunction
 
 " ======================================================================
+function s:SetBookmarks()
+    if s:qflist
+      call setqflist(g:bookmarks, 'r')
+    else
+      call setloclist(0, g:bookmarks, 'r')
+    endif
+endfunction
+
+" ======================================================================
+function s:GetBookmarks(what)
+    if s:qflist
+      return getqflist(a:what)
+    else
+      return getloclist(0, a:what)
+    endif
+endfunction
+
+" ======================================================================
 function! s:EnsureLoclistUpdated()
-  let l:curr = getloclist(0, {'items': 1}).items
+  let l:curr = s:GetBookmarks({'items': 1}).items
   if len(l:curr) != len(g:bookmarks)
-    call setloclist(0, g:bookmarks, 'r')
+    call s:SetBookmarks()
     return
   endif
 
@@ -64,8 +82,7 @@ function! s:EnsureLoclistUpdated()
           \ || l:curr[i].lnum != g:bookmarks[i].lnum
           \ || l:curr[i].col != g:bookmarks[i].col
           \ || l:curr[i].text !=# g:bookmarks[i].text
-      echom l:curr[i] g:bookmarks[i]
-      call setloclist(0, g:bookmarks, 'r')
+      call s:SetBookmarks()
       return
     endif
   endfor
@@ -74,7 +91,7 @@ endfunction
 " ======================================================================
 function! ShowBookmarks()
   call s:EnsureLoclistUpdated()
-  lopen
+  if s:qflist | copen | else | lopen | endif
 endfunction
 
 " ======================================================================
@@ -85,8 +102,12 @@ function! NextBookmark()
   endif
 
   call s:EnsureLoclistUpdated()
-  let l:list = getloclist(0, {'all': 1})
-  if l:list.idx >= l:list.size | lfirst | else | lnext | endif
+  let l:list = s:GetBookmarks({'all': 1})
+  if s:qflist
+    if l:list.idx >= l:list.size | cfirst | else | cnext | endif
+  else
+    if l:list.idx >= l:list.size | lfirst | else | lnext | endif
+  endif
 endfunction
 
 " ======================================================================
@@ -97,8 +118,12 @@ function! PrevBookmark()
   endif
 
   call s:EnsureLoclistUpdated()
-  let l:list = getloclist(0, {'all': 1})
-  if l:list.idx <= 1 | llast | else | lprev | endif
+  let l:list = s:GetBookmarks({'all': 1})
+  if s:qflist
+    if l:list.idx <= 1 | clast | else | cprev | endif
+  else
+    if l:list.idx <= 1 | llast | else | lprev | endif
+  endif
 endfunction
 
 " ======================================================================

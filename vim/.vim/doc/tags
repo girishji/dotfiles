@@ -12,7 +12,6 @@
 CTRL-<PageDown>	giri.txt	/*CTRL-<PageDown>*
 CTRL-W_g<Tab>	giri.txt	/*CTRL-W_g<Tab>*
 asterisks	giri.txt	/*asterisks*
-cscopectags.txt	cscopectags.txt	/*cscopectags.txt*
 dict.pop()..stdtypes.pyx	leetcode-py.txt	/*dict.pop()..stdtypes.pyx*
 dict.setdefault()..stdtypes.pyx	leetcode-py.txt	/*dict.setdefault()..stdtypes.pyx*
 folds-giri	giri-nav.txt	/*folds-giri*
@@ -23,7 +22,6 @@ giri-[-keymap	giri-nav.txt	/*giri-[-keymap*
 giri-arglist	giri.txt	/*giri-arglist*
 giri-buflist	giri.txt	/*giri-buflist*
 giri-callstack	giri.txt	/*giri-callstack*
-giri-cscopectags.txt	cscopectags.txt	/*giri-cscopectags.txt*
 giri-debug	giri.txt	/*giri-debug*
 giri-folds	giri-nav.txt	/*giri-folds*
 giri-g-keymap	giri-nav.txt	/*giri-g-keymap*
@@ -31,9 +29,11 @@ giri-legacy-script	giri.txt	/*giri-legacy-script*
 giri-moving-through-program	giri-nav.txt	/*giri-moving-through-program*
 giri-nav.txt	giri-nav.txt	/*giri-nav.txt*
 giri-netrw	giri.txt	/*giri-netrw*
+giri-numbers	giri.txt	/*giri-numbers*
 giri-pattern	giri.txt	/*giri-pattern*
 giri-quickfix	giri.txt	/*giri-quickfix*
 giri-register	giri.txt	/*giri-register*
+giri-search	giri.txt	/*giri-search*
 giri-stacktrace	giri.txt	/*giri-stacktrace*
 giri-substitute	giri.txt	/*giri-substitute*
 giri-tabs	giri.txt	/*giri-tabs*

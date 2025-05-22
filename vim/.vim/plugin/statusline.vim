@@ -92,19 +92,29 @@ function! BufferListStatusline()
     let output = (truncatedl ? '< ' : '') . output . (truncatedr ? ' >' : '')
   endif
 
-  return $'{output} %= %y ≡ %l,%c%V %P '
+  " Include filename if buffer is from :help (buffer is unlisted)
+  let ftype = '%y'
+  if &buftype ==# 'help'
+    let ftype = $'|{expand("%:t")}| {ftype}'
+  endif
+
+  return $'{output} %= {ftype} ≡ %l,%c%V %P '
 endfunction
 
 " ======================================================================
 " Get width of all other artifacts
 function s:StatuslineTailWidth()
-  let filetype = &filetype != '' ? &filetype : (&readonly ? 'RO' : 'RW')
+  let ftype = &filetype != '' ? &filetype : (&readonly ? 'RO' : 'RW')
+  if &buftype ==# 'help'
+    let ftype = $'|{expand("%:t")}| {ftype}'
+  else
+  endif
   let line = line('.')
   let col = col('.')
   let virtcol = virtcol('.')
   let percent = line('$') > 0 ? printf('%d%%%%', (line * 100) / line('$')) : '0%%'
 
-  let text = $'  {filetype} ≡ {line},{col}-{virtcol} {percent}% '
+  let text = $'  {ftype} ≡ {line},{col}-{virtcol} {percent}% '
   return strwidth(text)
 endfunction
 

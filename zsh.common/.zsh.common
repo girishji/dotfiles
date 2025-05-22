@@ -149,7 +149,10 @@
     # zsh-autosuggestions: offers suggestions as you type
     local zas='/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh'
     if [ -f "$zas" ]; then source $zas; fi
-    # bindkey -v '^[[6~' autosuggest-accept # PgDn accept suggestion
+	# NOTE: In terminal app, if PageUp/Down is made to send control characters
+	# to readline (instead of terminal app handling these keys), they will not
+	# scroll the screen but you can use PgDn for autosuggest completion.
+    bindkey -v '^[[6~' autosuggest-accept # PgDn accept suggestion
     bindkey -v '^[[6;5~' autosuggest-accept # Ctrl-PgDn accept suggestion
     # XXX: Setting fg color does not work properly. It does not repaint the screen
     # after right-arrow completion.

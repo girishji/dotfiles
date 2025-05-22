@@ -36,7 +36,7 @@ File organization                    *giri-vim-file-org*
   is true for mappings done through <buffer>
 - some variables are local to window (like 'spell'), and some are buffer
   local. Former need to be unset after leaving buffer.
-b:undo_ftplugin. examples: 
+b:undo_ftplugin. examples:
 b:undo_ftplugin ..= ' | setl foldignore< formatprg<'
 b:undo_ftplugin ..= ' | exe "nunmap <space>z"'
 
@@ -75,7 +75,7 @@ Spelling                         *giri-spell*~
 
 z= 	suggest options
 zg 	add good word to dict (goes into .vim/spell/en-utf8.add)
-zug 	undo above add 
+zug 	undo above add
 zw 	like "zg" but opposite. mark it as bad word. if it is added, then turn it into comment
 ]s 	move to next misspelled word
 [s, [S, ]S etc.
@@ -182,7 +182,7 @@ standard grep command.
 			Same as :g!.
 
 ----------------------------------------
-Quick navigation tags 
+Quick navigation tags
 
 `v` after an operator (`c`, `d`, etc.) will not start visual mode, but selects
 characterwise:
@@ -198,7 +198,7 @@ asdbYasdf (cursor under Y)
 
 `s` is synonym for `cl`
 
-`K` will look for help for word under cursor. 
+`K` will look for help for word under cursor.
 (make sure `:setlocal keywordprg=:help`)
 
 `&` will help you search for previously searched pattern. Just like `*`
@@ -235,11 +235,11 @@ vimscript for python dev:
 https://github.com/yegappan/VimScriptForPythonDevelopers/blob/master/VimScriptForPythonDevelopers.MD
 https://gist.github.com/kat0h/dce9eb73cd8435b11cd886952af560f1
 https://github.com/lacygoill/wiki/blob/main/vim/vim9.md
-https://vimhelp.org/usr_41.txt.html#41.6 
+https://vimhelp.org/usr_41.txt.html#41.6
 https://vimhelp.org/vim9.txt.html#inline-function
 
 ----------------------------------------
-Folds 
+Folds
 zR -> open all folds in window
 zM -> close all folds in window
 zo -> open fold under cursor (zO for recursive levels)
@@ -255,7 +255,7 @@ zc -> close fold under cursor (zC for recursive levels)
 :echo &var  -> echo vim variable
 
 ==================================================
-# Tips                                         *giri-tips* 
+# Tips                                         *giri-tips*
 
 ## surround text (multiple words) with quotes etc.
 
@@ -272,7 +272,7 @@ You can use either of them.
 
 Before executing the specified Normal mode command on each line, Vim moves the
 cursor to the beginning of the line. So we don’t have to worry about where the
-cursor is positioned when we execute the command. 
+cursor is positioned when we execute the command.
 
 This single command could be used to comment out an entire C file: ➾ :%norm i//
 
@@ -342,11 +342,52 @@ will restrict a pattern so that it matches only inside the visual selection.
 <C-R>%                  : pull file name (also #) (also insert mode)
 <C-R>=somevar           : pull contents of a variable (eg :let sray="ray[0-9]")
 
-## Search without typing (Use it like C-sC-w or emacs)
-Start search '/'
-Place cursor somewhere on word, C-rC-w, type space to touch next word C-rC-w,
-and so on
-(since you have set incrementalsearch option it jumps to next search)
+## Stacked search 					*giri-search*
+  For example: "/pat/;/foo/+3;?bar"
+
+Breakdown:
+  /pat/ → Searches forward for the first line that matches "pat".
+  ;/foo/+3 → From the line where /pat/ matched, search forward for "foo", and
+	go 3 lines below that match.
+  ;?bar → From the result of the previous step, search backward for the line
+	matching "bar".
+
+See:
+:help //;
+:help [range]
+:help :;
+
+## Append to search string without typing (Use it like C-sC-w or emacs)
+ - Start search '/'
+ - Place cursor somewhere on word, C-rC-w (put word under cursor on command line)
+ - Type space to touch next word and repeat
+
+## Search and replace (not using :%s/foo/bar/gc)        	*giri-replace*
+Say you have:
+   // buttons
+   BUTTON_Accept,
+   BUTTON_Cancel,
+
+You want to append "= 0" at the end of each line that is not a comment. Do:
+:g/,$/v;//;norm $i = 0
+:g is a global command: it executes any given action on all matching lines. :v
+instead operates on all non-matching lines. You can nest :v into :g in order
+TO ONLY OPERATE ON LINES THAT MATCH FOO, BUT DO NOT MATCH BAR. We also
+avoided escaping the forward-slashes in the v pattern with clunky syntax (\/\/)
+by just USING A DIFFERENT CHARACTER AS PATTERN-DELIMITER.
+norm $i = 0 is a normal command that jumps to the end of the current line and
+inserts = 0 right before your cursor.
+
+Another example using :c[hange] :
+An example of how to search for matches with a pattern and change the match
+with another word: >
+	/foo<CR>	find "foo"
+	c//e<CR>	change until end of match
+	bar<Esc>	type replacement
+	//<CR>		go to start of next match
+	c//e<CR>	change until end of match
+	beep<Esc>	type another replacement
+			etc.
 
 ## How to rename a varibale?
 1. Rename first occurance
@@ -371,7 +412,7 @@ sequence (1,2,3,... etc.)
 3. To increment letters do:
   :set nrformats+=alpha
 
-## to print numbers 1 to n (use macro)
+## to print numbers 1 to n (use macro)            *giri-numbers*
 1
 esc
 qq
@@ -401,7 +442,7 @@ esc
 :let i+=1
 q
 
-<C-r>=i will insert the value stored in variable i (in insert mode), by evaluating content register `=` 
+<C-r>=i will insert the value stored in variable i (in insert mode), by evaluating content register `=`
 
 ## Incrementing numbers already in lines: Use g C-a
 
@@ -452,7 +493,7 @@ addressed by the = symbol. From Insert mode we can access it by typing <C-r>=
 5. Three read-only registers ":, "., "%
 6. Alternate buffer register "#
 7. The expression register "=
-8. The selection and drop registers "*, "+ and "~ 
+8. The selection and drop registers "*, "+ and "~
 9. The black hole register "_
 10. Last search pattern register "/
 
@@ -462,7 +503,7 @@ or copied with the yank "y" command, regardless of whether or not a specific
 register was used (e.g.  "xdd).  This is like the unnamed register is pointing
 to the last used register.
 
-8. Selection and drop registers "*, "+ and "~ 
+8. Selection and drop registers "*, "+ and "~
 Use these registers for storing and retrieving the selected text for the GUI.
 Note that there is only a distinction between "* and "+ for X11 systems.
 The read-only "~ register stores the dropped text from the last drag'n'drop
@@ -494,7 +535,7 @@ More Tips
 ## Align columns according to '#' character, and align 2 columns. `\=` evaluates expression.
 Use `<c-v>` to highlight a column and `<`, `>` to shift text. Mapped to abbrev
 `align`.
- 
+
 	:s/\v(.*)(#)(.*)$/\=printf("%-22s %s%s", submatch(1), submatch(2), submatch(3))
 	:%s/\v(.*)\.(.*)/\=printf("%-16s %s", submatch(1), submatch(2))/
 You can also align using ':%!column -t' if columns are space separated.
@@ -647,11 +688,11 @@ Workflow 3:
 All lines with pattern are listed, both before and after replacement.
 
 ----------------------------------------
-Filtering the Contents of a Buffer Through an External Command 
+Filtering the Contents of a Buffer Through an External Command
 
 The :!{cmd} command takes on a different meaning when it’s given a range. The
 lines specified by [range] are passed as standard input for the {cmd}, and
-then the output from {cmd} overwrites the original contents of [range]. 
+then the output from {cmd} overwrites the original contents of [range].
 
 ex. Align text by column using `column` unix command
 Visually select lines and do `:'<,'>!column -t`
@@ -680,9 +721,9 @@ timeout vs ttimeout
 https://vi.stackexchange.com/questions/24925/usage-of-timeoutlen-and-ttimeoutlen
 
 ----------------------------------------
-terminal mode                                        *giri-terminal* 
+terminal mode                                        *giri-terminal*
 - 2 modes: terminal-job mode (keys go to running job) and terminal-normal mode
-- to change from former to latter do <c-w>N 
+- to change from former to latter do <c-w>N
 - to change otherwise do 'i' or 'a' (insert commands)
 - <c-w>: -> will get into command mode from terminal-job mode
 - <c-w><c-w> -> will switch to next window in terminal-job mode
@@ -701,7 +742,7 @@ equalprg and formatprg are used to define what external program to use for ==, g
 
 https://www.reddit.com/r/vim/comments/7bj837/favorite_console_tools_to_use_with_vim/
 
-vim pipes (read, write, filter): 
+vim pipes (read, write, filter):
 
 :r !cmd, :w !cmd and :%! cmd
 read: from cmd to vim
@@ -735,12 +776,12 @@ https://vim.fandom.com/wiki/Find_in_files_within_Vim
 
 ----------------------------------------
 Legacy script:
-How to quickly test some vim9script in shell 
- 
+How to quickly test some vim9script in shell
+
     vim -Nu NONE -S <(cat <<EOF
         vim9script
         var n: number = 123
-        n = n + 1 
+        n = n + 1
         echo n
     EOF
     )
@@ -748,7 +789,7 @@ Note: <() is process substitution
 (https://tldp.org/LDP/abs/html/process-sub.html)
 
 ----------------------------------------
-unit testing 
+unit testing
 
 https://stackoverflow.com/questions/16739300/redirect-ex-command-to-stdout-in-vim
 
@@ -758,20 +799,20 @@ https://stackoverflow.com/questions/16739300/redirect-ex-command-to-stdout-in-vi
 When the substitute string starts with "\=" the remainder is interpreted as an
 expression.
 
-Examples: 
+Examples:
 	:s/\n/\="\r" .. expand("$HOME") .. "\r"/
-This replaces an end-of-line with a new line containing the value of $HOME. 
+This replaces an end-of-line with a new line containing the value of $HOME.
 
 ------------------------------------------------------------------------------
 
-! after a command forces something 
+! after a command forces something
 
 autocmd! foo " removes all autocommands associated with event foo before
 adding new ones
 
 ----------------------------------------
 You can add multiple commands to autocmd this way:
- 
+
 	au BufWritePre *.go {
 			 var save = winsaveview()
 			 silent! exe ':%! some formatting command'
@@ -805,7 +846,7 @@ So you could Yank the text (" is the yank register)
 Substitute with :%s/<C-r>"/replacement/g
 
 ----------------------------------------
-" Vim's built-in doc system to make a mini-wiki within Vim.  
+" Vim's built-in doc system to make a mini-wiki within Vim.
 *vim-wiki*
 
 - You can create tags by surrounding them by *asterisks* (I like to prefix mine
@@ -815,7 +856,7 @@ Substitute with :%s/<C-r>"/replacement/g
   > at the line before the code block and by indenting the code.
 - You can make headers by writing them in all-caps and subheaders by putting a
   ~ at the end of the line.
-- You can make Vim search for your tags on write with 
+- You can make Vim search for your tags on write with
   `autocmd BufWritePost doc/*.txt helptags <afile>:p:h.`
 - When you use :help to jump to a tag, the buffer is unmodifiable by default;
   you can make a help buffer with the command `:set modifiable noreadonly`. I
@@ -829,14 +870,14 @@ Substitute with :%s/<C-r>"/replacement/g
 Read `:help help-writing` for a guide on how to use Vim's help syntax.
 
 ----------------------------------------
-Why autogroups?  
+Why autogroups?
 
 Easier to remove as a unit.
 
 https://vi.stackexchange.com/questions/9455/why-should-i-use-augroup
 
 ----------------------------------------
-What is the meaining of '#' symbol in function name? 
+What is the meaining of '#' symbol in function name?
 
 That's part of the autoload mechanism. From Autoloading at (Learn Vimscript
 the Hard Way) and :help autoload:
@@ -857,13 +898,13 @@ function:
 Vim will look for the file autoload/foo/bar.vim
 
 ----------------------------------------
-vim9script  
+vim9script
 
 def! is not allowed for script-local functions as it doesn't make sense
 because they can't be redefined. See :h E1117.
 Note, you can use def! g:SomeFunc() <- global function.
 
-xnoremap * :<C-u> call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR> 
+xnoremap * :<C-u> call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
 what is <SID>?
 To avoid polluting the function namespace, plugin-internal functions should be
 script-local, i.e. have the prefix s:. To invoke these from a mapping, the
@@ -874,13 +915,13 @@ script that defined it.
 https://groups.google.com/g/vim_use/c/V_BVGzi07PU
 
 ----------------------------------------
-Global, local, window specific options 
+Global, local, window specific options
 
 For ex, stl (statusline) can be any of the above three (:h stl).
 Use :setl (:setlocal) to set local var
 
 ----------------------------------------
-interpolated-string  
+interpolated-string
 |interpolated-string|
 
 $"string"		interpolated string constant		expr-$quote
@@ -905,7 +946,7 @@ timer_start can do background execution within Vim's main thread (it does its
 own time slicing)
 
 ----------------------------------------
-Why buffer local mapping 
+Why buffer local mapping
 
 map <buffer> ...
 
@@ -921,7 +962,7 @@ that it uses additional LOADSCRIPT and USEDICT in the loop when you do
 :disassembly
 
 Better version:
- 
+
 	% vim -Nu NONE -S <(cat <<'EOF'                                                                                       1 :(
 	    vim9script
 	    var foo = {x: 1, y: 2}
@@ -948,7 +989,7 @@ numberical keycode they use
 - it remaps keys to internal function where it waits for getchar(); it then
 uses feedkeys() to send keycode combination (>= 2); There is no circular
 dependency when you feedkey() <space>x since only <space> is mapped to
-internal function. 
+internal function.
 
 ----------------------------------------'
 Comment code using gc:
@@ -1001,7 +1042,7 @@ Cfilter
 	:Cfilter[!] /pat/
 Qfreplace
 	To perform replacement on filtered iterms:
-	:Qfreplace 
+	:Qfreplace
 
 Location list - specific to window (not global). You can have many location
 		lists open in different windows.
@@ -1026,7 +1067,7 @@ Using macros with quickfix
 	(perform some operations on file)
 	:w
 	:cnext - move to next entry
-	q - stop recording 
+	q - stop recording
 	@q or 10@q
 
 ----------------------------------------
@@ -1045,7 +1086,7 @@ explain HOW your code works in a comment: it’s much better to write the code
 so that the working is obvious, and it’s a waste of time to explain badly
 written code.
 
-Generally, you want your comments to tell WHAT your code does, not HOW. 
+Generally, you want your comments to tell WHAT your code does, not HOW.
 Also, try to avoid putting comments inside a function body. You can make small
 comments to note or warn about something particularly clever (or ugly), but
 try to avoid excess. Instead, put the comments at the head of the function,
@@ -1075,7 +1116,7 @@ strongly preferred limit.
 18) Editor modelines and other cruft
 
 Do not include any of these in source files. People have their own personal
-editor configurations, and your source files should not override them. 
+editor configurations, and your source files should not override them.
 
 https://www.kernel.org/doc/html/v4.10/process/coding-style.html
 
@@ -1085,7 +1126,7 @@ Link has info about 'include' and 'define', and everything about `[I`,
 `ijump`, etc.
 
 ----------------------------------------
-include-search 
+include-search
 Search in all included files (not just this file but all files in project
 within the context of this file)
 
@@ -1106,7 +1147,7 @@ fallback is always using 'tags'. Very simple:
 :!ctags -R
                         run ctags at your project root.
 
-CTRL-]			Jump to definition of keyword under cursor (like 
+CTRL-]			Jump to definition of keyword under cursor (like
 			'gd' except gd works for locally within file).
 			(Use g Ctrl-] instead). Same as ":tag {name}", where {name} is the
 			keyword under or after cursor.
@@ -1165,7 +1206,7 @@ g]			Like CTRL-], but use ":tselect" instead of ":tag".
 			a regexp pattern, see |tag-regexp|.
 
 ----------------------------------------
-Ex commands line range 
+Ex commands line range
 https://www.youtube.com/watch?v=Gs1VDYnS-Ac at 25:00 at 42:00
 use range (single line or a rangel of lines) based Ex commands to copy a line
 to where the cursor is.
@@ -1181,9 +1222,9 @@ this will copy a line with 'foo' to here.
 
 When separated with ';' the cursor position will be set to that line
 before interpreting the next line specifier.  This doesn't happen for ','.
-Examples:  
+Examples:
    4,/this line/
- 	from line 4 till match with "this line" after the cursor line.  
+ 	from line 4 till match with "this line" after the cursor line.
    5;/that line/
  	from line 5 till match with "that line" after line 5.
 
@@ -1209,18 +1250,18 @@ Declaring a variable with a type but without an initializer will initialize to
 false (for bool), empty (for string, list, dict, etc.) or zero (for number,
 any, etc.).  This matters especially when using the "any" type, the value will
 default to the number zero.  For example, when declaring a list, items can be
-added: 
+added:
 	var myList: list<number>
 	myList->add(7)
 
 Initializing a variable to a null value, e.g. null_list, differs from not
-initializing the variable.  This throws an error: 
+initializing the variable.  This throws an error:
 	var myList = null_list
 	myList->add(7)  # E1130: Cannot add to null list
 
 ----------------------------------------
 Abbrev with args
- 
+
   iab FF <c-o>:FF
   com -nargs=* FF call s:FF(<f-args>)
   fu s:FF(i, n)
@@ -1249,12 +1290,12 @@ Module		module.py, my_module.py
 Package		package, mypackage
 
 ----------------------------------------
-glob vs regex 
-	Glob pattern  
+glob vs regex
+	Glob pattern
 	if filename =~ glob2regpat('Make*.mak')
- 	This is equivalent to:  
+ 	This is equivalent to:
 	if filename =~ '^Make.*\.mak$'
- 	
+
 
 ----------------------------------------
 Path to current buffer
@@ -1268,13 +1309,13 @@ To execute vim in non-interactive mode, you can use either +{command}/-c
 commands after the first file has been read.
 
 To parse file and send it to pipeline's output, you may try the following:
- 
+
 	$ cat /etc/hosts | vim -es '+:0,$s/127/128/g' '+%print' '+:q!' /dev/stdin | cat
 	$ echo Example | vim -es '+:wq! /dev/stdout' /dev/stdin | cat
 	$ cat file1 file2 | vim - -es '+:0,$s/foo/test/g' '+:wq! file3'
 
 To edit file in-place, you can use -s {scriptin} so the script file is read.
- 
+
 	$ echo ':0,$s/foo/test/ge' > cmds.txt
 	$ echo ':wq' >> cmds.txt
 	$ vim -s cmds.txt -es file
@@ -1282,7 +1323,7 @@ To edit file in-place, you can use -s {scriptin} so the script file is read.
 https://unix.stackexchange.com/questions/14107/is-it-possible-to-execute-a-vim-script-in-a-non-interactive-mode
 
 ----------------------------------------
-<SID> 
+<SID>
 You can use it in abbrev, map, menu etc. You can also do `expand('<SID>') .. fn` (see :help)
 It prepends function name with name of script and a number. This way your
 script local functions can be used from global scope.
@@ -1291,7 +1332,7 @@ script local functions can be used from global scope.
 To find if something is truthy, see |truthy|
 
 ----------------------------------------
-non-greedy search 
+non-greedy search
 
 .* is greedy. So is .+ etc.
 
@@ -1302,7 +1343,7 @@ Try:
 %s/.\{-},//
 
 ----------------------------------------
-Tags 
+Tags
 https://gist.github.com/romainl/f2d0727bdb9bde063531cd237f47775f
 https://gist.github.com/romainl/27c1c29462a8c6c868f1a9bf244bc71d
 
@@ -1327,11 +1368,11 @@ Guessing names:
 :tag /block -> Suppose you want to jump to a tag that contains "block"
 :tag /foo$  -> ends with foo, for example
 
-Fing places where tag is called from: 
+Fing places where tag is called from:
 Cscope not only find places where an identifier is
 declared, but also where it is used.  See |cscope|.
 
-Preview window and finding right arguments to function 
+Preview window and finding right arguments to function
 
 :ptag foo
 Vim will open a window, and jumps to the tag "foo".  Then it takes you
@@ -1342,22 +1383,22 @@ c-w }
    If the name of a function appears in the text, you can get its definition
 in the preview window.
 
-To close the preview window use this command:  
+To close the preview window use this command:
 	:pclose 9 (or c-w z)
 
 To edit a specific file in the preview window, use ":pedit".  This can be
-useful to edit a header file, for example:  
+useful to edit a header file, for example:
 	:pedit defs.h
 
 Finally, ":psearch" can be used to find a word in the current file and any
 included files and display the match in the preview window.  This is
 especially useful when using library functions, for which you do not have a
-tags file.  Example:  
+tags file.  Example:
 	:psearch popen
 
 This will show the "stdio.h" file in the preview window, with the function
 prototype for popen():
-	FILE	*popen __P((const char *, const char *));  
+	FILE	*popen __P((const char *, const char *));
 
 Note:
 :[range]ps[earch][!] [count] [/]pattern[/]
@@ -1431,7 +1472,7 @@ see |tabpage.txt|
 :tabnew
 :[count]tabnew [++opt] [+cmd] {file}
 :[count]tabe[dit] [++opt] [+cmd] {file}
-:[count]tab {cmd}			
+:[count]tab {cmd}
 		Execute {cmd} and when it opens a new window open a new tab.
 :tabc[lose][!]	Close current tab page.
 :tabo[nly][!]	Close all other tab pages.
@@ -1510,7 +1551,7 @@ example runs the macro in every file in the buffer list, while the :argdo
 example runs it in each file that's listed in the argument list.
 
 NOTE: Vim's built-in support for removing buffers from the buffer list is lousy, so
-use arglist when necessary. 
+use arglist when necessary.
 
 https://www.reddit.com/r/vim/comments/u3nv6/buffer_list_vs_arguments_list/
 
@@ -1535,7 +1576,7 @@ Debug                               *giri-debug*
 The best way to debug .vimrc is to enable the debug and pipe it to
 a log file.
 >
-    vim -V20 2>&1 | tee logfile 
+    vim -V20 2>&1 | tee logfile
 
 To debug Vim source see :h :Termdebug
 
@@ -1621,7 +1662,7 @@ CTRL-W =	Make all windows (almost) equally high and wide, but use
 
 :on[ly][!]
 :{count}on[ly][!]
-CTRL-W o	
+CTRL-W o
 CTRL-W CTRL-O
 		Make the current window the only one on the screen.  All other
 		windows are closed.  For {count} see the `:quit` command

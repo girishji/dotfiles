@@ -27,8 +27,8 @@ nnoremap <leader>/ /\<
 nnoremap <leader>? ?\<
 
 # Buffer navigation
-# nnoremap <silent> <leader>[ :bprevious<CR>
-# nnoremap <silent> <leader>] :bnext<CR>
+nnoremap <silent> <leader>[ :bprevious<CR>
+nnoremap <silent> <leader>] :bnext<CR>
 # nnoremap <silent> [<space> :bprevious<CR>
 # nnoremap <silent> ]<space> :bnext<CR>
 nnoremap <leader><pagedown> <cmd>bprevious<cr>

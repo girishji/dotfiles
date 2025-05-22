@@ -7,8 +7,7 @@ let s:qflist = 1  " 1 for qflist and 0 for loclist
 nnoremap <leader>m <cmd>call SaveBookmark()<CR>
 nnoremap <leader>M <cmd>call ShowBookmarks()<CR>
 nnoremap <leader>R <cmd>call RemoveCurrentBookmark()<CR>
-nnoremap <silent> <leader>] <cmd>call NextBookmark()<CR>
-nnoremap <silent> <leader>[ <cmd>call PrevBookmark()<CR>
+" Use [c and ]c to switch bookmarks (when qflist is set)
 
 let g:bookmark_file = expand('~/.vim-bookmarks.vim')
 let g:bookmarks = []

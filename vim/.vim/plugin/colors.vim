@@ -6,21 +6,25 @@ vim9script
 #     g:terminal_ansi_colors = ['#282923', '#c61e5c', '#81af24', '#fd971f', '#51aebe', '#ae81ff', '#80beb5', '#bababa', '#74705d', '#f92672', '#a6e22e', '#e6db74', '#66d9ef', '#fd5ff0', '#a1efe4', '#f8f8f2']
 # endif
 
+if expandcmd($VIM_COLORSCHEME) != null_string
+    exec $'colorscheme {expandcmd($VIM_COLORSCHEME)}'
+
+    # color 146 -> slightly blue but gray
+    # color 249 -> gray replacement for 146
+    # autocmd ColorScheme quiet {
+    # hi Comment ctermfg=246 cterm=none
+    # }
+    highlight! TrailingWhitespace ctermbg=196
+    match TrailingWhitespace /\s\+\%#\@<!$/
+    finish
+endif
+
 # NOTE: 'background' is not set correctly until window is opened (after VimEnter). So,
 # set the background explicitly so that colorscheme can choose appropriate colors.
 
 # If env var is set, use it.
 if expandcmd($VIM_BG) != null_string
     exec $'set background={expandcmd($VIM_BG)}'
-endif
-
-# color 146 -> slightly blue but gray
-# color 249 -> gray replacement for 146
-# autocmd ColorScheme quiet {
-    # hi Comment ctermfg=246 cterm=none
-# }
-if expandcmd($VIM_COLORSCHEME) != null_string
-    exec $'colorscheme {expandcmd($VIM_COLORSCHEME)}'
 endif
 
 # colorscheme is not needed. Adjust terminal colors.
@@ -132,16 +136,16 @@ def SaneColors()
 enddef
 
 def MCColors()
-    hi StatusLine     ctermfg=8 ctermbg=7 cterm=bold
+    hi StatusLine     ctermfg=8 ctermbg=4 cterm=bold
     hi! link StatusLineNC StatusLine
     hi! link StatusLineTerm StatusLine
-    hi Pmenu          ctermfg=8 ctermbg=7
+    hi Pmenu          ctermfg=8 ctermbg=6 cterm=bold
     hi PmenuSel       ctermfg=15 ctermbg=8
     hi PmenuMatch     ctermfg=3 ctermbg=6
     hi PmenuMatchSel  cterm=underline ctermfg=3 ctermbg=8
-    hi PmenuSbar      ctermbg=14
+    hi PmenuSbar      ctermbg=7
     hi PmenuThumb     ctermbg=8
-    hi PmenuExtra     ctermfg=14 ctermbg=7
+    hi PmenuExtra     ctermfg=7 ctermbg=6 cterm=bold
     hi PmenuExtraSel  ctermfg=15 ctermbg=8
     hi Added          ctermfg=4
 enddef

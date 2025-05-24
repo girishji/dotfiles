@@ -1,5 +1,9 @@
 vim9script
 
+if has('gui_macvim')
+  finish
+endif
+
 # ---------------------------
 # Insert Mode Auto-completion
 # ---------------------------

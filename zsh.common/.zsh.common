@@ -24,11 +24,14 @@
             echo -ne $cursor_beam
         fi
     }
-    zle-line-init() {
-        echo -ne $cursor_beam
-    }
-    zle -N zle-keymap-select
-    zle -N zle-line-init
+
+    if [[ "$VIM" != *MacVim* ]]; then
+        zle-line-init() {
+            echo -ne $cursor_beam
+        }
+        zle -N zle-keymap-select
+        zle -N zle-line-init
+    fi
 }
 
 ##
@@ -71,8 +74,9 @@
     # $PATH and $path (and also $FPATH and $fpath, etc.) are "tied" to each other.
     # Modifying one will also modify the other.
     path=(
-        /home/linuxbrew/.linuxbrew/bin(N)   # (N): null if file doesn't exist
+        /opt/homebrew/bin(N)   # (N): null if file doesn't exist
         $path
+        /Applications/MacVim.app/Contents/bin(N)
         ~/.local/bin
     )
 
@@ -133,6 +137,9 @@
     zle -N edit-command-line
     bindkey -M viins '^e' edit-command-line
     bindkey -M vicmd '^e' edit-command-line
+    # ':' is bound to ZLE’s ex-mode, similar to Vim's ':'. It opens a prompt
+    # which is annoying when you accidentally hit <esc>:
+    bindkey -M vicmd ':' undefined-key
 
     # Show history menu on ctrl-R/S
     bindkey '^R' history-incremental-search-backward
@@ -579,12 +586,16 @@ prompt_vcs_setup() {
     # alias vr='vim -c "normal '\''0"'  # restore last opened buffer
     alias viclean='vim --clean'
     alias vimclean='vim --clean'
+    alias vw='view'
     alias nv='nvim'
     alias nvi='nvim'
     alias vim_='vim -Nu NONE -S <(cat <<EOF
         vim9script
     EOF
     )'
+    alias mvi='mvim'
+    alias mvd='mvimdiff'
+    alias mvw='mview'
 
     alias makedebug="make SHELL='sh -x'"
 
@@ -673,4 +684,4 @@ prompt_vcs_setup() {
     bindkey -M main "^[ " my_do_not_expand_alias
 }
 
-# vim:tw=80:ts=4:ft=zsh:ai:
+# vim: ts=4 shiftwidth=4 sts=4 expandtab ft=zsh

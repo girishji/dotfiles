@@ -24,7 +24,6 @@ alias ci='zi' # interactive z: list the directories by fzf and cd
 alias cl='clear'
 alias diffw='diff -w'  # ignore white spaces
 alias em='emacs'
-alias gssh='gcloud cloud-shell ssh'
 alias gr='grep -Ei'  # extended regex and case insensitive
 alias grc='grep -E'  # extended regex and case sensitive
 alias grep='command grep --color' # aliases /usr/bin/grep
@@ -44,10 +43,12 @@ alias nv='nvim'
 alias nvc='nvim --clean'
 alias nvr='nvim -c "normal '\''0"'  # restore last opened buffer ('0 mark has last cursor location)
 alias tt='tree'
-alias v='vim'
 alias vd='vi -d'  # diff mode - pass 2 files
 alias vr='vim -c "normal '\''0"'  # restore last opened buffer
 alias viclean='vim --clean'
+if [ -f "$HOME/git/vim/dist/bin/vim" ]; then
+    alias v="$HOME/git/vim/dist/bin/vim"
+fi
 alias u='cd ..'
 alias uu='cd ../..'
 alias uuu='cd ../../..'
@@ -57,3 +58,5 @@ alias uuuuuu='cd ../../../../../..'
 alias uuuuuuu='cd ../../../../../../..'
 alias uuuuuuuu='cd ../../../../../../../..'
 alias uuuuuuuuu='cd ../../../../../../../../..'
+
+# vim: ts=4 shiftwidth=4 sts=4 expandtab

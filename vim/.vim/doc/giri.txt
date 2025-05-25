@@ -342,9 +342,12 @@ will restrict a pattern so that it matches only inside the visual selection.
 <C-R>%                  : pull file name (also #) (also insert mode)
 <C-R>=somevar           : pull contents of a variable (eg :let sray="ray[0-9]")
 
-## Stacked search 					*giri-search*
-  For example: "/pat/;/foo/+3;?bar"
+## Cursor at end of match 					*giri-search*
+Append /e
+	/pattern/e
 
+## Stacked search
+  For example: "/pat/;/foo/+3;?bar"
 Breakdown:
   /pat/ → Searches forward for the first line that matches "pat".
   ;/foo/+3 → From the line where /pat/ matched, search forward for "foo", and

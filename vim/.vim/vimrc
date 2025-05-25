@@ -95,8 +95,8 @@ augroup CustomAutocmds | autocmd!
     autocmd BufEnter **/doc/*.txt set modifiable noreadonly
     " spell : When a word is CamelCased, assume "Cased" is a separate word
     autocmd FileType help,markdown set spelloptions=camel
-    " Remove trailing whitespaces
-    autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
+    " Remove trailing whitespaces (not good for vim help files)
+    " autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
     " Set dictionary from ~/.vim/dicts
     autocmd FileType *
           \ let s:dictfile = expand('~/.vim') . '/dicts/' . &filetype |

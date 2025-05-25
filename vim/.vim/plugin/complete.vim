@@ -51,7 +51,7 @@ inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 # --------------------------
 # Abbrev Completor
 # --------------------------
-set cpt+=fAbbrevCompletor
+# set cpt+=FAbbrevCompletor
 # set cpt+=ffunction("g:AbbrevCompletor"\\,\ [5])^5
 def! g:AbbrevCompletor(findstart: number, base: string): any
   # def! g:AbbrevCompletor(maxitems: number, findstart: number, base: string): any

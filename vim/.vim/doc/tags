@@ -33,6 +33,7 @@ giri-numbers	giri.txt	/*giri-numbers*
 giri-pattern	giri.txt	/*giri-pattern*
 giri-quickfix	giri.txt	/*giri-quickfix*
 giri-register	giri.txt	/*giri-register*
+giri-replace	giri.txt	/*giri-replace*
 giri-search	giri.txt	/*giri-search*
 giri-stacktrace	giri.txt	/*giri-stacktrace*
 giri-substitute	giri.txt	/*giri-substitute*

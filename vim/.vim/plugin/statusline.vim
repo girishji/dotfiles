@@ -8,6 +8,8 @@ augroup UpdateStatusline | autocmd!
   autocmd BufEnter,BufAdd,BufDelete,BufUnload,BufWritePost,WinEnter,WinLeave * redrawstatus
 augroup END
 
+highlight User9 ctermfg=1 ctermbg=6 cterm=bold
+
 " ======================================================================
 " Return statusline string
 function! BufferListStatusline()
@@ -23,7 +25,7 @@ function! BufferListStatusline()
     let name = name == '' ? '[No Name]' : fnamemodify(name, ':t') " Use just the filename
     let name .= (getbufvar(buf, "&mod") ? '[+]' : '')
     if buf == bufnr('%')
-      let name = '|<' . name . '>|'
+      let name = $'%9*{name}%%%*'
     elseif buf == bufnr('#')
       let name .= '#'
     endif

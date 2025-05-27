@@ -99,10 +99,12 @@ enddef
 # Cmdline auto-completion
 # --------------------------
 set wim=noselect:lastused,full wop=pum,tagfile wcm=<C-@> wmnu
+
 # NOTE: Using timer_start causes 'cmdheight' to jump +1 on first ':' attempt (vim bug)
 # autocmd CmdlineChanged : timer_start(0, function(CmdComplete, [getcmdline()]))
 # def CmdComplete(cur_cmdline: string, timer: number)
 # autocmd CmdlineChanged : CmdComplete()
+
 autocmd CmdlineChanged [:/?] CmdComplete()
 def CmdComplete()
   var [cmdline, curpos] = [getcmdline(), getcmdpos()]
@@ -111,9 +113,7 @@ def CmdComplete()
   if getchar(1, {number: true}) == 0  # Typehead is empty (no more pasted input)
       && !wildmenumode() && curpos == cmdline->len() + 1
       && cmdline =~ trigger && cmdline !~ exclude
-      # && cmdline =~ '\%(\w\|[*/:.-]\)$' && cmdline !~ '^\d\+$'  # Reduce noise
     SkipCmdlineChanged()  # Suppress redundant completion attempts
-    # feedkeys("\<C-@>", "ti")
     feedkeys("\<C-@>", "t")
     # NOTE: Using the 'g' flag in substitute() prevents Vim from inserting
     #   <C-@> when typing quickly with no completion items available.

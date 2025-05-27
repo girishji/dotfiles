@@ -37,7 +37,7 @@ nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [B :bfirst<CR>
 nnoremap <silent> ]B :blast<CR>
 nnoremap <leader>b <cmd>b#<cr>
-nnoremap <leader>d <cmd>bd<cr>
+nnoremap <leader>d <cmd>bw<cr>
 
 " quickfix list
 if !&diff  " vimdiff uses [c and ]c

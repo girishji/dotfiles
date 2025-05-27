@@ -51,10 +51,8 @@ inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 # --------------------------
 # Abbrev Completor
 # --------------------------
-# set cpt+=FAbbrevCompletor
-# set cpt+=ffunction("g:AbbrevCompletor"\\,\ [5])^5
+set cpt+=FAbbrevCompletor
 def! g:AbbrevCompletor(findstart: number, base: string): any
-  # def! g:AbbrevCompletor(maxitems: number, findstart: number, base: string): any
   if findstart > 0
     var prefix = getline('.')->strpart(0, col('.') - 1)->matchstr('\S\+$')
     if prefix->empty()
@@ -75,10 +73,13 @@ def! g:AbbrevCompletor(findstart: number, base: string): any
   endfor
   return items->empty() ? v:none :
     items->sort((v1, v2) => v1.word < v2.word ? -1 : v1.word ==# v2.word ? 0 : 1)
+enddef
+
+# set cpt+=Ffunction("g:AbbrevCompletor"\\,\ [5])^5
+  # def! g:AbbrevCompletor(maxitems: number, findstart: number, base: string): any
   # var T = items->empty() ? v:none :
   #     items->sort((v1, v2) => v1.word < v2.word ? -1 : v1.word ==# v2.word ? 0 : 1)->slice(0, maxitems)
   # return {words: T, refresh: 'always'}
-enddef
 
 # --------------------------
 # LSP Completor
@@ -103,7 +104,6 @@ set wim=noselect:lastused,full wop=pum,tagfile wcm=<C-@> wmnu
 # def CmdComplete(cur_cmdline: string, timer: number)
 # autocmd CmdlineChanged : CmdComplete()
 autocmd CmdlineChanged [:/?] CmdComplete()
-# XXX: / and : need different trigger chars to trigger search
 def CmdComplete()
   var [cmdline, curpos] = [getcmdline(), getcmdpos()]
   var trigger = '\%(\w\|[*/:.-]\)$'
@@ -131,8 +131,8 @@ cnoremap <expr> <up> SkipCmdlineChanged("\<up>")
 cnoremap <expr> <down> SkipCmdlineChanged("\<down>")
 autocmd CmdlineEnter : set bo+=error
 autocmd CmdlineLeave : set bo-=error
-autocmd CmdlineEnter [/?] set ph=8
-autocmd CmdlineLeave [/?] set ph&
+autocmd CmdlineEnter [:/?] exec $'set ph={max([10, winheight(0) / 2])}'
+autocmd CmdlineLeave [:/?] set ph&
 # autocmd CmdlineEnter /,\? setcmdline('\<') | set ph=8
 # autocmd CmdlineEnter /,\? setcmdline('\<') | set wop-=pum
 # autocmd CmdlineEnter /,\? set wop-=pum

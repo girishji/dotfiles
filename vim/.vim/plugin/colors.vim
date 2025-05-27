@@ -153,10 +153,10 @@ enddef
 def BorlandColors()
     hi StatusLine     ctermfg=8 ctermbg=6 cterm=bold
     hi Pmenu          ctermfg=8 ctermbg=2 cterm=bold
-    hi PmenuMatch     ctermfg=3 ctermbg=2 cterm=bold
+    hi PmenuMatch     ctermfg=15 ctermbg=2 cterm=bold
     hi PmenuExtra     ctermfg=7 ctermbg=2 cterm=bold
     hi PmenuExtraSel  ctermfg=7 ctermbg=4 cterm=bold
-    hi PmenuMatchSel  ctermfg=3 ctermbg=4 cterm=bold
+    hi PmenuMatchSel  ctermfg=15 ctermbg=4 cterm=bold
     # hi StatusLine     ctermfg=8 ctermbg=2 cterm=bold
     # hi Pmenu          ctermfg=8 ctermbg=6 cterm=bold
     # hi PmenuMatch     ctermfg=1 ctermbg=6

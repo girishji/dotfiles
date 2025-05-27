@@ -36,7 +36,8 @@ function! BufferListStatusline()
     let name = name == '' ? '[No Name]' : fnamemodify(name, ':t') " Use just the filename
     let name .= (getbufvar(buf, "&mod") ? '[+]' : '')
     if buf == bufnr('%')
-      let name = $'%9*{name}%%%*'
+      let name = $'|{name}%%|'
+      " let name = $'%9*{name}%%%*'
     elseif buf == bufnr('#')
       let name .= '#'
     endif

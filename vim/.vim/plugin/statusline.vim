@@ -1,5 +1,16 @@
 " Statusline with buffer list
 
+function RulerSetup()
+  set laststatus=0 ruler
+  set highlight-=S:StatusLineNC highlight+=Si
+  set rulerformat=%75(%-t%{&modified?'[+]':''}\ %=%{bufexists(bufnr('#'))&&(bufname(bufnr('#'))!='')&&bufnr('#')!=bufnr('%')?(fnamemodify(bufname(bufnr('#')),':t').'#'.(getbufvar(bufnr('#'),'&modified')?'[+]':'').'\ ≡'):''}\ %y\ ≡\ %l,%c%V\ %P\ %)
+endfunction
+
+if expandcmd($VIM_CS) == 'mc'
+  call RulerSetup()
+  finish
+endif
+
 set laststatus=2  " always show statusline
 
 augroup UpdateStatusline | autocmd!

@@ -140,30 +140,30 @@ def MCColors()
     hi! link StatusLineNC StatusLine
     hi! link StatusLineTerm StatusLine
     hi Pmenu          ctermfg=8 ctermbg=6 cterm=bold
-    hi PmenuSel       ctermfg=15 ctermbg=8
-    hi PmenuMatch     ctermfg=3 ctermbg=6
-    hi PmenuMatchSel  cterm=underline ctermfg=3 ctermbg=8
+    hi PmenuSel       ctermfg=8 ctermbg=4 cterm=bold
+    hi PmenuMatch     ctermfg=15 ctermbg=6 cterm=bold
+    hi PmenuMatchSel  ctermfg=15 ctermbg=4 cterm=bold
     hi PmenuSbar      ctermbg=7
     hi PmenuThumb     ctermbg=8
     hi PmenuExtra     ctermfg=7 ctermbg=6 cterm=bold
-    hi PmenuExtraSel  ctermfg=15 ctermbg=8
+    hi PmenuExtraSel  ctermfg=7 ctermbg=4 cterm=bold
     hi Added          ctermfg=4
 enddef
 
 def BorlandColors()
     hi StatusLine     ctermfg=8 ctermbg=6 cterm=bold
     hi Pmenu          ctermfg=8 ctermbg=2 cterm=bold
-    hi PmenuMatch     ctermfg=3 ctermbg=2
+    hi PmenuMatch     ctermfg=3 ctermbg=2 cterm=bold
     hi PmenuExtra     ctermfg=7 ctermbg=2 cterm=bold
-    hi PmenuExtraSel  ctermfg=7 ctermbg=8
-    hi PmenuMatchSel  ctermfg=3 ctermbg=8
+    hi PmenuExtraSel  ctermfg=7 ctermbg=4 cterm=bold
+    hi PmenuMatchSel  ctermfg=3 ctermbg=4 cterm=bold
     # hi StatusLine     ctermfg=8 ctermbg=2 cterm=bold
     # hi Pmenu          ctermfg=8 ctermbg=6 cterm=bold
     # hi PmenuMatch     ctermfg=1 ctermbg=6
     # hi PmenuExtra     ctermfg=7 ctermbg=6 cterm=bold
     # hi PmenuExtraSel  ctermfg=15 ctermbg=7
     # hi PmenuMatchSel  ctermfg=4 ctermbg=8
-    hi PmenuSel       ctermfg=15 ctermbg=8
+    hi PmenuSel       ctermfg=8 ctermbg=4 cterm=bold
     hi PmenuSbar      ctermbg=7
     hi PmenuThumb     ctermbg=8
     hi Added          ctermfg=4

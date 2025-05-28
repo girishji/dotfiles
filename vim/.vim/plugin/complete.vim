@@ -129,10 +129,10 @@ enddef
 # Optional
 cnoremap <expr> <up> SkipCmdlineChanged("\<up>")
 cnoremap <expr> <down> SkipCmdlineChanged("\<down>")
-autocmd CmdlineEnter : set bo+=error
-autocmd CmdlineLeave : set bo-=error
-autocmd CmdlineEnter [:/?] exec $'set ph={max([10, winheight(0) / 2])}'
-autocmd CmdlineLeave [:/?] set ph&
+autocmd CmdlineEnter : set bo+=error | exec $'set ph={max([10, winheight(0) * 3 / 4])}'
+autocmd CmdlineLeave : set bo-=error ph&
+autocmd CmdlineEnter [/?] set ph=8
+autocmd CmdlineLeave [/?] set ph&
 # autocmd CmdlineEnter /,\? setcmdline('\<') | set ph=8
 # autocmd CmdlineEnter /,\? setcmdline('\<') | set wop-=pum
 # autocmd CmdlineEnter /,\? set wop-=pum

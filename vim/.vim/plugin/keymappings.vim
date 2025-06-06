@@ -11,8 +11,8 @@ map Y y$
 " map gm to go to middle of line instead of middle of screen
 nnoremap gm gM
 " When softwrap happens move by screen line instead of file line
-nnoremap j gj
-nnoremap k gk
+nnoremap <silent> j gj
+nnoremap <silent> k gk
 " Jump lines faster (use with H, M, L)
 nnoremap <leader>j 8j
 vnoremap <leader>j 8j
@@ -96,6 +96,7 @@ nnoremap <leader>tt <cmd>tabnew %<cr>
 nnoremap <leader>tn <cmd>tabnew %<cr>
 nnoremap <leader>te <cmd>tabe %<cr>
 nnoremap <leader>tc <cmd>tabclose<cr>
+nnoremap <leader>D <cmd>tabclose<cr>
 nnoremap <leader>T <cmd>tab term<CR>
 nnoremap <leader>tT <cmd>tab term<CR>
 

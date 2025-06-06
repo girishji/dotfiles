@@ -60,9 +60,6 @@ iab  vv=* ======================================================================
 " inorea dd <C-r>=strftime("%Y-%m-%d")<CR><C-R>=Eatchar()<CR>
 " inorea ddd <C-r>=strftime("%Y-%m-%d %H:%M")<CR><C-R>=Eatchar()<CR>
 
-inorea adn and
-inorea teh the
-
 " inorea todo: TODO:
 inorea fixme: FIXME:
 inorea xxx: XXX:

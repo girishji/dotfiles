@@ -140,13 +140,13 @@ def MCColors()
     hi! link StatusLineNC StatusLine
     hi! link StatusLineTerm StatusLine
     hi Pmenu          ctermfg=8 ctermbg=6 cterm=bold
-    hi PmenuSel       ctermfg=8 ctermbg=4 cterm=bold
-    hi PmenuMatch     ctermfg=15 ctermbg=6 cterm=bold
-    hi PmenuMatchSel  ctermfg=15 ctermbg=4 cterm=bold
+    hi PmenuSel       ctermfg=8 ctermbg=2 cterm=bold
+    hi PmenuMatch     ctermfg=1 ctermbg=6 cterm=bold
+    hi PmenuMatchSel  ctermfg=1 ctermbg=2 cterm=bold
     hi PmenuSbar      ctermbg=7
     hi PmenuThumb     ctermbg=8
     hi PmenuExtra     ctermfg=7 ctermbg=6 cterm=bold
-    hi PmenuExtraSel  ctermfg=7 ctermbg=4 cterm=bold
+    hi PmenuExtraSel  ctermfg=7 ctermbg=2 cterm=bold
     hi Added          ctermfg=4
 enddef
 

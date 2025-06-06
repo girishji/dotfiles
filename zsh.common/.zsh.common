@@ -268,7 +268,6 @@ prompt_vcs_setup() {
     }
 
     # Create a widget that calls the function below.
-    zle -N prompt_vcs-info
     prompt_vcs-info() {
       local -i fd=$1  # -i sets the type to integer.
       local REPLY
@@ -287,6 +286,8 @@ prompt_vcs_setup() {
         exec {fd}<&-  # Close the file descriptor.
       }
     }
+
+    zle -N prompt_vcs-info
 
     # Format the output of vcs_info, which our precmd uses to set $RPS1.
     #     %a: current action (for example, rebase)

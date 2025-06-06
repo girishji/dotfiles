@@ -1,25 +1,33 @@
-" Statusline with buffer list
+" ======================================================================
+" Ruler
 
 function RulerSetup()
   set laststatus=0 ruler
   set highlight-=S:StatusLineNC highlight+=Si
-  set rulerformat=%75(%-t%{&modified?'[+]':''}\ %=%{bufexists(bufnr('#'))&&(bufname(bufnr('#'))!='')&&bufnr('#')!=bufnr('%')?(fnamemodify(bufname(bufnr('#')),':t').'#'.(getbufvar(bufnr('#'),'&modified')?'[+]':'').'\ ≡'):''}\ %y\ ≡\ %l,%c%V\ %P\ %)
+  set rulerformat=%65(%=%-t%{&modified?'[+]':''}\ ≡%{bufexists(bufnr('#'))&&(bufname(bufnr('#'))!='')&&bufnr('#')!=bufnr('%')?'\ ('.(fnamemodify(bufname(bufnr('#')),':t').(getbufvar(bufnr('#'),'&modified')?'[+]':'').'#)'.'\ ≡'):''}\ %y\ %l,%c%V\ %P\ %)
 endfunction
+
+" ======================================================================
+" Statusline with buffer list
+
+function StatuslineSetup()
+  set laststatus=2  " always show statusline
+  augroup UpdateStatusline | autocmd!
+    autocmd WinEnter,BufEnter * setl statusline=%!BufferListStatusline()
+    autocmd WinLeave,BufLeave * setl statusline=%!InactiveStatusline()
+    autocmd BufEnter,BufAdd,BufDelete,BufUnload,BufWritePost,WinEnter,WinLeave * redrawstatus
+  augroup END
+  highlight User9 ctermfg=1 ctermbg=6 cterm=bold
+endfunction
+
+" ======================================================================
+" Setup
 
 if expandcmd($VIM_CS) == 'mc'
   call RulerSetup()
-  finish
+else
+  call StatuslineSetup()
 endif
-
-set laststatus=2  " always show statusline
-
-augroup UpdateStatusline | autocmd!
-  autocmd WinEnter,BufEnter * setl statusline=%!BufferListStatusline()
-  autocmd WinLeave,BufLeave * setl statusline=%!InactiveStatusline()
-  autocmd BufEnter,BufAdd,BufDelete,BufUnload,BufWritePost,WinEnter,WinLeave * redrawstatus
-augroup END
-
-highlight User9 ctermfg=1 ctermbg=6 cterm=bold
 
 " ======================================================================
 " Return statusline string

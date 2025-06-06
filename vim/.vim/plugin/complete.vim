@@ -11,12 +11,9 @@ endif
 # <c-n> gets sent again due to event, and it reverts (the completion list in Vim
 # has 2 items, one is typed text and another is candidate). these two alternate
 # in a loop. Use 'menuone'.
-# can do: if !skip_next_complete && curline->strpart(0, col('.') - 1) =~ '\%(\k\|\.\)$'
-# set cot=menuone,popup,preinsert inf cpt-=t,i
-# hi ComplMatchIns ctermfg=1
 #
 # set cot=menuone,popup,noselect,nearest cpt-=t,i
-set cot=menuone,popup,noselect,nearest cpt=.^10,w^5,b^5,u^5
+set cot=menuone,popup,noselect,nearest cpt=.^5,w^5,b^5,u^5
 autocmd TextChangedI * InsComplete()
 def InsComplete()
   if getcharstr(1) == '' && getline('.')->strpart(0, col('.') - 1) =~ '\k$'
@@ -36,17 +33,9 @@ def SkipTextChangedI(): string
 enddef
 inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
 inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
-# inoremap <silent> <tab> <c-r>=<SID>SmartTab()<cr>
+# inoremap <silent><expr> <cr> pumvisible() ? "\<c-r>=<SID>SkipTextChangedI()\<cr>\<c-y>" : "\<cr>"
+
 # NOTE: <c-y> dismisses pum but keeps inserted item, use <c-e> to cancel.
-# def SmartTab(): string
-#     var info = complete_info(['pum_visible', 'matches', 'selected'])
-#     var base = getline('.')->strpart(0, col('.') - 1)->matchstr('\k\+$')
-#     if !info.pum_visible || (info.matches->len() == 1
-#             && (info.matches[0].word ==# base || info.selected != -1))
-#         return "\<tab>"
-#     endif
-#     return "\<c-n>"
-# enddef
 
 # --------------------------
 # Abbrev Completor
@@ -68,11 +57,10 @@ def! g:AbbrevCompletor(findstart: number, base: string): any
   for line in lines->split("\n")
     var m = line->matchlist('\v^i\s+\zs(\S+)\s+(.*)$')
     if m->len() > 2 && m[1]->stridx(base) == 0
-      items->add({ word: m[1], info: m[2], dup: 1 })
+      items->add({ word: m[1], menu: 'abbr', info: m[2], dup: 1 })
     endif
   endfor
-  return items->empty() ? v:none :
-    items->sort((v1, v2) => v1.word < v2.word ? -1 : v1.word ==# v2.word ? 0 : 1)
+  return items->empty() ? v:none : items
 enddef
 
 # set cpt+=Ffunction("g:AbbrevCompletor"\\,\ [5])^5
@@ -80,20 +68,6 @@ enddef
   # var T = items->empty() ? v:none :
   #     items->sort((v1, v2) => v1.word < v2.word ? -1 : v1.word ==# v2.word ? 0 : 1)->slice(0, maxitems)
   # return {words: T, refresh: 'always'}
-
-# --------------------------
-# LSP Completor
-# --------------------------
-# set cpt+=fLspCompletor
-# set cpt+=fLspCompletor^5
-# set cpt=fLspCompletor,.,w,b,u,t,fAbbrevCompletor
-# def! g:LspCompletor(findstart: number, base: string): any
-#     if findstart == 1
-#         return g:LspOmniFunc(findstart, base)
-#     endif
-#     return {words: g:LspOmniFunc(findstart, base), refresh: 'always'}
-# enddef
-# autocmd VimEnter * g:LspOptionsSet({ autoComplete: false, omniComplete: true, autoHighlightDiags: false })
 
 # --------------------------
 # Cmdline auto-completion
@@ -129,7 +103,7 @@ enddef
 # Optional
 cnoremap <expr> <up> SkipCmdlineChanged("\<up>")
 cnoremap <expr> <down> SkipCmdlineChanged("\<down>")
-autocmd CmdlineEnter : set bo+=error | exec $'set ph={max([10, winheight(0) * 3 / 4])}'
+autocmd CmdlineEnter : set bo+=error | exec $'set ph={max([10, winheight(0) - 4])}'
 autocmd CmdlineLeave : set bo-=error ph&
 autocmd CmdlineEnter [/?] set ph=8
 autocmd CmdlineLeave [/?] set ph&
@@ -156,7 +130,8 @@ def SelectItem()
   selected_match = ''
   if getcmdline() =~ '^\s*\%(Grep\|Find\|Buffer\|FindSymbol\)\s'
     var info = cmdcomplete_info()
-    if info != {} && info.pum_visible && !info.matches->empty()
+    # if info != {} && info.pum_visible && !info.matches->empty()
+    if wildmenumode() && info != {} && !info.matches->empty()
       selected_match = info.selected != -1 ? info.matches[info.selected] : info.matches[0]
       setcmdline(info.cmdline_orig)
     endif
@@ -167,7 +142,8 @@ enddef
 # Fuzzy find file
 # --------------------------
 # nnoremap <leader><space> :Find<space><c-@>
-command! -nargs=* -complete=customlist,FuzzyFind Find execute(selected_match != '' ? $'edit {selected_match}' : '', 'silent')
+# command! -nargs=* -complete=customlist,FuzzyFind Find execute(selected_match != '' ? $'edit {selected_match}' : '', 'silent')
+command! -nargs=* -complete=customlist,FuzzyFind Find exec "edit" selected_match
 var allfiles: list<string>
 autocmd CmdlineEnter : allfiles = null_list
 def FuzzyFind(arglead: string, _: string, _: number): list<string>

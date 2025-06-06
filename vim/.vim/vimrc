@@ -44,6 +44,7 @@ set fillchars=stlnc:┴
 if &background == 'dark'
     set fillchars=vert:│,fold:۰,diff:·,stl:─,stlnc:═
 endif
+set noshowcmd  " Stop echoing keymapped typed keys in the bottom row
 set clipboard=unnamed  " Always use the system clipboard
 set mouse=  " XXX: Disable mouse (set by defaults.vim). Needed by macos terminal app.
 set number  " line numbering
@@ -57,7 +58,6 @@ set report=0  " show yank confirmation even if 1 or 2 lines yanked
 set showmatch  " show matching braces when text indicator is over them
 set ignorecase  " case-insensitive search
 set smartcase  " smart search
-set infercase  " when doing <c-n/p> completion, respect case
 set splitbelow  " open new split panes to right
 set splitright  " open new split panes to bottom
 set breakindent  " wrapped line will continue visually indented
@@ -123,7 +123,7 @@ endif
 " g:termdebug_config['wide'] = 1 # Force vertical split
 " g:termdebug_config['evaluate_in_popup'] = v:true
 
-" " Download plug.vim if it doesn't exist yet
+" Download plug.vim if it doesn't exist yet
 " if empty(glob('~/.vim/autoload/plug.vim'))
 "     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
 "                 \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -144,6 +144,11 @@ endif
 "     " Plug 'yegappan/lsp'
 "     " Plug 'girishji/pythondoc.vim', {'for': 'python'}
 "     " Plug 'girishji/devdocs.vim'
+"     "
+"     " XXX: LSP has a problem where open dict.c and :4000 and you
+"     " get 'Press ENTER or type command to continue' message. Also, happens
+"     " when a second file is opened.
+"     Plug 'girishji/lsp'
 "     call plug#end()
 " endif
 

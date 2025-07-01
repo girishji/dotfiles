@@ -279,9 +279,8 @@ This single command could be used to comment out an entire C file: ➾ :%norm i/
 You can use with visual mode selection also.
 
 **
-The :normal command allows us to combine the expressive nature of Vim’s Normal
- mode commands with the range of Ex commands. It’s a powerful combination! Use
- norm with . and @q (Macros). (ex. as in `:%norm .`)
+The :normal executes Normal mode commands from Ex command line.
+Use :norm with . and @q (Macros). (ex. as in `:%norm .`)
 **
 
 ## To put ; at the end of each line
@@ -320,6 +319,10 @@ visally select and do :sort
   C-o 80a <char> Esc
 (bad alternative:) without leaving insert mode:
   C-o :norm 80i<char> Return
+
+## Replace all occurance of foo in a project
+:grep foo
+:cdo s/foo/bar/gc
 
 ## Equivalent of rsir (replace string in region):
 - visually select region
@@ -568,7 +571,7 @@ adding markdown links to URLs:
 
 :g/foo/#<CR>   <- shows line numbers
 
-<c-f> and <c-c> <- Ex command and search mode
+<c-f> <- Ex command window
 - tab completion in '/' search: press <c-f> and you can tab complete
 - in / and ':' mode use <c-u> <c-w> to delete whole line or word
 
@@ -1209,10 +1212,20 @@ g]			Like CTRL-], but use ":tselect" instead of ":tag".
 			a regexp pattern, see |tag-regexp|.
 
 ----------------------------------------
-Ex commands line range
-https://www.youtube.com/watch?v=Gs1VDYnS-Ac at 25:00 at 42:00
-use range (single line or a rangel of lines) based Ex commands to copy a line
-to where the cursor is.
+Ex commands with line number and pattern as range
+
+This is generic Ex command not related to :global
+
+:[start]/pattern/[command]
+
+:2/foo/yank	Yank the first line matching foo after line 2
+This:
+Starts from a given line (2)
+Searches forward for the first match of pattern
+Applies the given command (yank) to that line (does not apply over multiple
+lines)
+Compare:
+ :g/foo/yank	Yank every line in the buffer that matches foo
 
 :?foo?t.
 See :h E16

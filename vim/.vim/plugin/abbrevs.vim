@@ -42,6 +42,8 @@ endfunc
 " 'vim' same as 'vimgrep' (can use Vim style regex)
 cabbr <expr> lv CmdAbbr('lv', $'lv // %<left><left><left><c-r>=Eatchar()<cr>')
 
+cabbr gr grep
+
 " Modeline
 iabbr vim_modeline_help vim:tw=78:ts=4:ft=help:norl:ma:noro:ai:lcs=tab\:\ \ ,trail\:~:<c-r>=Eatchar()<cr>
 iabbr vim_modeline_txt vim:ft=txt:<c-r>=Eatchar()<cr>

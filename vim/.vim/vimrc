@@ -7,13 +7,6 @@ map <BS> <Leader>
 let &t_Cs = "\e[4:3m"
 let &t_Ce = "\e[4:0m"
 
-" Disable bracketed paste (otherwise pasting does not work in popup)
-" https://github.com/vim/vim/issues/11766
-" &t_BE = ""
-" &t_BD = "\e[?2004l"
-" exec "set t_PS=\e[200~"
-" exec "set t_PE=\e[201~"
-
 " Cursor shape changes to show which mode you are in (:h t_SI)
 " 6=beam, 4=underline, 2=block
 let &t_SI = "\e[6 q" " SI = INSERT mode
@@ -31,15 +24,13 @@ source $VIMRUNTIME/defaults.vim
 " disable message from 'defaults.vim' when entering cmdwin
 autocmd! vimHints
 
-" NOTE: $VIMRUNTIME/ftplugin/python.vim sets tabstop, shiftwidth, etc.
+syntax on
 
-" Turn on listchars for Noname/scratch files and non-help files
 " 'listchars' is not local to buffer, only local to window
 autocmd FileType * if &ft =~ '\v(help|markdown)' | setlocal listchars=tab:\ \ ,trail:\  | else | setlocal listchars=tab:→.,trail:~ | endif
 autocmd BufEnter * if &ft == '' | setlocal listchars=tab:\ \ ,trail:\  | endif
 set list
 
-" set fillchars=vert:│,fold:۰,diff:·
 set fillchars=stlnc:┴
 if &background == 'dark'
     set fillchars=vert:│,fold:۰,diff:·,stl:─,stlnc:═
@@ -69,19 +60,20 @@ set nofoldenable  " do not do folding when you open file
 set signcolumn=yes  " always show column for lsp diagnostics etc
 " set dictionary+=/usr/share/dict/words
 set whichwrap+=<,>,h,l  " make arrows and h, l, push cursor to next line
-" set pumheight=7  " max number of items in popup menu (pmenu)
 set virtualedit=block  " allows selection of rectangular text in visual block mode
-" set rulerformat=%80(%=%f\ %h%m%r\ %-6y\ %-5.(%l,%c%V%)\ %P%)
-
-syntax on
+set grepprg=grep\ -REIins\ --exclude=tags\ --exclude=\"*.swp\"\ --exclude-dir=.git\ $*
+set autocomplete complete-=t,i infercase
 
 augroup CustomAutocmds | autocmd!
     " Macro key mapped to Q for help file
     autocmd FileType help nnoremap <buffer> Q q
+
     " Windows to close
     autocmd FileType help,vim-plug,qf nnoremap <buffer><silent> q :close<CR>
+
     " netrw: 'q' is already mapped to compound key (ex. 'qf' gets file info).
     autocmd FileType netrw nnoremap <buffer><silent> qq :close<CR>
+
     " Tell vim to automatically open the quickfix and location window.
     " :grep, :vimgrep and so on are called quickfix commands, they trigger
     " QuickFixCmdPost.
@@ -89,14 +81,19 @@ augroup CustomAutocmds | autocmd!
     " quickfix after the first match.
     autocmd QuickFixCmdPost [^lc]* cwindow
     autocmd QuickFixCmdPost l*    lwindow
+
     " Update tags in help file
     autocmd BufWritePost **/doc/*.txt helptags <afile>:p:h
+
     " Make help files writeable
     autocmd BufEnter **/doc/*.txt set modifiable noreadonly
+
     " spell : When a word is CamelCased, assume "Cased" is a separate word
     autocmd FileType help,markdown set spelloptions=camel
+
     " Remove trailing whitespaces (not good for vim help files)
     " autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
+
     " Set dictionary from ~/.vim/dicts
     autocmd FileType *
           \ let s:dictfile = expand('~/.vim') . '/dicts/' . &filetype |
@@ -109,9 +106,11 @@ augroup END
 if has('syntax') && has('eval') && !getcompletion('matchit', 'packadd')->empty()
     packadd! matchit
 endif
+
 if !getcompletion('comment', 'packadd')->empty()
     packadd! comment
 endif
+
 if !getcompletion('hlyank', 'packadd')->empty()
     packadd! hlyank
 endif

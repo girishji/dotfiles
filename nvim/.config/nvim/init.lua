@@ -84,6 +84,7 @@ do
     vim.o.linebreak = true
     vim.o.joinspaces = false
     vim.o.showmatch = true
+    vim.o.grepprg = 'grep -REIins --exclude=tags --exclude="*.swp" --exclude-dir=.git $*'
     vim.o.whichwrap = 'b,s,<,>,h,l' -- make arrows and h, l, push cursor to next line
     vim.o.virtualedit = 'block' -- allows selection of rectangular text in visual block mode
     vim.o.wildignore = '.gitignore,*.swp,*.zwc,tags'
@@ -423,6 +424,21 @@ do
         group = group,
         command = [[call mkdir(expand('<afile>:p:h'), 'p')]],
     })
+
+    vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+        pattern = { "[^l]*" },  -- Matches non-location list commands (e.g. :grep)
+        callback = function()
+            vim.cmd("cwindow")
+        end,
+    })
+
+    vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+        pattern = { "l*" },  -- Matches location list commands (e.g. :lgrep)
+        callback = function()
+            vim.cmd("lwindow")
+        end,
+    })
+
 end
 
 

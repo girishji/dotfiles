@@ -7,32 +7,27 @@ endif
 # ---------------------------
 # Insert Mode Auto-completion
 # ---------------------------
-# XXX 'menu' has a problem: if only 1 candidate, it completes on <c-n>, then
-# <c-n> gets sent again due to event, and it reverts (the completion list in Vim
-# has 2 items, one is typed text and another is candidate). these two alternate
-# in a loop. Use 'menuone'.
-#
+# set cot=menuone,popup,noselect,nearest cpt=.^5,w^5,b^5,u^5
 # set cot=menuone,popup,noselect,nearest cpt-=t,i
-set cot=menuone,popup,noselect,nearest cpt=.^5,w^5,b^5,u^5
-autocmd TextChangedI * InsComplete()
-def InsComplete()
-  if getcharstr(1) == '' && getline('.')->strpart(0, col('.') - 1) =~ '\k$'
-    # Suppress event caused by <c-n> if completion candidates not found
-    SkipTextChangedI()
-    feedkeys("\<c-n>", "n")
-  endif
-enddef
-inoremap <silent> <c-e> <c-r>=<SID>SkipTextChangedI()<cr><c-e>
-inoremap <silent> <c-y> <c-r>=<SID>SkipTextChangedI()<cr><c-y>
-def SkipTextChangedI(): string
-  set eventignore+=TextChangedI  # Suppress next event caused by <c-e> (or <c-n> when no matches found)
-  timer_start(1, (_) => {
-    set eventignore-=TextChangedI
-  })
-  return ''
-enddef
-inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
-inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+# autocmd TextChangedI * InsComplete()
+# def InsComplete()
+#   if getcharstr(1) == '' && getline('.')->strpart(0, col('.') - 1) =~ '\k$'
+#     # Suppress event caused by <c-n> if completion candidates not found
+#     SkipTextChangedI()
+#     feedkeys("\<c-n>", "nt")  # 't' is important
+#   endif
+# enddef
+# def SkipTextChangedI(): string
+#   set eventignore+=TextChangedI  # Suppress next event caused by <c-e> (or <c-n> when no matches found)
+#   timer_start(1, (_) => {
+#     set eventignore-=TextChangedI
+#   })
+#   return ''
+# enddef
+# inoremap <silent> <c-e> <c-r>=<SID>SkipTextChangedI()<cr><c-e>
+# inoremap <silent> <c-y> <c-r>=<SID>SkipTextChangedI()<cr><c-y>
+# inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
+# inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 # inoremap <silent><expr> <cr> pumvisible() ? "\<c-r>=<SID>SkipTextChangedI()\<cr>\<c-y>" : "\<cr>"
 
 # NOTE: <c-y> dismisses pum but keeps inserted item, use <c-e> to cancel.
@@ -63,32 +58,21 @@ def! g:AbbrevCompletor(findstart: number, base: string): any
   return items->empty() ? v:none : items
 enddef
 
-# set cpt+=Ffunction("g:AbbrevCompletor"\\,\ [5])^5
-  # def! g:AbbrevCompletor(maxitems: number, findstart: number, base: string): any
-  # var T = items->empty() ? v:none :
-  #     items->sort((v1, v2) => v1.word < v2.word ? -1 : v1.word ==# v2.word ? 0 : 1)->slice(0, maxitems)
-  # return {words: T, refresh: 'always'}
-
 # --------------------------
 # Cmdline auto-completion
 # --------------------------
 set wim=noselect:lastused,full wop=pum,tagfile wcm=<C-@> wmnu
 
-# NOTE: Using timer_start causes 'cmdheight' to jump +1 on first ':' attempt (vim bug)
-# autocmd CmdlineChanged : timer_start(0, function(CmdComplete, [getcmdline()]))
-# def CmdComplete(cur_cmdline: string, timer: number)
-# autocmd CmdlineChanged : CmdComplete()
-
 autocmd CmdlineChanged [:/?] CmdComplete()
 def CmdComplete()
-  var [cmdline, curpos] = [getcmdline(), getcmdpos()]
-  var trigger = '\%(\w\|[*/:.-]\)$'
-  var exclude = expand('<afile>') == ':' ? '^\%(\d\|,\|+\|-\)\+$' : ''  # Skip numeric range
+  var [cmdline, curpos, cmdmode] = [getcmdline(), getcmdpos(), expand('<afile>') == ':']
+  var trigger_char = '\%(\w\|[*/:.-]\)$'
+  var not_trigger_char = '^\%(\d\|,\|+\|-\)\+$'  # Skip numeric range
   if getchar(1, {number: true}) == 0  # Typehead is empty (no more pasted input)
       && !wildmenumode() && curpos == cmdline->len() + 1
-      && cmdline =~ trigger && cmdline !~ exclude
+      && (!cmdmode || (cmdline =~ trigger_char && cmdline !~ not_trigger_char))
     SkipCmdlineChanged()  # Suppress redundant completion attempts
-    feedkeys("\<C-@>", "t")
+    feedkeys("\<C-@>", "nt")
     # NOTE: Using the 'g' flag in substitute() prevents Vim from inserting
     #   <C-@> when typing quickly with no completion items available.
     # Remove <C-@> that get inserted when no items are available
@@ -103,17 +87,16 @@ enddef
 # Optional
 cnoremap <expr> <up> SkipCmdlineChanged("\<up>")
 cnoremap <expr> <down> SkipCmdlineChanged("\<down>")
-autocmd CmdlineEnter : set bo+=error | exec $'set ph={max([10, winheight(0) - 4])}'
-autocmd CmdlineLeave : set bo-=error ph&
+autocmd CmdlineEnter [:/?] set bo+=error | exec $'set ph={max([10, winheight(0) - 4])}'
+autocmd CmdlineLeave [:/?] set bo-=error ph&
 autocmd CmdlineEnter [/?] set ph=8
-autocmd CmdlineLeave [/?] set ph&
-# autocmd CmdlineEnter /,\? setcmdline('\<') | set ph=8
-# autocmd CmdlineEnter /,\? setcmdline('\<') | set wop-=pum
 # autocmd CmdlineEnter /,\? set wop-=pum
 # autocmd CmdlineLeave /,\? set wop+=pum
 
 # Note:
-# does not complete if not at end of line
+# Using timer_start causes 'cmdheight' to jump +1 on first ':'
+#   attempt (vim bug). Use getchar() instead.
+# Does not complete if not at end of line, by design.
 # say there are space chars at end, if you make substitute replace all (not just
 #  end) and use cmdline->trim(' ', 2)->len() + 1, then cursor will jump to end
 #  after removing ^@ (past the trailing spaces), not desirable. so, better to

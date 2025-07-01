@@ -4,20 +4,31 @@ nnoremap <leader>w <cmd>w<cr>
 " nnoremap <leader>w <cmd>update<cr> " BufWrite (not posted) is needed by plugins
 nnoremap <leader>q <cmd>qa<cr>
 nnoremap <leader>Q <cmd>qa!<cr>
-nnoremap <leader>r <cmd>registers<cr>
-" nnoremap <leader>m <cmd>marks<cr>
+
+" <c-l> deletes for beginning of line in insert mode
+" (<c-u> will delete to first indented col)
+inoremap <c-l> <c-o>d0<c-o>x
+
 " Y mapping, more natural but not vi compatible
 map Y y$
+
 " map gm to go to middle of line instead of middle of screen
 nnoremap gm gM
+
+" For autocomplete
+inoremap <silent> <Tab> <C-R>=pumvisible() ? "\<lt>C-N>" : "\<lt>Tab>"<CR>
+inoremap <silent> <S-Tab> <C-R>=pumvisible() ? "\<lt>C-P>" : "\<lt>S-Tab>"<CR>
+
 " When softwrap happens move by screen line instead of file line
 nnoremap <silent> j gj
 nnoremap <silent> k gk
+
 " Jump lines faster (use with H, M, L)
 nnoremap <leader>j 8j
 vnoremap <leader>j 8j
 nnoremap <leader>k 8k
 vnoremap <leader>k 8k
+
 " alternative to 'packadd nohlsearch'. use <cmd> to avoid triggering CmdlineEnter.
 nnoremap <silent> <esc> <cmd>nohls<cr><esc>
 

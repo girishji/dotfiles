@@ -7,28 +7,28 @@ endif
 # ---------------------------
 # Insert Mode Auto-completion
 # ---------------------------
-# set cot=menuone,popup,noselect,nearest cpt=.^5,w^5,b^5,u^5
 # set cot=menuone,popup,noselect,nearest cpt-=t,i
-# autocmd TextChangedI * InsComplete()
-# def InsComplete()
-#   if getcharstr(1) == '' && getline('.')->strpart(0, col('.') - 1) =~ '\k$'
-#     # Suppress event caused by <c-n> if completion candidates not found
-#     SkipTextChangedI()
-#     feedkeys("\<c-n>", "nt")  # 't' is important
-#   endif
-# enddef
-# def SkipTextChangedI(): string
-#   set eventignore+=TextChangedI  # Suppress next event caused by <c-e> (or <c-n> when no matches found)
-#   timer_start(1, (_) => {
-#     set eventignore-=TextChangedI
-#   })
-#   return ''
-# enddef
-# inoremap <silent> <c-e> <c-r>=<SID>SkipTextChangedI()<cr><c-e>
-# inoremap <silent> <c-y> <c-r>=<SID>SkipTextChangedI()<cr><c-y>
-# inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
-# inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
-# inoremap <silent><expr> <cr> pumvisible() ? "\<c-r>=<SID>SkipTextChangedI()\<cr>\<c-y>" : "\<cr>"
+set cot=menuone,popup,noselect,nearest cpt=.^5,w^5,b^5,u^5
+autocmd TextChangedI * InsComplete()
+def InsComplete()
+  if getcharstr(1) == '' && getline('.')->strpart(0, col('.') - 1) =~ '\k$'
+    # Suppress event caused by <c-n> if completion candidates not found
+    SkipTextChangedI()
+    feedkeys("\<c-n>", "nt")  # 't' is important
+  endif
+enddef
+def SkipTextChangedI(): string
+  set eventignore+=TextChangedI  # Suppress next event caused by <c-e> (or <c-n> when no matches found)
+  timer_start(1, (_) => {
+    set eventignore-=TextChangedI
+  })
+  return ''
+enddef
+inoremap <silent> <c-e> <c-r>=<SID>SkipTextChangedI()<cr><c-e>
+inoremap <silent> <c-y> <c-r>=<SID>SkipTextChangedI()<cr><c-y>
+inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+## inoremap <silent><expr> <cr> pumvisible() ? "\<c-r>=<SID>SkipTextChangedI()\<cr>\<c-y>" : "\<cr>"
 
 # NOTE: <c-y> dismisses pum but keeps inserted item, use <c-e> to cancel.
 
@@ -105,53 +105,65 @@ autocmd CmdlineEnter [/?] set ph=8
 #   end. may fix this using timer_start with setcmdpos or feedkeys
 
 # --------------------------
-# Preserve history completion and select first item by default
-# --------------------------
-var selected_match = null_string
-autocmd CmdlineLeavePre : SelectItem()
-def SelectItem()
-  selected_match = ''
-  if getcmdline() =~ '^\s*\%(Grep\|Find\|Buffer\|FindSymbol\)\s'
-    var info = cmdcomplete_info()
-    # if info != {} && info.pum_visible && !info.matches->empty()
-    if wildmenumode() && info != {} && !info.matches->empty()
-      selected_match = info.selected != -1 ? info.matches[info.selected] : info.matches[0]
-      setcmdline(info.cmdline_orig)
-    endif
-  endif
-enddef
-
-# --------------------------
 # Fuzzy find file
 # --------------------------
-# nnoremap <leader><space> :Find<space><c-@>
-# command! -nargs=* -complete=customlist,FuzzyFind Find execute(selected_match != '' ? $'edit {selected_match}' : '', 'silent')
-command! -nargs=* -complete=customlist,FuzzyFind Find exec "edit" selected_match
+nnoremap <leader><space> :<c-r>=execute('let fzfind_root="."')\|''<cr>FzFind<space><c-@>
+nnoremap <leader>fv :<c-r>=execute('let fzfind_root="$HOME/.vim"')\|''<cr>FzFind<space><c-@>
+nnoremap <leader>fV :<c-r>=execute('let fzfind_root="$VIMRUNTIME"')\|''<cr>Find<space><c-@>
+
+command! -nargs=* -complete=customlist,FuzzyFind FzFind execute $'silent edit {selected_menu_item}'
+
 var allfiles: list<string>
+
 autocmd CmdlineEnter : allfiles = null_list
+
 def FuzzyFind(arglead: string, _: string, _: number): list<string>
   if allfiles == null_list
-    allfiles = systemlist($'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune -o -name "*.swp" \) -type f -follow')
+    allfiles = systemlist($'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune -o -name "*.sw?" \) -type f -follow')
   endif
   return arglead == '' ? allfiles : allfiles->matchfuzzy(arglead)
 enddef
-nnoremap <leader><space> :<c-r>=execute('let fzfind_root="."')\|''<cr>Find<space><c-@>
-nnoremap <leader>fv :<c-r>=execute('let fzfind_root="$HOME/.vim"')\|''<cr>Find<space><c-@>
-nnoremap <leader>fV :<c-r>=execute('let fzfind_root="$VIMRUNTIME"')\|''<cr>Find<space><c-@>
 
 # --------------------------
 # Live grep
 # --------------------------
-nnoremap <leader>g :Grep<space>
-nnoremap <leader>G :Grep <c-r>=expand("<cword>")<cr>
-command! -nargs=+ -complete=customlist,GrepComplete Grep VisitFile()
+nnoremap <leader>g :IGrep<space>
+nnoremap <leader>G :IGrep <c-r>=expand("<cword>")<cr>
+
+command! -nargs=+ -complete=customlist,GrepComplete IGrep VisitFile()
+
 def GrepComplete(arglead: string, cmdline: string, cursorpos: number): list<any>
-  return arglead->len() > 1 ? systemlist($'ggrep -REIHns "{arglead}"' ..
-    ' --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.swp"') : []
+  var items = []
+  var done = false
+  var cmd = $'ggrep -REIHns "{arglead}"' ..
+    ' --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.sw?"'
+
+  var job = job_start(cmd, {
+    out_cb: (ch, str) => { # invoked when channel reads a line
+      items->add(str)
+    },
+    close_cb: (ch) => { # invoked after command returns
+      done = true
+    },
+  })
+  # Blocking loop: wait until job is done
+  while !done
+    sleep 2m
+    # Do not fully hang Vim: allow messages, redrawing, and channel events
+    if getchar(1, {number: true}) != 0
+      if job->job_status() ==# 'run'
+        job->job_stop()
+      endif
+      return []
+    endif
+  endwhile
+
+  return items
 enddef
+
 def VisitFile()
-  if (selected_match != null_string)
-    var qfitem = getqflist({lines: [selected_match]}).items[0]
+  if (selected_menu_item != null_string)
+    var qfitem = getqflist({lines: [selected_menu_item]}).items[0]
     if qfitem->has_key('bufnr') && qfitem.lnum > 0
       var pos = qfitem.vcol > 0 ? 'setcharpos' : 'setpos'
       silent exec $':b +call\ {pos}(".",\ [0,\ {qfitem.lnum},\ {qfitem.col},\ 0]) {qfitem.bufnr}'
@@ -163,8 +175,10 @@ enddef
 # --------------------------
 # Fuzzy find buffer
 # --------------------------
-nnoremap <leader><bs> :Buffer <c-@>
-command! -nargs=* -complete=customlist,FuzzyBuffer Buffer execute('b ' .. selected_match->matchstr('\d\+'))
+nnoremap <leader><bs> :FzBuffer <c-@>
+
+command! -nargs=* -complete=customlist,FuzzyBuffer FzBuffer execute 'b' selected_menu_item->matchstr('\d\+')
+
 def FuzzyBuffer(arglead: string, _: string, _: number): list<string>
   var bufs = execute('buffers', 'silent!')->split("\n")
   var altbuf = bufs->indexof((_, v) => v =~ '^\s*\d\+\s\+#')
@@ -172,6 +186,26 @@ def FuzzyBuffer(arglead: string, _: string, _: number): list<string>
     [bufs[0], bufs[altbuf]] = [bufs[altbuf], bufs[0]]
   endif
   return arglead == '' ? bufs : bufs->matchfuzzy(arglead)
+enddef
+
+# --------------------------
+# Preserve history completion and select first item by default
+# --------------------------
+var selected_menu_item = null_string
+
+autocmd CmdlineLeavePre : ExtractSelectedItem()
+
+def ExtractSelectedItem()
+  selected_menu_item = ''
+  if wildmenumode()
+    var info = cmdcomplete_info()
+    if info != {} && !info.matches->empty()
+      selected_menu_item = info.selected != -1 ? info.matches[info.selected] : info.matches[0]
+      if getcmdline() =~ '^\s*IGrep\s'
+        setcmdline(info.cmdline_orig)
+      endif
+    endif
+  endif
 enddef
 
 # vim: shiftwidth=2 sts=2 expandtab

@@ -62,9 +62,13 @@ set signcolumn=yes  " always show column for lsp diagnostics etc
 set whichwrap+=<,>,h,l  " make arrows and h, l, push cursor to next line
 set virtualedit=block  " allows selection of rectangular text in visual block mode
 set grepprg=grep\ -REIins\ --exclude=tags\ --exclude=\"*.swp\"\ --exclude-dir=.git\ $*
-set autocomplete complete-=t,i infercase
+" XXX: Do not set 'infercase' -- when typing all-caps it spams.
+" wet autocomplete complete-=t,i
 
 augroup CustomAutocmds | autocmd!
+    " Dismiss the info preview window
+    autocmd CompleteDone * pclose
+
     " Macro key mapped to Q for help file
     autocmd FileType help nnoremap <buffer> Q q
 

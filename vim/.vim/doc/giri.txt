@@ -1153,6 +1153,8 @@ fallback is always using 'tags'. Very simple:
 :!ctags -R
                         run ctags at your project root.
 
+g CTRL-]		Like CTRL-], but use ":tjump" instead of ":tag".
+
 CTRL-]			Jump to definition of keyword under cursor (like
 			'gd' except gd works for locally within file).
 			(Use g Ctrl-] instead). Same as ":tag {name}", where {name} is the
@@ -1160,8 +1162,6 @@ CTRL-]			Jump to definition of keyword under cursor (like
 			When there are several matching tags for {name}, jump
 			to the [count] one.  When no [count] is given the
 			first one is jumped to.
-
-g CTRL-]		Like CTRL-], but use ":tjump" instead of ":tag".
 
 :[count]ta[g][!] {name}
 			Jump to the definition of {name}, using the

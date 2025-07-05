@@ -525,10 +525,11 @@ prompt_vcs_setup() {
     #
     # CAUTION: Avoid **/* and ***/* as shell complains 'too many paths to expand' when searching a large directory.
 
-    alias gg="grep -REIins --exclude={'*.swp',tags} --exclude-dir='.git' \"\""
+    alias gg="grep -REIns --exclude={'*.swp',tags} --exclude-dir='.git' \"\""
+    alias ggi="grep -iREIns --exclude={'*.swp',tags} --exclude-dir='.git' \"\""
     cursor_offset["gg"]=2
+    cursor_offset["ggi"]=2
 
-    alias -g g="grep --color -iEI"
     alias -g gr="grep --color -iEI"
     alias -g G='| grep --color -iEI'
 

@@ -48,6 +48,8 @@ alias vr='vim -c "normal '\''0"'  # restore last opened buffer
 alias viclean='vim --clean'
 if [ -f "$HOME/git/vim/dist/bin/vim" ]; then
     alias v="$HOME/git/vim/dist/bin/vim"
+    alias vi="$HOME/git/vim/dist/bin/vim"
+    alias vim="$HOME/git/vim/dist/bin/vim"
 fi
 alias u='cd ..'
 alias uu='cd ../..'

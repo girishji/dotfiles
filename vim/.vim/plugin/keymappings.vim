@@ -16,8 +16,8 @@ map Y y$
 nnoremap gm gM
 
 " For autocomplete
-inoremap <silent> <Tab> <C-R>=pumvisible() ? "\<lt>C-N>" : "\<lt>Tab>"<CR>
-inoremap <silent> <S-Tab> <C-R>=pumvisible() ? "\<lt>C-P>" : "\<lt>S-Tab>"<CR>
+inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 
 " When softwrap happens move by screen line instead of file line
 nnoremap <silent> j gj

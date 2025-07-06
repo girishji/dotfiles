@@ -7,7 +7,6 @@ endif
 # ---------------------------
 # Insert Mode Auto-completion
 # ---------------------------
-# set cot=menuone,popup,noselect,nearest cpt-=t,i
 set cot=menuone,popup,noselect,nearest cpt=.^5,w^5,b^5,u^5
 autocmd TextChangedI * InsComplete()
 def InsComplete()
@@ -26,9 +25,6 @@ def SkipTextChangedI(): string
 enddef
 inoremap <silent> <c-e> <c-r>=<SID>SkipTextChangedI()<cr><c-e>
 inoremap <silent> <c-y> <c-r>=<SID>SkipTextChangedI()<cr><c-y>
-inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
-inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
-## inoremap <silent><expr> <cr> pumvisible() ? "\<c-r>=<SID>SkipTextChangedI()\<cr>\<c-y>" : "\<cr>"
 
 # NOTE: <c-y> dismisses pum but keeps inserted item, use <c-e> to cancel.
 
@@ -71,7 +67,7 @@ def CmdComplete()
   if getchar(1, {number: true}) == 0  # Typehead is empty (no more pasted input)
       && !wildmenumode() && curpos == cmdline->len() + 1
       && (!cmdmode || (cmdline =~ trigger_char && cmdline !~ not_trigger_char))
-    SkipCmdlineChanged()  # Suppress redundant completion attempts
+    SkipCmdlineChangedEvent()  # Suppress redundant completion attempts
     feedkeys("\<C-@>", "nt")
     # NOTE: Using the 'g' flag in substitute() prevents Vim from inserting
     #   <C-@> when typing quickly with no completion items available.
@@ -79,14 +75,20 @@ def CmdComplete()
     timer_start(0, (_) => getcmdline()->substitute('\%x00', '', 'ge')->setcmdline())
   endif
 enddef
-def SkipCmdlineChanged(key = ''): string
+# def SkipCmdlineChanged(key = ''): string
+#   set ei+=CmdlineChanged
+#   timer_start(0, (_) => execute('set ei-=CmdlineChanged'))
+#   return key == '' ? '' : ((wildmenumode() ? "\<c-e>" : '') .. key)
+# enddef
+def SkipCmdlineChangedEvent(): number
   set ei+=CmdlineChanged
   timer_start(0, (_) => execute('set ei-=CmdlineChanged'))
-  return key == '' ? '' : ((wildmenumode() ? "\<c-e>" : '') .. key)
+  return wildmenumode()
 enddef
 # Optional
-cnoremap <expr> <up> SkipCmdlineChanged("\<up>")
-cnoremap <expr> <down> SkipCmdlineChanged("\<down>")
+cnoremap <expr> <up> SkipCmdlineChangedEvent() ? "\<c-e>\<up>" : "\<up>"
+cnoremap <expr> <down> SkipCmdlineChangedEvent() ? "\<c-e>\<down>" : "\<down>"
+# cnoremap <expr> <down> SkipCmdlineChanged("\<down>")
 autocmd CmdlineEnter [:/?] set bo+=error | exec $'set ph={max([10, winheight(0) - 4])}'
 autocmd CmdlineLeave [:/?] set bo-=error ph&
 autocmd CmdlineEnter [/?] set ph=8
@@ -107,11 +109,11 @@ autocmd CmdlineEnter [/?] set ph=8
 # --------------------------
 # Fuzzy find file
 # --------------------------
-nnoremap <leader><space> :<c-r>=execute('let fzfind_root="."')\|''<cr>FzFind<space><c-@>
-nnoremap <leader>fv :<c-r>=execute('let fzfind_root="$HOME/.vim"')\|''<cr>FzFind<space><c-@>
-nnoremap <leader>fV :<c-r>=execute('let fzfind_root="$VIMRUNTIME"')\|''<cr>Find<space><c-@>
+nnoremap <leader><space> :<c-r>=execute('let fzfind_root="."')\|''<cr>FzF<space><c-@>
+nnoremap <leader>fv :<c-r>=execute('let fzfind_root="$HOME/.vim"')\|''<cr>FzF<space><c-@>
+nnoremap <leader>fV :<c-r>=execute('let fzfind_root="$VIMRUNTIME"')\|''<cr>FzF<space><c-@>
 
-command! -nargs=* -complete=customlist,FuzzyFind FzFind execute $'silent edit {selected_menu_item}'
+command! -nargs=* -complete=customlist,FuzzyFind FzF execute $'silent edit {selected_menu_item}'
 
 var allfiles: list<string>
 
@@ -127,10 +129,10 @@ enddef
 # --------------------------
 # Live grep
 # --------------------------
-nnoremap <leader>g :IGrep<space>
-nnoremap <leader>G :IGrep <c-r>=expand("<cword>")<cr>
+nnoremap <leader>g :IGr<space>
+nnoremap <leader>G :IGr <c-r>=expand("<cword>")<cr>
 
-command! -nargs=+ -complete=customlist,GrepComplete IGrep VisitFile()
+command! -nargs=+ -complete=customlist,GrepComplete IGr VisitFile()
 
 def GrepComplete(arglead: string, cmdline: string, cursorpos: number): list<any>
   var items = []
@@ -147,6 +149,7 @@ def GrepComplete(arglead: string, cmdline: string, cursorpos: number): list<any>
     },
   })
   # Blocking loop: wait until job is done
+  # var start = reltime() # || (start->reltime()->reltimefloat() * 1000) > 500 # ms
   while !done
     sleep 2m
     # Do not fully hang Vim: allow messages, redrawing, and channel events
@@ -201,7 +204,7 @@ def ExtractSelectedItem()
     var info = cmdcomplete_info()
     if info != {} && !info.matches->empty()
       selected_menu_item = info.selected != -1 ? info.matches[info.selected] : info.matches[0]
-      if getcmdline() =~ '^\s*IGrep\s'
+      if getcmdline() =~ '^\s*IGr\s'
         setcmdline(info.cmdline_orig)
       endif
     endif

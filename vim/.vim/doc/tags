@@ -16,6 +16,7 @@ giri-arglist	giri.txt	/*giri-arglist*
 giri-buflist	giri.txt	/*giri-buflist*
 giri-callstack	giri.txt	/*giri-callstack*
 giri-debug	giri.txt	/*giri-debug*
+giri-keymap	giri.txt	/*giri-keymap*
 giri-legacy-script	giri.txt	/*giri-legacy-script*
 giri-netrw	giri.txt	/*giri-netrw*
 giri-numbers	giri.txt	/*giri-numbers*

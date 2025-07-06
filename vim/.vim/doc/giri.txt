@@ -1696,4 +1696,10 @@ CTRL-W c
 		last window on the screen.
 
 ------------------------------------------------------------------------------
+Keymap						*giri-keymap*
+
+<expr> in 'cnoremap': This tells Vim that the right-hand side of the mapping
+is an expression that will be evaluated to produce the string to be executed.
+
+------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

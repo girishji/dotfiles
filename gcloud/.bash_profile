@@ -15,12 +15,12 @@ if [ -n "$BASH_VERSION" ]; then
 fi
 
 # Customizations
-if command -v /usr/bin/zoxide &> /dev/null; then
-    eval "$(zoxide init bash)"
-fi
-if [ ! -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    sudo apt install -y zsh-autosuggestions
-fi
+# if command -v /usr/bin/zoxide &> /dev/null; then
+#     eval "$(zoxide init bash)"
+# fi
+# if [ ! -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+#     sudo apt install -y zsh-autosuggestions
+# fi
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then

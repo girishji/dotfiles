@@ -63,11 +63,12 @@ set whichwrap+=<,>,h,l  " make arrows and h, l, push cursor to next line
 set virtualedit=block  " allows selection of rectangular text in visual block mode
 set grepprg=grep\ -REIins\ --exclude=tags\ --exclude=\"*.swp\"\ --exclude-dir=.git\ $*
 " XXX: Do not set 'infercase' -- when typing all-caps it spams.
-" wet autocomplete complete-=t,i
+" set autocomplete complete-=t,i
 
 augroup CustomAutocmds | autocmd!
+    " XXX: <c-f> or q: window is also a 'preview' window and throws error when you try to pclose
     " Dismiss the info preview window
-    autocmd CompleteDone * pclose
+    " autocmd CompleteDone * pclose
 
     " Macro key mapped to Q for help file
     autocmd FileType help nnoremap <buffer> Q q

@@ -60,6 +60,7 @@ enddef
 set wim=noselect:lastused,full wop=pum,tagfile wcm=<C-@> wmnu
 
 autocmd CmdlineChanged [:/?] CmdComplete()
+
 def CmdComplete()
   var [cmdline, curpos, cmdmode] = [getcmdline(), getcmdpos(), expand('<afile>') == ':']
   var trigger_char = '\%(\w\|[*/:.-]\)$'
@@ -67,6 +68,9 @@ def CmdComplete()
   if getchar(1, {number: true}) == 0  # Typehead is empty (no more pasted input)
       && !wildmenumode() && curpos == cmdline->len() + 1
       && (!cmdmode || (cmdline =~ trigger_char && cmdline !~ not_trigger_char))
+    # XXX: Here SkipCmdlineChangedEvent() does not help with live grep jittering
+    # when no matches are found (call SkipCmdlineChangedEvent inside
+    # GetCmdOutput() to fix that), but it helps with :s/ jittering.
     SkipCmdlineChangedEvent()  # Suppress redundant completion attempts
     feedkeys("\<C-@>", "nt")
     # NOTE: Using the 'g' flag in substitute() prevents Vim from inserting
@@ -75,23 +79,23 @@ def CmdComplete()
     timer_start(0, (_) => getcmdline()->substitute('\%x00', '', 'ge')->setcmdline())
   endif
 enddef
-# def SkipCmdlineChanged(key = ''): string
-#   set ei+=CmdlineChanged
-#   timer_start(0, (_) => execute('set ei-=CmdlineChanged'))
-#   return key == '' ? '' : ((wildmenumode() ? "\<c-e>" : '') .. key)
-# enddef
+
 def SkipCmdlineChangedEvent(): number
   set ei+=CmdlineChanged
+  # If you increase time to say 300, live grep fails to get invoked second time
+  # when 2 characters are typed quickly.
   timer_start(0, (_) => execute('set ei-=CmdlineChanged'))
   return wildmenumode()
 enddef
+
 # Optional
 cnoremap <expr> <up> SkipCmdlineChangedEvent() ? "\<c-e>\<up>" : "\<up>"
 cnoremap <expr> <down> SkipCmdlineChangedEvent() ? "\<c-e>\<down>" : "\<down>"
-# cnoremap <expr> <down> SkipCmdlineChanged("\<down>")
+
 autocmd CmdlineEnter [:/?] set bo+=error | exec $'set ph={max([10, winheight(0) - 4])}'
 autocmd CmdlineLeave [:/?] set bo-=error ph&
 autocmd CmdlineEnter [/?] set ph=8
+
 # autocmd CmdlineEnter /,\? set wop-=pum
 # autocmd CmdlineLeave /,\? set wop+=pum
 
@@ -106,39 +110,12 @@ autocmd CmdlineEnter [/?] set ph=8
 # can use substitute('\%x00', ...) to replace inside line, but cursor jumps to
 #   end. may fix this using timer_start with setcmdpos or feedkeys
 
-# --------------------------
-# Fuzzy find file
-# --------------------------
-nnoremap <leader><space> :<c-r>=execute('let fzfind_root="."')\|''<cr>FzF<space><c-@>
-nnoremap <leader>fv :<c-r>=execute('let fzfind_root="$HOME/.vim"')\|''<cr>FzF<space><c-@>
-nnoremap <leader>fV :<c-r>=execute('let fzfind_root="$VIMRUNTIME"')\|''<cr>FzF<space><c-@>
-
-command! -nargs=* -complete=customlist,FuzzyFind FzF execute $'silent edit {selected_menu_item}'
-
-var allfiles: list<string>
-
-autocmd CmdlineEnter : allfiles = null_list
-
-def FuzzyFind(arglead: string, _: string, _: number): list<string>
-  if allfiles == null_list
-    allfiles = systemlist($'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune -o -name "*.sw?" \) -type f -follow')
-  endif
-  return arglead == '' ? allfiles : allfiles->matchfuzzy(arglead)
-enddef
-
-# --------------------------
-# Live grep
-# --------------------------
-nnoremap <leader>g :IGr<space>
-nnoremap <leader>G :IGr <c-r>=expand("<cword>")<cr>
-
-command! -nargs=+ -complete=customlist,GrepComplete IGr VisitFile()
-
-def GrepComplete(arglead: string, cmdline: string, cursorpos: number): list<any>
+# ----------------------------------------
+# Start a time-limited job and get output of command
+# ----------------------------------------
+def GetCmdOutput(cmd: string): list<any>
   var items = []
   var done = false
-  var cmd = $'ggrep -REIHns "{arglead}"' ..
-    ' --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.sw?"'
 
   var job = job_start(cmd, {
     out_cb: (ch, str) => { # invoked when channel reads a line
@@ -149,19 +126,56 @@ def GrepComplete(arglead: string, cmdline: string, cursorpos: number): list<any>
     },
   })
   # Blocking loop: wait until job is done
-  # var start = reltime() # || (start->reltime()->reltimefloat() * 1000) > 500 # ms
+  var start_time = reltime()
   while !done
-    sleep 2m
+    sleep 20m
     # Do not fully hang Vim: allow messages, redrawing, and channel events
-    if getchar(1, {number: true}) != 0
-      if job->job_status() ==# 'run'
-        job->job_stop()
-      endif
-      return []
+    var char_waiting = getchar(1, {number: true}) != 0
+    if char_waiting || start_time->reltime()->reltimefloat() * 1000 > 500
+      done = true
+      items = char_waiting ? [] : items
+      job->job_stop()
     endif
   endwhile
 
+  if items == []
+    SkipCmdlineChangedEvent() # stops calling this fn in a loop when no items are found
+  endif
   return items
+enddef
+
+# --------------------------
+# Fuzzy find file
+# --------------------------
+nnoremap <leader><space> :<c-r>=execute('let fzfind_root="."')\|''<cr>Find<space><c-@>
+nnoremap <leader>fv :<c-r>=execute($'let fzfind_root="{expand('$HOME')}/.vim"')\|''<cr>Find<space><c-@>
+nnoremap <leader>fV :<c-r>=execute($'let fzfind_root="{expand('$VIMRUNTIME')}"')\|''<cr>Find<space><c-@>
+
+command! -nargs=* -complete=customlist,FuzzyFind Find execute $'silent edit {selected_menu_item}'
+
+var allfiles: list<string>
+
+autocmd CmdlineEnter : allfiles = null_list
+
+def FuzzyFind(arglead: string, _: string, _: number): list<string>
+  if allfiles == null_list
+    # allfiles = systemlist($'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune -o -name "*.sw?" \) -type f -follow')
+    allfiles = GetCmdOutput($'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune -o -name "*.sw?" \) -type f -follow')
+  endif
+  return arglead == '' ? allfiles : allfiles->matchfuzzy(arglead)
+enddef
+
+# --------------------------
+# Live grep
+# --------------------------
+nnoremap <leader>g :Grep<space>
+nnoremap <leader>G :Grep <c-r>=expand("<cword>")<cr>
+
+command! -nargs=+ -complete=customlist,GrepComplete Grep VisitFile()
+
+def GrepComplete(arglead: string, cmdline: string, cursorpos: number): list<any>
+  var cmd = $'ggrep -REIHns "{arglead}" --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.sw?"'
+  return arglead != null_string ? GetCmdOutput(cmd) : []
 enddef
 
 def VisitFile()
@@ -178,9 +192,9 @@ enddef
 # --------------------------
 # Fuzzy find buffer
 # --------------------------
-nnoremap <leader><bs> :FzBuffer <c-@>
+nnoremap <leader><bs> :Buffer <c-@>
 
-command! -nargs=* -complete=customlist,FuzzyBuffer FzBuffer execute 'b' selected_menu_item->matchstr('\d\+')
+command! -nargs=* -complete=customlist,FuzzyBuffer Buffer execute 'b' selected_menu_item->matchstr('\d\+')
 
 def FuzzyBuffer(arglead: string, _: string, _: number): list<string>
   var bufs = execute('buffers', 'silent!')->split("\n")
@@ -204,7 +218,7 @@ def ExtractSelectedItem()
     var info = cmdcomplete_info()
     if info != {} && !info.matches->empty()
       selected_menu_item = info.selected != -1 ? info.matches[info.selected] : info.matches[0]
-      if getcmdline() =~ '^\s*IGr\s'
+      if getcmdline() =~ '^\s*Grep\s'
         setcmdline(info.cmdline_orig)
       endif
     endif

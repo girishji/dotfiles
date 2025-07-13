@@ -146,6 +146,8 @@ nnoremap <leader>vz <cmd>e ~/.zsh.common<cr>
 nnoremap <leader>vg <cmd>e ~/.gvimrc<cr>
 " open netrw file browser
 nnoremap <leader>vn <cmd>35Lex<cr>
+" tags
+nnoremap <leader>vt <cmd>!ctags -R<cr>
 
 " Make <C-PageUp/Down> switch tabs when tab has a terminal open
 func s:SwitchTab(dir)

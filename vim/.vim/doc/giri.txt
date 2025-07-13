@@ -1702,4 +1702,7 @@ Keymap						*giri-keymap*
 is an expression that will be evaluated to produce the string to be executed.
 
 ------------------------------------------------------------------------------
+When syntax is slow, use `|:syntime|` to debug.  		*giri-syntax*
+
+------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

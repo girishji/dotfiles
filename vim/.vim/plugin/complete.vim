@@ -113,7 +113,7 @@ autocmd CmdlineEnter [/?] set ph=8
 # ----------------------------------------
 # Start a time-limited job and get output of command
 # ----------------------------------------
-def GetCmdOutput(cmd: string): list<any>
+def GetCmdOutput(cmd: string, partial_response: bool): list<any>
   var items = []
   var done = false
 
@@ -128,13 +128,13 @@ def GetCmdOutput(cmd: string): list<any>
   # Blocking loop: wait until job is done
   var start_time = reltime()
   while !done
-    sleep 20m
+    sleep 2m
     # Do not fully hang Vim: allow messages, redrawing, and channel events
     var char_waiting = getchar(1, {number: true}) != 0
     if char_waiting || start_time->reltime()->reltimefloat() * 1000 > 500
       done = true
-      items = char_waiting ? [] : items
-      job->job_stop()
+      items = char_waiting ? [] : partial_response ? items : []
+      job->job_stop('kill')
     endif
   endwhile
 
@@ -159,8 +159,8 @@ autocmd CmdlineEnter : allfiles = null_list
 
 def FuzzyFind(arglead: string, _: string, _: number): list<string>
   if allfiles == null_list
-    # allfiles = systemlist($'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune -o -name "*.sw?" \) -type f -follow')
-    allfiles = GetCmdOutput($'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune -o -name "*.sw?" \) -type f -follow')
+    allfiles = systemlist($'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune -o -name "*.sw?" \) -type f -follow')
+    # allfiles = GetCmdOutput($'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune -o -name "*.sw?" \) -type f -follow', false)
   endif
   return arglead == '' ? allfiles : allfiles->matchfuzzy(arglead)
 enddef
@@ -175,7 +175,9 @@ command! -nargs=+ -complete=customlist,GrepComplete Grep VisitFile()
 
 def GrepComplete(arglead: string, cmdline: string, cursorpos: number): list<any>
   var cmd = $'ggrep -REIHns "{arglead}" --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.sw?"'
-  return arglead != null_string ? GetCmdOutput(cmd) : []
+  return len(arglead) > 1 ? systemlist(cmd) : []
+  # XXX: when typing very fast GetCmdOutput returns empty list
+  # return arglead != null_string ? GetCmdOutput(cmd, true) : []
 enddef
 
 def VisitFile()

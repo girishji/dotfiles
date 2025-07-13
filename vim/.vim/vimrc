@@ -64,6 +64,11 @@ set virtualedit=block  " allows selection of rectangular text in visual block mo
 set grepprg=grep\ -REIins\ --exclude=tags\ --exclude=\"*.swp\"\ --exclude-dir=.git\ $*
 " XXX: Do not set 'infercase' -- when typing all-caps it spams.
 " set autocomplete complete-=t,i
+set cot=popup
+set cpt=.^5,w^5,b^5,u^5
+" set cpt=.^5,w^5,b^5,u^5,k/Users/gp/git/ngram-complete.vim/data/en_1w.txt^5
+" set cpt+=k/Users/gp/git/ngram-complete.vim/data/en_1w.txt
+" argadd ~/sqlite-amalgamation-3500200/sqlite3.c *
 
 augroup CustomAutocmds | autocmd!
     " XXX: <c-f> or q: window is also a 'preview' window and throws error when you try to pclose

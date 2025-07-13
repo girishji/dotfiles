@@ -27,6 +27,7 @@ giri-replace	giri.txt	/*giri-replace*
 giri-search	giri.txt	/*giri-search*
 giri-stacktrace	giri.txt	/*giri-stacktrace*
 giri-substitute	giri.txt	/*giri-substitute*
+giri-syntax	giri.txt	/*giri-syntax*
 giri-tabs	giri.txt	/*giri-tabs*
 giri-tags	giri.txt	/*giri-tags*
 giri-terminal	giri.txt	/*giri-terminal*

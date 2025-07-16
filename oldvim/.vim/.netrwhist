@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =6
+let g:netrw_dirhist_6='/Users/gp/git/vim/vim/ci'
+let g:netrw_dirhist_5='/Users/gp/git/vim/vim/src/auto'
+let g:netrw_dirhist_4='/Users/gp/git/vim/vim/src/xxd'
+let g:netrw_dirhist_3='/Users/gp/git/vim/vim/src/auto'
+let g:netrw_dirhist_2='/Users/gp/git/vim/vim/src/xxd'
+let g:netrw_dirhist_1='/Users/gp/git/vim/vim/src/auto'
+let g:netrw_dirhist_0='/Users/gp/dotfiles/vim/.vim'
+let g:netrw_dirhist_9='/Users/gp/git/vim/vim/src'
+let g:netrw_dirhist_8='/Users/gp/git/OpenOCD-Nuvoton/jimtcl/tests'
+let g:netrw_dirhist_7='/Users/gp/git/vim/vim/src'

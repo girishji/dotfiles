@@ -1,0 +1,1708 @@
+*giri.txt*
+See |tips.txt|
+----------------------------------------
+
+Convert dictionary to a string in Vimscript
+use string(dict)
+Ex: In insert mode, <C-r>=string(complete_info())<cr> will print the output of
+the function at cursor.
+
+----------------------------------------
+Example: Renaming files
+
+Say I have a directory with the following files in them (directory picked at
+random :-):
+
+buffer.c
+charset.c
+digraph.c
+...
+
+and I want to rename *.c *.bla.  I'd do it like this: >
+	$ vim
+	:r !ls *.c
+	:%s/\(.*\).c/mv & \1.bla
+	:w !sh
+	:q!
+('&' above is the whole matched string)
+
+
+----------------------------------------
+File organization                    *giri-vim-file-org*
+
+- after/ftplugin/ft.vim can be split into ft_foo1.vim, ft_foo2.vim, etc., or
+  after/ftplugin/ft/foo1.vim etc. ft is filetype 'python', 'c', etc.
+- when variables and options are set through :setl then no need to undo. same
+  is true for mappings done through <buffer>
+- some variables are local to window (like 'spell'), and some are buffer
+  local. Former need to be unset after leaving buffer.
+b:undo_ftplugin. examples:
+b:undo_ftplugin ..= ' | setl foldignore< formatprg<'
+b:undo_ftplugin ..= ' | exe "nunmap <space>z"'
+
+see https://github.com/habamax/.vim
+
+----------------------------------------
+vim9 assemler ~
+
+:disassemble
+also, use this plugin:
+https://github.com/lacygoill/vim9asm
+
+----------------------------------------
+How to get type of a variable in vim9script?
+
+typename(var)
+
+----------------------------------------
+Compile vim9 ~
+
+To check that the code compiles in a given script, write :defcompile at the end, and source it. For example:
+
+$ echo 'defcompile' >>plugin/editorconfig.vim
+$ vim -Nu NONE -S plugin/editorconfig.vim
+
+https://github.com/lacygoill/editorconfig-vim?tab=readme-ov-file
+
+----------------------------------------
+BufReadPre vs BufWinEnter
+
+BufReadPre - before file is loaded
+BufWinEnter - executed after the modeline is read
+
+----------------------------------------
+Spelling                         *giri-spell*~
+
+z= 	suggest options
+zg 	add good word to dict (goes into .vim/spell/en-utf8.add)
+zug 	undo above add
+zw 	like "zg" but opposite. mark it as bad word. if it is added, then turn it into comment
+]s 	move to next misspelled word
+[s, [S, ]S etc.
+
+----------------------------------------
+Measure performance of a function ~
+
+> for i in {1..10}; do
+> vim -es -N -u NONE -U NONE -i NONE -S /tmp/test.vim /tmp/version8.txt
+> done
+>
+see https://groups.google.com/g/vim_dev/c/xVOqj_CL4dw
+
+----------------------------------------
+Command-line key mapping ~
+
+`<Left>` | Cursor one character left
+`<Right>` | Cursor one character right
+`<C-e>/<End>` | Move cursor to the end of line
+`<C-b>/<Home>` | Move cursor to the beginning of line
+`<C-u>` | Delete characters between cursor and beginning of line
+`<C-w>` | Delete word before the cursor
+`<S-Left>/<C-Left>` | Cursor one WORD left
+`<S-Right>/<C-Right>` | Cursor one WORD right
+`<C-Up>/<S-Up>` | Recall history previous
+`<C-Down>/<S-Down>` | Recall history next
+`<C-r><C-w>` | Insert word under cursor (`<cword>`) into prompt
+`<C-r><C-a>` | Insert WORD under cursor (`<cWORD>`) into prompt
+`<C-r><C-l>` | Insert line under cursor into prompt
+`<C-r>` {register} | Insert the contents of a numbered or named register. Between typing CTRL-R and the second character '"' will be displayed to indicate that you are expected to enter the name of a register.
+
+----------------------------------------
+:dig! to show digraphs (utf-8) ~
+
+<c-k> and 2 letter code will input the symbol
+34 is ¾, 12 is ½, 14 is ¼, for example
+
+Box Drawing:
+Do :dig! and see the section under box drawing and arrows
+ex:
+hh for horizontal line (light)
+HH for horizontal line (heavy)
+vv and VV for vertical
+dr, dl, ur, ul for L shaped turns
+-> for right arrow
+
+----------------------------------------
+import autoload ~
+
+Every script under "autoload" (of every plugin) should have a different name,
+since relying on finding the right one is not a good idea.
+
+Specifying relative name with `import autoload` speeds up since Vim does not
+have to search all autoload subdirs in the runtimepath.
+
+If you 'import autoload foo.vim' in a file inside import dir, and some other
+file does 'import foo.vim', then the second import fails. You are trying to
+source foo.vim right away in the second instance, which conflicts with first
+instance where autoload keyword is used for lazy loading. Just remove the
+first import.
+
+You can use "import autoload" with a relative path to find it quickly. But
+having "autoload" in the path of the script still has a special meaning,
+causing the path#file#item names to be used for exported items. This is so
+that the same script can both be found in 'runtimepath' directories and also
+loaded directly by scripts that know where it is. If you only want to use the
+items from scripts that know what file to source, then make sure not to use an
+"autoload" directory in the path.
+
+when plugin1/autoload/splicelib/util/log.vim is sourced the Log() function is
+exported, and given a name in the global namespace: splicelib#util#log#Log()
+Notice that plugin1 is not part of the global name.
+
+If you want your function to be private, it needs to be under an import/
+directory.
+If you want your function to be lazy-loaded, it needs to be under an autoload/
+directory.
+
+https://github.com/vim/vim/issues/10114
+
+----------------------------------------
+pattern matching                    *giri-pattern*
+
+For pattern matching, read |usr_27.txt|
+
+See *27.8*	Matching a line break
+
+There is also |pattern.txt|
+
+----------------------------------------
+Q: How to remove lines NOT matching a pattern (exclude pattern)?
+
+g!/pattern/s/.*// or :v/pattern/s/.*//
+
+:v is a shortcut for :g!. The etymology comes from the -v option to the
+standard grep command.
+
+:[range]g[lobal]!/{pattern}/[cmd]
+			Execute the Ex command [cmd] (default ":p") on the
+			lines within [range] where {pattern} does NOT match.
+
+							*:v* *:vglobal*
+:[range]v[global]/{pattern}/[cmd]
+			Same as :g!.
+
+----------------------------------------
+Quick navigation tags
+
+`v` after an operator (`c`, `d`, etc.) will not start visual mode, but selects
+characterwise:
+ex:
+asdbXXXXYasdf (cursor under Y)
+`cv4h` will delete all Xs and enter insert mode
+
+`X` deletes [count] characters before cursor (just as  `x` deletes under/after
+cursor)
+ex:
+asdbYasdf (cursor under Y)
+`4Xs` will deletes all Xs (and Y) and enter insert mode.
+
+`s` is synonym for `cl`
+
+`K` will look for help for word under cursor.
+(make sure `:setlocal keywordprg=:help`)
+
+`&` will help you search for previously searched pattern. Just like `*`
+searches for word under cursor, `&` searches for previously searched pattern.
+You can also use it in :s//, as in :s/foo/&bar/ will replace foo with foobar.
+
+Search variable/function declarations even without LSP: Use |gD| and |gd|.They
+use |searchdecl| to search. Bram: Use `[<tab>`, it searches other files (in
+same dir, and included ones) and does not highlight like `gd`.
+See JUMPING TO A MATCH for info below about `[<tab>`
+
+`ye` will yank word under cursor.
+
+|[I| |]I| : list lines (in current buffer) matching keyword under cursor
+No need to use fzf :Blines. Mapped to `<leader>l`.
+
+<C-]> to open the vim links (like tags), <c-t> to go back.
+If you see a file path in docs, open it using `gf`
+
+:helpgrep foo
+:help index	points to an index of every command in every mode
+
+Navigate by tags and search, not files
+
+*gtoc* Table of contents |usr_toc.txt|
+*gvimscript* |usr_41.txt|
+*gvim9script* |vim9.txt|
+*gvimvariables* |eval.txt|
+*gfolds* |usr_28.txt|
+*ghelp* |help.txt|
+
+To open html link: <Cmd>Mouse-1-click
+vimscript for python dev:
+https://github.com/yegappan/VimScriptForPythonDevelopers/blob/master/VimScriptForPythonDevelopers.MD
+https://gist.github.com/kat0h/dce9eb73cd8435b11cd886952af560f1
+https://github.com/lacygoill/wiki/blob/main/vim/vim9.md
+https://vimhelp.org/usr_41.txt.html#41.6
+https://vimhelp.org/vim9.txt.html#inline-function
+
+----------------------------------------
+Folds
+zR -> open all folds in window
+zM -> close all folds in window
+zo -> open fold under cursor (zO for recursive levels)
+zc -> close fold under cursor (zC for recursive levels)
+
+----------------------------------------
+:so % -> source this buffer, or :w|so % (save and source)
+:set! variable -> echo the value of variable
+:set variable? -> print value of variable
+:set variable! -> toggle value
+:set novariable -> unset the boolean value
+:set var&  -> set vim variable to default value
+:echo &var  -> echo vim variable
+
+==================================================
+# Tips                                         *giri-tips*
+
+## surround text (multiple words) with quotes etc.
+
+for "" 2 words:
+c2w""<Esc>P
+
+one two three four -> (one two) (three four)
+c2w(<Ctrl-R>-)<Esc>w.
+- (small delete register) register stores less than one line (:h registers)
+" (unnamed register) register stores longer text
+You can use either of them.
+
+## comment out range of lines:
+
+Before executing the specified Normal mode command on each line, Vim moves the
+cursor to the beginning of the line. So we don’t have to worry about where the
+cursor is positioned when we execute the command.
+
+This single command could be used to comment out an entire C file: ➾ :%norm i//
+
+You can use with visual mode selection also.
+
+**
+The :normal executes Normal mode commands from Ex command line.
+Use :norm with . and @q (Macros). (ex. as in `:%norm .`)
+**
+
+## To put ; at the end of each line
+visually select rectangle using C-v and jagged selection using $
+C-v(many j's)$, A; (append), <esc> (to see changes)
+or
+visually select using 'v'
+:`<,`>norm A;
+or
+A; (for first line)
+(visually select next lines)
+:`<,`>norm .
+
+Use norm with . and @q (Macro)
+
+## Operate command over multiple files
+:argdo %s/foo/bar/gec        : operate on all files in :args
+:bufdo %s/foo/bar/gec
+:windo %s/foo/bar/gec
+:argdo exe '%!sort'|w!       : include an external command
+:bufdo exe "normal @q" | w   : perform a recording on open files
+:silent bufdo !zip proj.zip %:p   : zip all current files
+
+g/re/p
+g = global, re = regexp, p = print
+It came from vi
+
+## User filt[er] command
+:filt[er] Diag hi
+to show/filter all highlight groups related to Diag. It prints values.
+
+## Sort lines alphabetically:
+visally select and do :sort
+
+## use C-o to execute normal commands in insert mode ('o' is 2nd char of 'normal')
+  C-o 80a <char> Esc
+(bad alternative:) without leaving insert mode:
+  C-o :norm 80i<char> Return
+
+## Replace all occurance of foo in a project
+:grep foo
+:cdo s/foo/bar/gc
+
+## Equivalent of rsir (replace string in region):
+- visually select region
+- 1) without \%V atom -> :`<,`>s/foo/bar (this will work but it will highlight foo after it is done)
+- 2) best: use \%V to confine match within visual region ->  :`<,`>s/\%Vfoo/bar
+  (you don't need `< and `> when using \%V, but they were inserted
+  automatically by vim. :s/\%Vfoo/bar/ is sufficient)
+
+Note: The substitute command (:s) applies to whole lines, however the \%V atom
+will restrict a pattern so that it matches only inside the visual selection.
+
+## Repeat last Ex command: @:
+@ is repeat qualifier in general
+
+## pulling text objects onto command-line
+<C-R><C-W> : pull word under the cursor into a command line or search
+<C-R><C-A> : pull WORD under the cursor into a command line or search
+<C-R>-                  : pull small register (also insert mode)
+<C-R>[0-9a-z]           : pull named registers (also insert mode)
+<C-R>%                  : pull file name (also #) (also insert mode)
+<C-R>=somevar           : pull contents of a variable (eg :let sray="ray[0-9]")
+
+## Cursor at end of match 					*giri-search*
+Append /e
+	/pattern/e
+
+## Stacked search
+  For example: "/pat/;/foo/+3;?bar"
+Breakdown:
+  /pat/ → Searches forward for the first line that matches "pat".
+  ;/foo/+3 → From the line where /pat/ matched, search forward for "foo", and
+	go 3 lines below that match.
+  ;?bar → From the result of the previous step, search backward for the line
+	matching "bar".
+
+See:
+:help //;
+:help [range]
+:help :;
+
+## Append to search string without typing (Use it like C-sC-w or emacs)
+ - Start search '/'
+ - Place cursor somewhere on word, C-rC-w (put word under cursor on command line)
+ - Type space to touch next word and repeat
+
+## Search and replace (not using :%s/foo/bar/gc)        	*giri-replace*
+Say you have:
+   // buttons
+   BUTTON_Accept,
+   BUTTON_Cancel,
+
+You want to append "= 0" at the end of each line that is not a comment. Do:
+:g/,$/v;//;norm $i = 0
+:g is a global command: it executes any given action on all matching lines. :v
+instead operates on all non-matching lines. You can nest :v into :g in order
+TO ONLY OPERATE ON LINES THAT MATCH FOO, BUT DO NOT MATCH BAR. We also
+avoided escaping the forward-slashes in the v pattern with clunky syntax (\/\/)
+by just USING A DIFFERENT CHARACTER AS PATTERN-DELIMITER.
+norm $i = 0 is a normal command that jumps to the end of the current line and
+inserts = 0 right before your cursor.
+
+Another example using :c[hange] :
+An example of how to search for matches with a pattern and change the match
+with another word: >
+	/foo<CR>	find "foo"
+	c//e<CR>	change until end of match
+	bar<Esc>	type replacement
+	//<CR>		go to start of next match
+	c//e<CR>	change until end of match
+	beep<Esc>	type another replacement
+			etc.
+
+## How to rename a varibale?
+1. Rename first occurance
+  - select word to rename with *
+  - 'cw' to rename that word
+2. Rename all other occurances usings :s (substitute) ex command
+  - (without moving the cursor) :%s//<C-r><C-w>/g
+  - pattern to rename is automatically selected inside //, and C-rC-w puts the
+    new word into the substitute command
+
+## Interactive search and replace:
+:%s/content/copy/gc  (:h :s_g, :h :s_c, :h :s_flags)
+
+## C-a and C-x will change numbers nearest to cursor (add /subtract)
+## g then <C-a>: (after rectangular visual selection) incremnts number as a
+sequence (1,2,3,... etc.)
+
+## increment (C-a, a=add) / decrease (C-x) number (also 'g C-a')
+0. g C-a after visual selection will increment subsequent numbers
+1. You can prefix a number for addittion and subtraction
+2. C-a and C-x will seek next digit and add (1 by default) or subtract
+3. To increment letters do:
+  :set nrformats+=alpha
+
+## to print numbers 1 to n (use macro)            *giri-numbers*
+1
+esc
+qq
+yyp
+C-A
+q
+10@q (replay macro)
+
+## Create numbered list:
+1
+qq
+yyp
+C-a
+j
+q
+10@q
+
+or
+
+(book p 178)
+Use variable, expression register and macro
+:let i=1
+:echo i
+qa (macro)
+I<C-r>=i<CR>
+esc
+:let i+=1
+q
+
+<C-r>=i will insert the value stored in variable i (in insert mode), by evaluating content register `=`
+
+## Incrementing numbers already in lines: Use g C-a
+
+Put your cursor on number. C-v (blockwise visual mode), j to select more lines with numbers, g C-a
+
+----------------------------------------
+" *advanced incrementing* (really useful)
+" put following in _vimrc
+let g:I=0
+function! INC(increment)
+let g:I =g:I + a:increment
+return g:I
+endfunction
+" eg create list starting from 223 incrementing by 5 between markers a,b
+:let I=223
+:'a,'bs/^/\=INC(5)/
+" create a map for INC
+cab viminc :let I=223 \| 'a,'bs/$/\=INC(5)/
+
+----------------------------------------
+# Registers                                 *giri-register*
+
+## Yank and delete Registers
+
+The 0 register always contains the last yank, so even if you delete stuff you
+can use “0p to paste the last yank.
+
+By default vim stores yank into "0 (does not rotate) and stores deleted and
+changed text into "1 and rotates (:h #1). If deleted text is less than a line
+it is also stored in "- (minus) register (aka small delete register).
+
+## Expression register '='
+
+It can evaluate a piece of Vim script code and return the result. It is
+addressed by the = symbol. From Insert mode we can access it by typing <C-r>=
+
+## Insert a value of arithmatic expression in Insert Mode
+
+<C-r>=6*35<CR>  from insert mode
+
+<C-r>= will open a prompt
+
+##
+1. The unnamed register ""
+2. 10 numbered registers "0 to "9
+3. The small delete register "-
+4. 26 named registers "a to "z or "A to "Z
+5. Three read-only registers ":, "., "%
+6. Alternate buffer register "#
+7. The expression register "=
+8. The selection and drop registers "*, "+ and "~
+9. The black hole register "_
+10. Last search pattern register "/
+
+1. Unnamed register ""
+Vim fills this register with text deleted with the "d", "c", "s", "x" commands
+or copied with the yank "y" command, regardless of whether or not a specific
+register was used (e.g.  "xdd).  This is like the unnamed register is pointing
+to the last used register.
+
+8. Selection and drop registers "*, "+ and "~
+Use these registers for storing and retrieving the selected text for the GUI.
+Note that there is only a distinction between "* and "+ for X11 systems.
+The read-only "~ register stores the dropped text from the last drag'n'drop
+operation.  When something has been dropped onto Vim, the "~ register is
+filled in.
+
+4. Named registers "a to "z or "A to "Z			*quote_alpha* *quotea*
+Vim fills these registers only when you say so.  Specify them as lowercase
+letters to replace their previous contents or as uppercase letters to append
+to their previous contents.
+
+----------------------------------------
+
+## rectangular selection and replace:
+1. Use C-v (visual block mode) to yank text; Use $ for ragged block
+   You cannot just yank. Use C-v mode to yank.
+2. Put cursor where you want to paste and press P
+  (book page 48)
+
+## In visual mode i and a does not work, use I and A
+
+Because i and a are treated as "inside" and "around" of text object
+
+----------------------------------------
+More Tips
+
+## Vim REPL: Start 'ex' or 'vim -e'.
+
+## Align columns according to '#' character, and align 2 columns. `\=` evaluates expression.
+Use `<c-v>` to highlight a column and `<`, `>` to shift text. Mapped to abbrev
+`align`.
+
+	:s/\v(.*)(#)(.*)$/\=printf("%-22s %s%s", submatch(1), submatch(2), submatch(3))
+	:%s/\v(.*)\.(.*)/\=printf("%-16s %s", submatch(1), submatch(2))/
+You can also align using ':%!column -t' if columns are space separated.
+Note: :<range>!<shell cmd> filters the range of lines through shell command
+
+newline: vim inserts null character (^@) in string as a placeholder for
+newline. It gets interpreted by `put` command to mean newline. When you type
+'\n' in `join`, like `mstr = mlist->join('\n')` you will get actual `\n` but
+when you use "\n" instead, you will get null character.
+https://stackoverflow.com/questions/73190102/how-to-insert-line-breaks-by-calling-join-function-in-vimscript
+
+Helpful: <c-d> shows all completion options in Cmdline mode. <c-d> is actually
+meant to show all tag completion options, but it works universally in command
+line mode. Ex. `:h ad<c-d>`
+
+Search superpower: 1) hop around while searching using <c-g> and <c-t> (t is
+on top of g). 2) <c-r><c-w> to suck in a word, <c-l> for next char, and
+<c-r><c-l> for whole line
+Search in Ex command prompt:
+1) (when in Ex command prompt) <c-f>A<tab> 2) inside this edit mode <tab> works just like
+insert mode
+Seach mode navigation: |ex-edit-index| and |cmdline-completion|
+
+Use & in your replacement patterns to insert the matched text. For example,
+adding markdown links to URLs:
+%s/https.*/[&]()/g
+
+:g/foo/#<CR>   <- shows line numbers
+
+<c-f> <- Ex command window
+- tab completion in '/' search: press <c-f> and you can tab complete
+- in / and ':' mode use <c-u> <c-w> to delete whole line or word
+
+Comments in `map` command <- no space before '|' as it will become part of mapping
+ex., `nnorempa foo :FooCmd| # coment here`
+
+You can write programs in Ex command line <- :if foo <CR> (start typing) :else
+:endif :wh[ile] :endwhile :for etc all work. |eval.txt|
+
+To see help for <c-d> in insert mode do `:h i_CTRL-D` `:h i_CTRL-X_CTRL-]`
+Similary c_ctrl-d for command mode, n_ for normal mode.
+
+`gf` <- will open file under cursor, given full path or relative path to file.
+
+:right :center <- right align or center align the line
+
+how does nmap <expr> ... work: |map-expression|
+
+`:command Cmd` will print the implementation of `Cmd` (ex., `:command Rg`)
+
+`{{{` in comments is a fold marker. [Optional] number is fold level. See |foldmarker|
+# {{{1
+# }}}1
+# vim: set fdm=marker:
+
+https://www.vi-improved.org/help-with-help/
+What			Prepend		Example
+Normal mode command	(nothing)	:help x
+Visual mode command	v_		:help v_u
+Insert mode command	i_		:help i_<Esc>
+Command-line command	:		:help :quit
+Command-line editing	c_		:help c_<Del>
+Vim command argument	-		:help -r
+Option			'		:help 'textwidth'
+Search flags		/		:help /\U
+Substitution flags	s/		:help s/\&
+
+:help index	points to an index of every command in every mode
+
+:echo &isk # same as :set isk?
+
+Vim can search for text that spans multiple lines. For example, the search
+`/hello\_sworld` finds "hello world" in a single line, and also finds "hello"
+ending one line, with "world" starting the next line.
+\n	a newline character (line ending)
+\_s	a whitespace (space or tab) or newline character
+\_^	the beginning of a line (zero width)
+\_$	the end of a line (zero width)
+\_.	any character including a newline
+
+Cmdline autocommands from lacygoill
+https://gist.github.com/lacygoill/88437bcbbe90d1d2e2787695e1c1c6a9
+
+You can pass more args to a callback function than what caller passes:
+`callback': funcref('s:popup_cb', [output])`
+callback is called with windid and result only. Here it is accepting [output]
+https://github.com/vim/vim/issues/6171
+
+----------------------------------------
+## substitute                   *giri-substitute*
+
+Note:
+	:[range]sm[agic] ...	Same as `:substitute`, but always use 'magic'.
+
+:[range]s[ubstitute]/{pattern}/{string}/[flags]
+
+Symbol         Represents
+\0             Insert the entire matched pattern
+&              Insert the entire matched pattern
+\1             Insert the first submatch
+\2             Insert the second submatch (and so on, up to \9) Insert the entire matched pattern
+~              Use {string} from the previous invocation of :substitute
+\={Vim script} Evaluate {Vim script} expression; use result as replacement {string}
+\r             Insert a carriage return
+\t             Insert a tab character
+\\             Insert a single backslash
+
+Examples: >
+  :s/\([abc]\)\([efg]\)/\2\1/g	 modifies "af fa bg" to "fa fa gb"
+  :%s/content/copy/gc  interactive
+  :%s//<c-r><c-w>/gc  reuse the most recent search pattern
+<
+\r is the newline (line break) within patterns.
+
+Flags:
+[c]	Confirm each substitution.
+[i]	Ignore case for the pattern.
+[I]	Don't ignore case for the pattern.
+[p]	Print the line containing the last substitute.
+[n]	Report the number of matches, do not actually substitute.
+[e]     When the search pattern fails, do not issue an error message.
+
+Can use inside global (see below)
+:g/pattern/ [range]s/foo/bar
+For all lines containing 'pattern' do substitution of foo with bar
+
+\= is very useful
+prepend each line with a random number (and then you can sort file to randomize
+lines)
+%s/^/\=rand() . " "/
+
+Workflow 1:
+I search for the RE using /
+I then do the actual substitute:
+:s//replacement/
+If I only want to see the matching lines, I can "print" them using
+:g//p
+or I can delete all the non-matching lines (leaving the matching ones) using
+:v//d
+
+Workflow 2:
+:exe "/pattern" | lv // % | lop | wincmd p | %s//replacement/gc
+will find pattern, populate the location list (lv=lvimgrep), open the location
+list (lop=lopen), return to the previous window (wincmd is like <c-w>), and
+prompt for the substitutions. You can then use the location list to jump to
+any of the lines.
+
+Workflow 3:
+:g/pattern/p|s//replacement/gp
+All lines with pattern are listed, both before and after replacement.
+
+----------------------------------------
+Filtering the Contents of a Buffer Through an External Command
+
+The :!{cmd} command takes on a different meaning when it’s given a range. The
+lines specified by [range] are passed as standard input for the {cmd}, and
+then the output from {cmd} overwrites the original contents of [range].
+
+ex. Align text by column using `column` unix command
+Visually select lines and do `:'<,'>!column -t`
+
+abcd "123"
+abcdabcd "123123"
+aaaaaa "1234"
+
+becomes:
+abcd      "123"
+abcdabcd  "123123"
+aaaaaa    "1234"
+
+----------------------------------------
+Vim indentation logic and |i_CTRL-F|
+
+To insert enough spaces to align with appropriate indentation type CTRL_F
+For the full help see |indentkeys-format|
+
+python indentation:
+    In insert mode <c-d> unindents; in normal mode use << and >> (hold shift
+key)
+
+----------------------------------------
+timeout vs ttimeout
+https://vi.stackexchange.com/questions/24925/usage-of-timeoutlen-and-ttimeoutlen
+
+----------------------------------------
+terminal mode                                        *giri-terminal*
+- 2 modes: terminal-job mode (keys go to running job) and terminal-normal mode
+- to change from former to latter do <c-w>N
+- to change otherwise do 'i' or 'a' (insert commands)
+- <c-w>: -> will get into command mode from terminal-job mode
+- <c-w><c-w> -> will switch to next window in terminal-job mode
+- <c-w>h -> (mapped) hide window
+
+----------------------------------------
+Run interpreter
+:'<,'>w !python3
+is prefereable (instead of filtering without `w`) because it doesn't change the buffer.
+
+To run 1 line of code, do `yyp!!python3`. This becomes a filter command with
+range of just one line. `!!` puts `:.!` in command line. Dot
+is the current line.
+
+equalprg and formatprg are used to define what external program to use for ==, gq and friends.
+
+https://www.reddit.com/r/vim/comments/7bj837/favorite_console_tools_to_use_with_vim/
+
+vim pipes (read, write, filter):
+
+:r !cmd, :w !cmd and :%! cmd
+read: from cmd to vim
+write: from vim to cmd
+filter: from vim to cmd and back to vim, with original text replaced with
+output of cmd.
+http://of-vim-and-vigor.blogspot.com/2012/11/vims-pipes.html
+
+----------------------------------------
+grep lgrep vim[grep] lvim[grep]
+https://vim.fandom.com/wiki/Find_in_files_within_Vim
+
+- lgrep vs grep: lgrep is local to a window
+
+- Using vimgrep to search hundreds of files can be slow. A search taking only
+  a few seconds using an external grep program might take nearly a minute with
+  vimgrep. One reason for this is that vimgrep uses Vim's procedures to read
+  files, which can involve execution of several autocommands.
+
+- advantage of vimgrep: power of Vim's regular expressions or its ability to
+  detect file encodings.
+
+- :vim[grep][!] /{pattern}/[g][j] {file} ...
+  The 'g' option specifies that all matches for a search will be returned
+  instead of just one per line, and the 'j' option specifies that Vim will not
+  jump to the first match automatically.
+
+- Recursive search
+  You can use ** in the file pattern to search recursively.
+  :vimgrep /dostuff()/j ../**/*.c
+
+----------------------------------------
+Legacy script:
+How to quickly test some vim9script in shell
+
+    vim -Nu NONE -S <(cat <<EOF
+        vim9script
+        var n: number = 123
+        n = n + 1
+        echo n
+    EOF
+    )
+Note: <() is process substitution
+(https://tldp.org/LDP/abs/html/process-sub.html)
+
+----------------------------------------
+unit testing
+
+https://stackoverflow.com/questions/16739300/redirect-ex-command-to-stdout-in-vim
+
+----------------------------------------
+|sub-replace|
+
+When the substitute string starts with "\=" the remainder is interpreted as an
+expression.
+
+Examples:
+	:s/\n/\="\r" .. expand("$HOME") .. "\r"/
+This replaces an end-of-line with a new line containing the value of $HOME.
+
+------------------------------------------------------------------------------
+
+! after a command forces something
+
+autocmd! foo " removes all autocommands associated with event foo before
+adding new ones
+
+----------------------------------------
+You can add multiple commands to autocmd this way:
+
+	au BufWritePre *.go {
+			 var save = winsaveview()
+			 silent! exe ':%! some formatting command'
+			 winrestview(save)
+		   }
+
+
+----------------------------------------
+Ex mode command line friends: C-f and C-c
+
+While in command line:
+  C-f : opens a small window with full editing capabilities
+  C-c : puts whatever you edited after `:` in command mode
+While in normal mode:
+  `q:` : puts you into full editing mode for Ex commands
+  C-r<register> : inserts contents of register (r = recall)
+  C-r C-w : inserts word under cursor
+  C-r C-W : inserts WORD under cursor
+  C-r C-l : inserts line under cursor
+  C-r / : inserts search register
+
+----------------------------------------
+On the command line, Ctrl-r followed by any of the registers (the named
+ones, like a or 3, or the others, such as - or ") will insert the contents of
+said register.
+
+(This works in insert mode as well.)
+
+So you could Yank the text (" is the yank register)
+
+Substitute with :%s/<C-r>"/replacement/g
+
+----------------------------------------
+" Vim's built-in doc system to make a mini-wiki within Vim.
+*vim-wiki*
+
+- You can create tags by surrounding them by *asterisks* (I like to prefix mine
+  with a semicolon to avoid name conflicts; e.g. *;foo*) and link to them with
+  |vertical-bars|.
+- You can put inline code within `backticks`, and make code blocks by putting a
+  > at the line before the code block and by indenting the code.
+- You can make headers by writing them in all-caps and subheaders by putting a
+  ~ at the end of the line.
+- You can make Vim search for your tags on write with
+  `autocmd BufWritePost doc/*.txt helptags <afile>:p:h.`
+- When you use :help to jump to a tag, the buffer is unmodifiable by default;
+  you can make a help buffer with the command `:set modifiable noreadonly`. I
+  recommend adding this autocommand to be able to modify your own help files:
+  `autocmd BufRead ~/.vim/doc/*.txt` set modifiable noreadonly (replace .vim with
+  vimfiles on Windows).
+- Caveat: Vim only allows ASCII characters in the first line of the note
+  (because it's automatically added to :help local-additions in help.txt, which
+  is ASCII-encoded), but you can use UTF-8 for the rest of the file.
+
+Read `:help help-writing` for a guide on how to use Vim's help syntax.
+
+----------------------------------------
+Why autogroups?
+
+Easier to remove as a unit.
+
+https://vi.stackexchange.com/questions/9455/why-should-i-use-augroup
+
+----------------------------------------
+What is the meaining of '#' symbol in function name?
+
+That's part of the autoload mechanism. From Autoloading at (Learn Vimscript
+the Hard Way) and :help autoload:
+
+Autoload lets you delay loading code until it's actually needed, so if the
+following function
+
+execute pathogen#infect()
+has already been loaded, Vim will simply call it normally. Otherwise Vim will
+look for a file called autoload/pathogen.vim in your ~/.vim directory . If
+this file exists, Vim will load/source the file. It will then try to call the
+function normally.
+
+Every # in the function name works like a path separator. Thus when calling a
+function:
+
+:call foo#bar#func()
+Vim will look for the file autoload/foo/bar.vim
+
+----------------------------------------
+vim9script
+
+def! is not allowed for script-local functions as it doesn't make sense
+because they can't be redefined. See :h E1117.
+Note, you can use def! g:SomeFunc() <- global function.
+
+xnoremap * :<C-u> call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
+what is <SID>?
+To avoid polluting the function namespace, plugin-internal functions should be
+script-local, i.e. have the prefix s:. To invoke these from a mapping, the
+special <SID> prefix has to be used instead of s:, because <SID> internally
+gets translated into something that keeps the script's ID, whereas the pure
+s:, when executed as part of the mapping, has lost its association to the
+script that defined it.
+https://groups.google.com/g/vim_use/c/V_BVGzi07PU
+
+----------------------------------------
+Global, local, window specific options
+
+For ex, stl (statusline) can be any of the above three (:h stl).
+Use :setl (:setlocal) to set local var
+
+----------------------------------------
+interpolated-string
+|interpolated-string|
+
+$"string"		interpolated string constant		expr-$quote
+$'string'		interpolated literal string constant	expr-$'
+:h interpolated-string
+
+----------------------------------------
+gp	Just like "p", but leave the cursor just after the new text.
+gP	Just like "P", but leave the cursor just after the new text.
+
+----------------------------------------
+What is =<< trim END do?     |:let-heredoc|
+
+It is 'here document'.
+
+----------------------------------------
+job_start vs timer_start (async execution)
+https://vi.stackexchange.com/questions/27003/how-to-start-an-async-function-in-vim-8
+https://vi.stackexchange.com/questions/27035/vim-script-how-to-pass-varargs-to-a-lambda-in-timer-start
+
+timer_start can do background execution within Vim's main thread (it does its
+own time slicing)
+
+----------------------------------------
+Why buffer local mapping
+
+map <buffer> ...
+
+This is important to stop your mapping for a specific filetype becoming global
+having just once opened that filetype.
+
+----------------------------------------
+
+Do not include dictionary key lookup inside a for-loop (for performance)
+
+Use a local variable outside for loop to cache dict key value. You can verify
+that it uses additional LOADSCRIPT and USEDICT in the loop when you do
+:disassembly
+
+Better version:
+
+	% vim -Nu NONE -S <(cat <<'EOF'                                                                                       1 :(
+	    vim9script
+	    var foo = {x: 1, y: 2}
+	    def Func()
+	        var fooy = foo.y
+	        for i in range(5)
+	            echom fooy
+	        endfor
+	    enddef
+	    disa Func
+	EOF
+	)
+
+----------------------------------------
+Problem with which-key plugin
+
+- timeoutlen has to be reduced from 1sec to 500ms, otherwise it is slow to
+open; But this causes problem when typing multi-key combinations like gc
+(comment code)
+- fzf can search keymaps (<leader><tab>)
+- after a while you don't need to look at keymaps
+- <c-x> <c-w> etc don't work (can be made to work if you hunt down exact
+numberical keycode they use
+- it remaps keys to internal function where it waits for getchar(); it then
+uses feedkeys() to send keycode combination (>= 2); There is no circular
+dependency when you feedkey() <space>x since only <space> is mapped to
+internal function.
+
+----------------------------------------'
+Comment code using gc:
+
+gcap –> comment a paragraph
+gcj –> comment current line and line bellow
+gc3j –> comment current line and 3 lines bellow
+gcgg –> comment current line and all the lines including first line in file
+gcG –> comment current line and all the lines including last line in file
+
+----------------------------------------
+QuickFix                         *giri-quickfix*
+
+QuickFix is a jump list. (https://youtu.be/F3ZfdeAWP2Y)
+ - good for task management while editing
+ - helps refactoring in large projects
+
+Creating -> :make, :grep, :vimgrep, :helpgrep
+Open and Close -> :copen, :cclose
+	:copen and :cclose to open and close quickfix list that is active
+	:cwindow (open qf window ONLY if there are entries, or toggle)
+	(:cw[indow] toggles, after :copen has opened the list)
+Jumping ->
+  -> :cc [nr] jump to entry [nr] (or current entry again) when not in qf window
+	:cc [nr] - display error number [nr]
+	[c and ]c mapped to :cnext and :cprevious, [C and ]C to :cfirst and :clast
+  -> <CR> jump to entry under cursor
+  -> <C-W><CR> jump to entry but in a new window (helpful)
+  -> :cnext/cprevious
+  (also:)
+  -> :cnfile/:cpfile jump to entry in next/previous file
+  -> :cfirst(:crewind)/:clast
+  -> :cabove/:cbelow jump to entry above/below current line
+  -> :cafter/:cbefore jump to entry before/after cursor in current line
+
+Managing QF lists
+	:chistory - shows all quickfix lists
+	:colder and :cnewer to navigate through your quickfix lists (up to 10).
+
+Batch Operations
+:cdo Execute commands for each entry (each line)
+	:cdo s/OLD/NEW/g | w
+:cfdo Execute commands for each file
+	:cfdo %s/OLD/NEW/g | w ( <- apply to entire file, not just first match)
+
+Bundled plugins
+Cfilter
+	What if you need to use :cdo but exclude certian entries?
+	:packadd cfilter (bundled plugin)
+	:Cfilter[!] /pat/
+Qfreplace
+	To perform replacement on filtered iterms:
+	:Qfreplace
+
+Location list - specific to window (not global). You can have many location
+		lists open in different windows.
+	Quickfix -> buffer1, buffer2
+	Location List 1 -> buffer1, Location List 2 -> buffer2
+
+Clear/delete current quickfix list
+	:cex[pr] [] - Empty the current quickfix list.
+
+Saving
+:w filename -> write quickfix buffer
+Loading from file
+:cfile / :cgetfile -> read from file
+	:cfile <filename> or :cgetfile <filename>
+Loading from buffer
+:cbuffer / :cgetbuffer -> read from buffer
+	:e <filename>
+	:cbuffer or :cgetbuffer
+
+Using macros with quickfix
+	qq - start recording
+	(perform some operations on file)
+	:w
+	:cnext - move to next entry
+	q - stop recording
+	@q or 10@q
+
+----------------------------------------
+# 'gn'
+
+'gn' is the search-highlighted text. Can use 'cgn' etc.
+
+# note: to search visually selected region: visually select and '*'
+
+----------------------------------------
+Kernal coding guidelines:
+
+8) Commenting
+Comments are good, but there is also a danger of over-commenting. NEVER try to
+explain HOW your code works in a comment: it’s much better to write the code
+so that the working is obvious, and it’s a waste of time to explain badly
+written code.
+
+Generally, you want your comments to tell WHAT your code does, not HOW.
+Also, try to avoid putting comments inside a function body. You can make small
+comments to note or warn about something particularly clever (or ugly), but
+try to avoid excess. Instead, put the comments at the head of the function,
+telling people what it does, and possibly WHY it does it.
+
+1) Indentation
+Tabs are 8 characters, and thus indentations are also 8 characters. There are
+heretic movements that try to make indentations 4 (or even 2!) characters
+deep, and that is akin to trying to define the value of PI to be 3.
+
+Rationale: The whole idea behind indentation is to clearly define where a
+block of control starts and ends. Especially when you’ve been looking at your
+screen for 20 straight hours, you’ll find it a lot easier to see how the
+indentation works if you have large indentations.
+
+Now, some people will claim that having 8-character indentations makes the
+code move too far to the right, and makes it hard to read on a 80-character
+terminal screen. The answer to that is that if you need more than 3 levels of
+indentation, you’re screwed anyway, and should fix your program.
+
+2) Breaking long lines and strings
+
+Coding style is all about readability and maintainability using commonly
+available tools. The limit on the length of lines is 80 columns and this is a
+strongly preferred limit.
+
+18) Editor modelines and other cruft
+
+Do not include any of these in source files. People have their own personal
+editor configurations, and your source files should not override them.
+
+https://www.kernel.org/doc/html/v4.10/process/coding-style.html
+
+----------------------------------------
+https://www.reddit.com/r/vim/wiki/include-and-path
+Link has info about 'include' and 'define', and everything about `[I`,
+`ijump`, etc.
+
+----------------------------------------
+include-search
+Search in all included files (not just this file but all files in project
+within the context of this file)
+
+https://www.youtube.com/watch?v=Gs1VDYnS-Ac at 25:00
+
+:ij (include search jump)
+It is like `gd` to jump to symbol definition except the search includes other
+files in the context. For python these can be imported files. Watch video
+where it can be made to work better.
+:dj (you want to only match function names, constant names etc.
+(macro/define), not any string name which is what :ij does)
+
+You get IDE like navigation with the above. Set the `path` variable to be root
+of project.
+For some languages like Go, include search does not work perfectly. The
+fallback is always using 'tags'. Very simple:
+							*giri-tags*
+:!ctags -R
+                        run ctags at your project root.
+
+g CTRL-]		Like CTRL-], but use ":tjump" instead of ":tag".
+
+CTRL-]			Jump to definition of keyword under cursor (like
+			'gd' except gd works for locally within file).
+			(Use g Ctrl-] instead). Same as ":tag {name}", where {name} is the
+			keyword under or after cursor.
+			When there are several matching tags for {name}, jump
+			to the [count] one.  When no [count] is given the
+			first one is jumped to.
+
+:[count]ta[g][!] {name}
+			Jump to the definition of {name}, using the
+			information in the tags file(s).  Put {name} in the
+			tag stack.  See |tag-!| for [!].
+			{name} can be a regexp pattern, see |tag-regexp|.
+			When there are several matching tags for {name}, jump
+			to the [count] one.  When [count] is omitted the
+			first one is jumped to. See |tag-matchlist| for
+			jumping to other matching tags.
+
+{Visual}CTRL-]		Same as ":tag {name}", where {name} is the text that
+			is highlighted.
+
+When there are several matching tags, these commands can be used to jump
+between them.
+
+:tj tag jump
+:ptj foo (preview tag jump)
+go back and forth using:
+:ptp (and :tp)
+:ptn (and :tn)
+<c-w>z will close the preview window
+:ta (navigate tag stack)
+
+:ts[elect][!] [name]	List the tags that match [name], using the
+			information in the tags file(s).
+
+g]			Like CTRL-], but use ":tselect" instead of ":tag".
+
+:sts[elect][!] [name]	Does ":tselect[!] [name]" and splits the window for
+			the selected tag.
+
+{Visual}g]		Same as "g]", but use the highlighted text as the
+			identifier.
+
+:tj[ump][!] [name]	Like ":tselect", but jump to the tag directly when
+			there is only one match. (Can use glob, ex: :tj *usb*send)
+
+:stj[ump][!] [name]	Does ":tjump[!] [name]" and splits the window for the
+			selected tag.
+
+{Visual}g CTRL-]	Same as "g CTRL-]", but use the highlighted text as
+			the identifier.
+
+:lt[ag][!] [name]	Jump to tag [name] and add the matching tags to a new
+			location list for the current window.  [name] can be
+			a regexp pattern, see |tag-regexp|.
+
+----------------------------------------
+Ex commands with line number and pattern as range
+
+This is generic Ex command not related to :global
+
+:[start]/pattern/[command]
+
+:2/foo/yank	Yank the first line matching foo after line 2
+This:
+Starts from a given line (2)
+Searches forward for the first match of pattern
+Applies the given command (yank) to that line (does not apply over multiple
+lines)
+Compare:
+ :g/foo/yank	Yank every line in the buffer that matches foo
+
+:?foo?t.
+See :h E16
+this will copy a line with 'foo' to here.
+
+	/{pattern}[/]	the next line where {pattern} matches
+				also see |:range-pattern| below
+	?{pattern}[?]	the previous line where {pattern} matches
+				also see |:range-pattern| below
+
+When separated with ';' the cursor position will be set to that line
+before interpreting the next line specifier.  This doesn't happen for ','.
+Examples:
+   4,/this line/
+ 	from line 4 till match with "this line" after the cursor line.
+   5;/that line/
+ 	from line 5 till match with "that line" after line 5.
+
+
+----------------------------------------
+Insert mode completion popup items cannot be modified
+
+No new items can be added (unlike popup_menu())
+
+Atleast not without a major flicker of popup menu as it gets replaced. Even
+then if some item was selected when you replace the menu the same menu will
+not be selected. feedkeys of <c-n> did not work.
+If you want to try use the testing code at the end:
+https://github.com/vim/vim/commit/4475b623960671898dac6a72b13a8d140402afa6
+
+complete_add() only works when called before showing popup. After popup
+is shown you have to call complete() to replace it.
+
+----------------------------------------
+Variable initialization
+
+Declaring a variable with a type but without an initializer will initialize to
+false (for bool), empty (for string, list, dict, etc.) or zero (for number,
+any, etc.).  This matters especially when using the "any" type, the value will
+default to the number zero.  For example, when declaring a list, items can be
+added:
+	var myList: list<number>
+	myList->add(7)
+
+Initializing a variable to a null value, e.g. null_list, differs from not
+initializing the variable.  This throws an error:
+	var myList = null_list
+	myList->add(7)  # E1130: Cannot add to null list
+
+----------------------------------------
+Abbrev with args
+
+  iab FF <c-o>:FF
+  com -nargs=* FF call s:FF(<f-args>)
+  fu s:FF(i, n)
+      let t = "for (int a = 0; a < b; ++a) {\e"
+      let t1 = substitute(t, 'a', a:i, 'g')
+      exe 'normal! A' . substitute(t1, 'b', a:x, 'g')
+      exe "normal o\<space>\<BS>\e"
+  endf
+
+at insert mode FF e 10<cr> will be for (int e = 0; e < 10; ++e) {<cr>.
+
+----------------------------------------
+Naming Styles (from pep8)
+
+functions that return something after doing something are named according to 'verbs'
+functions that modify state without returning are named by their 'nouns'.
+
+"Names should be as short as possible while still being clear."
+
+Function	function, my_function
+Variable	x, var, my_variable
+Class		Model, MyClass
+Method		class_method, method
+Constant	CONSTANT, MY_CONSTANT, MY_LONG_CONSTANT
+Module		module.py, my_module.py
+Package		package, mypackage
+
+----------------------------------------
+glob vs regex
+	Glob pattern
+	if filename =~ glob2regpat('Make*.mak')
+ 	This is equivalent to:
+	if filename =~ '^Make.*\.mak$'
+
+
+----------------------------------------
+Path to current buffer
+    Use 1<c-g> or <c-g> to get path (abs or relative) to current buffer
+
+----------------------------------------
+Batch mode and headless vim
+
+To execute vim in non-interactive mode, you can use either +{command}/-c
+{command} or -s (in -es) parameter which will allow you to execute the vim
+commands after the first file has been read.
+
+To parse file and send it to pipeline's output, you may try the following:
+
+	$ cat /etc/hosts | vim -es '+:0,$s/127/128/g' '+%print' '+:q!' /dev/stdin | cat
+	$ echo Example | vim -es '+:wq! /dev/stdout' /dev/stdin | cat
+	$ cat file1 file2 | vim - -es '+:0,$s/foo/test/g' '+:wq! file3'
+
+To edit file in-place, you can use -s {scriptin} so the script file is read.
+
+	$ echo ':0,$s/foo/test/ge' > cmds.txt
+	$ echo ':wq' >> cmds.txt
+	$ vim -s cmds.txt -es file
+
+https://unix.stackexchange.com/questions/14107/is-it-possible-to-execute-a-vim-script-in-a-non-interactive-mode
+
+----------------------------------------
+<SID>
+You can use it in abbrev, map, menu etc. You can also do `expand('<SID>') .. fn` (see :help)
+It prepends function name with name of script and a number. This way your
+script local functions can be used from global scope.
+
+----------------------------------------
+To find if something is truthy, see |truthy|
+
+----------------------------------------
+non-greedy search
+
+.* is greedy. So is .+ etc.
+
+\{-} is the non-greedy matching in Vim, so you should use \{-} instead of *.
+
+Try:
+
+%s/.\{-},//
+
+----------------------------------------
+Tags
+https://gist.github.com/romainl/f2d0727bdb9bde063531cd237f47775f
+https://gist.github.com/romainl/27c1c29462a8c6c868f1a9bf244bc71d
+
+To build tags file:
+ctags -R .
+
+Commands
+:tags -> to see the stack
+:3tag -> go forward 3 levels
+:tag foo -> jump to foo
+3 <c-t> go back 3 levels
+split window:
+:stag foo
+:c-w t
+When a function is defined multiple times (or a method in several classes),
+':tag' will jump to first one.
+:tnext -> jump to next one of multiple matches
+:tselect tagname -> presents you options, interactive
+:tprevious, :tfirst, :tlast
+Guessing names:
+:tag foo<tab> -> autocompletion
+:tag /block -> Suppose you want to jump to a tag that contains "block"
+:tag /foo$  -> ends with foo, for example
+
+Fing places where tag is called from:
+Cscope not only find places where an identifier is
+declared, but also where it is used.  See |cscope|.
+
+Preview window and finding right arguments to function
+
+:ptag foo
+Vim will open a window, and jumps to the tag "foo".  Then it takes you
+back to the original position.  Thus you can continue typing without the need
+to use a CTRL-W command.
+
+c-w }
+   If the name of a function appears in the text, you can get its definition
+in the preview window.
+
+To close the preview window use this command:
+	:pclose 9 (or c-w z)
+
+To edit a specific file in the preview window, use ":pedit".  This can be
+useful to edit a header file, for example:
+	:pedit defs.h
+
+Finally, ":psearch" can be used to find a word in the current file and any
+included files and display the match in the preview window.  This is
+especially useful when using library functions, for which you do not have a
+tags file.  Example:
+	:psearch popen
+
+This will show the "stdio.h" file in the preview window, with the function
+prototype for popen():
+	FILE	*popen __P((const char *, const char *));
+
+Note:
+:[range]ps[earch][!] [count] [/]pattern[/]
+		Works like |:ijump| but shows the found match in the preview
+		window. Don't need a tags file and it will also find matches in system
+		include files.
+
+--------------------------------------------------------------------------
+Notes:
+
+# :find uses 'path', while :edit does not. Both respect wildignore. Both open file.
+# :checkpath!  " to list all included files
+# set path=.,**
+# path set to '**' does not consider wildignore dirs because it does not use full path
+# */build/* form is needed for :find to ignore, while build/ is needed for :edit to ignore 'build' dir.
+# set wildignore+=*/build/*,build/,*/pycache/*,pycache/,*/venv/*,venv/,*/dist/*,dist/,*.o,*.obj
+#   :find does not show full path (if you set path to '**'), except when same filename is in different dirs
+#   :edit does not ignore dirs when used with '**'
+
+# Note: problem with wildcharm is that it automatically inserts first item in menu
+# :set wildcharm=<c-z>
+# nnoremap <leader><space> :find<space><c-z>
+
+------------------------------------------------------------------------------
+utf-8 composing character ~
+
+https://dev.to/bbkr/utf-8-decomposition-1n3m
+
+------------------------------------------------------------------------------
+shell~
+
+Why you cannot do job_start( $'for p in {panes}; do {cmd} -t $p; done', ...)
+But you need to do $'sh -c "for p in {panes}; do {cmd} -t $p; done"'
+
+https://vi.stackexchange.com/questions/19867/whats-wrong-with-terminal-cd-in-vim-8-1
+The issue is that the bare :terminal command (or job_start(), or system())
+doesn’t ever execute a shell—it executes the name of the external program you
+give it (which, by default, happens to be the shell). 'for' is not a
+executable, but a shell command. So is 'cd', and cannot be used. So, "terminal cd ." tries
+to run a command on disk named cd. For reasons, you don’t have one, and it
+wouldn’t work if you did.
+
+Also: only arguments in double quotes can contain white space.
+
+------------------------------------------------------------------------------
+netrw 							*giri-netrw*
+
+-:go up dir  D:delete  R:rename  s:sort-by  x:special  %:create
+
+Help: ':help netrw'
+
+I - Toggle the banner (in order to see the path). (:h netrw-I)
+
+% - Create a new file (make sure you type out relative path from the `pwd`,
+    even if you descended the tree inside netrw)
+
+i - "The "i" map cycles between the thin, long, wide, and tree listing
+formats...", "The tree listing format has a top directory followed by files
+and directories preceded by one or more "|"s, which indicate the directory
+depth. One may open and close directories by pressing the key while atop the
+directoryname. | (h: netrw-i)
+
+qf - will show information about the file or directory (and also the path).
+(:h netrw-qf)
+
+------------------------------------------------------------------------------
+Tabs                                            *giri-tabs*
+
+see |tabpage.txt|
+
+:tabnew
+:[count]tabnew [++opt] [+cmd] {file}
+:[count]tabe[dit] [++opt] [+cmd] {file}
+:[count]tab {cmd}
+		Execute {cmd} and when it opens a new window open a new tab.
+:tabc[lose][!]	Close current tab page.
+:tabo[nly][!]	Close all other tab pages.
+
+:tabn[ext]				*:tabn* *:tabnext* *gt*
+<C-PageDown>				*CTRL-<PageDown>* *<C-PageDown>*
+gt					*i_CTRL-<PageDown>* *i_<C-PageDown>*
+		Go to the next tab page.  Wraps around from the last to the
+		first one.
+
+:tabp[revious] {count}
+:tabN[ext] {count}
+{count}<C-PageUp>
+{count}gT	Go {count} tab pages back.  Wraps around from the first one
+		to the last one.  Note that the use of {count} is different
+		from |:tabnext|, where it is used as the tab page number.
+
+<C-Tab>					*g<Tab>* *CTRL-W_g<Tab>* *<C-Tab>*
+g<Tab>
+CTRL-W g<Tab>	Go to the last accessed tab page.
+
+:tabs		List the tab pages and the windows they contain.
+
+------------------------------------------------------------------------------
+arglist                                            *giri-arglist* *giri-buflist*
+
+'arglist' is from Vi, while 'buflist' is Vim. Every file in arglist is in
+buflist, but not vice versa. When you start Vim with list of files as
+arguments, they go into arglist.
+
+There is one global argument list, which is used for all windows by default.
+It is possible to create a new argument list local to a window, see
+|:arglocal|.
+
+Examples:
+
+Remove last line of all *.vim files, if they have modeline: >
+    :ar[gs] **/*.vim  -> create new arglist, overwriting old one
+    :argdo $g/vim/d
+Others: >
+    :ar[gs]  -> print arglist
+    :%argd -> to delete contents of arglist
+    :argd[elete] *.obj
+    :1,5argd -> delete items 1 to 5
+    :n[ext]
+    :prev[ious] or :N[next] -> :N is easier
+    :rew[ind] [++opt] [+cmd]
+			Start editing the first file in the argument list.
+
+From |{arglist}|
+On Unix and a few other systems you can also use backticks, for example: >
+	:args `find . -name \\*.c -print`
+The backslashes before the star are required to prevent "*.c" to be expanded
+by the shell before executing the find program.
+
+Insert a modeline at the end: >
+    :argdo s@\n@\="\n# vim: tabstop=8 shiftwidth=4 softtabstop=4 expandtab"
+
+This replaces an end-of-line with a new line containing the value of $HOME. >
+	:s@\n@\="\r" .. expand("$HOME") .. "\r"@
+
+arglist vs buflist
+==================
+
+The argument list is a subset of the buffer list. That can be useful if you
+want to run an Ex command across a set of files, but not all of them.
+
+Suppose that you want to execute a macro in a set of files. Which of these
+would you use?
+
+:bufdo normal @a
+:argdo normal @a
+
+They both execute the macro from register a in a set of files. The :bufdo
+example runs the macro in every file in the buffer list, while the :argdo
+example runs it in each file that's listed in the argument list.
+
+NOTE: Vim's built-in support for removing buffers from the buffer list is lousy, so
+use arglist when necessary.
+
+https://www.reddit.com/r/vim/comments/u3nv6/buffer_list_vs_arguments_list/
+
+------------------------------------------------------------------------------
+Use OS as IDE
+
+No gq command to reformat? Pipe a range through fmt(1) like :'<,'>!fmt 60.
+
+Need to include the total of column 3 at the bottom of a range of data?
+:'<,'>!awk '{t+=$3}END{print t}1'
+Notice that you can send only visually selected text to awk.
+
+To align columns use unix 'column' command.
+------------------------------------------------------------------------------
+What is func?
+"func" is a type, a function with any number of arguments and any return type.
+The function can be defined later.
+https://github.com/lacygoill/wiki/blob/main/vim/vim9.md#the-difference-between-using-or-omitting-function-when-saving-a-funcref-in-a-variable
+
+------------------------------------------------------------------------------
+Debug                               *giri-debug*
+The best way to debug .vimrc is to enable the debug and pipe it to
+a log file.
+>
+    vim -V20 2>&1 | tee logfile
+
+To debug Vim source see :h :Termdebug
+
+------------------------------------------------------------------------------
+Call stack                          *giri-callstack* *giri-stacktrace*
+
+In Vimscript, you can use the :echo or :echom commands in combination with
+debug information to inspect and print the call stack of functions. The :debug
+command and the :verbose flag also help in examining the function call stack.
+
+Method 1: Use :throw and v:exception
+>
+    def PrintCallStack()
+      try
+        throw "Capturing call stack"
+      catch
+        echomsg "Call Stack: " .. v:throwpoint
+      endtry
+    enddef
+
+Call the function PrintCallStack()
+
+Method 2: Enable debug Mode
+
+The :debug command lets you inspect the call stack interactively. For example:
+
+Enter :debug function_name() to run a function in debug mode.
+Use :backtrace or :bt to print the call stack.
+
+Method 3: Use the :verbose Option
+When invoking a function with the :verbose flag, you can sometimes infer the
+stack trace, but this is less direct.
+
+Method 4: Inject Logging in Your Script
+Manually log the function calls by appending information to a global variable
+or a file.
+
+    function! LogFunctionCall()
+      echomsg "Function stack: " . string(getloclist(0))
+    endfunction
+
+Call LogFunctionCall from other functions
+
+------------------------------------------------------------------------------
+vimscript 			*giri-vimscript* *giri-legacy-script*
+
+See |eval.txt|
+
+------------------------------------------------------------------------------
+Windows  						*giri-window*
+
+CTRL-W T	Move the current window to a new tab page.  This fails if
+		there is only one window in the current tab page.
+
+The following commands can be used to change the window layout/position.
+CTRL-W K	Move the current window to be at the very top, using the full
+		width of the screen.
+CTRL-W J	Move the current window to be at the very bottom, using the
+		full width of the screen.
+CTRL-W H	Move the current window to be at the far left.
+CTRL-W L	Move the current window to be at the far right.
+
+Navigate.
+CTRL-W w (mapped to 'CTRL-W PageDown' since in term mode it waits after c-w c-w)
+CTRL-W CTRL-W	Without count: move cursor to window below/right of the
+		current one.  If there is no window below or right, go to
+		top-left window.
+		With count: go to Nth window (windows are numbered from
+		top-left to bottom-right).  To obtain the window number see
+		|bufwinnr()| and |winnr()|.  When N is larger than the number
+		of windows go to the last window.
+CTRL-W h,j,k,l	Move cursor to another window.
+
+Resize:
+CTRL-W <	Decrease current window width by N (default 1).
+CTRL-W >	Increase current window width by N (default 1).
+:res[ize] -N
+CTRL-W -	Decrease current window height by N (default 1).
+:res[ize] +N
+CTRL-W +	Increase current window height by N (default 1).
+CTRL-W =	Make all windows (almost) equally high and wide, but use
+		'winheight' and 'winwidth' for the current window.
+
+:on[ly][!]
+:{count}on[ly][!]
+CTRL-W o
+CTRL-W CTRL-O
+		Make the current window the only one on the screen.  All other
+		windows are closed.  For {count} see the `:quit` command
+		above |:count_quit|.
+
+:clo[se][!]
+:{count}clo[se][!]
+CTRL-W c
+		Without {count}: Close the current window.  If {count} is
+		given close the {count} window.
+
+:hid[e]
+:{count}hid[e] (I mapped it to <C-W>H)
+		Without {count}: Quit the current window, unless it is the
+		last window on the screen.
+
+------------------------------------------------------------------------------
+Keymap						*giri-keymap*
+
+<expr> in 'cnoremap': This tells Vim that the right-hand side of the mapping
+is an expression that will be evaluated to produce the string to be executed.
+
+------------------------------------------------------------------------------
+When syntax is slow, use `|:syntime|` to debug.  		*giri-syntax*
+
+------------------------------------------------------------------------------
+vim:tw=78:ts=8:ft=help:norl:set modifiable noreadonly:

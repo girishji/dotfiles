@@ -18,13 +18,13 @@ autocmd CmdlineLeave [:/?] set ph&
 " Fuzzy find file
 " --------------------------
 
-nnoremap <leader><space> :<c-r>=execute('let g:fzfind_root="."')\|''<cr>find<space>
-nnoremap <leader>fv :<c-r>=execute($'let g:fzfind_root="{expand('$HOME')}/.vim"')\|''<cr>find<space>
-nnoremap <leader>fV :<c-r>=execute($'let g:fzfind_root="{expand('$VIMRUNTIME')}"')\|''<cr>find<space>
+nnoremap <leader><space> :<c-r>=execute('let g:fzfind_root="."')\|''<cr>Find<space>
+nnoremap <leader>fv :<c-r>=execute($'let g:fzfind_root="{expand('$HOME')}/.vim"')\|''<cr>Find<space>
+nnoremap <leader>fV :<c-r>=execute($'let g:fzfind_root="{expand('$VIMRUNTIME')}"')\|''<cr>Find<space>
 
-set findfunc=FuzzyFind
+command! -nargs=* -complete=customlist,<SID>FuzzyFind Find exec $'edit! {s:selected}'
 
-func FuzzyFind(cmdarg, _)
+func s:FuzzyFind(cmdarg, cmdline, cursorpos)
   if s:allfiles == []
     let s:allfiles = systemlist($'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune -o -name "*.sw?" \) -type f -follow')
   endif
@@ -33,12 +33,6 @@ endfunc
 
 let s:allfiles = []
 autocmd CmdlineEnter : let s:allfiles = []
-
-" autocmd CmdlineLeavePre :
-"       \ if getcmdline() =~ '^\s*fin\%[d]\s' && get(cmdcomplete_info(), 'matches', []) != []
-"       \   && cmdcomplete_info().selected == -1 |
-"       \     call setcmdline($'find {cmdcomplete_info().matches[0]}') |
-"       \ endif
 
 autocmd CmdlineLeavePre :
       \ if getcmdline() =~ '^\s*Find\s' && get(cmdcomplete_info(), 'matches', []) != [] |
@@ -64,15 +58,14 @@ autocmd CmdlineLeavePre :
 nnoremap <leader>g :Grep<space>
 nnoremap <leader>G :Grep <c-r>=expand("<cword>")<cr>
 
-command! -nargs=+ -complete=customlist,GrepComplete Grep call VisitFile()
+command! -nargs=+ -complete=customlist,<SID>GrepComplete Grep call <SID>VisitFile()
 
-func GrepComplete(arglead, cmdline, cursorpos)
+func s:GrepComplete(arglead, cmdline, cursorpos)
   let l:cmd = $'ggrep -REIHns "{a:arglead}" --exclude-dir=.git --exclude=".*" --exclude="tags" --exclude="*.sw?"'
-  let s:selected = ''
   return len(a:arglead) > 1 ? systemlist(l:cmd) : [] " Trigger after 2 chars
 endfunc
 
-func VisitFile()
+func s:VisitFile()
   if (s:selected != '')
     let l:item = getqflist(#{lines: [s:selected]}).items[0]
     if l:item->has_key('bufnr')

@@ -62,14 +62,6 @@ set signcolumn=yes  " always show column (used by git signs)
 set whichwrap+=<,>,h,l  " make arrows and h, l, push cursor to next line
 set virtualedit=block  " allows selection of rectangular text in visual block mode
 set grepprg=grep\ -REIins\ --exclude=tags\ --exclude=\"*.swp\"\ --exclude-dir=.git\ $*
-" XXX: Do not set 'infercase' -- when typing all-caps it spams.
-set autocomplete complete-=t,i shortmess+=cC
-" set cpp=border:off
-" set cot=popup
-set cpt=.^5,w^5,b^5,u^5
-" set cpt=.^5,w^5,b^5,u^5,k/Users/gp/git/ngram-complete.vim/data/en_1w.txt^5
-" set cpt+=k/Users/gp/git/ngram-complete.vim/data/en_1w.txt
-" argadd ~/sqlite-amalgamation-3500200/sqlite3.c *
 
 augroup CustomAutocmds | autocmd!
     " Dismiss the info preview window (^C to keep, so you can interact)
@@ -132,7 +124,7 @@ endif
 " g:termdebug_config['wide'] = 1 # Force vertical split
 " g:termdebug_config['evaluate_in_popup'] = v:true
 
-" Download plug.vim if it doesn't exist yet
+" " Download plug.vim if it doesn't exist yet
 " if empty(glob('~/.vim/autoload/plug.vim'))
 "     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
 "                 \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -150,14 +142,9 @@ endif
 "     call plug#begin("~/.local/share/vim-plug/")
 "     " Make sure you use single quotes
 "     " Plug 'lacygoill/vim9asm'
-"     " Plug 'yegappan/lsp'
+"     Plug 'yegappan/lsp'
 "     " Plug 'girishji/pythondoc.vim', {'for': 'python'}
 "     " Plug 'girishji/devdocs.vim'
-"     "
-"     " XXX: LSP has a problem where open dict.c and :4000 and you
-"     " get 'Press ENTER or type command to continue' message. Also, happens
-"     " when a second file is opened.
-"     Plug 'girishji/lsp'
 "     call plug#end()
 " endif
 

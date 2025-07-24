@@ -453,7 +453,7 @@ prompt_vcs_setup() {
     alias gc2='git clone --depth 1 '
     alias gp='git push'
     alias gu='git pull --no-rebase'
-    alias gb='git branch'
+    alias gb='git ls-remote --heads origin'
     alias gch='git checkout'
     alias gl='git log --oneline --decorate --graph --no-merges origin/master..HEAD'
     alias gl2='git log --oneline --decorate --graph --all'
@@ -641,7 +641,7 @@ prompt_vcs_setup() {
     # keyword), those visible in terminal (do not use 'local') but not available to
     # other tools, and environment variables (use 'export' keyword, and these
     # variables are available in terminal as well as accessible from other tools)
-    MY_ALIAS_EXPAND_BLACKLIST=(t ls rm)
+    MY_ALIAS_EXPAND_BLACKLIST=(t ls rm less viclean)
 
     # Make <space> expand alias (other option is to use completion mechanism (Tab))
     my_expand_alias() {

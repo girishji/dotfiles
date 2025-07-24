@@ -6,6 +6,11 @@ elseif executable('yapf')
     &l:formatprg = "yapf"
 endif
 
+if exists("g:loaded_lsp")
+    set omnifunc=g:LspOmniFunc
+    set cpt+=o
+endif
+
 setlocal foldignore=
 
 b:undo_ftplugin ..= ' | setl foldignore< formatprg< | silent! autocmd! PythonAutoImport'
@@ -65,7 +70,7 @@ iabbr <buffer>       namedtuple_    Point = namedtuple('Point', 'x y')<esc>_<c-r
 iabbr <buffer>       namedtuple__   Point = namedtuple('Point', ('x', 'y'), defaults=(None,) * 2)<esc>_<c-r>=Eatchar()<cr>
 
 # Misc
-iabbr <buffer><expr> def      NotCtx('def') ? 'def' : 'def ):<cr><esc>-f)i<c-r>=Eatchar()<cr>'
+# iabbr <buffer><expr> def      NotCtx('def') ? 'def' : 'def ):<cr><esc>-f)i<c-r>=Eatchar()<cr>'
 iabbr <buffer>       def_     def ():<cr>"""."""<esc>-f(i<c-r>=Eatchar()<cr>
 iabbr <buffer>       def__    def ():<c-o>o'''<cr>>>> print()<cr><cr>'''<esc>4k_f(i<c-r>=Eatchar()<cr>
 iabbr <buffer>       try_ try:

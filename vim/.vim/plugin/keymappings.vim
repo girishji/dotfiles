@@ -143,7 +143,7 @@ nnoremap <leader>vr :enew \| exec "nn <buffer> q :bd!\<cr\>" \| put = execute(''
 nnoremap <leader>vm <cmd>messages<cr>
 nnoremap <leader>ve <cmd>e $MYVIMRC<cr>
 nnoremap <leader>vz <cmd>e ~/.zsh.common<cr>
-nnoremap <leader>vg <cmd>e ~/.gvimrc<cr>
+" nnoremap <leader>vg <cmd>e ~/.gvimrc<cr>
 " open netrw file browser
 nnoremap <leader>vn <cmd>35Lex<cr>
 " tags
@@ -161,9 +161,11 @@ endfunc
 tnoremap <silent> <C-PageUp> <scriptcmd>SwitchTab('up')<cr>
 tnoremap <silent> <C-PageDown> <scriptcmd>SwitchTab('down')<cr>
 
-" " highlight groups ([-1] forces empty string as return value of setqflist())
+" [-1] forces empty string as return value of setqflist()
+" Open keymaps in qflist
+" nnoremap <leader>fk :<c-r>=setqflist([], ' ', #{title: 'keymap', items: execute("verbose map")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
+" Open highlight groups in qflist
 " nnoremap <leader>fh :<c-r>=setqflist([], ' ', #{title: 'highlight', items: execute("hi")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
-nnoremap <leader>fk :<c-r>=setqflist([], ' ', #{title: 'keymap', items: execute("verbose map")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
 " nnoremap <leader>fm :<c-r>=setqflist([], ' ', #{title: 'marks', items: execute("marks")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
 " nnoremap <leader>fr :<c-r>=setqflist([], ' ', #{title: 'registers', items: execute("registers")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
 " nnoremap <leader>fq <cmd>chistory<cr>

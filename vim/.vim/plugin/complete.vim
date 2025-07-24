@@ -2,8 +2,8 @@ if has('gui_macvim')
   finish
 endif
 
+" ======================================================================
 " Command-line autocomplete
-" --------------------------
 
 autocmd CmdlineChanged [:/?] call wildtrigger()
 set wim=noselect:lastused,full wop=pum
@@ -15,8 +15,8 @@ autocmd CmdlineEnter : exec $'set ph={max([10, winheight(0) - 4])}'
 autocmd CmdlineEnter [/?] set ph=8
 autocmd CmdlineLeave [:/?] set ph&
 
+" ----------------------------------------------------------------------
 " Fuzzy find file
-" --------------------------
 
 nnoremap <leader><space> :<c-r>=execute('let g:fzfind_root="."')\|''<cr>Find<space>
 nnoremap <leader>fv :<c-r>=execute($'let g:fzfind_root="{expand('$HOME')}/.vim"')\|''<cr>Find<space>
@@ -34,15 +34,8 @@ endfunc
 let s:allfiles = []
 autocmd CmdlineEnter : let s:allfiles = []
 
-autocmd CmdlineLeavePre :
-      \ if getcmdline() =~ '^\s*Find\s' && get(cmdcomplete_info(), 'matches', []) != [] |
-      \   let s:info = cmdcomplete_info() |
-      \   let s:selected = s:info.selected != -1 ? s:info.matches[s:info.selected] : s:info.matches[0] |
-      \   call setcmdline(s:info.cmdline_orig) |
-      \ endif
-
+" ----------------------------------------------------------------------
 " Buffer
-" --------------------------
 
 nnoremap <leader><bs> :buffer<space>
 
@@ -52,8 +45,8 @@ autocmd CmdlineLeavePre :
       \     call setcmdline($'buffer {cmdcomplete_info().matches[0]}') |
       \ endif
 
+" ----------------------------------------------------------------------
 " Live grep
-" --------------------------
 
 nnoremap <leader>g :Grep<space>
 nnoremap <leader>G :Grep <c-r>=expand("<cword>")<cr>
@@ -77,7 +70,7 @@ func s:VisitFile()
 endfunc
 
 autocmd CmdlineLeavePre :
-      \ if getcmdline() =~ '^\s*Grep\s' && get(cmdcomplete_info(), 'matches', []) != [] |
+      \ if getcmdline() =~ '^\s*\%(Grep\|Find\)\s' && get(cmdcomplete_info(), 'matches', []) != [] |
       \   let s:info = cmdcomplete_info() |
       \   let s:selected = s:info.selected != -1 ? s:info.matches[s:info.selected] : s:info.matches[0] |
       \   call setcmdline(s:info.cmdline_orig) |
@@ -87,12 +80,14 @@ autocmd CmdlineLeavePre :
 " Insert mode autocomplete
 " Note: Do not set 'infercase' -- when typing all-caps it spams.
 "   C omnifunc (ccomplete#Complete) needs tags file (:h ft-c-omni)
+
 set autocomplete
 set cpt=.^5,o^5,w^5,b^5,u^5
 set cot=popup cpp=highlight:Normal
 
+" ----------------------------------------------------------------------
 " Abbrev Completor
-" --------------------------
+
 set cpt+=FAbbrevCompletor
 def! g:AbbrevCompletor(findstart: number, base: string): any
   if findstart > 0

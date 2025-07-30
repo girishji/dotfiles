@@ -17,3 +17,6 @@ iab <buffer><expr> while   NotCtx('while') ? 'while'
             \ : 'while <c-o>oendwhile<esc>k_ela<c-r>=Eatchar()<cr>'
 iab <buffer><expr> for     NotCtx('for' ) ? 'for'
             \ : 'for <c-o>oendfor<esc>k_ela<c-r>=Eatchar()<cr>'
+
+" No need to open :help for word under cursor
+nnoremap <buffer> K <Nop>

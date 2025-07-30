@@ -21,7 +21,7 @@ command HighlightGroupUnderCursor {
 }
 
 # Open files in ~/help folder using 'hf' abbref (:hf ...)
-command -nargs=1 -complete=custom,<SID>Completor HelpFile OpenHelpFile(<f-args>)
+command -nargs=1 -complete=custom,Completor HelpFile OpenHelpFile(<f-args>)
 def Completor(prefix: string, line: string, cursorpos: number): string
   var dir = '~/help'->expand()
   return dir->readdir((v) => !$'{dir}/{v}'->isdirectory() && v !~ '^\.')->join("\n")

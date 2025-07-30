@@ -5,15 +5,16 @@ endif
 " ======================================================================
 " Command-line autocomplete
 
-autocmd CmdlineChanged [:/?] call wildtrigger()
+autocmd CmdlineChanged [:/\?] call wildtrigger()
 set wim=noselect:lastused,full wop=pum
 
 cnoremap <up> <c-u><up>
 cnoremap <down> <c-u><down>
 
 autocmd CmdlineEnter : exec $'set ph={max([10, winheight(0) - 4])}'
-autocmd CmdlineEnter [/?] set ph=8
-autocmd CmdlineLeave [:/?] set ph&
+" autocmd CmdlineEnter : set ph=12
+autocmd CmdlineEnter [/\?] set ph=8
+autocmd CmdlineLeave [:/\?] set ph&
 
 " ----------------------------------------------------------------------
 " Fuzzy find file
@@ -82,8 +83,11 @@ autocmd CmdlineLeavePre :
 "   C omnifunc (ccomplete#Complete) needs tags file (:h ft-c-omni)
 
 set autocomplete
-set cpt=.^5,o^5,w^5,b^5,u^5
+set cpt=.^5,w^5,b^5,u^5
 set cot=popup cpp=highlight:Normal
+
+" ^X^F completes filename
+set cot+=menuone,noselect
 
 " ----------------------------------------------------------------------
 " Abbrev Completor

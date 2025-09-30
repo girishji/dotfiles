@@ -566,7 +566,7 @@ prompt_vcs_setup() {
     alias pipi='pip install'
 
     alias c='z'
-    alias ca='cat'
+    alias ca='bat'
     alias cl='clear'
     alias le='less'
     alias p3='python3'
@@ -578,13 +578,23 @@ prompt_vcs_setup() {
     alias formatjson='python3 -m json.tool'
     alias jsonformat='python3 -m json.tool'
 
+    if command -v bat >/dev/null 2>&1; then
+        # Use a 8-bit color theme for bat
+        # export BAT_THEME="ansi"
+        # export BAT_STYLE="numbers,changes,grid,header"
+        # alias ba='bat --style=plain' # without line numbers
+        export BAT_STYLE="plain"
+        alias ba='bat'
+        alias ca='bat'
+    fi
+
     # TIP: could use 'py' which is ipython+pyflyby (if installed through pipx, and ipython injected into it)
     alias ip='ipython'
 
     alias v='vim'
     alias vd2='vi -d'  # diff mode - pass 2 files
-    alias vimdiff='vimdiff -c "set autoread" -c "au FocusGained,BufEnter * checktime"'
-    alias vd='vimdiff -c "set autoread" -c "au FocusGained,BufEnter * checktime"'
+    alias vimdiff='vimdiff -R -c "set autoread" -c "au FocusGained,BufEnter * checktime"' # read only
+    alias vimdiff2='vimdiff -c "set autoread" -c "au FocusGained,BufEnter * checktime"'
     # alias vr='vim -c "normal '\''0"'  # restore last opened buffer
     alias viclean='vim --clean'
     alias vimclean='vim --clean'
@@ -598,6 +608,7 @@ prompt_vcs_setup() {
     alias mvi='mvim'
     alias mvd='mvimdiff'
     alias mvw='mview'
+    export EDITOR=vim
 
     alias makedebug="make SHELL='sh -x'"
 

@@ -1,6 +1,7 @@
 " Key mappings
 
-nnoremap <leader>w <cmd>w<cr>
+" nnoremap <leader>w <cmd>w<cr>  " XXX: maybe causing the ruler line getting printed twice problem
+nnoremap <leader>w :w<cr>
 " nnoremap <leader>w <cmd>update<cr> " BufWrite (not posted) is needed by plugins
 nnoremap <leader>q <cmd>qa<cr>
 nnoremap <leader>Q <cmd>qa!<cr>
@@ -14,10 +15,6 @@ map Y y$
 
 " map gm to go to middle of line instead of middle of screen
 nnoremap gm gM
-
-" For autocomplete
-inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
-inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 
 " When softwrap happens move by screen line instead of file line
 nnoremap <silent> j gj
@@ -119,8 +116,8 @@ nnoremap <leader>- <c-w>s
 nnoremap <leader>\ <c-w>v
 nnoremap <silent> <C-Up> :resize +2<cr>
 nnoremap <silent> <C-Down> :resize -2<cr>
-nnoremap <silent> <C-Right> :vertical resize -2<cr>
-nnoremap <silent> <C-Left> :vertical resize +2<cr>
+nnoremap <silent> <C-Right> :vertical resize +2<cr>
+nnoremap <silent> <C-Left> :vertical resize -2<cr>
 " hide window (when terminal window is active)
 tnoremap <c-w>H <c-w>:hide<cr>
 " hide window

@@ -4,15 +4,17 @@ endif
 
 " ======================================================================
 " Command-line autocomplete
-
+"
 autocmd CmdlineChanged [:/\?] call wildtrigger()
 set wim=noselect:lastused,full wop=pum
 
-cnoremap <up> <c-u><up>
-cnoremap <down> <c-u><down>
+cnoremap <expr> <up>   wildmenumode() ? "\<c-e>\<up>"   : "\<up>"
+cnoremap <expr> <down> wildmenumode() ? "\<c-e>\<down>" : "\<down>"
+
+autocmd CmdlineEnter [/\?]  set pumheight=8
+autocmd CmdlineLeave [/\?]  set pumheight&
 
 autocmd CmdlineEnter : exec $'set ph={max([10, winheight(0) - 4])}'
-" autocmd CmdlineEnter : set ph=12
 autocmd CmdlineEnter [/\?] set ph=8
 autocmd CmdlineLeave [:/\?] set ph&
 
@@ -26,14 +28,15 @@ nnoremap <leader>fV :<c-r>=execute($'let g:fzfind_root="{expand('$VIMRUNTIME')}"
 command! -nargs=* -complete=customlist,<SID>FuzzyFind Find exec $'edit! {s:selected}'
 
 func s:FuzzyFind(cmdarg, cmdline, cursorpos)
-  if s:allfiles == []
-    let s:allfiles = systemlist($'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune -o -name "*.sw?" \) -type f -follow')
+  if s:files_cache == []
+    let s:files_cache = systemlist(
+          \ $'find {get(g:, "fzfind_root", ".")} \! \( -path "*/.git" -prune -o -name "*.sw?" \) -type f -follow')
   endif
-  return a:cmdarg == '' ? s:allfiles : matchfuzzy(s:allfiles, a:cmdarg)
+  return a:cmdarg == '' ? s:files_cache : matchfuzzy(s:files_cache, a:cmdarg)
 endfunc
 
-let s:allfiles = []
-autocmd CmdlineEnter : let s:allfiles = []
+let s:files_cache = []
+autocmd CmdlineEnter : let s:files_cache = []
 
 " ----------------------------------------------------------------------
 " Buffer
@@ -60,14 +63,9 @@ func s:GrepComplete(arglead, cmdline, cursorpos)
 endfunc
 
 func s:VisitFile()
-  if (s:selected != '')
-    let l:item = getqflist(#{lines: [s:selected]}).items[0]
-    if l:item->has_key('bufnr')
-      let l:pos = l:item.vcol > 0 ? 'setcharpos' : 'setpos'
-      exec $':b +call\ {l:pos}(".",\ [0,\ {l:item.lnum},\ {l:item.col},\ 0]) {l:item.bufnr}'
-      call setbufvar(l:item.bufnr, '&buflisted', 1)
-    endif
-  endif
+  let l:item = getqflist(#{lines: [s:selected]}).items[0]
+  exec $':b +call\ setpos(".",\ [0,\ {l:item.lnum},\ {l:item.col},\ 0]) {l:item.bufnr}'
+  call setbufvar(l:item.bufnr, '&buflisted', 1)
 endfunc
 
 autocmd CmdlineLeavePre :
@@ -79,15 +77,34 @@ autocmd CmdlineLeavePre :
 
 " ======================================================================
 " Insert mode autocomplete
-" Note: Do not set 'infercase' -- when typing all-caps it spams.
-"   C omnifunc (ccomplete#Complete) needs tags file (:h ft-c-omni)
+" Note:
+"   - Do not set 'infercase' -- when typing all-caps it spams.
+"   - Omnifunc (ccomplete#Complete) for C lang needs tags file (:h ft-c-omni)
 
 set autocomplete
 set cpt=.^5,w^5,b^5,u^5
-set cot=popup cpp=highlight:Normal
+set cot=popup,longest cpp=highlight:Normal
+" set pb=double,shadow,margin
 
-" ^X^F completes filename
-set cot+=menuone,noselect
+" Move cursor to the end of XCxxxX (always) and XCxxxX+ (when only one item is present),
+" where x is preinserted char and C is cursor. Needs "longest" in 'cot'.
+func AcceptPreinsert()
+  let word = getline('.')->strpart(0, col('.') - 1)->matchstr('^\S\+')
+  let info = complete_info()
+  return exists("*preinserted") && preinserted() && info.selected == -1
+        \ && ((info->has_key('matches') && info.matches->len() > 1 && info.matches[0].word[:-2] != word)
+        \ || (info.items->len() > 1 && info.items[0].word[:-2] != word))
+endfunc
+
+inoremap <silent><expr> <tab> AcceptPreinsert() ? "\<c-y>" : pumvisible() ? "\<c-n>" : "\<tab>"
+" inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+inoremap <silent><expr> <PageDown> exists("*preinserted") && preinserted() ? "\<c-y>" : "\<PageDown>"
+
+hi link PreInsert LineNr
+
+" For manual completion (ex. ^X^F completes filename)
+" set cot+=menuone,noselect
 
 " ----------------------------------------------------------------------
 " Abbrev Completor

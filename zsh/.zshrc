@@ -32,14 +32,7 @@
     # depends on arch
     export XDG_DATA_HOME="${HOME}/.local/share/"$(arch)
 
-    export EDITOR=vim
-    export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-19.jdk/Contents/Home
-
     # export OPENAI_API_KEY=sk-E...
-
-    # Use a 8-bit color theme for bat
-    export BAT_THEME="ansi"
-    export BAT_STYLE="numbers,changes,grid,header"
 
     # Make 'pip3 install --user xxx' packages available
     # export PATH=$PATH:$(python3 -m site --user-base)/bin
@@ -134,7 +127,6 @@
 # Aliases
 #
 () {
-    alias ba='bat --style=plain' # without line numbers
     alias bc='bc -l'
     if which gls >/dev/null ; then
         # TIP: brew install coreutils
@@ -161,9 +153,9 @@
     alias cr='clang-repl --Xcc=-include"$HOME/.clang-repl-incl.h" --Xcc=-std=c++23 --Xcc=-stdlib=libc++ --Xcc=-fexperimental-library'
     alias clang_repl='clang-repl --Xcc=-include"$HOME/.clang-repl-incl.h" --Xcc=-std=c++23 --Xcc=-stdlib=libc++ --Xcc=-fexperimental-library'
 
-    alias gsh='gcloud compute ssh --zone "us-central1-c" "vimfix" --project "sandbox-403316" --ssh-flag="-ServerAliveInterval=30"'
-    alias gscp='gcloud compute scp --zone "us-central1-c" --project "sandbox-403316" from vimfix:~/to'
-    alias gstop='gcloud compute instances stop vimfix'
+    # alias gsh='gcloud compute ssh --zone "us-central1-c" "vimfix" --project "sandbox-403316" --ssh-flag="-ServerAliveInterval=30"'
+    # alias gscp='gcloud compute scp --zone "us-central1-c" --project "sandbox-403316" from vimfix:~/to'
+    # alias gstop='gcloud compute instances stop vimfix'
     # alias gcsh='gcloud cloud-shell ssh --authorize-session'
     alias vi=vim
 }
@@ -182,4 +174,4 @@ fi
 if [ -f '/Users/gp/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/gp/Downloads/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/gp/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/gp/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+# if [ -f '/Users/gp/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/gp/Downloads/google-cloud-sdk/completion.zsh.inc'; fi

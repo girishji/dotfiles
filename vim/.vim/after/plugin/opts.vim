@@ -2,8 +2,8 @@ vim9script
 
 if exists("g:loaded_lsp")
 
-    # autocmd VimEnter * g:LspOptionsSet({ autoComplete: false, omniComplete: true })
-    autocmd VimEnter * g:LspOptionsSet({ autoComplete: false, omniComplete: true, autoHighlightDiags: false })
+    # autocmd VimEnter * g:LspOptionsSet({ autoComplete: false })
+    autocmd VimEnter * g:LspOptionsSet({ autoComplete: false, autoHighlightDiags: false })
 
     if executable('clangd')
         g:LspAddServer([{

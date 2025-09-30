@@ -1,6 +1,7 @@
 setl keywordprg=:help
 
 iab <buffer> vim9 vim9script<c-r>=Eatchar()<cr>
+iab <buffer> $T $TEST_FILTER = ''<esc>i<c-r>=Eatchar()<cr>
 iab <buffer><expr> augroup NotCtx('augroup') ? 'augroup'
             \ : 'augroup  \| autocmd!<cr>augroup END<esc>k_ela<c-r>=Eatchar()<cr>'
 iab <buffer><expr> def     NotCtx('def') ? 'def'

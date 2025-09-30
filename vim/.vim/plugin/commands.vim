@@ -48,7 +48,9 @@ def CanExpandHF(): bool
 enddef
 cabbr <expr> hf <SID>CanExpandHF() ? 'HelpFile' : 'hf'
 
-command TrailingWhitespaceStrip TrailingWhitespaceStrip()
+# TrailingWhitespaceStrip
+command StripTrailingWhitespace TrailingWhitespaceStrip()
+command SpaceTrailingStrip TrailingWhitespaceStrip()
 def TrailingWhitespaceStrip()
   if !&binary && &filetype != 'diff'
     :normal mz

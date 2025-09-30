@@ -56,14 +56,28 @@ def SaneColors()
     hi Folded ctermbg=0
     hi LineNr ctermfg=11 ctermbg=0
     hi NonText ctermfg=0 |# 'eol', etc.
+
+    # hi! link Pmenu  Normal
+    # hi! link PmenuExtra LineNr
+    # hi PmenuExtraSel  ctermfg=11 ctermbg=None cterm=bold,underline
+    # hi PmenuMatch     ctermfg=4 ctermbg=None
+    # hi PmenuMatchSel  ctermfg=4 ctermbg=None cterm=bold,underline
+    # hi PmenuSbar      ctermbg=None
+    # hi PmenuSel       ctermfg=None ctermbg=None cterm=bold,underline
+    # hi PmenuThumb     ctermbg=11
+    # hi PmenuShadow    ctermbg=8 ctermfg=10
+    # hi PmenuBorder    ctermfg=7
+
     hi Pmenu          ctermfg=8 ctermbg=6 cterm=bold
     hi PmenuExtra     ctermfg=7 ctermbg=6 cterm=bold
     hi PmenuExtraSel  ctermfg=7 ctermbg=2 cterm=bold
     hi PmenuMatch     ctermfg=1 ctermbg=6 cterm=bold
     hi PmenuMatchSel  ctermfg=1 ctermbg=2 cterm=bold
-    hi PmenuSbar      ctermbg=7
+    hi PmenuSbar      ctermbg=6
     hi PmenuSel       ctermfg=8 ctermbg=2 cterm=bold
-    hi PmenuThumb     ctermbg=8
+    hi PmenuThumb     ctermbg=7
+    hi PmenuShadow    ctermbg=8 ctermfg=10
+
     hi Search ctermfg=0 ctermbg=3
     hi SignColumn ctermfg=None ctermbg=0
     hi StatusLine     ctermfg=8 ctermbg=6 cterm=bold

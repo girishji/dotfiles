@@ -31,14 +31,16 @@ autocmd FileType * if &ft =~ '\v(help|markdown)' | setlocal listchars=tab:\ \ ,t
 autocmd BufEnter * if &ft == '' | setlocal listchars=tab:\ \ ,trail:\  | endif
 set list
 
-set fillchars=stlnc:┴
 if &background == 'dark'
-    set fillchars=vert:│,fold:۰,diff:·,stl:─,stlnc:═
+  set fillchars=vert:│,fold:۰,diff:·,stl:─,stlnc:═,trunc:…
+else
+  set fillchars=stlnc:┴,trunc:…
 endif
 set noshowcmd  " Stop echoing keymapped typed keys in the bottom row
 set clipboard=unnamed  " Always use the system clipboard
 set mouse=  " XXX: Disable mouse (set by defaults.vim). Needed by macos terminal app.
 set number  " line numbering
+set signcolumn=yes  " always show column (used by git signs)
 " set relativenumber
 set hls  " highlight search
 set lbr  " line break
@@ -57,11 +59,13 @@ set spellsuggest=best,10  " set maximum number of suggestions listed top 10 item
 set foldmethod=indent
 " set foldnestmax=1
 set nofoldenable  " do not do folding when you open file
-set signcolumn=yes  " always show column (used by git signs)
 " set dictionary+=/usr/share/dict/words
 set whichwrap+=<,>,h,l  " make arrows and h, l, push cursor to next line
 set virtualedit=block  " allows selection of rectangular text in visual block mode
 set grepprg=grep\ -REIins\ --exclude=tags\ --exclude=\"*.swp\"\ --exclude-dir=.git\ $*
+" set pumborder=ascii
+" set pumborder=shadow
+" set pumborder=custom:=\|=\|::::
 
 augroup CustomAutocmds | autocmd!
     " Dismiss the info preview window (^C to keep, so you can interact)
@@ -133,7 +137,7 @@ endif
 " autocmd VimEnter * if exists('g:plugs') && len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) > 0
 "             \| PlugInstall --sync | source $MYVIMRC
 "             \| endif
-
+"
 " if has('gui')  " MacVim
 "     call plug#begin("~/.local/share/vim-plug/")
 "     " Plug '~/git/devdocs.vim'
@@ -143,6 +147,7 @@ endif
 "     " Make sure you use single quotes
 "     " Plug 'lacygoill/vim9asm'
 "     Plug 'yegappan/lsp'
+"     " Plug '~/girishji/lsp'
 "     " Plug 'girishji/pythondoc.vim', {'for': 'python'}
 "     " Plug 'girishji/devdocs.vim'
 "     call plug#end()

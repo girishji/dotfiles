@@ -57,6 +57,7 @@ def SaneColors()
     hi LineNr ctermfg=11 ctermbg=0
     hi NonText ctermfg=0 |# 'eol', etc.
 
+    # Transparent (selection has underline only)
     # hi! link Pmenu  Normal
     # hi! link PmenuExtra LineNr
     # hi PmenuExtraSel  ctermfg=11 ctermbg=None cterm=bold,underline
@@ -68,6 +69,18 @@ def SaneColors()
     # hi PmenuShadow    ctermbg=8 ctermfg=10
     # hi PmenuBorder    ctermfg=7
 
+    # Transparent
+    # hi! link Pmenu  Normal
+    # hi PmenuExtra     ctermfg=7 ctermbg=none cterm=bold
+    # hi PmenuExtraSel  ctermfg=7 ctermbg=2 cterm=bold
+    # hi PmenuMatch     ctermfg=1 ctermbg=none cterm=bold
+    # hi PmenuMatchSel  ctermfg=1 ctermbg=2 cterm=bold
+    # hi PmenuSbar      ctermbg=none
+    # hi PmenuSel       ctermfg=8 ctermbg=2 cterm=bold
+    # hi PmenuThumb     ctermbg=7
+    # hi PmenuBorder    ctermfg=7 ctermbg=none
+
+    # Gray background
     hi Pmenu          ctermfg=8 ctermbg=6 cterm=bold
     hi PmenuExtra     ctermfg=7 ctermbg=6 cterm=bold
     hi PmenuExtraSel  ctermfg=7 ctermbg=2 cterm=bold

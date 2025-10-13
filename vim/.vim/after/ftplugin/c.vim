@@ -8,7 +8,6 @@ if exists("g:loaded_lsp")
 endif
 
 # setlocal cpt=.^5,o^5,w^5,b^5,u^5
-setlocal cpt=.^5,w^5,b^5,u^5
 
 # In insert mode type 'FF e 10<cr>' and it will insert 'for (int e = 0; e < 10; ++e) {<cr>.'
 iab <buffer> FF <c-o>:FF

@@ -137,7 +137,7 @@ endif
 " autocmd VimEnter * if exists('g:plugs') && len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) > 0
 "             \| PlugInstall --sync | source $MYVIMRC
 "             \| endif
-"
+
 " if has('gui')  " MacVim
 "     call plug#begin("~/.local/share/vim-plug/")
 "     " Plug '~/git/devdocs.vim'

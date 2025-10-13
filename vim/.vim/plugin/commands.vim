@@ -49,7 +49,7 @@ enddef
 cabbr <expr> hf <SID>CanExpandHF() ? 'HelpFile' : 'hf'
 
 # TrailingWhitespaceStrip
-command StripTrailingWhitespace TrailingWhitespaceStrip()
+command TrailingWhitespaceStrip TrailingWhitespaceStrip()
 command SpaceTrailingStrip TrailingWhitespaceStrip()
 def TrailingWhitespaceStrip()
   if !&binary && &filetype != 'diff'

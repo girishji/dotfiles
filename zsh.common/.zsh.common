@@ -443,8 +443,10 @@ prompt_vcs_setup() {
     # dir/**/foo* = foo* in the directory dir and all its subdirectories, recursively
     #
     # Add your pattern as in 'ls **/*<pat>...'. excludes files *.swp and dir plugged.
-    alias ff='ls **/*~(*.swp|build/*)'
-    cursor_offset["ff"]=17
+    alias ff='ls ***/**'
+    cursor_offset["ff"]=2
+    alias ff2='ls **/*~(*.swp|build/*)'
+    cursor_offset["ff2"]=17
 
     # git
     alias ga='git add .; gitcommit'
@@ -458,7 +460,8 @@ prompt_vcs_setup() {
     alias gl='git log --oneline --decorate --graph --no-merges origin/master..HEAD'
     alias gl2='git log --oneline --decorate --graph --all'
     alias gd='git diff'
-    alias gd2='git diff master..your_branch'
+    alias gd2='git diff --word-diff' # word/char level diff
+    alias gd3='git diff master..your_branch'
     alias gdv='git difftool -t vimdiff'
 
     # grep

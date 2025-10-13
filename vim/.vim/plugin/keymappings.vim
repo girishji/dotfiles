@@ -94,12 +94,9 @@ endfunc
 "   remember `] takes you to end of pasted buffer, or use 'gp' to paste
 nnoremap gs `[v`]
 
-" nnoremap <leader>t <cmd>!tree <bar> more<cr>
-" nnoremap <leader>t <cmd>term<cr>
-
 " Tabs
-" NOTE: For tabnext/tabprev use Cmd+top_right/left keys (mapped to
-"   ctrl+pgdn/pgup)
+" NOTE: For tabnext/tabprev use Cmd+top_right/left keys
+"   (mapped to ctrl+pgdn/pgup in qmk)
 nnoremap <leader>tt <cmd>tabnew %<cr>
 nnoremap <leader>tn <cmd>tabnew %<cr>
 nnoremap <leader>te <cmd>tabe %<cr>
@@ -114,6 +111,7 @@ nnoremap <leader>tT <cmd>tab term<CR>
 nnoremap <leader>- <c-w>s
 " vertical split
 nnoremap <leader>\ <c-w>v
+" resize
 nnoremap <silent> <C-Up> :resize +2<cr>
 nnoremap <silent> <C-Down> :resize -2<cr>
 nnoremap <silent> <C-Right> :vertical resize +2<cr>
@@ -129,18 +127,15 @@ vnoremap <leader>a :s/\v(.*)=(.*)/\=printf("%-16s %s", submatch(1), submatch(2))
 
 " Toggle group
 nnoremap <leader>vs :set spell!<CR><Bar>:echo "Spell Check: " .. strpart("OffOn", 3 * &spell, 3)<CR>
-" nnoremap <expr> <leader>vc empty(filter(getwininfo(), 'v:val.quickfix')) ? ':copen<CR>' : ':cclose<CR>'
-" nnoremap <expr> <leader>vl empty(filter(getwininfo(), 'v:val.loclist')) ? ':lopen<CR>' : ':lclose<CR>'
 
 " redirect shell command, use :il /foo to filter lines
-nnoremap <leader>vR :new \| exec "nn <buffer> q :bd!\<cr\>" \| r !
-" redirect vim cmd, use <leader>fi to filter
-nnoremap <leader>vr :enew \| exec "nn <buffer> q :bd!\<cr\>" \| put = execute('')<left><left>
+nnoremap <leader>vr :term<space>
+" redirect vim cmd
+nnoremap <leader>vR :new \| setl bt=nofile bh=wipe noswf \| put = execute('')<left><left>
 
 nnoremap <leader>vm <cmd>messages<cr>
 nnoremap <leader>ve <cmd>e $MYVIMRC<cr>
 nnoremap <leader>vz <cmd>e ~/.zsh.common<cr>
-" nnoremap <leader>vg <cmd>e ~/.gvimrc<cr>
 " open netrw file browser
 nnoremap <leader>vn <cmd>35Lex<cr>
 " tags
@@ -157,14 +152,5 @@ func s:SwitchTab(dir)
 endfunc
 tnoremap <silent> <C-PageUp> <scriptcmd>SwitchTab('up')<cr>
 tnoremap <silent> <C-PageDown> <scriptcmd>SwitchTab('down')<cr>
-
-" [-1] forces empty string as return value of setqflist()
-" Open keymaps in qflist
-" nnoremap <leader>fk :<c-r>=setqflist([], ' ', #{title: 'keymap', items: execute("verbose map")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
-" Open highlight groups in qflist
-" nnoremap <leader>fh :<c-r>=setqflist([], ' ', #{title: 'highlight', items: execute("hi")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
-" nnoremap <leader>fm :<c-r>=setqflist([], ' ', #{title: 'marks', items: execute("marks")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
-" nnoremap <leader>fr :<c-r>=setqflist([], ' ', #{title: 'registers', items: execute("registers")->split("\n")->mapnew('{"text": v:val}')})[-1]<cr>copen<cr>
-" nnoremap <leader>fq <cmd>chistory<cr>
 
 " vim: shiftwidth=2 sts=2 expandtab

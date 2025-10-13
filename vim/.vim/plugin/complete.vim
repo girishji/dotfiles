@@ -11,12 +11,12 @@ set wim=noselect:lastused,full wop=pum
 cnoremap <expr> <up>   wildmenumode() ? "\<c-e>\<up>"   : "\<up>"
 cnoremap <expr> <down> wildmenumode() ? "\<c-e>\<down>" : "\<down>"
 
-autocmd CmdlineEnter [/\?]  set pumheight=8
-autocmd CmdlineLeave [/\?]  set pumheight&
-
 autocmd CmdlineEnter : exec $'set ph={max([10, winheight(0) - 4])}'
 autocmd CmdlineEnter [/\?] set ph=8
 autocmd CmdlineLeave [:/\?] set ph&
+
+autocmd CmdlineEnter [:/\?] set pb=double,margin,shadow
+autocmd CmdlineLeave [:/\?] set pb=shadow
 
 " ----------------------------------------------------------------------
 " Fuzzy find file
@@ -83,21 +83,43 @@ autocmd CmdlineLeavePre :
 
 set autocomplete
 set cpt=.^5,w^5,b^5,u^5
-set cot=popup,longest cpp=highlight:Normal
-" set pb=double,shadow,margin
+set cot=popup,longest
+if exists('&pumborder')
+  set pb=shadow cpp=shadow:on
+endif
 
-" Move cursor to the end of XCxxxX (always) and XCxxxX+ (when only one item is present),
-" where x is preinserted char and C is cursor. Needs "longest" in 'cot'.
-func AcceptPreinsert()
-  let word = getline('.')->strpart(0, col('.') - 1)->matchstr('^\S\+')
+func SmartTab()
+  if &cot !~ 'longest' || !exists("*preinserted") || !preinserted()
+    return pumvisible() ? "\<c-n>" : "\<tab>"
+  endif
+  let line = getline('.')
+  let curcol = col('.')
   let info = complete_info()
-  return exists("*preinserted") && preinserted() && info.selected == -1
-        \ && ((info->has_key('matches') && info.matches->len() > 1 && info.matches[0].word[:-2] != word)
-        \ || (info.items->len() > 1 && info.items[0].word[:-2] != word))
+  " cursor to end of XCxxxX ('x' is preinserted)
+  let items = info->has_key('matches') ? info.matches : info.items
+  let word = line->strpart(0, curcol - 1)->matchstr('\k\+$')
+  if items->len() > 0 && items[0].word[:-2] == word
+    return "\<c-n>"
+  endif
+  " end of XCxxxXXX (when any item matches exactly)
+  let postfix = line->strpart(curcol - 1)->matchstr('^\k\+')
+  if empty(postfix)
+    return "\<c-y>"
+  endif
+  let found = v:false
+  for item in items
+    if item.word == (word . postfix)
+      let found = v:true
+      break
+    endif
+  endfor
+  if found
+    return "\<c-y>\<esc>ea"
+  endif
+  return "\<c-y>"
 endfunc
 
-inoremap <silent><expr> <tab> AcceptPreinsert() ? "\<c-y>" : pumvisible() ? "\<c-n>" : "\<tab>"
-" inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <silent><expr> <tab> SmartTab()
 inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 inoremap <silent><expr> <PageDown> exists("*preinserted") && preinserted() ? "\<c-y>" : "\<PageDown>"
 

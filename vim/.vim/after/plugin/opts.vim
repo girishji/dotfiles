@@ -2,8 +2,10 @@ vim9script
 
 if exists("g:loaded_lsp")
 
-    # autocmd VimEnter * g:LspOptionsSet({ autoComplete: false })
     autocmd VimEnter * g:LspOptionsSet({ autoComplete: false, autoHighlightDiags: false })
+
+    set cpt-=.^5
+    set cpt^=.^5,o^7
 
     if executable('clangd')
         g:LspAddServer([{

@@ -85,41 +85,31 @@ set autocomplete
 set cpt=.^5,w^5,b^5,u^5
 set cot=popup,longest
 if exists('&pumborder')
-  set pb=shadow cpp=shadow:on
+  set pb=shadow
 endif
+set cpp=highlight:Normal
 
 func SmartTab()
-  if &cot !~ 'longest' || !exists("*preinserted") || !preinserted()
+  if &cot !~ 'longest\|preinsert' || !exists("*preinserted") || !preinserted()
     return pumvisible() ? "\<c-n>" : "\<tab>"
   endif
-  let line = getline('.')
-  let curcol = col('.')
   let info = complete_info()
-  " cursor to end of XCxxxX ('x' is preinserted)
   let items = info->has_key('matches') ? info.matches : info.items
-  let word = line->strpart(0, curcol - 1)->matchstr('\k\+$')
-  if items->len() > 0 && items[0].word[:-2] == word
+  " cursor to end of XCxxxX always ('x' is preinserted)
+  if items[0].word[:-2] =~ $'\C{info.preinserted_text}$'
     return "\<c-n>"
   endif
-  " end of XCxxxXXX (when any item matches exactly)
-  let postfix = line->strpart(curcol - 1)->matchstr('^\k\+')
-  if empty(postfix)
-    return "\<c-y>"
-  endif
-  let found = v:false
-  for item in items
-    if item.word == (word . postfix)
-      let found = v:true
-      break
-    endif
-  endfor
-  if found
-    return "\<c-y>\<esc>ea"
+  " end of XCxxxXXX (when first item matches exactly)
+  let postfix = getline('.')->strpart(col('.') - 1)->matchstr('^\k\+')
+  if items[0].word =~ $'\C{postfix}$'
+    let hops = postfix->len() - info.preinserted_text->len()
+    return "\<c-y>" . repeat("\<right>", hops)
   endif
   return "\<c-y>"
 endfunc
 
 inoremap <silent><expr> <tab> SmartTab()
+" inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
 inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 inoremap <silent><expr> <PageDown> exists("*preinserted") && preinserted() ? "\<c-y>" : "\<PageDown>"
 

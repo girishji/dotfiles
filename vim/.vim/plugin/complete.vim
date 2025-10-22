@@ -18,6 +18,8 @@ autocmd CmdlineLeave [:/\?] set ph&
 autocmd CmdlineEnter [:/\?] set pb=double,margin,shadow
 autocmd CmdlineLeave [:/\?] set pb=shadow
 
+hi PmenuBorder ctermfg=10 ctermbg=6
+
 " ----------------------------------------------------------------------
 " Fuzzy find file
 

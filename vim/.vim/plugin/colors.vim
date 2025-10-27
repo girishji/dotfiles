@@ -89,7 +89,7 @@ def SaneColors()
     hi PmenuSbar      ctermbg=6
     hi PmenuSel       ctermfg=8 ctermbg=2 cterm=bold
     hi PmenuThumb     ctermbg=7
-    hi PmenuShadow    ctermbg=8 ctermfg=10
+    hi PmenuShadow    ctermbg=8 ctermfg=7
 
     hi Search ctermfg=0 ctermbg=3
     hi SignColumn ctermfg=None ctermbg=0

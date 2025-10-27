@@ -97,11 +97,11 @@ func SmartTab()
   endif
   let info = complete_info()
   let items = info->has_key('matches') ? info.matches : info.items
-  " cursor to end of XCxxxX always ('x' is preinserted)
+  " send cursor to the end of XCxxxX (only one char after preinserted text) always ('x' is preinserted)
   if items[0].word[:-2] =~ $'\C{info.preinserted_text}$'
     return "\<c-n>"
   endif
-  " end of XCxxxXXX (when first item matches exactly)
+  " send cursor to the end of XCxxxXXX (when first item matches exactly)
   let postfix = getline('.')->strpart(col('.') - 1)->matchstr('^\k\+')
   if items[0].word =~ $'\C{postfix}$'
     let hops = postfix->len() - info.preinserted_text->len()
@@ -111,7 +111,7 @@ func SmartTab()
 endfunc
 
 inoremap <silent><expr> <tab> SmartTab()
-" inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
+" inoremap <silent><expr> <tab> preinserted() ? "\<c-y>" : pumvisible() ? "\<c-n>" : "\<tab>"
 inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 inoremap <silent><expr> <PageDown> exists("*preinserted") && preinserted() ? "\<c-y>" : "\<PageDown>"
 

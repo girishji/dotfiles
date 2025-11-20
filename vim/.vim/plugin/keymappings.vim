@@ -125,9 +125,8 @@ nnoremap <c-w>H <cmd>hide<cr>
 vnoremap <leader>A :!column -t<cr>| " align columns
 vnoremap <leader>a :s/\v(.*)=(.*)/\=printf("%-16s %s", submatch(1), submatch(2))
 
-" Toggle group
+" Toggle spellcheck
 nnoremap <leader>vs :set spell!<CR><Bar>:echo "Spell Check: " .. strpart("OffOn", 3 * &spell, 3)<CR>
-
 " redirect shell command, use :il /foo to filter lines
 nnoremap <leader>vr :term<space>
 " redirect vim cmd
@@ -140,6 +139,12 @@ nnoremap <leader>vz <cmd>e ~/.zsh.common<cr>
 nnoremap <leader>vn <cmd>35Lex<cr>
 " tags
 nnoremap <leader>vt <cmd>!ctags -R<cr>
+
+func! s:CleanupPastedText() abort
+  exec "normal! `[v`]gw"
+  TrailingWhitespaceStrip
+endfunc
+nnoremap <silent> <leader>vc <cmd>call <sid>CleanupPastedText()<cr>
 
 " Make <C-PageUp/Down> switch tabs when tab has a terminal open
 func s:SwitchTab(dir)

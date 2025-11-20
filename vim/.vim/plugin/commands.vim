@@ -50,14 +50,14 @@ cabbr <expr> hf <SID>CanExpandHF() ? 'HelpFile' : 'hf'
 
 # TrailingWhitespaceStrip
 command TrailingWhitespaceStrip TrailingWhitespaceStrip()
-command SpaceTrailingStrip TrailingWhitespaceStrip()
+command StripWhitespace TrailingWhitespaceStrip()
 def TrailingWhitespaceStrip()
   if !&binary && &filetype != 'diff'
-    :normal mz
-    :normal Hmy
+    :normal! mz
+    :normal! Hmy
     :%s/\s\+$//e
-    :normal 'yz<CR>
-    :normal `z
+    :normal! 'yz
+    :normal! `z
   endif
 enddef
 

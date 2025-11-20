@@ -45,11 +45,11 @@ cabbr <expr> lv CmdAbbr('lv', $'lv // %<left><left><left><c-r>=Eatchar()<cr>')
 cabbr gr grep
 
 " Modeline
-iabbr vim_modeline_help vim:tw=78:ts=4:ft=help:norl:ma:noro:ai:lcs=tab\:\ \ ,trail\:~:<c-r>=Eatchar()<cr>
-iabbr vim_modeline_txt vim:ft=txt:<c-r>=Eatchar()<cr>
-iabbr vim_modeline_markdown vim:tw=80:ts=4:ft=markdown:ai:<c-r>=Eatchar()<cr>
-iabbr vim_modeline_vim " vim: shiftwidth=2 sts=2 expandtab<c-r>=Eatchar()<cr>
-iabbr vim_modeline_vim9 " vim: ts=4 shiftwidth=4 sts=4 expandtab<c-r>=Eatchar()<cr>
+iabbr vim_help_modeline vim:tw=78:ts=4:ft=help:norl:ma:noro:ai:lcs=tab\:\ \ ,trail\:~:<c-r>=Eatchar()<cr>
+iabbr vim_txt_modeline vim:ft=txt:<c-r>=Eatchar()<cr>
+iabbr vim_markdown_modeline vim:tw=80:ts=4:ft=markdown:ai:<c-r>=Eatchar()<cr>
+iabbr vim_vim_modeline " vim: shiftwidth=2 sts=2 expandtab<c-r>=Eatchar()<cr>
+iabbr vim_vim9_modeline " vim: ts=4 shiftwidth=4 sts=4 expandtab<c-r>=Eatchar()<cr>
 
 " dashes to match previous line length (there are also key maps in keymappings.vim)
 iab  --> <esc>d^a<c-r>=repeat('-', getline(line('.') - 1)->trim()->len())<cr><c-r>=Eatchar()<cr>

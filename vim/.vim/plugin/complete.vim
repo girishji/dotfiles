@@ -85,33 +85,35 @@ autocmd CmdlineLeavePre :
 
 set autocomplete
 set cpt=.^5,w^5,b^5,u^5
-set cot=popup,longest
+" set cot=popup,longest
+set cot=popup
 if exists('&pumborder')
   set pb=shadow
 endif
 set cpp=highlight:Normal
 
-func SmartTab()
-  if &cot !~ 'longest\|preinsert' || !exists("*preinserted") || !preinserted()
-    return pumvisible() ? "\<c-n>" : "\<tab>"
-  endif
-  let info = complete_info()
-  let items = info->has_key('matches') ? info.matches : info.items
-  " send cursor to the end of XCxxxX (only one char after preinserted text) always ('x' is preinserted)
-  if items[0].word[:-2] =~ $'\C{info.preinserted_text}$'
-    return "\<c-n>"
-  endif
-  " send cursor to the end of XCxxxXXX (when first item matches exactly)
-  let postfix = getline('.')->strpart(col('.') - 1)->matchstr('^\k\+')
-  if items[0].word =~ $'\C{postfix}$'
-    let hops = postfix->len() - info.preinserted_text->len()
-    return "\<c-y>" . repeat("\<right>", hops)
-  endif
-  return "\<c-y>"
-endfunc
+" func SmartTab()
+"   if &cot !~ 'longest\|preinsert' || !exists("*preinserted") || !preinserted()
+"     return pumvisible() ? "\<c-n>" : "\<tab>"
+"   endif
+"   let info = complete_info()
+"   let items = info->has_key('matches') ? info.matches : info.items
+"   " send cursor to the end of XCxxxX (only one char after preinserted text) always ('x' is preinserted)
+"   if items[0].word[:-2] =~ $'\C{info.preinserted_text}$'
+"     return "\<c-n>"
+"   endif
+"   " send cursor to the end of XCxxxXXX (when first item matches exactly)
+"   let postfix = getline('.')->strpart(col('.') - 1)->matchstr('^\k\+')
+"   if items[0].word =~ $'\C{postfix}$'
+"     let hops = postfix->len() - info.preinserted_text->len()
+"     return "\<c-y>" . repeat("\<right>", hops)
+"   endif
+"   return "\<c-y>"
+" endfunc
 
-inoremap <silent><expr> <tab> SmartTab()
+" inoremap <silent><expr> <tab> SmartTab()
 " inoremap <silent><expr> <tab> preinserted() ? "\<c-y>" : pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <silent><expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
 inoremap <silent><expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 inoremap <silent><expr> <PageDown> exists("*preinserted") && preinserted() ? "\<c-y>" : "\<PageDown>"
 
@@ -142,6 +144,7 @@ def! g:AbbrevCompletor(findstart: number, base: string): any
     if m->len() > 2 && m[1]->stridx(base) == 0
       items->add({ word: m[1], menu: 'abbr', info: m[2], dup: 1 })
     endif
+    items->sort()
   endfor
   return items->empty() ? v:none : items
 enddef

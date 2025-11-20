@@ -67,6 +67,7 @@
         ~/bin(N)
         ~/.local/bin(N)
         $HOMEBREW_PREFIX/opt/llvm/bin${PATH+:$PATH} # clangd and llvm on M1 Mac with brew
+	/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin(N)
     )
 
     # Functions in $fpath are autoloaded.
@@ -175,3 +176,6 @@ if [ -f '/Users/gp/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/gp
 
 # The next line enables shell command completion for gcloud.
 # if [ -f '/Users/gp/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/gp/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+
+# Added by Antigravity
+export PATH="/Users/gp/.antigravity/antigravity/bin:$PATH"

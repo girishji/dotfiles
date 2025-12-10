@@ -182,34 +182,25 @@
     # 2) You can run 'zstyle' in your shell to display the styles set in your current
     # session as well as their patterns.
 
-    # Even though zsh-autocomplete plugin initializes the completion system (no
-    # need for 'compinit'), call it explicitly so that cache file can be located
-    # outside ~/.zsh
+    # Initialize the completion system
+    autoload -Uz compinit
+    compinit
 
-    ZCACHEFILE=${XDG_DATA_HOME:=~/.local/share}/zsh/zcompdump
-    # Just in case: If the parent directory doesn't exist, create it.
-    [[ -d $ZCACHEFILE:h ]] ||
-        mkdir -p $ZCACHEFILE:h
+    # Define the completer chain (order matters)
+    zstyle ':completion:*' completer _expand _complete _ignored
 
-    autoload -U compinit
-    compinit -d $ZCACHEFILE
+    # Enable Case-Insensitive Matching
+    # Matches lowercase to uppercase and vice versa.
+    zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
-    # zsh by default does not include aliases in autocompletion. Call
-    # _expand_alias function through completion mechanism. It needs to appear
-    # before _complete. This will cause TAB to expand alias.
-    # defaults: https://github.com/marlonrichert/zsh-autocomplete/blob/main/Functions/Init/.autocomplete__config
-    # see https://thevaluable.dev/zsh-completion-guide-examples/
-    # 'completer': this is the zstyle you want to configure
-    # _foo, _bar are actual completors. The order matter: the completion system will
-    # try each of these completer one after the other. The completion stop when
-    # some matches are found or when the completer stop it by itself.
-    # builtin zstyle ':completion:*' completer \
-    #     _expand _expand_alias _complete _correct _approximate _complete:-fuzzy _prefix _ignored
-    builtin zstyle ':completion:*' completer \
-        _expand _complete _correct _approximate _complete:-fuzzy _prefix _ignored
+    # Configuration to List Matches without Auto-Inserting
+    # 'select=2': Only start menu selection if there are at least 2 matches,
+    # allowing you to see the list first.
+    zstyle ':completion:*' menu select=2
 
-    # This line will complete dotfiles.
-    _comp_options+=(globdots) # With hidden files
+    # Make lists prettier
+    zstyle ':completion:*' group-name ''
+    zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 }
 
 ##
@@ -363,9 +354,9 @@ prompt_vcs_setup() {
 
     typeset -Ag cursor_offset
 
-    if [ -f "$HOME/git/vim/dist/bin/vim" ]; then
-        alias vim=$HOME/git/vim/dist/bin/vim
-    fi
+    # if [ -f "$HOME/git/vim/dist/bin/vim" ]; then
+    #     alias vim=$HOME/git/vim/dist/bin/vim
+    # fi
 
     # Type '-' to return to your previous dir.
     alias -- -='cd -'
@@ -398,6 +389,7 @@ prompt_vcs_setup() {
     # only at the beginning of line.
     alias -g H='| head'
     alias -g L='| less -R'
+    alias -g A="| awk '{print \$1}'"  # prints the first column only
     alias -g SED=$'| sed \'/pat/ s///g\''
     cursor_offset["SED"]=12
     alias -g X=$'| xargs -I {} echo {}'
@@ -534,7 +526,7 @@ prompt_vcs_setup() {
     cursor_offset["gg2"]=2
 
     alias -g gr="grep --color -iEI"
-    # alias -g G='| grep --color -iEI'
+    alias -g G='| grep --color -iEI'
 
     # alternative:
     #
@@ -578,6 +570,7 @@ prompt_vcs_setup() {
     alias less='command less -R' # -R for interpreting Ansi color codes
     alias targ='tar -c --exclude-from=.gitignore -vzf'
     alias t='python3 ~/git/t/t.py --task-dir ~/.local/share/todo --list tasks'
+    alias tt='tree'
     alias formatjson='python3 -m json.tool'
     alias jsonformat='python3 -m json.tool'
 

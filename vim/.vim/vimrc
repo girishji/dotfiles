@@ -1,6 +1,7 @@
 " 'mapleader' should be in the beginning
 let g:mapleader = "\<Space>"
-let g:maplocalleader = "\<Space>"  "  meant for certain file types
+let g:maplocalleader = "\<Space>"
+" let g:maplocalleader = "\<CR>"
 map <BS> <Leader>
 
 " To make undercurl work in iterm2 (:h E436, :h t_Cs)

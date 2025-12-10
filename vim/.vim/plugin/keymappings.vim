@@ -2,9 +2,12 @@
 
 " nnoremap <leader>w <cmd>w<cr>  " XXX: maybe causing the ruler line getting printed twice problem
 nnoremap <leader>w :w<cr>
+nnoremap <localleader>w :w<cr>
 " nnoremap <leader>w <cmd>update<cr> " BufWrite (not posted) is needed by plugins
 nnoremap <leader>q <cmd>qa<cr>
+nnoremap <localleader>q <cmd>qa<cr>
 nnoremap <leader>Q <cmd>qa!<cr>
+nnoremap <localleader>Q <cmd>qa!<cr>
 
 " <c-l> deletes for beginning of line in insert mode
 " (<c-u> will delete to first indented col)

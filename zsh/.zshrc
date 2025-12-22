@@ -145,14 +145,14 @@
     else
         alias ls='ls -FG' # aliases the command /usr/bin/ls
     fi
-    alias x86="$env /usr/bin/arch -x86_64 /bin/zsh ---login"
-    alias arm="$env /usr/bin/arch -arm64 /bin/zsh ---login"
-    alias ibooks='cd /Users/gp/Library/Mobile Documents/iCloud~com~apple~iBooks/Documents'
-    alias obsidian='cd /Users/gp/Library/Mobile Documents/iCloud~md~obsidian/Documents'
+    # alias x86="$env /usr/bin/arch -x86_64 /bin/zsh ---login"
+    # alias arm="$env /usr/bin/arch -arm64 /bin/zsh ---login"
+    # alias ibooks='cd /Users/gp/Library/Mobile Documents/iCloud~com~apple~iBooks/Documents'
+    # alias obsidian='cd /Users/gp/Library/Mobile Documents/iCloud~md~obsidian/Documents'
     alias op='open'
     # -fexperimental-library is needed for std::ranges
-    alias cr='clang-repl --Xcc=-include"$HOME/.clang-repl-incl.h" --Xcc=-std=c++23 --Xcc=-stdlib=libc++ --Xcc=-fexperimental-library'
-    alias clang_repl='clang-repl --Xcc=-include"$HOME/.clang-repl-incl.h" --Xcc=-std=c++23 --Xcc=-stdlib=libc++ --Xcc=-fexperimental-library'
+    # alias cr='clang-repl --Xcc=-include"$HOME/.clang-repl-incl.h" --Xcc=-std=c++23 --Xcc=-stdlib=libc++ --Xcc=-fexperimental-library'
+    # alias clang_repl='clang-repl --Xcc=-include"$HOME/.clang-repl-incl.h" --Xcc=-std=c++23 --Xcc=-stdlib=libc++ --Xcc=-fexperimental-library'
 
     # alias gsh='gcloud compute ssh --zone "us-central1-c" "vimfix" --project "sandbox-403316" --ssh-flag="-ServerAliveInterval=30"'
     # alias gscp='gcloud compute scp --zone "us-central1-c" --project "sandbox-403316" from vimfix:~/to'

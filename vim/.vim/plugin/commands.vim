@@ -1,81 +1,139 @@
-vim9script
+" ------------------------------------------------------------
+" Find highlight group under cursor
+" ------------------------------------------------------------
 
-# Find highlight group under cursor
-command HighlightGroupUnderCursor {
-  if exists("*synstack")
-    for grp in synstack(line('.'), col('.'))->mapnew('synIDattr(v:val, "name")')
+command! HighlightGroupUnderCursor call s:HighlightGroupUnderCursor()
+
+function! s:HighlightGroupUnderCursor() abort
+  if exists('*synstack')
+    for id in synstack(line('.'), col('.'))
+      let grp = synIDattr(id, 'name')
       echo 'Group:' grp
-      var g = grp
-      while true
-        var linksto = $'hi {g}'->execute()->matchstr('links to \zs\S\+')
-        if linksto == null_string
-          exec 'verbose hi' g
+      let g = grp
+      while 1
+        let out = execute('hi ' . g)
+        let linksto = matchstr(out, 'links to \zs\S\+')
+        if empty(linksto)
+          execute 'verbose hi ' . g
           break
         else
           echo '->' linksto
-          g = linksto
+          let g = linksto
         endif
       endwhile
     endfor
   endif
-}
+endfunction
 
-# Open files in ~/help folder using 'hf' abbref (:hf ...)
-command -nargs=1 -complete=custom,Completor HelpFile OpenHelpFile(<f-args>)
-def Completor(prefix: string, line: string, cursorpos: number): string
-  var dir = '~/help'->expand()
-  return dir->readdir((v) => !$'{dir}/{v}'->isdirectory() && v !~ '^\.')->join("\n")
-enddef
-def OpenHelpFile(prefix: string)
-  var fname = $'~/help/{prefix}'
-  if fname->expand()->filereadable()
-    :exec $'edit {fname}'
-  else  # if only item is showing in the popup menu, open it.
-    var paths = fname->getcompletion('file')
-    if paths->len() == 1
-      :exec $'edit {paths[0]}'
+" ------------------------------------------------------------
+" Open files in ~/help folder using :hf
+" ------------------------------------------------------------
+
+command! -nargs=1 -complete=custom,s:HelpCompletor HelpFile call s:OpenHelpFile(<f-args>)
+
+function! s:HelpCompletor(A, L, P) abort
+  let dir = expand('~/help')
+  if !isdirectory(dir)
+    return ''
+  endif
+
+  let files = []
+  for f in readdir(dir)
+    if f !~# '^\.' && !isdirectory(dir . '/' . f)
+      call add(files, f)
+    endif
+  endfor
+  return join(files, "\n")
+endfunction
+
+
+function! s:OpenHelpFile(prefix) abort
+  let fname = expand('~/help/' . a:prefix)
+
+  if filereadable(fname)
+    execute 'edit ' . fname
+  else
+    let paths = getcompletion(fname, 'file')
+    if len(paths) == 1
+      execute 'edit ' . paths[0]
     endif
   endif
-enddef
-def CanExpandHF(): bool
-  if getcmdtype() == ':'
-    var context = getcmdline()->strpart(0, getcmdpos() - 1)
-    if context == 'hf'
-      return true
+endfunction
+
+
+function! s:CanExpandHF() abort
+  if getcmdtype() ==# ':'
+    let context = strpart(getcmdline(), 0, getcmdpos() - 1)
+    if context ==# 'hf'
+      return 1
     endif
   endif
-  return false
-enddef
-cabbr <expr> hf <SID>CanExpandHF() ? 'HelpFile' : 'hf'
+  return 0
+endfunction
 
-# TrailingWhitespaceStrip
-command TrailingWhitespaceStrip TrailingWhitespaceStrip()
-command StripWhitespace TrailingWhitespaceStrip()
-def TrailingWhitespaceStrip()
-  if !&binary && &filetype != 'diff'
-    :normal! mz
-    :normal! Hmy
-    :%s/\s\+$//e
-    :normal! 'yz
-    :normal! `z
+cabbrev <expr> hf <SID>CanExpandHF() ? 'HelpFile' : 'hf'
+
+
+" ------------------------------------------------------------
+" TrailingWhitespaceStrip
+" ------------------------------------------------------------
+
+command! TrailingWhitespaceStrip call s:TrailingWhitespaceStrip()
+command! StripWhitespace         call s:TrailingWhitespaceStrip()
+
+function! s:TrailingWhitespaceStrip() abort
+  if !&binary && &filetype !=# 'diff'
+    normal! mz
+    normal! Hmy
+    %s/\s\+$//e
+    normal! 'yz
+    normal! `z
   endif
-enddef
+endfunction
 
-# :<range>Align [char]
-command! -range -nargs=* Align Align(<line1>, <line2>, <f-args>)
-def Align(line1: number, line2: number, delimit = null_string)
-  var lines = getline(line1, line2)->mapnew((_, v) => v->split((delimit ?? '\s') .. '\+'))
-  var maxwords = max(lines->mapnew((_, v) => v->len()))
-  var maxcount = range(maxwords)->mapnew((_, i) =>
-    lines->reduce((mc, line) => max([mc, i < line->len() ? line[i]->len() : 0]), 0))
-  var indent = getline(line1, line2)->mapnew((_, v) => v->matchstr('\s*\ze\S*'))
-  foreach(lines, (lnum, lwords) => {
-    var line = range(max([0, lwords->len() - 1]))->reduce((s, j) =>
-      $'{s}{lwords[j]}{repeat(" ", maxcount[j] - lwords[j]->len() + 1)}' ..
-      (delimit != '' ? $'{delimit} ' : ''), '')
-    line ..= lwords->empty() ? '' : lwords[-1]
-    $'{indent[lnum]}{line}'->setline(line1 + lnum)
-  })
-enddef
 
-# vim: shiftwidth=2 sts=2 expandtab
+" ------------------------------------------------------------
+" :<range>Align [char]
+" ------------------------------------------------------------
+
+command! -range -nargs=* Align call s:Align(<line1>, <line2>, <f-args>)
+
+function! s:Align(line1, line2, ...) abort
+  let delimit = a:0 ? a:1 : ''
+  let sep = empty(delimit) ? '\s\+' : escape(delimit, '\') . '\+'
+
+  let raw = getline(a:line1, a:line2)
+  let words = map(copy(raw), 'split(v:val, sep)')
+  let maxwords = max(map(copy(words), 'len(v:val)'))
+
+  let maxcount = []
+  for i in range(maxwords)
+    let m = 0
+    for line in words
+      if i < len(line)
+        let m = max([m, len(line[i])])
+      endif
+    endfor
+    call add(maxcount, m)
+  endfor
+
+  let indent = map(copy(raw), 'matchstr(v:val, ''\s*\ze\S'')')
+
+  for lnum in range(len(words))
+    let lwords = words[lnum]
+    let line = ''
+    for j in range(max([0, len(lwords) - 1]))
+      let pad = repeat(' ', maxcount[j] - len(lwords[j]) + 1)
+      let line .= lwords[j] . pad
+      if !empty(delimit)
+        let line .= delimit . ' '
+      endif
+    endfor
+    if !empty(lwords)
+      let line .= lwords[-1]
+    endif
+    call setline(a:line1 + lnum, indent[lnum] . line)
+  endfor
+endfunction
+
+" vim: shiftwidth=2 sts=2 expandtab

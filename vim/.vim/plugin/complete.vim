@@ -15,8 +15,10 @@ autocmd CmdlineEnter : exec $'set ph={max([10, winheight(0) - 4])}'
 autocmd CmdlineEnter [/\?] set ph=8
 autocmd CmdlineLeave [:/\?] set ph&
 
-autocmd CmdlineEnter [:/\?] set pb=double,margin,shadow
-autocmd CmdlineLeave [:/\?] set pb=shadow
+if !has('nvim')
+  autocmd CmdlineEnter [:/\?] set pb=double,margin,shadow
+  autocmd CmdlineLeave [:/\?] set pb=shadow
+endif
 
 hi PmenuBorder ctermfg=10 ctermbg=6
 
@@ -87,10 +89,12 @@ set autocomplete
 set cpt=.^5,w^5,b^5,u^5
 " set cot=popup,longest
 set cot=popup
-if exists('&pumborder')
-  set pb=shadow
+if !has('nvim')
+  if exists('&pumborder')
+    set pb=shadow
+  endif
+  set cpp=highlight:Normal
 endif
-set cpp=highlight:Normal
 
 " func SmartTab()
 "   if &cot !~ 'longest\|preinsert' || !exists("*preinserted") || !preinserted()
@@ -125,28 +129,65 @@ hi link PreInsert LineNr
 " ----------------------------------------------------------------------
 " Abbrev Completor
 
+" Add to complete functions
 set cpt+=FAbbrevCompletor
-def! g:AbbrevCompletor(findstart: number, base: string): any
-  if findstart > 0
-    var prefix = getline('.')->strpart(0, col('.') - 1)->matchstr('\S\+$')
-    if prefix->empty()
+
+" Define the completion function
+function! AbbrevCompletor(findstart, base) abort
+  if a:findstart
+    " Get the prefix before the cursor
+    let prefix = matchstr(getline('.'), '\S\+$')
+    if empty(prefix)
       return -2
     endif
-    return col('.') - prefix->len() - 1
+    return col('.') - len(prefix) - 1
   endif
-  var lines = execute('ia', 'silent!')
-  if lines =~? gettext('No abbreviation found')
-    return v:none  # Suppresses warning message
+
+  " Get all insert-mode abbreviations
+  let lines = execute('ia', 'silent!')
+  if lines =~? 'No abbreviation found'
+    return v:none
   endif
-  var items = []
-  for line in lines->split("\n")
-    var m = line->matchlist('\v^i\s+\zs(\S+)\s+(.*)$')
-    if m->len() > 2 && m[1]->stridx(base) == 0
-      items->add({ word: m[1], menu: 'abbr', info: m[2], dup: 1 })
+
+  let items = []
+  for line in split(lines, "\n")
+    let m = matchlist(line, '\v^i\s+\zs(\S+)\s+(.*)$')
+    if len(m) > 2 && stridx(m[1], a:base) == 0
+      call add(items, {'word': m[1], 'menu': 'abbr', 'info': m[2], 'dup': 1})
     endif
-    items->sort()
   endfor
-  return items->empty() ? v:none : items
-enddef
+
+  " Sort items by word
+  if !empty(items)
+    call sort(items, {a,b->a.word < b.word ? -1 : a.word > b.word ? 1 : 0})
+    return items
+  endif
+
+  return v:none
+endfunction
+
+" set cpt+=FAbbrevCompletor
+" def! g:AbbrevCompletor(findstart: number, base: string): any
+"   if findstart > 0
+"     var prefix = getline('.')->strpart(0, col('.') - 1)->matchstr('\S\+$')
+"     if prefix->empty()
+"       return -2
+"     endif
+"     return col('.') - prefix->len() - 1
+"   endif
+"   var lines = execute('ia', 'silent!')
+"   if lines =~? gettext('No abbreviation found')
+"     return v:none  # Suppresses warning message
+"   endif
+"   var items = []
+"   for line in lines->split("\n")
+"     var m = line->matchlist('\v^i\s+\zs(\S+)\s+(.*)$')
+"     if m->len() > 2 && m[1]->stridx(base) == 0
+"       items->add({ word: m[1], menu: 'abbr', info: m[2], dup: 1 })
+"     endif
+"     items->sort()
+"   endfor
+"   return items->empty() ? v:none : items
+" enddef
 
 " vim: shiftwidth=2 sts=2 expandtab

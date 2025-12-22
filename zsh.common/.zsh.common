@@ -358,6 +358,8 @@ prompt_vcs_setup() {
     #     alias vim=$HOME/git/vim/dist/bin/vim
     # fi
 
+    alias vim=nvim
+
     # Type '-' to return to your previous dir.
     alias -- -='cd -'
     # '--' signifies the end of options. Otherwise, '-=...' would be interpreted as

@@ -2,7 +2,9 @@
 " Ruler
 
 set laststatus=0 ruler
-set highlight-=S:StatusLineNC highlight+=Si
+if !has('nvim')
+  set highlight-=S:StatusLineNC highlight+=Si
+endif
 augroup ruler_toggle
   autocmd!
   autocmd WinEnter,BufEnter * setl rulerformat=%65(%=𜰟\ %-t%{&modified?'[+]':''}\ 𜰟\ %{bufexists(bufnr('#'))&&(bufname(bufnr('#'))!='')&&bufnr('#')!=bufnr('%')?'('.(fnamemodify(bufname(bufnr('#')),':t').(getbufvar(bufnr('#'),'&modified')?'[+]':'').'#)\ '):''}%y%{&ft==''?'':'\ '}%l,%c%V\ %P%)

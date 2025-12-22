@@ -1,31 +1,40 @@
 " 'mapleader' should be in the beginning
-let g:mapleader = "\<Space>"
-let g:maplocalleader = "\<Space>"
-" let g:maplocalleader = "\<CR>"
+if has('nvim')
+  let mapleader = " "
+  let maplocalleader = " "  " Optional: same for localleader
+  " Make Space do nothing in Normal and Visual modes
+  nnoremap <Space> <Nop>
+  vnoremap <Space> <Nop>
+else
+  let g:mapleader = "\<Space>"
+  let g:maplocalleader = "\<Space>"
+endif
 map <BS> <Leader>
 
-" To make undercurl work in iterm2 (:h E436, :h t_Cs)
-let &t_Cs = "\e[4:3m"
-let &t_Ce = "\e[4:0m"
+if !has('nvim') " Vim specific
+  " To make undercurl work in iterm2 (:h E436, :h t_Cs)
+  let &t_Cs = "\e[4:3m"
+  let &t_Ce = "\e[4:0m"
 
-" Cursor shape changes to show which mode you are in (:h t_SI)
-" 6=beam, 4=underline, 2=block
-let &t_SI = "\e[6 q" " SI = INSERT mode
-let &t_SR = "\e[4 q" " SR = REPLACE mode
-let &t_EI = "\e[2 q" " EI = NORMAL mode (ALL ELSE)
-" Reset the cursor on start. After suspend-resume, cursor changes to beam even
-" in normal mode. This will prevent that.
-autocmd VimEnter,VimResume * silent execute '!echo -ne "\e[2 q"' | redraw!
+  " Cursor shape changes to show which mode you are in (:h t_SI)
+  " 6=beam, 4=underline, 2=block
+  let &t_SI = "\e[6 q" " SI = INSERT mode
+  let &t_SR = "\e[4 q" " SR = REPLACE mode
+  let &t_EI = "\e[2 q" " EI = NORMAL mode (ALL ELSE)
+  " Reset the cursor on start. After suspend-resume, cursor changes to beam even
+  " in normal mode. This will prevent that.
+  autocmd VimEnter,VimResume * silent execute '!echo -ne "\e[2 q"' | redraw!
+
+  " Defaults
+  source $VIMRUNTIME/defaults.vim
+  " disable message from 'defaults.vim' when entering cmdwin
+  autocmd! vimHints
+
+  syntax on
+endif
 
 " Format usin 'gq'. :h fo-table
 set formatoptions=qjln
-
-" Defaults
-source $VIMRUNTIME/defaults.vim
-" disable message from 'defaults.vim' when entering cmdwin
-autocmd! vimHints
-
-syntax on
 
 " 'listchars' is not local to buffer, only local to window
 autocmd FileType * if &ft =~ '\v(help|markdown)' | setlocal listchars=tab:\ \ ,trail:\  | else | setlocal listchars=tab:→.,trail:~ | endif

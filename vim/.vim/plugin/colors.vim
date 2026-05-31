@@ -90,7 +90,8 @@ function! SaneColors() abort
 endfunction
 
 " Following should occur after setting colorscheme.
-highlight! TrailingWhitespace ctermbg=196
-match TrailingWhitespace /\s\+\%#\@<!$/
+" XXX disasbling since it is distracting in copy-pasted text files
+" highlight! TrailingWhitespace ctermbg=196
+" match TrailingWhitespace /\s\+\%#\@<!$/
 
 " vim: ts=4 shiftwidth=4 sts=4 expandtab

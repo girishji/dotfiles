@@ -16,9 +16,9 @@ autocmd CmdlineEnter [/\?] set ph=8
 autocmd CmdlineLeave [:/\?] set ph&
 
 if !has('nvim')
-  autocmd CmdlineEnter [:/\?] set pb=double,margin,shadow
-  autocmd CmdlineLeave [:/\?] set pb=shadow
+  autocmd CmdlineEnter [:/\?] set pumborder=double,margin,shadow
 endif
+autocmd CmdlineLeave [:/\?] set pumborder=shadow
 
 hi PmenuBorder ctermfg=10 ctermbg=6
 
@@ -86,13 +86,13 @@ autocmd CmdlineLeavePre :
 "   - Omnifunc (ccomplete#Complete) for C lang needs tags file (:h ft-c-omni)
 
 set autocomplete
-set cpt=.^5,w^5,b^5,u^5
+set cpt=.^10,w^5,b^5,u^5
 " set cot=popup,longest
 set cot=popup
+if exists('&pumborder') && !has('nvim')
+  set pumborder=shadow
+endif
 if !has('nvim')
-  if exists('&pumborder')
-    set pb=shadow
-  endif
   set cpp=highlight:Normal
 endif
 
@@ -146,7 +146,7 @@ function! AbbrevCompletor(findstart, base) abort
   " Get all insert-mode abbreviations
   let lines = execute('ia', 'silent!')
   if lines =~? 'No abbreviation found'
-    return v:none
+    return has('nvim') ? [] : v:none
   endif
 
   let items = []
@@ -163,7 +163,7 @@ function! AbbrevCompletor(findstart, base) abort
     return items
   endif
 
-  return v:none
+  return has('nvim') ? [] : v:none
 endfunction
 
 " set cpt+=FAbbrevCompletor

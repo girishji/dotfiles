@@ -69,66 +69,72 @@ set spellsuggest=best,10  " set maximum number of suggestions listed top 10 item
 set foldmethod=indent
 " set foldnestmax=1
 set nofoldenable  " do not do folding when you open file
-" set dictionary+=/usr/share/dict/words
 set whichwrap+=<,>,h,l  " make arrows and h, l, push cursor to next line
 set virtualedit=block  " allows selection of rectangular text in visual block mode
 set grepprg=grep\ -REIins\ --exclude=tags\ --exclude=\"*.swp\"\ --exclude-dir=.git\ $*
-" set pumborder=ascii
-" set pumborder=shadow
-" set pumborder=custom:=\|=\|::::
 
 augroup CustomAutocmds | autocmd!
-    " Dismiss the info preview window (^C to keep, so you can interact)
-    autocmd CompleteDone * if getcmdwintype() == '' | pclose | endif
+  " Dismiss the info preview window (^C to keep, so you can interact)
+  autocmd CompleteDone * if getcmdwintype() == '' | pclose | endif
 
-    " Macro key mapped to Q for help file
-    autocmd FileType help nnoremap <buffer> Q q
+  " Macro key mapped to Q for help file
+  autocmd FileType help nnoremap <buffer> Q q
 
-    " Windows to close
-    autocmd FileType help,vim-plug,qf nnoremap <buffer><silent> q :close<CR>
+  " Windows to close
+  autocmd FileType help,vim-plug,qf nnoremap <buffer><silent> q :close<CR>
 
-    " netrw: 'q' is already mapped to compound key (ex. 'qf' gets file info).
-    autocmd FileType netrw nnoremap <buffer><silent> qq :close<CR>
+  " netrw: 'q' is already mapped to compound key (ex. 'qf' gets file info).
+  autocmd FileType netrw nnoremap <buffer><silent> qq :close<CR>
 
-    " Tell vim to automatically open the quickfix and location window.
-    " :grep, :vimgrep and so on are called quickfix commands, they trigger
-    " QuickFixCmdPost.
-    " NOTE: Exclude cadexppr also ([^c]*), otherwise g//caddexpr will open
-    " quickfix after the first match.
-    autocmd QuickFixCmdPost [^lc]* cwindow
-    autocmd QuickFixCmdPost l*    lwindow
+  " Tell vim to automatically open the quickfix and location window.
+  " :grep, :vimgrep and so on are called quickfix commands, they trigger
+  " QuickFixCmdPost.
+  " NOTE: Exclude cadexppr also ([^c]*), otherwise g//caddexpr will open
+  " quickfix after the first match.
+  autocmd QuickFixCmdPost [^lc]* cwindow
+  autocmd QuickFixCmdPost l*    lwindow
 
-    " Update tags in help file
-    autocmd BufWritePost **/doc/*.txt helptags <afile>:p:h
+  " Update tags in help file
+  autocmd BufWritePost **/doc/*.txt helptags <afile>:p:h
 
-    " Make help files writeable
-    autocmd BufEnter **/doc/*.txt set modifiable noreadonly
+  " Make help files writeable
+  autocmd BufEnter **/doc/*.txt set modifiable noreadonly
 
-    " spell : When a word is CamelCased, assume "Cased" is a separate word
-    autocmd FileType help,markdown set spelloptions=camel
+  " spell : When a word is CamelCased, assume "Cased" is a separate word
+  autocmd FileType help,markdown set spelloptions=camel
 
-    " Remove trailing whitespaces (not good for vim help files)
-    " autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
+  " Remove trailing whitespaces (not appropriate for vim help files)
+  " autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
 
-    " Set dictionary from ~/.vim/dicts
-    autocmd FileType *
-          \ let s:dictfile = expand('~/.vim') . '/dicts/' . &filetype |
-          \ if filereadable(s:dictfile) |
-          \   let &l:dictionary = s:dictfile |
-          \   exe $'setl complete+=k{s:dictfile}^10' |
-          \ endif
+  " Set dictionary from ~/.vim/dicts
+  autocmd FileType *
+        \ let s:dictfile = expand('~/.vim') . '/dicts/' . &filetype |
+        \ if filereadable(s:dictfile) |
+        \   let &l:dictionary = s:dictfile |
+        \   exe $'setl complete+=k{s:dictfile}^10' |
+        \ endif
+
+  " Restore cursor after opening buffer
+  autocmd BufReadPost *
+        \ if &buftype == '' && line("'\"") > 0 && line("'\"") <= line("$") |
+        \   execute "normal! g`\"" |
+        \ endif
 augroup END
 
 if has('syntax') && has('eval') && !getcompletion('matchit', 'packadd')->empty()
-    packadd! matchit
+  packadd! matchit
 endif
 
 if !getcompletion('comment', 'packadd')->empty()
-    packadd! comment
+  packadd! comment
 endif
 
 if !getcompletion('hlyank', 'packadd')->empty()
-    packadd! hlyank
+  packadd! hlyank
+elseif has('nvim')
+  augroup YankHighlight | autocmd!
+    autocmd TextYankPost * silent! lua vim.highlight.on_yank()
+  augroup END
 endif
 
 " Debug Vim in Linux (:h :Termdebug), needs gdb

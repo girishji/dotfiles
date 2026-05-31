@@ -100,6 +100,10 @@ command! -range -nargs=* Align call s:Align(<line1>, <line2>, <f-args>)
 
 function! s:Align(line1, line2, ...) abort
   let delimit = a:0 ? a:1 : ''
+  if empty(delimit)
+    echoerr "Error: Specify a separator character"
+    return
+  endif
   let sep = empty(delimit) ? '\s\+' : escape(delimit, '\') . '\+'
 
   let raw = getline(a:line1, a:line2)

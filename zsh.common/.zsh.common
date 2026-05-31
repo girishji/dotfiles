@@ -360,6 +360,9 @@ prompt_vcs_setup() {
 
     alias vim=nvim
 
+    alias nordic='cd /opt/nordic/ncs'
+    alias nrf='cd /opt/nordic/ncs'
+
     # Type '-' to return to your previous dir.
     alias -- -='cd -'
     # '--' signifies the end of options. Otherwise, '-=...' would be interpreted as
@@ -435,9 +438,9 @@ prompt_vcs_setup() {
     # foo*(.) = only regular files matching foo*
     # foo*(/) = only directories matching foo*
     # dir/**/foo* = foo* in the directory dir and all its subdirectories, recursively
-    #
-    # Add your pattern as in 'ls **/*<pat>...'. excludes files *.swp and dir plugged.
-    alias ff='ls ***/**'
+
+    # NOTE: Do not use '***' (follow symlinks), it misses finding files
+    alias ff='ls **/**'
     cursor_offset["ff"]=2
     alias ff2='ls **/*~(*.swp|build/*)'
     cursor_offset["ff2"]=17
@@ -568,7 +571,7 @@ prompt_vcs_setup() {
     alias le='less'
     alias p3='python3'
     alias rm='rm -i'
-    alias diffw='diff -w'  # ignore white spaces
+    alias diff2='diff -w -B'  # ignore white spaces, blank lines
     alias less='command less -R' # -R for interpreting Ansi color codes
     alias targ='tar -c --exclude-from=.gitignore -vzf'
     alias t='python3 ~/git/t/t.py --task-dir ~/.local/share/todo --list tasks'
@@ -589,16 +592,16 @@ prompt_vcs_setup() {
     # TIP: could use 'py' which is ipython+pyflyby (if installed through pipx, and ipython injected into it)
     alias ip='ipython'
 
-    alias v='vim'
+    # alias v='vim'
+    # alias n='nvim'
+    alias vw='view'
+    alias nv='nvim'
     alias vd2='vi -d'  # diff mode - pass 2 files
     alias vimdiff='vimdiff -R -c "set autoread" -c "au FocusGained,BufEnter * checktime"' # read only
     alias vimdiff2='vimdiff -c "set autoread" -c "au FocusGained,BufEnter * checktime"'
     # alias vr='vim -c "normal '\''0"'  # restore last opened buffer
     alias viclean='vim --clean'
     alias vimclean='vim --clean'
-    alias vw='view'
-    alias nv='nvim'
-    alias nvi='nvim'
     alias vim_='vim -Nu NONE -S <(cat <<EOF
         vim9script
     EOF

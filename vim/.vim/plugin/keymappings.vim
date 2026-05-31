@@ -1,9 +1,15 @@
 " Key mappings
 
-" nnoremap <leader>w <cmd>w<cr>  " XXX: maybe causing the ruler line getting printed twice problem
 nnoremap <leader>w :w<cr>
 nnoremap <localleader>w :w<cr>
+" XXX: try the following to fix ruler line getting printed twice problem
+" (https://github.com/vim/vim/issues/18181). redraw causes screen to blink
+" though.
+" set nofsync
+" nnoremap <leader>w :w<cr>:redraw!<cr>
+" nnoremap <localleader>w :w<cr>:redraw!<cr>
 " nnoremap <leader>w <cmd>update<cr> " BufWrite (not posted) is needed by plugins
+
 nnoremap <leader>q <cmd>qa<cr>
 nnoremap <localleader>q <cmd>qa<cr>
 nnoremap <leader>Q <cmd>qa!<cr>

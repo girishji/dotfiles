@@ -1,3 +1,10 @@
+colorscheme quiet
+finish
+
+
+
+
+
 " colorscheme is not needed. Adjust terminal colors.
 " When ssh or lldb, new window has 'light' as 'background'. Do not use 'dark'
 " background for 'midnight commander' like colors.

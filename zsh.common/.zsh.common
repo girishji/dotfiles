@@ -317,7 +317,8 @@ prompt_vcs_setup() {
     # status of the last command was n.
     # https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
     #
-    PS1="%F{11}────────────────────────────────%f"$'\n'"%F{4}%40<..<%~%<<%f %K{%(?,10,9)}%k"$'\n'"❯ "
+    PS1="%F{8}-------------------------------------------%f"$'\n'"%F{4}%40<..<%~%<<%f %K{%(?,10,9)}%k"$'\n'"❯ "
+    # PS1="%F{11}────────────────────────────────%f"$'\n'"%F{4}%40<..<%~%<<%f %K{%(?,10,9)}%k"$'\n'"❯ "
     # PS1="%F{244}%40<..<%~%<<%f"$'\n'"%K{%(?,10,9)}%F{0}%#%f%k "  # 10 is bright green; 9 is bright red.
 
     # Install precmd hook function.
@@ -358,7 +359,7 @@ prompt_vcs_setup() {
     #     alias vim=$HOME/git/vim/dist/bin/vim
     # fi
 
-    alias vim=nvim
+    # alias vim=nvim
 
     alias nordic='cd /opt/nordic/ncs'
     alias nrf='cd /opt/nordic/ncs'
@@ -626,8 +627,9 @@ prompt_vcs_setup() {
     alias clang++_='clang++ -include"$HOME/.clang-repl-incl.h" -std=c++23 -stdlib=libc++ -fexperimental-library -o /tmp/a.out  && /tmp/a.out'
     cursor_offset["clang++_"]=15
 
-    export LS_COLORS='di=1:ln=3'
-    alias ls='ls --color=always' # auto/always/never
+    # export LS_COLORS='di=1:ln=3'
+    # alias ls='ls --color=always' # auto/always/never
+    alias ls='ls -F'
     alias l='ls'
     alias ll='ls -l'
     if [[ ! -d "$HOME/.config" ]]; then

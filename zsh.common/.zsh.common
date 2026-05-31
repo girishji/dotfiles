@@ -629,7 +629,7 @@ prompt_vcs_setup() {
 
     # export LS_COLORS='di=1:ln=3'
     # alias ls='ls --color=always' # auto/always/never
-    alias ls='ls -F'
+    alias ls='ls -FG'
     alias l='ls'
     alias ll='ls -l'
     if [[ ! -d "$HOME/.config" ]]; then

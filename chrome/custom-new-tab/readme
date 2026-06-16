@@ -1,0 +1,11 @@
+Chrome allows you to load unpacked local directories as extensions, you can build a lightweight, custom Extension in under two minutes. This gives you total control: it keeps Google as your default address bar search engine, but completely strips the New Tab page of Doodles, animations, and clutter.
+
+Here is how to load your own local "Doodle Blocker" extension.
+
+Open Chrome and navigate to chrome://extensions/ in the address bar.
+
+In the top-right corner of the Extensions page, toggle the Developer mode switch to ON.
+
+In the top-left corner, click the Load unpacked button.
+
+Select the custom-new-tab folder you created.

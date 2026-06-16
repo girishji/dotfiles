@@ -1,0 +1,9 @@
+{
+  "manifest_version": 3,
+  "name": "Custom Blank New Tab",
+  "version": "1.0",
+  "description": "A clean, distraction-free blank canvas for new tabs while keeping Google Search in the omnibox.",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  }
+}

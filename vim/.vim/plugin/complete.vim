@@ -20,7 +20,7 @@ if !has('nvim')
 endif
 autocmd CmdlineLeave [:/\?] set pumborder=shadow
 
-hi PmenuBorder ctermfg=10 ctermbg=6
+" hi PmenuBorder ctermfg=10 ctermbg=6
 
 " ----------------------------------------------------------------------
 " Fuzzy find file

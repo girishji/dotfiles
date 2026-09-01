@@ -77,7 +77,8 @@
         /opt/homebrew/bin(N)   # (N): null if file doesn't exist
         $path
         /Applications/MacVim.app/Contents/bin(N)
-        ~/.local/bin
+        ~/.local/bin(N)
+        ~/.local/share/arm64/../bin(N)
     )
 
     # Set $PAGER if not already set.

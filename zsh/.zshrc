@@ -192,3 +192,5 @@ else
 fi
 unset __mamba_setup
 # <<< mamba initialize <<<
+
+. "$HOME/.local/share/arm64/../bin/env"

@@ -18,6 +18,7 @@ endfunction
 " background for 'midnight commander' like colors.
 " Modify colors for source files and leave defaults for help/markdown files.
 
+" XXX:: for leetcode light background the following does not look good
 if get(g:, 'colors_name', '') == ''
     augroup ColorTweaks
         autocmd!

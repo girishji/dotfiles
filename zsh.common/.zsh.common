@@ -528,8 +528,10 @@ prompt_vcs_setup() {
     # CAUTION: Avoid **/* and ***/* as shell complains 'too many paths to expand' when searching a large directory.
 
     alias gg="grep -iREIns --exclude={'*.swp',tags} --exclude-dir='.git' \"\""
+    alias fgg="grep -iREIns --exclude={'*.swp',tags} --exclude-dir='.git' \"\""
     alias gg2="grep -REIns --exclude={'*.swp',tags} --exclude-dir='.git' \"\""
     cursor_offset["gg"]=2
+    cursor_offset["fgg"]=2
     cursor_offset["gg2"]=2
 
     alias -g gr="grep --color -iEI"
@@ -608,6 +610,10 @@ prompt_vcs_setup() {
         vim9script
     EOF
     )'
+    alias vih='vim ~/help/'
+    cursor_offset["vih"]=1
+    alias vit='vim ~/trading/'
+    cursor_offset["vit"]=1
     alias mvi='mvim'
     alias mvd='mvimdiff'
     alias mvw='mview'
